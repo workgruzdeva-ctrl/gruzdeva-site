@@ -83,6 +83,18 @@
   .badge.primary{background:#141414; color:#fff; border-color:#141414}
   .badge::before{content:""; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.6}
   .badge.primary::before{background:var(--accent); opacity:1; width:6px; height:6px}
+  /* Book badge — clickable, slightly emphasised */
+  a.badge.book{
+    text-decoration:none;
+    background:#141414; color:#fff; border-color:#141414;
+    padding:8px 14px; font-size:13px; line-height:1.35;
+    transition:background .2s, transform .15s;
+  }
+  a.badge.book::before{
+    content:"📖"; background:transparent; width:auto; height:auto; opacity:1;
+    font-size:13px;
+  }
+  a.badge.book:hover{transform:translateY(-1px); background:#000}
 
   .cta-row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
   .btn{
@@ -413,13 +425,15 @@
     <div class="body">
       <h1>Привет, я <span class="name">Валя</span></h1>
       <p class="lead">
-        Я врач и ученый в эмиграции. Автор книги
-        <a href="#">«Внимание и память, и Почему они работали лучше, пока ты все не испортил»</a>.
+        Я врач и ученый в эмиграции. Работаю с СДВГ, исполнительными навыками и когнитивным здоровьем.
       </p>
       <div class="badges">
-        <span class="badge primary">ADHD‑CCSP · специалист по СДВГ</span>
-        <span class="badge">Врач · нейрофизиология</span>
-        <span class="badge">co‑founder · R&amp;D · INCF</span>
+        <a class="badge book" href="https://www.ozon.ru/product/vnimanie-i-pamyat-i-pochemu-oni-rabotali-luchshe-poka-ty-vse-ne-isportil-gruzdeva-valentina-765884596/?at=PjtJ2GAOrcr8jrx3T9gq8zGhprWlYWsYxXJgkh931P6j" target="_blank" rel="noopener">Автор книги «Внимание и память, и почему они работали лучше пока ты все не испортил»</a>
+        <span class="badge">ADHD-CCSP</span>
+        <span class="badge">специалист по СДВГ взрослых</span>
+        <span class="badge">врач</span>
+        <span class="badge">нейрофизиолог</span>
+        <span class="badge">co-founder INCF</span>
       </div>
       <div class="cta-row">
         <a href="https://t.me/" class="btn btn-primary">
@@ -447,21 +461,21 @@
     <div class="start">
       <a href="#materials" class="start-card">
         <div class="num">1</div>
-        <div class="q">Я просто хочу разобраться</div>
-        <div class="a">Подкасты, темы и практики по исполнительным навыкам — без обязательств.</div>
+        <div class="q">Хочу познакомиться и забрать полезное (бесплатное)</div>
+        <div class="a">Подкасты, тесты и практики по СДВГ, исполнительным навыкам и когнитивному здоровью.</div>
         <span class="go">К материалам →</span>
       </a>
       <a href="#services" class="start-card">
         <div class="num">2</div>
-        <div class="q">Мне кажется, у меня СДВГ</div>
-        <div class="a">Диагностическая встреча: разберёмся, что у вас, и что делать дальше.</div>
+        <div class="q">Мне кажется, что у меня СДВГ</div>
+        <div class="a">Диагностическое интервью по протоколу DIVA-5: разберёмся, были ли вы правы и что делать дальше.</div>
         <span class="go">К диагностике →</span>
       </a>
       <a href="#services" class="start-card">
         <div class="num">3</div>
-        <div class="q">Я знаю проблему, но не могу её решить</div>
-        <div class="a">Индивидуальные консультации или группа — для системной работы с навыками.</div>
-        <span class="go">К консультациям →</span>
+        <div class="q">У меня СДВГ, что делать дальше?</div>
+        <div class="a">Индивидуальная или групповая работа, чтобы настроить стратегию работы с исполнительными навыками — не надеясь на мотивацию и силу воли.</div>
+        <span class="go">Выбрать формат работы →</span>
       </a>
     </div>
   </section>
@@ -658,7 +672,6 @@
     <div class="section-head">
       <div>
         <h2>Частые вопросы</h2>
-        <p class="section-sub">Драфт — тексты ответов можно править</p>
       </div>
     </div>
 
@@ -679,7 +692,7 @@
     <div>
       <a href="https://t.me/">Telegram</a> &nbsp;·&nbsp;
       <a href="#">INCF</a> &nbsp;·&nbsp;
-      <a href="#">Книга</a>
+      <a href="https://www.ozon.ru/product/vnimanie-i-pamyat-i-pochemu-oni-rabotali-luchshe-poka-ty-vse-ne-isportil-gruzdeva-valentina-765884596/?at=PjtJ2GAOrcr8jrx3T9gq8zGhprWlYWsYxXJgkh931P6j" target="_blank" rel="noopener">Книга</a>
     </div>
   </footer>
 </div>
