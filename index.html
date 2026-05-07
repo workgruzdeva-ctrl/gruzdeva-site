@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gruzdeva V.А. — врач, учёный, специалист по СДВГ</title>
+<style>
+  /* ============== TOKENS ============== */
+  :root{
+    --ink:#141414;
+    --soft:#4a4a4a;
+    --muted:#8c8c8c;
+    --line:#ececec;
+    --line-soft:#f5f5f5;
+    --bg:#ffffff;
+    --paper:#ffffff;
+    --accent:#ffd93d;
+    --accent-soft:#fff8d6;
+    --accent-deep:#a07800;
+
+    --t-display:64px;
+    --t-h1:44px;
+    --t-h2:28px;
+    --t-h3:20px;
+    --t-body:16px;
+    --t-small:14px;
+
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+
+    --shadow-soft:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.08);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.04), 0 16px 36px -18px rgba(0,0,0,.16);
+    --shadow-fab:0 12px 28px -12px rgba(0,0,0,.32);
+
+    --easing:cubic-bezier(.2,.7,.2,1);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    font-size:var(--t-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:32px 28px 96px}
+
+  a{color:var(--ink); text-decoration:underline; text-decoration-color:var(--line); text-decoration-thickness:1px; text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--ink)}
+
+  /* TOP NAV */
+  .topnav{display:flex; justify-content:space-between; align-items:center; padding:8px 0 32px; font-size:var(--t-small)}
+  .logo{font-weight:600; letter-spacing:.04em; text-decoration:none}
+  .logo .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent); margin-right:8px; vertical-align:middle; transform:translateY(-1px)}
+  .topnav nav a{color:var(--soft); text-decoration:none; margin-left:24px; transition:color .2s}
+  .topnav nav a:hover{color:var(--ink)}
+
+  /* HERO */
+  .hero{
+    display:grid; grid-template-columns: 1fr 380px; gap:64px;
+    padding:48px 0 80px; align-items:center;
+    border-bottom:1px solid var(--line);
+  }
+  .hero h1{font-size:var(--t-display); line-height:1.02; letter-spacing:-.025em; font-weight:700; margin:0 0 18px}
+  .hero h1 .name{
+    background:linear-gradient(180deg, transparent 55%, var(--accent) 55%, var(--accent) 92%, transparent 92%);
+    padding:0 6px; white-space:nowrap;
+  }
+  .hero .lead{font-size:22px; line-height:1.45; color:var(--soft); margin:0 0 28px; max-width:34ch}
+  .hero .lead a{color:var(--ink)}
+
+  .badges{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 12px; border-radius:100px;
+    font-size:13px; color:var(--soft);
+    background:var(--line-soft); border:1px solid var(--line);
+  }
+  .badge.primary{background:#141414; color:#fff; border-color:#141414}
+  .badge::before{content:""; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.6}
+  .badge.primary::before{background:var(--accent); opacity:1; width:6px; height:6px}
+
+  .cta-row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 22px; border-radius:100px;
+    text-decoration:none; font-size:15px; font-weight:600;
+    transition:transform .2s var(--easing), box-shadow .2s var(--easing), background .2s, border-color .2s;
+    border:1px solid transparent; cursor:pointer; font-family:inherit;
+  }
+  .btn-primary{background:var(--ink); color:#fff}
+  .btn-primary .arrow{color:var(--accent); font-size:18px; line-height:1; transition:transform .2s var(--easing)}
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+  .btn-primary:hover .arrow{transform:translateX(4px)}
+  .btn-ghost{color:var(--ink); background:transparent; border-color:var(--line)}
+  .btn-ghost:hover{background:var(--line-soft); border-color:var(--ink)}
+
+  /* portrait — soft animated gradient */
+  .portrait{
+    width:380px; aspect-ratio:4/5; border-radius:var(--r-lg);
+    overflow:hidden; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow-soft);
+    background:
+      radial-gradient(ellipse at 30% 25%, #fff8d6 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 75%, #ffd93d 0%, transparent 60%),
+      linear-gradient(180deg, #fff5b8, #ffe27a);
+    background-size:200% 200%;
+    animation:portraitShift 14s ease-in-out infinite alternate;
+  }
+  @keyframes portraitShift{
+    0%   { background-position: 0% 0%, 100% 100%, 0 0; }
+    100% { background-position: 30% 20%, 70% 70%, 0 0; }
+  }
+  .portrait img{width:100%; height:100%; object-fit:cover; display:block}
+  .portrait .fallback{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:120px; color:#7a5b00; font-weight:600; opacity:.45;
+  }
+  .portrait .tag{
+    position:absolute; bottom:18px; left:18px;
+    background:#fff; color:var(--ink);
+    padding:8px 14px; border-radius:100px;
+    font-size:12px; letter-spacing:.12em; font-weight:600; text-transform:uppercase;
+  }
+
+  /* SECTIONS */
+  section{padding:72px 0; border-bottom:1px solid var(--line)}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:24px; flex-wrap:wrap}
+  h2{font-size:var(--t-h2); font-weight:700; margin:0; letter-spacing:-.015em}
+  .section-sub{color:var(--muted); font-size:var(--t-small); margin:0}
+
+  /* SCROLL-IN ANIMATIONS */
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s var(--easing), transform .6s var(--easing)}
+  .reveal.in{opacity:1; transform:none}
+
+  /* С ЧЕГО НАЧАТЬ */
+  .start{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .start-card{
+    border:1px solid var(--line); border-radius:var(--r-lg);
+    padding:28px; text-decoration:none; color:var(--ink);
+    background:var(--paper);
+    display:flex; flex-direction:column;
+    transition:border-color .2s, transform .2s var(--easing), box-shadow .2s;
+  }
+  .start-card:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
+  .start-card .num{
+    width:32px; height:32px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:13px;
+    margin-bottom:18px;
+  }
+  .start-card .q{font-size:17px; font-weight:600; margin:0 0 8px; line-height:1.35}
+  .start-card .a{font-size:14px; color:var(--soft); margin:0 0 20px; line-height:1.5}
+  .start-card .go{
+    margin-top:auto; align-self:flex-start;
+    font-size:13px; font-weight:600; color:var(--ink);
+    border-bottom:2px solid var(--accent); padding-bottom:1px; text-decoration:none;
+    transition:color .2s;
+  }
+  .start-card:hover .go{color:var(--accent-deep)}
+
+  /* MATERIAL FILTERS */
+  .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; padding-bottom:14px; border-bottom:1px solid var(--line)}
+  .filter{
+    background:transparent; border:1px solid var(--line); border-radius:100px;
+    padding:8px 16px; font-size:14px; color:var(--soft); cursor:pointer;
+    font-family:inherit; font-weight:500;
+    transition:background .2s, color .2s, border-color .2s;
+  }
+  .filter:hover{color:var(--ink); border-color:var(--ink)}
+  .filter.active{background:var(--ink); color:#fff; border-color:var(--ink); font-weight:600}
+  .filter .count{opacity:.6; margin-left:6px; font-size:12px}
+
+  .mat-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    transition:opacity .2s var(--easing);
+  }
+  .mat-grid.fading{opacity:0}
+
+  .mcard{
+    background:var(--paper);
+    border:1px solid var(--line); border-radius:var(--r-md);
+    padding:20px; text-decoration:none; color:var(--ink);
+    display:flex; flex-direction:column; gap:0;
+    transition:border-color .2s, transform .2s var(--easing), box-shadow .2s, background .2s;
+  }
+  .mcard:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
+  .mcard .mtype{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    color:var(--muted); margin-bottom:10px;
+  }
+  .mcard .mtype::before{
+    content:""; display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--muted);
+  }
+  .mcard.podcast .mtype{color:var(--accent-deep)}
+  .mcard.podcast .mtype::before{background:var(--accent)}
+  .mcard.test{background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 70%); border-color:transparent}
+  .mcard.test .mtype{color:var(--accent-deep)}
+  .mcard.test .mtype::before{background:var(--accent-deep)}
+  .mcard.lecture .mtype{color:#3a3a3a}
+  .mcard.lecture .mtype::before{background:#3a3a3a}
+  .mcard h4{font-size:16px; font-weight:600; margin:0 0 6px; line-height:1.3}
+  .mcard p{font-size:13px; color:var(--soft); line-height:1.5; margin:0}
+  .mcard.placeholder{
+    border-style:dashed; background:transparent;
+  }
+  .mcard.placeholder p{color:var(--muted)}
+
+  /* CONSULTATIONS */
+  .formats{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg);
+    padding:32px 28px;
+    display:flex; flex-direction:column;
+    transition:border-color .2s, transform .25s var(--easing), box-shadow .25s var(--easing);
+    position:relative;
+  }
+  .card:hover{transform:translateY(-3px); border-color:var(--ink); box-shadow:var(--shadow-hover)}
+  .card .ftype{
+    display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent-deep); font-weight:700;
+    background:var(--accent-soft); padding:5px 12px; border-radius:100px;
+    margin-bottom:18px;
+  }
+  .card h3{font-size:var(--t-h3); font-weight:700; margin:0 0 12px; letter-spacing:-.01em}
+  .card .summary{color:var(--soft); font-size:15px; line-height:1.55; margin:0 0 24px}
+
+  .price-block{margin:0 0 24px; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .price-block .pl{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:6px}
+  .price-block .pv{font-size:26px; font-weight:700; letter-spacing:-.01em; line-height:1}
+  .price-block .pv .rub{font-size:13px; font-weight:500; color:var(--muted); margin-left:8px; letter-spacing:0}
+
+  .inc-label{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:0 0 10px}
+  ul.inc{list-style:none; padding:0; margin:0 0 28px; font-size:14px; color:var(--soft)}
+  ul.inc li{padding:7px 0 7px 26px; position:relative; line-height:1.5}
+  ul.inc li::before{
+    content:""; position:absolute; left:0; top:14px;
+    width:14px; height:8px;
+    border-left:2px solid var(--accent-deep);
+    border-bottom:2px solid var(--accent-deep);
+    transform:rotate(-45deg);
+  }
+  .card .card-cta{margin-top:auto; align-self:stretch; text-align:center}
+
+  /* FEATURED CARD (Group) — highlight + goose */
+  .card.featured{
+    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 55%);
+    border-color:var(--accent);
+    border-width:2px;
+    overflow:visible;
+  }
+  .card.featured .ftype{
+    background:var(--accent);
+    color:var(--ink);
+  }
+  .card.featured .price-block .pv{color:var(--ink)}
+  .ribbon{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:600;
+    color:var(--accent-deep);
+    margin:-6px 0 14px;
+    font-style:italic;
+  }
+  .ribbon::before{content:"✦"; font-style:normal; font-size:11px}
+
+  .card-mascot{
+    position:absolute;
+    top:-30px; right:14px;
+    width:96px; height:96px;
+    pointer-events:none;
+    transform-origin:60% 90%;
+    animation:goose-wiggle 4.5s ease-in-out infinite;
+    z-index:2;
+  }
+  @keyframes goose-wiggle{
+    0%, 100% { transform: rotate(-4deg) translateY(0); }
+    50%      { transform: rotate(4deg) translateY(-4px); }
+  }
+  @media (max-width: 880px){
+    .card-mascot{width:80px; height:80px; top:-22px; right:8px}
+  }
+
+  /* ROADMAP */
+  .roadmap{
+    display:grid; grid-template-columns:repeat(6, 1fr);
+    gap:14px; position:relative; margin-top:24px;
+  }
+  .roadmap::before{
+    content:""; position:absolute; left:5%; right:5%; top:24px; height:2px;
+    background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);
+    z-index:0;
+  }
+  .step{
+    display:flex; flex-direction:column; align-items:flex-start;
+    background:var(--bg); padding:0 6px;
+    position:relative; z-index:1;
+  }
+  .step .dot{
+    width:48px; height:48px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; color:var(--soft);
+    margin-bottom:14px;
+    transition:background .2s, border-color .2s, color .2s, transform .25s var(--easing);
+  }
+  .step:hover .dot{background:var(--accent); border-color:var(--accent); color:var(--ink); transform:scale(1.05)}
+  .step h4{font-size:14px; font-weight:600; margin:0 0 4px; line-height:1.3}
+  .step p{font-size:12px; color:var(--muted); margin:0; line-height:1.4}
+
+  /* FAQ */
+  .faq{display:flex; flex-direction:column}
+  .faq-item{border-bottom:1px solid var(--line)}
+  .faq-q{
+    width:100%; text-align:left; cursor:pointer;
+    background:none; border:none; font:inherit;
+    padding:22px 0; font-size:17px; font-weight:600; color:var(--ink);
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    font-family:inherit;
+    transition:color .2s;
+  }
+  .faq-q:hover{color:var(--accent-deep)}
+  .faq-q .plus{
+    flex-shrink:0;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--line-soft); color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; line-height:1; font-weight:400;
+    transition:transform .25s var(--easing), background .2s;
+  }
+  .faq-item.open .faq-q .plus{transform:rotate(45deg); background:var(--accent)}
+  .faq-a{
+    max-height:0; overflow:hidden;
+    transition:max-height .3s var(--easing), padding .25s var(--easing);
+    color:var(--soft); font-size:15px; line-height:1.6;
+  }
+  .faq-item.open .faq-a{max-height:600px; padding:0 0 24px}
+
+  footer{padding:32px 0 0; color:var(--muted); font-size:var(--t-small); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px}
+  footer a{color:var(--soft); text-decoration:none}
+  footer a:hover{color:var(--ink)}
+
+  /* FLOATING CTA */
+  .fab{
+    position:fixed; right:24px; bottom:24px; z-index:50;
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ink); color:#fff;
+    padding:14px 22px; border-radius:100px;
+    text-decoration:none; font-size:14px; font-weight:600;
+    box-shadow:var(--shadow-fab);
+    opacity:0; transform:translateY(20px); pointer-events:none;
+    transition:opacity .3s var(--easing), transform .3s var(--easing), box-shadow .2s;
+  }
+  .fab.show{opacity:1; transform:none; pointer-events:auto}
+  .fab:hover{box-shadow:0 16px 36px -10px rgba(0,0,0,.42)}
+  .fab .arrow{color:var(--accent); font-size:16px; transition:transform .2s var(--easing)}
+  .fab:hover .arrow{transform:translateX(3px)}
+
+  /* RESPONSIVE */
+  @media (max-width: 880px){
+    :root{--t-display:44px; --t-h1:32px; --t-h2:24px}
+    .wrap{padding:24px 20px 120px}
+    .hero{grid-template-columns:1fr; gap:36px; padding:24px 0 56px}
+    .hero h1{order:2}
+    .hero .body{order:3}
+    .portrait{width:100%; max-width:300px; order:1}
+    .portrait .fallback{font-size:88px}
+    .hero .lead{font-size:18px}
+    .topnav nav{display:none}
+    .start{grid-template-columns:1fr}
+    .mat-grid{grid-template-columns:1fr}
+    .formats{grid-template-columns:1fr}
+    .roadmap{grid-template-columns:1fr; gap:14px}
+    .roadmap::before{left:23px; top:0; bottom:0; right:auto; width:2px; height:auto}
+    .step{padding:0 0 0 56px; min-height:48px}
+    .step .dot{position:absolute; left:0; top:0; margin:0}
+    section{padding:48px 0}
+
+    /* sticky bottom on mobile */
+    .fab{
+      left:16px; right:16px; bottom:16px;
+      border-radius:14px;
+      justify-content:center; padding:16px;
+      font-size:15px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <a href="#top" class="logo"><span class="dot"></span>Gruzdeva V.А.</a>
+    <nav>
+      <a href="#start">С чего начать</a>
+      <a href="#materials">Материалы</a>
+      <a href="#services">Консультации</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <header id="top" class="hero">
+    <div class="body">
+      <h1>Привет, я <span class="name">Валя</span></h1>
+      <p class="lead">
+        Я врач и ученый в эмиграции. Автор книги
+        <a href="#">«Внимание и память, и Почему они работали лучше, пока ты все не испортил»</a>.
+      </p>
+      <div class="badges">
+        <span class="badge primary">ADHD‑CCSP · специалист по СДВГ</span>
+        <span class="badge">Врач · нейрофизиология</span>
+        <span class="badge">co‑founder · R&amp;D · INCF</span>
+      </div>
+      <div class="cta-row">
+        <a href="https://t.me/" class="btn btn-primary">
+          Перейти в Telegram <span class="arrow">→</span>
+        </a>
+        <a href="#start" class="btn btn-ghost">С чего начать</a>
+      </div>
+    </div>
+
+    <div class="portrait">
+      <img src="valya.jpg" alt="Валентина Груздева" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="fallback" style="display:none">VG</div>
+      <span class="tag">be smart</span>
+    </div>
+  </header>
+
+  <!-- С ЧЕГО НАЧАТЬ -->
+  <section id="start" class="reveal">
+    <div class="section-head">
+      <div>
+        <h2>С чего начать?</h2>
+        <p class="section-sub">Три коротких пути в зависимости от того, где вы сейчас</p>
+      </div>
+    </div>
+    <div class="start">
+      <a href="#materials" class="start-card">
+        <div class="num">1</div>
+        <div class="q">Я просто хочу разобраться</div>
+        <div class="a">Подкасты, темы и практики по исполнительным навыкам — без обязательств.</div>
+        <span class="go">К материалам →</span>
+      </a>
+      <a href="#services" class="start-card">
+        <div class="num">2</div>
+        <div class="q">Мне кажется, у меня СДВГ</div>
+        <div class="a">Диагностическая встреча: разберёмся, что у вас, и что делать дальше.</div>
+        <span class="go">К диагностике →</span>
+      </a>
+      <a href="#services" class="start-card">
+        <div class="num">3</div>
+        <div class="q">Я знаю проблему, но не могу её решить</div>
+        <div class="a">Индивидуальные консультации или группа — для системной работы с навыками.</div>
+        <span class="go">К консультациям →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section id="materials" class="reveal">
+    <div class="section-head">
+      <div>
+        <h2>Материалы</h2>
+        <p class="section-sub">Подкасты, тесты, практики и лекции по исполнительным навыкам</p>
+      </div>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter active" data-f="all" type="button">Все<span class="count"></span></button>
+      <button class="filter" data-f="podcast" type="button">Подкасты<span class="count"></span></button>
+      <button class="filter" data-f="test" type="button">Тесты<span class="count"></span></button>
+      <button class="filter" data-f="practice" type="button">Практики<span class="count"></span></button>
+      <button class="filter" data-f="lecture" type="button">Лекции<span class="count"></span></button>
+    </div>
+
+    <div class="mat-grid" id="matGrid">
+
+      <a href="#" class="mcard podcast" data-type="podcast">
+        <div class="mtype">Подкаст</div>
+        <h4>«Белка и Стрелка»</h4>
+        <p>про науку, мозг и поведение, простым языком</p>
+      </a>
+
+      <a href="#" class="mcard podcast" data-type="podcast">
+        <div class="mtype">Подкаст</div>
+        <h4>«Выйти из тени»</h4>
+        <p>отдельный проект на близкие темы</p>
+      </a>
+
+      <a href="#" class="mcard test" data-type="test">
+        <div class="mtype">Тест</div>
+        <h4>Тестирование</h4>
+        <p>короткие опросники — посмотреть, что у вас с навыками</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Метапознание</h4>
+        <p>как замечать, что у тебя в голове</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Инициация действия</h4>
+        <p>как прям брать и делать</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Контроль импульсов</h4>
+        <p>как не дать себе всё сломать</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Ощущение времени</h4>
+        <p>как не терять часы</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Планирование</h4>
+        <p>как прям брать и планировать</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Управление стрессом</h4>
+        <p>как не сгореть на ровном месте</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Поддержание внимания</h4>
+        <p>как не уплывать каждые 5 минут</p>
+      </a>
+
+      <a href="#" class="mcard" data-type="practice">
+        <div class="mtype">Практика</div>
+        <h4>Рабочая память</h4>
+        <p>как помнить всякое</p>
+      </a>
+
+      <div class="mcard lecture placeholder" data-type="lecture">
+        <div class="mtype">Лекция</div>
+        <h4>Скоро</h4>
+        <p>лекции в записи появятся здесь — пока в работе</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONSULTATIONS -->
+  <section id="services" class="reveal">
+    <div class="section-head">
+      <div>
+        <h2>Консультации</h2>
+        <p class="section-sub">Форматы работы со взрослыми с СДВГ — от диагностики до группы</p>
+      </div>
+      <a href="https://t.me/" class="btn btn-ghost" style="font-size:13px; padding:10px 16px">Написать в Telegram</a>
+    </div>
+
+    <div class="formats">
+      <article class="card">
+        <span class="ftype">01 · Старт</span>
+        <h3>Диагностика</h3>
+        <p class="summary">Разберёмся, есть ли у вас СДВГ, и обсудим конкретные дальнейшие шаги коррекции навыков.</p>
+        <div class="price-block">
+          <div class="pl">Стоимость встречи</div>
+          <div class="pv">40 €<span class="rub">≈ 4 000 ₽</span></div>
+        </div>
+        <p class="inc-label">Что включено</p>
+        <ul class="inc">
+          <li>Диагностическое интервью по DIVA-5: 1–3 встречи</li>
+          <li>Письменное заключение и рекомендации</li>
+          <li>При необходимости — направление к психиатру для фармакотерапии</li>
+        </ul>
+        <a href="https://t.me/" class="btn btn-primary card-cta">Записаться <span class="arrow">→</span></a>
+      </article>
+
+      <article class="card">
+        <span class="ftype">02 · Индивидуально</span>
+        <h3>Консультации</h3>
+        <p class="summary">Разберёмся, какие именно навыки дают сбой — инициация, планирование, устойчивое внимание — и подберём стратегии под вас.</p>
+        <div class="price-block">
+          <div class="pl">Пакет из 5 встреч</div>
+          <div class="pv">350 €<span class="rub">≈ 35 000 ₽</span></div>
+        </div>
+        <p class="inc-label">Что включено</p>
+        <ul class="inc">
+          <li>5 индивидуальных сессий по 60 минут</li>
+          <li>Поддержка между встречами при необходимости</li>
+          <li>Фокус на устойчивых поведенческих изменениях, а не разовых решениях</li>
+          <li>Индивидуальные техники под ваш стиль жизни и когнитивные особенности</li>
+        </ul>
+        <a href="https://t.me/" class="btn btn-primary card-cta">Записаться на пакет <span class="arrow">→</span></a>
+      </article>
+
+      <article class="card featured">
+        <!-- goose mascot -->
+        <svg class="card-mascot" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- shadow -->
+          <ellipse cx="52" cy="100" rx="28" ry="3" fill="#141414" opacity=".08"/>
+          <!-- body -->
+          <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#141414" stroke-width="2.5"/>
+          <!-- wing -->
+          <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#fff5b8" stroke="#141414" stroke-width="2" stroke-linejoin="round"/>
+          <!-- wing detail -->
+          <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#141414" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- neck -->
+          <path d="M 28 62 Q 18 38 32 22" stroke="#141414" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
+          <!-- head -->
+          <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#141414" stroke-width="2.5"/>
+          <!-- beak -->
+          <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#141414" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- eye -->
+          <circle cx="35" cy="20" r="1.6" fill="#141414"/>
+          <!-- legs -->
+          <line x1="46" y1="93" x2="44" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+          <line x1="58" y1="93" x2="60" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+          <!-- feet -->
+          <path d="M 38 105 L 50 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+
+        <span class="ftype">03 · Группа</span>
+        <h3>Групповая работа</h3>
+        <span class="ribbon">стаей идти веселее</span>
+        <p class="summary">Формат для тех, кому нужна поддержка и структура, но индивидуальные сессии сейчас не подходят.</p>
+        <div class="price-block">
+          <div class="pl">Курс из 6 встреч</div>
+          <div class="pv">240 €<span class="rub">≈ 24 000 ₽</span></div>
+        </div>
+        <p class="inc-label">Что включено</p>
+        <ul class="inc">
+          <li>6 встреч в мини-группе по 1.5 часа, раз в неделю</li>
+          <li>Домашние задания и сопровождение в чате между встречами</li>
+          <li>Живой формат: обсуждения, упражнения, обратная связь</li>
+        </ul>
+        <a href="https://t.me/" class="btn btn-primary card-cta">Присоединиться <span class="arrow">→</span></a>
+      </article>
+    </div>
+    <p class="section-sub" style="margin-top:18px">Оплата в ₽ возможна по договорённости — пишите в Telegram</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="reveal">
+    <div class="section-head">
+      <div>
+        <h2>Частые вопросы</h2>
+        <p class="section-sub">Драфт — тексты ответов можно править</p>
+      </div>
+    </div>
+
+    <div class="faq">
+      <div class="faq-item"><button class="faq-q" type="button">Можно ли прийти без диагноза?<span class="plus">+</span></button><div class="faq-a">Да. Не нужно иметь готовый диагноз, чтобы прийти. Если вы подозреваете СДВГ — мы начнём с диагностической встречи. Если просто чувствуете, что навыки даются с трудом — можно сразу в консультации.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Вы назначаете лекарства?<span class="plus">+</span></button><div class="faq-a">Нет, медикаментозное лечение я не назначаю — для этого нужен психиатр. Если в процессе работы становится понятно, что фармакотерапия может помочь, я даю направление к проверенному коллеге.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Можно ли оплатить в рублях?<span class="plus">+</span></button><div class="faq-a">Да, оплата в рублях возможна по договорённости — напишите в Telegram, обсудим способ.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Консультации проходят онлайн?<span class="plus">+</span></button><div class="faq-a">Да, все встречи проходят онлайн — по видеосвязи. Это удобно из любой точки и не требует личного присутствия.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Что будет на первой встрече?<span class="plus">+</span></button><div class="faq-a">Если это диагностика — мы знакомимся и проходим формализованное интервью DIVA-5: я задаю структурированные вопросы про детство и текущую жизнь. Если это консультация — мы разбираемся с вашим запросом и определяем точку входа в работу. После встречи у вас будут понятные следующие шаги.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Чем диагностика отличается от консультации?<span class="plus">+</span></button><div class="faq-a">Диагностика — про вопрос «есть ли у меня СДВГ?». Это формализованное интервью, заключение и при необходимости направление. Консультация — про работу с конкретными навыками: что именно у вас сбоит и какие стратегии могут помочь. Это два разных формата с разной задачей.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Подходит ли это, если у меня не СДВГ, а просто хаос?<span class="plus">+</span></button><div class="faq-a">Да, подходит. Сбои в исполнительных навыках бывают и у людей без СДВГ — после выгорания, длительного стресса, в эмиграции, после ковида. Мы можем разобраться, что именно у вас происходит, и работать с конкретными точками сбоя.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Можно ли работать, если я уже принимаю препараты?<span class="plus">+</span></button><div class="faq-a">Да, это никак не мешает. Многие из моих клиентов уже принимают препараты — это не отменяет необходимости тренировать навыки, а часто, наоборот, открывает для этого окно возможностей.</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>© <span id="y"></span> Gruzdeva V.А. · be smart</div>
+    <div>
+      <a href="https://t.me/">Telegram</a> &nbsp;·&nbsp;
+      <a href="#">INCF</a> &nbsp;·&nbsp;
+      <a href="#">Книга</a>
+    </div>
+  </footer>
+</div>
+
+<!-- FLOATING CTA -->
+<a href="https://t.me/" class="fab" id="fab" aria-label="Написать в Telegram">
+  <span class="fab-text">Написать в Telegram</span>
+  <span class="arrow">→</span>
+</a>
+
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  /* FAQ */
+  document.querySelectorAll('.faq-q').forEach(q=>{
+    q.addEventListener('click', ()=> q.parentElement.classList.toggle('open'));
+  });
+
+  /* SCROLL-IN reveal */
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* FILTERS */
+  const filters = document.querySelectorAll('.filter');
+  const grid = document.getElementById('matGrid');
+  const cards = grid.querySelectorAll('.mcard');
+
+  // counts
+  const counts = {all: cards.length, podcast:0, test:0, practice:0, lecture:0};
+  cards.forEach(c => { counts[c.dataset.type] = (counts[c.dataset.type]||0) + 1 });
+  filters.forEach(f => {
+    const c = counts[f.dataset.f] || 0;
+    f.querySelector('.count').textContent = c ? ' · ' + c : '';
+  });
+
+  filters.forEach(f => f.addEventListener('click', () => {
+    filters.forEach(x => x.classList.remove('active'));
+    f.classList.add('active');
+    const type = f.dataset.f;
+    grid.classList.add('fading');
+    setTimeout(() => {
+      cards.forEach(c => {
+        const show = (type === 'all') || (c.dataset.type === type);
+        c.style.display = show ? '' : 'none';
+      });
+      grid.classList.remove('fading');
+    }, 180);
+  }));
+
+  /* FLOATING CTA — show after scrolling past hero */
+  const fab = document.getElementById('fab');
+  const onScroll = () => {
+    if(window.scrollY > 480) fab.classList.add('show');
+    else fab.classList.remove('show');
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* Mobile sticky button text swap */
+  const setFabText = () => {
+    const t = window.matchMedia('(max-width: 880px)').matches ? 'Записаться' : 'Написать в Telegram';
+    document.querySelector('.fab-text').textContent = t;
+  };
+  setFabText();
+  window.addEventListener('resize', setFabText);
+</script>
+
+</body>
+</html>
