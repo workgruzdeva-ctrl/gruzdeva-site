@@ -146,6 +146,20 @@
   h2{font-size:var(--t-h2); font-weight:700; margin:0; letter-spacing:-.015em}
   .section-sub{color:var(--muted); font-size:var(--t-small); margin:0}
 
+  /* Display headings (bigger serif for major content blocks) */
+  h2.display{
+    font-family:"Charter","Iowan Old Style","Apple Garamond","Georgia",serif;
+    font-size:clamp(44px, 7vw, 84px);
+    font-weight:600;
+    letter-spacing:-.03em;
+    line-height:1;
+    margin:0 0 14px;
+  }
+  .section-lead{
+    font-size:16px; line-height:1.55; color:var(--soft);
+    max-width:60ch; margin:0 0 28px;
+  }
+
   /* SCROLL-IN ANIMATIONS */
   .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s var(--easing), transform .6s var(--easing)}
   .reveal.in{opacity:1; transform:none}
@@ -190,7 +204,8 @@
   .filter .count{opacity:.6; margin-left:6px; font-size:12px}
 
   .mat-grid{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    align-items:stretch;
     transition:opacity .2s var(--easing);
   }
   .mat-grid.fading{opacity:0}
@@ -198,9 +213,10 @@
   .mcard{
     background:var(--paper);
     border:1px solid var(--line); border-radius:var(--r-md);
-    padding:20px; text-decoration:none; color:var(--ink);
+    padding:22px; text-decoration:none; color:var(--ink);
     display:flex; flex-direction:column; gap:0;
     transition:border-color .2s, transform .2s var(--easing), box-shadow .2s, background .2s;
+    position:relative;
   }
   .mcard:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
   .mcard .mtype{
@@ -212,77 +228,278 @@
     content:""; display:inline-block; width:8px; height:8px; border-radius:50%;
     background:var(--muted);
   }
-  .mcard.podcast .mtype{color:var(--accent-deep)}
-  .mcard.podcast .mtype::before{background:var(--accent)}
-  .mcard.test{background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 70%); border-color:transparent}
-  .mcard.test .mtype{color:var(--accent-deep)}
-  .mcard.test .mtype::before{background:var(--accent-deep)}
-  .mcard.lecture .mtype{color:#3a3a3a}
-  .mcard.lecture .mtype::before{background:#3a3a3a}
   .mcard h4{font-size:16px; font-weight:600; margin:0 0 6px; line-height:1.3}
   .mcard p{font-size:13px; color:var(--soft); line-height:1.5; margin:0}
-  .mcard.placeholder{
-    border-style:dashed; background:transparent;
+
+  /* FEATURED PODCAST — large dark card spanning 2 cols */
+  .mcard.pod-large{
+    grid-column: span 2;
+    background:#0d0d0d; color:#fff; border-color:#0d0d0d;
+    padding:28px;
+    min-height:280px;
+    overflow:hidden;
   }
-  .mcard.placeholder p{color:var(--muted)}
+  .mcard.pod-large:hover{background:#161616; border-color:#0d0d0d; box-shadow:0 12px 32px -16px rgba(0,0,0,.4)}
+  .mcard.pod-large .mtype{color:var(--accent); margin-bottom:6px}
+  .mcard.pod-large .mtype::before{background:var(--accent)}
+  .mcard.pod-large .ep-info{
+    position:absolute; top:28px; right:32px;
+    font-size:12px; color:#7a7a7a; letter-spacing:.04em;
+  }
+  .mcard.pod-large h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:30px; font-weight:600; letter-spacing:-.015em; color:#fff;
+    margin:0 0 6px; line-height:1.1;
+  }
+  .mcard.pod-large .ep{font-size:13px; color:#9a9a9a; margin:0 0 12px}
+  .mcard.pod-large p{color:#9a9a9a; max-width:48ch; margin:0 0 22px}
+  .mcard.pod-large .player{
+    display:flex; align-items:center; gap:14px;
+    margin-top:auto;
+  }
+  .mcard.pod-large .play-btn{
+    width:46px; height:46px; border-radius:50%;
+    background:var(--accent); color:#0d0d0d;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:transform .15s var(--easing);
+  }
+  .mcard.pod-large:hover .play-btn{transform:scale(1.05)}
+  .mcard.pod-large .waveform{
+    flex:1; height:36px; color:var(--accent);
+    overflow:hidden;
+  }
+  .mcard.pod-large .waveform .dim{opacity:.3}
+
+  /* SMALL PODCAST — dark, single column, condensed */
+  .mcard.pod-small{
+    background:#0d0d0d; color:#fff; border-color:#0d0d0d;
+    padding:22px; min-height:200px;
+  }
+  .mcard.pod-small:hover{background:#161616; border-color:#0d0d0d}
+  .mcard.pod-small .mtype{color:var(--accent); margin-bottom:6px}
+  .mcard.pod-small .mtype::before{background:var(--accent)}
+  .mcard.pod-small .ep-info{position:absolute; top:22px; right:22px; font-size:11px; color:#7a7a7a}
+  .mcard.pod-small h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:20px; color:#fff; line-height:1.15;
+    margin:2px 0 6px;
+  }
+  .mcard.pod-small p{color:#9a9a9a; font-size:13px; margin:0 0 18px}
+  .mcard.pod-small .player{
+    display:flex; align-items:center; gap:12px;
+    margin-top:auto;
+  }
+  .mcard.pod-small .play-btn{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--accent); color:#0d0d0d;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .mcard.pod-small .waveform{flex:1; height:24px; color:var(--accent)}
+
+  /* FEATURED TEST — light, prominent */
+  .mcard.test-large{
+    background:var(--paper);
+    padding:28px; min-height:280px;
+  }
+  .mcard.test-large .mtype{color:var(--soft)}
+  .mcard.test-large .mtype::before{background:var(--ink)}
+  .mcard.test-large .ep-info{position:absolute; top:28px; right:28px; font-size:12px; color:var(--muted)}
+  .mcard.test-large h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:24px; font-weight:600; letter-spacing:-.01em; line-height:1.2;
+    margin:6px 0 14px;
+  }
+  .mcard.test-large .quote{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:14px 18px; border-radius:8px;
+    font-style:italic; color:#5a4500;
+    font-size:14px; line-height:1.5;
+    margin:0 0 16px;
+  }
+  .mcard.test-large p{color:var(--soft); font-size:13px; margin:0 0 22px}
+  .mcard.test-large .test-cta{
+    margin-top:auto;
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink); color:#fff;
+    padding:12px 20px; border-radius:100px;
+    font-size:13px; font-weight:600;
+    text-decoration:none; align-self:flex-start;
+    transition:transform .15s, opacity .15s;
+  }
+  .mcard.test-large .test-cta:hover{transform:translateY(-1px); opacity:.9}
+  .mcard.test-large .test-cta .arrow{transition:transform .15s}
+  .mcard.test-large:hover .test-cta .arrow{transform:translateX(3px)}
+
+  /* PRACTICE cards: number + footer */
+  .mcard.practice .pnum{
+    position:absolute; top:20px; right:22px;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:22px; color:var(--line); font-weight:600;
+    letter-spacing:-.01em; line-height:1;
+    transition:color .2s;
+  }
+  .mcard.practice:hover .pnum{color:var(--muted)}
+  .mcard.practice h4{margin:0 0 6px; font-family:"Charter","Iowan Old Style","Georgia",serif; font-size:18px; font-weight:600; letter-spacing:-.01em}
+  .mcard.practice p{margin:0 0 auto; padding-bottom:18px}
+  .mcard.practice .pfoot{
+    margin-top:auto; padding-top:14px;
+    border-top:1px dashed var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px; color:var(--muted);
+  }
+  .mcard.practice .pfoot .open{color:var(--ink); font-weight:600; display:inline-flex; align-items:center; gap:4px}
+  .mcard.practice .pfoot .open .arrow{transition:transform .15s}
+  .mcard.practice:hover .pfoot .open .arrow{transform:translateX(3px)}
+
+  /* lecture placeholder */
+  .mcard.lecture.placeholder{border-style:dashed; background:transparent}
+  .mcard.lecture .mtype{color:#3a3a3a}
+  .mcard.lecture .mtype::before{background:#3a3a3a}
+  .mcard.lecture.placeholder p{color:var(--muted)}
 
   /* CONSULTATIONS */
-  .formats{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  .formats{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch}
   .card{
     background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg);
-    padding:32px 28px;
+    padding:36px 32px 32px;
     display:flex; flex-direction:column;
     transition:border-color .2s, transform .25s var(--easing), box-shadow .25s var(--easing);
     position:relative;
   }
   .card:hover{transform:translateY(-3px); border-color:var(--ink); box-shadow:var(--shadow-hover)}
+
+  /* Breadcrumb style ftype "01 — СТАРТ" */
   .card .ftype{
-    display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
-    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--accent-deep); font-weight:700;
-    background:var(--accent-soft); padding:5px 12px; border-radius:100px;
-    margin-bottom:18px;
+    display:flex; align-items:center; gap:14px; align-self:flex-start;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--muted);
+    background:transparent; padding:0; border:none; border-radius:0;
+    margin:0 0 22px;
   }
-  .card h3{font-size:var(--t-h3); font-weight:700; margin:0 0 12px; letter-spacing:-.01em}
-  .card .summary{color:var(--soft); font-size:15px; line-height:1.55; margin:0 0 24px}
+  .card .ftype .num{color:var(--ink); font-family:"Charter","Iowan Old Style","Georgia",serif; font-size:14px; font-weight:600; letter-spacing:0}
+  .card .ftype .sep{opacity:.35; font-size:14px}
 
-  .price-block{margin:0 0 24px; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
-  .price-block .pl{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:6px}
-  .price-block .pv{font-size:26px; font-weight:700; letter-spacing:-.01em; line-height:1}
-  .price-block .pv .rub{font-size:13px; font-weight:500; color:var(--muted); margin-left:8px; letter-spacing:0}
+  /* Bigger serif title */
+  .card h3{
+    font-family:"Charter","Iowan Old Style","Apple Garamond","Georgia",serif;
+    font-size:34px; font-weight:600; letter-spacing:-.015em; line-height:1.05;
+    margin:0 0 14px;
+  }
+  .card .summary{color:var(--soft); font-size:15px; line-height:1.55; margin:0 0 22px}
 
-  .inc-label{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:0 0 10px}
+  /* Ribbon (italic accent line for featured card) */
+  .ribbon{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:13px; font-weight:500;
+    color:var(--accent);
+    margin:-8px 0 16px;
+    font-style:italic;
+  }
+  .ribbon::before{content:"✦"; font-style:normal; font-size:12px; opacity:.9}
+
+  /* "ВЫБОР ВАЛИ" badge on featured card */
+  .choice-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    align-self:flex-start;
+    background:var(--accent); color:var(--ink);
+    padding:7px 14px; border-radius:100px;
+    font-size:11px; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .choice-badge::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--ink)}
+
+  /* "Подойдёт, если" mini-list */
+  .fit{margin:0 0 24px}
+  .fit-label{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px}
+  ul.fit-list{list-style:none; padding:0; margin:0; font-size:14px; color:var(--soft); line-height:1.5}
+  ul.fit-list li{padding:5px 0 5px 18px; position:relative}
+  ul.fit-list li::before{content:"•"; position:absolute; left:2px; top:3px; color:var(--accent); font-weight:bold; font-size:18px; line-height:1}
+
+  /* Price block */
+  .price-block{margin:0 0 24px; padding:20px 0 22px; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .price-block .pl{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:8px}
+  .price-block .pv{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:38px; font-weight:600; letter-spacing:-.015em; line-height:1;
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  .price-block .pv .per-unit{font-family:-apple-system,sans-serif; font-size:13px; font-weight:500; color:var(--muted); letter-spacing:0}
+  .price-block .pv .rub{font-family:-apple-system,sans-serif; font-size:13px; font-weight:500; color:var(--muted); letter-spacing:0; margin:0}
+
+  /* "Что включено" with checkmarks */
+  .inc-label{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px}
   ul.inc{list-style:none; padding:0; margin:0 0 28px; font-size:14px; color:var(--soft)}
   ul.inc li{padding:7px 0 7px 26px; position:relative; line-height:1.5}
   ul.inc li::before{
-    content:""; position:absolute; left:0; top:14px;
-    width:14px; height:8px;
-    border-left:2px solid var(--accent-deep);
-    border-bottom:2px solid var(--accent-deep);
+    content:""; position:absolute; left:2px; top:14px;
+    width:12px; height:7px;
+    border-left:2px solid var(--accent);
+    border-bottom:2px solid var(--accent);
     transform:rotate(-45deg);
   }
-  .card .card-cta{margin-top:auto; align-self:stretch; text-align:center}
 
-  /* FEATURED CARD (Group) — highlight + goose */
+  /* Full-width pill CTA at bottom of cards */
+  .card .card-cta{
+    margin-top:auto;
+    display:flex; justify-content:center; align-items:center; gap:10px;
+    width:100%; padding:16px 24px;
+    border-radius:100px;
+    background:transparent; color:var(--ink);
+    border:1px solid var(--ink);
+    font-weight:600; font-size:14px;
+    text-decoration:none; font-family:inherit;
+    transition:background .15s var(--easing), color .15s, transform .15s, box-shadow .15s;
+  }
+  .card .card-cta:hover{background:var(--ink); color:#fff; transform:translateY(-1px)}
+  .card .card-cta .arrow{font-size:16px; line-height:1; transition:transform .15s}
+  .card .card-cta:hover .arrow{transform:translateX(3px)}
+
+  /* FEATURED card — DARK theme */
   .card.featured{
-    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 55%);
-    border-color:var(--accent);
-    border-width:2px;
+    background:#0d0d0d;
+    color:#fff;
+    border-color:#0d0d0d;
+    border-width:1px;
     overflow:visible;
   }
-  .card.featured .ftype{
-    background:var(--accent);
-    color:var(--ink);
+  .card.featured h3{color:#fff}
+  .card.featured .summary{color:#bdbdbd}
+  .card.featured .ftype{color:#7a7a7a}
+  .card.featured .ftype .num{color:#fff}
+  .card.featured .ftype .sep{color:#3a3a3a}
+  .card.featured .price-block{border-color:#2a2a2a}
+  .card.featured .price-block .pl,
+  .card.featured .inc-label,
+  .card.featured .fit-label{color:#7a7a7a}
+  .card.featured .price-block .pv{color:var(--accent)}
+  .card.featured .price-block .pv .per-unit,
+  .card.featured .price-block .pv .rub{color:#888}
+  .card.featured ul.inc,
+  .card.featured ul.fit-list{color:#bdbdbd}
+  .card.featured ul.inc li::before{
+    border-left-color:var(--accent);
+    border-bottom-color:var(--accent);
   }
-  .card.featured .price-block .pv{color:var(--ink)}
-  .ribbon{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:12px; font-weight:600;
-    color:var(--accent-deep);
-    margin:-6px 0 14px;
-    font-style:italic;
+
+  /* Featured CTA — yellow pill */
+  .card.featured .card-cta{
+    background:var(--accent); color:var(--ink);
+    border-color:var(--accent); font-weight:700;
   }
-  .ribbon::before{content:"✦"; font-style:normal; font-size:11px}
+  .card.featured .card-cta:hover{background:#ffe066; color:var(--ink)}
+
+  /* Stream date / spots indicator */
+  .stream-info{
+    display:flex; justify-content:center; align-items:center; gap:8px;
+    margin-top:14px;
+    font-size:12px; color:#888;
+  }
+  .stream-info::before{
+    content:""; width:8px; height:8px; border-radius:50%;
+    background:#22c55e; box-shadow:0 0 0 3px rgba(34,197,94,.18);
+    flex-shrink:0;
+  }
 
   .card-mascot{
     position:absolute;
@@ -389,7 +606,15 @@
     .topnav nav{display:none}
     .start{grid-template-columns:1fr}
     .mat-grid{grid-template-columns:1fr}
+    .mat-grid > .mcard.pod-large{grid-column:span 1}
+    .mcard.pod-large{padding:22px; min-height:240px}
+    .mcard.pod-large h4{font-size:24px}
+    .mcard.test-large{padding:22px; min-height:auto}
     .formats{grid-template-columns:1fr}
+    .card{padding:28px 24px}
+    .card h3{font-size:28px}
+    .price-block .pv{font-size:30px}
+    .card-mascot{width:72px; height:72px; top:-18px; right:8px}
     .roadmap{grid-template-columns:1fr; gap:14px}
     .roadmap::before{left:23px; top:0; bottom:0; right:auto; width:2px; height:auto}
     .step{padding:0 0 0 56px; min-height:48px}
@@ -484,8 +709,8 @@
   <section id="materials" class="reveal">
     <div class="section-head">
       <div>
-        <h2>Материалы</h2>
-        <p class="section-sub">Подкасты, тесты, практики и лекции по исполнительным навыкам</p>
+        <h2 class="display">Материалы</h2>
+        <p class="section-lead">Короткие материалы, чтобы потренировать конкретный навык — за 5 минут или за вечер. Выберите, что у вас сегодня болит.</p>
       </div>
     </div>
 
@@ -499,70 +724,178 @@
 
     <div class="mat-grid" id="matGrid">
 
-      <a href="#" class="mcard podcast" data-type="podcast">
+      <!-- BIG PODCAST card -->
+      <a href="#" class="mcard pod-large" data-type="podcast">
         <div class="mtype">Подкаст</div>
+        <span class="ep-info">новые эпизоды раз в две недели</span>
         <h4>«Белка и Стрелка»</h4>
-        <p>про науку, мозг и поведение, простым языком</p>
+        <p>Про науку, мозг и поведение — простым языком.</p>
+        <div class="player">
+          <div class="play-btn" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
+          </div>
+          <svg class="waveform" viewBox="0 0 260 36" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="currentColor">
+              <rect x="0" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="6" y="6" width="3" height="24" rx="1.5"/>
+              <rect x="12" y="10" width="3" height="16" rx="1.5"/>
+              <rect x="18" y="2" width="3" height="32" rx="1.5"/>
+              <rect x="24" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="30" y="8" width="3" height="20" rx="1.5"/>
+              <rect x="36" y="11" width="3" height="14" rx="1.5"/>
+              <rect x="42" y="4" width="3" height="28" rx="1.5"/>
+              <rect x="48" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="54" y="2" width="3" height="32" rx="1.5"/>
+              <rect x="60" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="66" y="9" width="3" height="18" rx="1.5"/>
+              <rect x="72" y="11" width="3" height="14" rx="1.5"/>
+              <rect x="78" y="6" width="3" height="24" rx="1.5"/>
+            </g>
+            <g fill="currentColor" class="dim">
+              <rect x="84" y="10" width="3" height="16" rx="1.5"/>
+              <rect x="90" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="96" y="7" width="3" height="22" rx="1.5"/>
+              <rect x="102" y="12" width="3" height="12" rx="1.5"/>
+              <rect x="108" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="114" y="9" width="3" height="18" rx="1.5"/>
+              <rect x="120" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="126" y="11" width="3" height="14" rx="1.5"/>
+              <rect x="132" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="138" y="8" width="3" height="20" rx="1.5"/>
+              <rect x="144" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="150" y="11" width="3" height="14" rx="1.5"/>
+              <rect x="156" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="162" y="9" width="3" height="18" rx="1.5"/>
+              <rect x="168" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="174" y="11" width="3" height="14" rx="1.5"/>
+              <rect x="180" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="186" y="13" width="3" height="10" rx="1.5"/>
+              <rect x="192" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="198" y="15" width="3" height="6" rx="1.5"/>
+              <rect x="204" y="14" width="3" height="8" rx="1.5"/>
+              <rect x="210" y="15" width="3" height="6" rx="1.5"/>
+              <rect x="216" y="16" width="3" height="4" rx="1.5"/>
+              <rect x="222" y="15" width="3" height="6" rx="1.5"/>
+              <rect x="228" y="16" width="3" height="4" rx="1.5"/>
+              <rect x="234" y="17" width="3" height="2" rx="1.5"/>
+              <rect x="240" y="16" width="3" height="4" rx="1.5"/>
+            </g>
+          </svg>
+        </div>
       </a>
 
-      <a href="#" class="mcard podcast" data-type="podcast">
+      <!-- FEATURED TEST card -->
+      <a href="#" class="mcard test-large" data-type="test">
+        <div class="mtype">Тест</div>
+        <span class="ep-info">скоро</span>
+        <h4>Профиль исполнительных навыков</h4>
+        <div class="quote">«Часто откладываю задачу, хотя точно знаю, что её надо сделать»</div>
+        <p>Короткий опрос — посмотреть, какие навыки у вас сильнее, а где провал. Готовится — следите.</p>
+        <span class="test-cta">Узнать первой <span class="arrow">→</span></span>
+      </a>
+
+      <!-- SMALL PODCAST card -->
+      <a href="#" class="mcard pod-small" data-type="podcast">
         <div class="mtype">Подкаст</div>
         <h4>«Выйти из тени»</h4>
-        <p>отдельный проект на близкие темы</p>
+        <p>отдельный проект — для тех, кому интересно копать глубже</p>
+        <div class="player">
+          <div class="play-btn" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
+          </div>
+          <svg class="waveform" viewBox="0 0 200 24" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="currentColor">
+              <rect x="0" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="5" y="5" width="2.5" height="14" rx="1"/>
+              <rect x="10" y="7" width="2.5" height="10" rx="1"/>
+              <rect x="15" y="2" width="2.5" height="20" rx="1"/>
+              <rect x="20" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="25" y="5" width="2.5" height="14" rx="1"/>
+              <rect x="30" y="8" width="2.5" height="8" rx="1"/>
+              <rect x="35" y="3" width="2.5" height="18" rx="1"/>
+              <rect x="40" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="45" y="6" width="2.5" height="12" rx="1"/>
+            </g>
+            <g fill="currentColor" opacity=".3">
+              <rect x="50" y="8" width="2.5" height="8" rx="1"/>
+              <rect x="55" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="60" y="7" width="2.5" height="10" rx="1"/>
+              <rect x="65" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="70" y="10" width="2.5" height="4" rx="1"/>
+              <rect x="75" y="9" width="2.5" height="6" rx="1"/>
+              <rect x="80" y="10" width="2.5" height="4" rx="1"/>
+              <rect x="85" y="11" width="2.5" height="2" rx="1"/>
+              <rect x="90" y="10" width="2.5" height="4" rx="1"/>
+              <rect x="95" y="11" width="2.5" height="2" rx="1"/>
+              <rect x="100" y="11" width="2.5" height="2" rx="1"/>
+            </g>
+          </svg>
+        </div>
       </a>
 
-      <a href="#" class="mcard test" data-type="test">
-        <div class="mtype">Тест</div>
-        <h4>Тестирование</h4>
-        <p>короткие опросники — посмотреть, что у вас с навыками</p>
-      </a>
-
-      <a href="#" class="mcard" data-type="practice">
+      <!-- PRACTICE cards -->
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">01</span>
         <h4>Метапознание</h4>
         <p>как замечать, что у тебя в голове</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">02</span>
         <h4>Инициация действия</h4>
         <p>как прям брать и делать</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">03</span>
         <h4>Контроль импульсов</h4>
         <p>как не дать себе всё сломать</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">04</span>
         <h4>Ощущение времени</h4>
         <p>как не терять часы</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">05</span>
         <h4>Планирование</h4>
         <p>как прям брать и планировать</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">06</span>
         <h4>Управление стрессом</h4>
         <p>как не сгореть на ровном месте</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">07</span>
         <h4>Поддержание внимания</h4>
         <p>как не уплывать каждые 5 минут</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard" data-type="practice">
+      <a href="#" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
+        <span class="pnum">08</span>
         <h4>Рабочая память</h4>
         <p>как помнить всякое</p>
+        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
       <div class="mcard lecture placeholder" data-type="lecture">
@@ -578,93 +911,123 @@
   <section id="services" class="reveal">
     <div class="section-head">
       <div>
-        <h2>Консультации</h2>
-        <p class="section-sub">Форматы работы со взрослыми с СДВГ — от диагностики до группы</p>
+        <h2 class="display">Консультации</h2>
+        <p class="section-lead">Три формата — от первого «кажется, это про меня» до устойчивых изменений в группе. Начните с диагностики или сразу с того, что подходит.</p>
       </div>
-      <a href="https://t.me/" class="btn btn-ghost" style="font-size:13px; padding:10px 16px">Написать в Telegram</a>
     </div>
 
     <div class="formats">
+
       <article class="card">
-        <span class="ftype">01 · Старт</span>
+        <div class="ftype"><span class="num">01</span><span class="sep">—</span><span>Старт</span></div>
         <h3>Диагностика</h3>
-        <p class="summary">Разберёмся, есть ли у вас СДВГ, и обсудим конкретные дальнейшие шаги коррекции навыков.</p>
+        <p class="summary">Понять, СДВГ ли это и что с этим делать дальше.</p>
+
+        <div class="fit">
+          <p class="fit-label">Подойдёт, если</p>
+          <ul class="fit-list">
+            <li>Подозреваете у себя СДВГ, но не уверены</li>
+            <li>Хотите официальное заключение</li>
+            <li>Не знаете, с чего начинать работу</li>
+          </ul>
+        </div>
+
         <div class="price-block">
           <div class="pl">Стоимость встречи</div>
           <div class="pv">40 €<span class="rub">≈ 4 000 ₽</span></div>
         </div>
+
         <p class="inc-label">Что включено</p>
         <ul class="inc">
           <li>Диагностическое интервью по DIVA-5: 1–3 встречи</li>
           <li>Письменное заключение и рекомендации</li>
-          <li>При необходимости — направление к психиатру для фармакотерапии</li>
+          <li>При необходимости — направление к психиатру</li>
         </ul>
-        <a href="https://t.me/" class="btn btn-primary card-cta">Записаться <span class="arrow">→</span></a>
-      </article>
 
-      <article class="card">
-        <span class="ftype">02 · Индивидуально</span>
-        <h3>Консультации</h3>
-        <p class="summary">Разберёмся, какие именно навыки дают сбой — инициация, планирование, устойчивое внимание — и подберём стратегии под вас.</p>
-        <div class="price-block">
-          <div class="pl">Пакет из 5 встреч</div>
-          <div class="pv">350 €<span class="rub">≈ 35 000 ₽</span></div>
-        </div>
-        <p class="inc-label">Что включено</p>
-        <ul class="inc">
-          <li>5 индивидуальных сессий по 60 минут</li>
-          <li>Поддержка между встречами при необходимости</li>
-          <li>Фокус на устойчивых поведенческих изменениях, а не разовых решениях</li>
-          <li>Индивидуальные техники под ваш стиль жизни и когнитивные особенности</li>
-        </ul>
-        <a href="https://t.me/" class="btn btn-primary card-cta">Записаться на пакет <span class="arrow">→</span></a>
+        <a href="https://t.me/" class="card-cta">Записаться на интервью <span class="arrow">→</span></a>
       </article>
 
       <article class="card featured">
         <!-- goose mascot -->
         <svg class="card-mascot" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <!-- shadow -->
-          <ellipse cx="52" cy="100" rx="28" ry="3" fill="#141414" opacity=".08"/>
-          <!-- body -->
-          <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#141414" stroke-width="2.5"/>
-          <!-- wing -->
-          <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#fff5b8" stroke="#141414" stroke-width="2" stroke-linejoin="round"/>
-          <!-- wing detail -->
-          <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#141414" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- neck -->
-          <path d="M 28 62 Q 18 38 32 22" stroke="#141414" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
-          <!-- head -->
-          <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#141414" stroke-width="2.5"/>
-          <!-- beak -->
-          <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#141414" stroke-width="1.5" stroke-linejoin="round"/>
-          <!-- eye -->
-          <circle cx="35" cy="20" r="1.6" fill="#141414"/>
-          <!-- legs -->
+          <ellipse cx="52" cy="100" rx="28" ry="3" fill="#000" opacity=".4"/>
+          <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+          <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 28 62 Q 18 38 32 22" stroke="#0d0d0d" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
+          <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+          <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="35" cy="20" r="1.6" fill="#0d0d0d"/>
           <line x1="46" y1="93" x2="44" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
           <line x1="58" y1="93" x2="60" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
-          <!-- feet -->
           <path d="M 38 105 L 50 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
           <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
         </svg>
 
-        <span class="ftype">03 · Группа</span>
+        <span class="choice-badge">Выбор Вали</span>
+        <div class="ftype"><span class="num">02</span><span class="sep">—</span><span>Группа</span></div>
         <h3>Групповая работа</h3>
         <span class="ribbon">стаей идти веселее</span>
-        <p class="summary">Формат для тех, кому нужна поддержка и структура, но индивидуальные сессии сейчас не подходят.</p>
+        <p class="summary">Структура курса и поддержка таких же, как вы. Самый живой формат.</p>
+
+        <div class="fit">
+          <p class="fit-label">Подойдёт, если</p>
+          <ul class="fit-list">
+            <li>Хотите формат дешевле, чем индивидуальный</li>
+            <li>Нужна структура и регулярность</li>
+            <li>Готовы делиться и слушать других</li>
+          </ul>
+        </div>
+
         <div class="price-block">
           <div class="pl">Курс из 6 встреч</div>
-          <div class="pv">240 €<span class="rub">≈ 24 000 ₽</span></div>
+          <div class="pv">240 €<span class="per-unit">· 40 € за встречу</span><span class="rub">≈ 24 000 ₽</span></div>
         </div>
+
         <p class="inc-label">Что включено</p>
         <ul class="inc">
           <li>6 встреч в мини-группе по 1.5 часа, раз в неделю</li>
           <li>Домашние задания и сопровождение в чате между встречами</li>
           <li>Живой формат: обсуждения, упражнения, обратная связь</li>
+          <li>Закрытое сообщество выпускников после курса</li>
         </ul>
-        <a href="https://t.me/" class="btn btn-primary card-cta">Присоединиться <span class="arrow">→</span></a>
+
+        <a href="https://t.me/" class="card-cta">Записаться в поток <span class="arrow">→</span></a>
+        <div class="stream-info">ближайший поток: уточняется · напишите, чтобы попасть в лист ожидания</div>
       </article>
+
+      <article class="card">
+        <div class="ftype"><span class="num">03</span><span class="sep">—</span><span>Индивидуально</span></div>
+        <h3>Консультации</h3>
+        <p class="summary">Тренируем конкретные навыки под вашу жизнь.</p>
+
+        <div class="fit">
+          <p class="fit-label">Подойдёт, если</p>
+          <ul class="fit-list">
+            <li>Диагноз уже есть или диагностика не нужна</li>
+            <li>Хотите устойчивые изменения, а не разовый совет</li>
+            <li>Нужен темп один-на-один, без группы</li>
+          </ul>
+        </div>
+
+        <div class="price-block">
+          <div class="pl">Пакет из 5 встреч</div>
+          <div class="pv">350 €<span class="per-unit">· 70 € за сессию</span><span class="rub">≈ 35 000 ₽</span></div>
+        </div>
+
+        <p class="inc-label">Что включено</p>
+        <ul class="inc">
+          <li>5 индивидуальных сессий по 60 минут</li>
+          <li>Поддержка между встречами при необходимости</li>
+          <li>Фокус на устойчивых изменениях</li>
+          <li>Индивидуальные техники под ваш контекст</li>
+        </ul>
+
+        <a href="https://t.me/" class="card-cta">Обсудить запрос <span class="arrow">→</span></a>
+      </article>
+
     </div>
-    <p class="section-sub" style="margin-top:18px">Оплата в ₽ возможна по договорённости — пишите в Telegram</p>
+    <p class="section-sub" style="margin-top:24px; text-align:center">Оплата в ₽ возможна по договорённости — пишите в Telegram</p>
   </section>
 
   <!-- FAQ -->
@@ -704,6 +1067,11 @@
       <div class="faq-item">
         <button class="faq-q" type="button">Можно ли прийти, если у меня есть другие диагнозы помимо СДВГ?<span class="plus">+</span></button>
         <div class="faq-a">Да. Мне важно знать о других диагнозах и состояниях — они могут влиять на внимание, энергию, тревожность, сон, мотивацию и на то, как работают исполнительные навыки.<br><br>Это не проблема: у многих моих клиентов есть коморбидные состояния или другие диагнозы. Мы будем учитывать это в работе и подбирать стратегии аккуратно, под вашу реальную ситуацию.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">Подходит ли это, если у меня не СДВГ, а просто хаос?<span class="plus">+</span></button>
+        <div class="faq-a">Да, подходит. Сбои в исполнительных навыках бывают и у людей без СДВГ — после выгорания, длительного стресса, в эмиграции, после ковида. Мы можем разобраться, что именно у вас происходит, и работать с конкретными точками сбоя.</div>
       </div>
 
       <div class="faq-item">
