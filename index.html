@@ -92,17 +92,19 @@
   }
   .badge.tier1::before{background:var(--ink); opacity:1; width:5px; height:5px}
 
-  /* Book badge — clickable, with icon */
+  /* Book badge — black, parallel emphasis to ADHD-CCSP */
   a.badge.book{
+    background:#141414; color:#fff; border-color:#141414;
     text-decoration:none;
     transition:background .2s, transform .15s;
-    max-width:380px;
+    max-width:420px;
+    font-weight:500;
   }
   a.badge.book::before{
     content:"📖"; background:transparent; width:auto; height:auto; opacity:1;
     font-size:13px;
   }
-  a.badge.book:hover{transform:translateY(-1px); background:var(--line)}
+  a.badge.book:hover{transform:translateY(-1px); background:#000}
   a.badge.book .title-text{
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
@@ -280,41 +282,41 @@
   .mcard h4{font-size:16px; font-weight:600; margin:0 0 6px; line-height:1.3}
   .mcard p{font-size:13px; color:var(--soft); line-height:1.5; margin:0}
 
-  /* FEATURED PODCAST — large dark card (span 2 cols as in reference) */
+  /* FEATURED PODCAST — wide banner-like, span 2 cols but compact height */
   .mcard.pod-large{
     grid-column: span 2;
     background:#0d0d0d; color:#fff; border-color:#0d0d0d;
-    padding:28px;
-    min-height:280px;
+    padding:18px 22px;
+    min-height:0;
     overflow:hidden;
   }
   .mcard.pod-large:hover{background:#161616; border-color:#0d0d0d; box-shadow:0 12px 32px -16px rgba(0,0,0,.4)}
-  .mcard.pod-large .mtype{color:var(--accent); margin-bottom:6px}
-  .mcard.pod-large .mtype::before{background:var(--accent)}
+  .mcard.pod-large .mtype{color:var(--accent); margin-bottom:4px; font-size:10px}
+  .mcard.pod-large .mtype::before{background:var(--accent); width:6px; height:6px}
   .mcard.pod-large .ep-info{
-    position:absolute; top:28px; right:32px;
-    font-size:12px; color:#7a7a7a; letter-spacing:.04em;
+    position:absolute; top:18px; right:22px;
+    font-size:11px; color:#7a7a7a; letter-spacing:.04em;
   }
   .mcard.pod-large h4{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:30px; font-weight:600; letter-spacing:-.015em; color:#fff;
-    margin:0 0 6px; line-height:1.1;
+    font-size:20px; font-weight:600; letter-spacing:-.015em; color:#fff;
+    margin:2px 0 4px; line-height:1.15;
   }
-  .mcard.pod-large .ep{font-size:13px; color:#9a9a9a; margin:0 0 12px}
-  .mcard.pod-large p{color:#9a9a9a; max-width:48ch; margin:0 0 22px}
+  .mcard.pod-large .ep{font-size:12px; color:#9a9a9a; margin:0 0 6px}
+  .mcard.pod-large p{color:#8a8a8a; font-size:12px; margin:0 0 14px; max-width:48ch; line-height:1.45}
   .mcard.pod-large .player{
-    display:flex; align-items:center; gap:14px;
+    display:flex; align-items:center; gap:12px;
     margin-top:auto;
   }
   .mcard.pod-large .play-btn{
-    width:46px; height:46px; border-radius:50%;
+    width:32px; height:32px; border-radius:50%;
     background:var(--accent); color:#0d0d0d;
     display:flex; align-items:center; justify-content:center;
     flex-shrink:0; transition:transform .15s var(--easing);
   }
   .mcard.pod-large:hover .play-btn{transform:scale(1.05)}
   .mcard.pod-large .waveform{
-    flex:1; height:36px; color:var(--accent);
+    flex:1; height:22px; color:var(--accent);
     overflow:hidden;
   }
   .mcard.pod-large .waveform .dim{opacity:.3}
@@ -380,6 +382,17 @@
   .mcard.test-large:hover .test-cta .arrow{transform:translateX(3px)}
 
   /* PRACTICE cards: number + footer */
+  .mcard.practice.alt{
+    background:#f5f3ee;
+    border-color:#e8e4dc;
+  }
+  .mcard.practice.alt:hover{
+    background:#efece5;
+    border-color:var(--ink);
+  }
+  .mcard.practice.alt .pnum{color:#cdc8bc}
+  .mcard.practice.alt .pfoot{border-top-color:#dad5c8}
+
   .mcard.practice .pnum{
     position:absolute; top:20px; right:22px;
     font-family:"Charter","Iowan Old Style","Georgia",serif;
@@ -706,18 +719,18 @@
       <p class="lead">
         Я врач и ученый в эмиграции. Работаю с СДВГ, исполнительными навыками и когнитивным здоровьем.
       </p>
-      <!-- Tier 1: ключевое позиционирование (ярко-жёлтые) -->
+      <!-- Tier 1: ключевое позиционирование (ярко-жёлтый) + книга (чёрная) -->
       <div class="badges">
         <span class="badge tier1">ADHD-CCSP</span>
-        <span class="badge tier1">специалист по СДВГ взрослых</span>
-        <span class="badge tier1">врач</span>
-        <span class="badge tier1">нейрофизиолог</span>
-      </div>
-      <!-- Tier 2: доп. факты + книга -->
-      <div class="badges-secondary">
         <a class="badge book" href="https://www.ozon.ru/product/vnimanie-i-pamyat-i-pochemu-oni-rabotali-luchshe-poka-ty-vse-ne-isportil-gruzdeva-valentina-765884596/?at=PjtJ2GAOrcr8jrx3T9gq8zGhprWlYWsYxXJgkh931P6j" target="_blank" rel="noopener">
           <span class="title-text">«Внимание и память, и почему они работали лучше, пока ты все не испортил»</span>
         </a>
+      </div>
+      <!-- Tier 2: остальное в нейтрально-сером -->
+      <div class="badges-secondary">
+        <span class="badge">специалист по СДВГ взрослых</span>
+        <span class="badge">врач</span>
+        <span class="badge">нейрофизиолог</span>
         <span class="badge">co-founder INCF</span>
       </div>
       <div class="cta-row">
@@ -912,7 +925,7 @@
         <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="#" class="mcard practice alt" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">03</span>
         <h4>Контроль импульсов</h4>
@@ -936,7 +949,7 @@
         <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="#" class="mcard practice alt" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">06</span>
         <h4>Управление стрессом</h4>
