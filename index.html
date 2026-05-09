@@ -335,37 +335,42 @@
     text-align:right;
   }
 
-  /* SMALL PODCAST — slim banner in 1 col, same family as pod-large */
+  /* SMALL PODCAST — same dimensions as practice cards, dark theme */
   .mcard.pod-small{
     background:#1a1a1a; color:#fff; border-color:#1a1a1a;
-    padding:12px 16px;
-    display:flex; flex-direction:row; align-items:center; gap:12px;
-    flex-wrap:nowrap; min-height:0; overflow:hidden;
+    padding:20px;
+    display:flex; flex-direction:column;
   }
   .mcard.pod-small:hover{background:#222; border-color:#1a1a1a}
+  .mcard.pod-small .mtype{
+    color:var(--accent); margin-bottom:8px; font-size:11px;
+    display:inline-flex; align-items:center; gap:6px;
+    letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  }
+  .mcard.pod-small .mtype::before{
+    content:""; width:8px; height:8px; border-radius:50%; background:var(--accent);
+  }
+  .mcard.pod-small h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; color:#fff; line-height:1.2; font-weight:600;
+    margin:0 0 6px;
+  }
+  .mcard.pod-small p{font-size:12px; color:#8a8a8a; margin:0 0 16px; line-height:1.45}
+  .mcard.pod-small .player{
+    margin-top:auto;
+    display:flex; align-items:center; gap:10px;
+  }
   .mcard.pod-small .play-btn{
     width:28px; height:28px; border-radius:50%;
     background:var(--accent); color:#0d0d0d;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
   }
-  .mcard.pod-small .pod-info{
-    flex:0 1 auto; min-width:0;
-    display:flex; flex-direction:column; gap:1px;
+  .mcard.pod-small .waveform{flex:1; height:18px; color:var(--accent); opacity:.85}
+
+  /* Test card spans 2 rows so pod-small can match practice cards in row 2 */
+  .mcard.test-large{
+    grid-row: span 2;
   }
-  .mcard.pod-small .pod-info .mtype{
-    display:inline-flex; align-items:center; gap:5px;
-    color:var(--accent); font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
-    margin:0;
-  }
-  .mcard.pod-small .pod-info .mtype::before{
-    content:""; width:5px; height:5px; border-radius:50%; background:var(--accent);
-  }
-  .mcard.pod-small h4{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:13px; color:#fff; line-height:1.2; font-weight:600;
-    margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .mcard.pod-small .waveform{flex:1; height:16px; color:var(--accent); opacity:.85; min-width:50px}
 
   /* FEATURED TEST — light, prominent */
   .mcard.test-large{
@@ -918,16 +923,16 @@
         <span class="test-cta">Узнать первой <span class="arrow">→</span></span>
       </a>
 
-      <!-- SMALL PODCAST card — slim banner, single column -->
+      <!-- SMALL PODCAST card — normal-sized dark card, matches practice card height -->
       <a href="#" class="mcard pod-small" data-type="podcast">
-        <div class="play-btn" aria-hidden="true">
-          <svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
-        </div>
-        <div class="pod-info">
-          <div class="mtype">Подкаст</div>
-          <h4>«Выйти из тени»</h4>
-        </div>
-        <svg class="waveform" viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true">
+        <div class="mtype">Подкаст</div>
+        <h4>«Выйти из тени»</h4>
+        <p>отдельный проект — для тех, кому интересно копать глубже</p>
+        <div class="player">
+          <div class="play-btn" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
+          </div>
+          <svg class="waveform" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true">
             <g fill="currentColor">
               <rect x="0" y="9" width="2.5" height="6" rx="1"/>
               <rect x="5" y="5" width="2.5" height="14" rx="1"/>
@@ -954,6 +959,7 @@
               <rect x="100" y="11" width="2.5" height="2" rx="1"/>
             </g>
           </svg>
+        </div>
       </a>
 
       <!-- PRACTICE cards -->
