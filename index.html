@@ -637,33 +637,86 @@
   .step h4{font-size:14px; font-weight:600; margin:0 0 4px; line-height:1.3}
   .step p{font-size:12px; color:var(--muted); margin:0; line-height:1.4}
 
-  /* JOIN — group registration form */
-  .join-wrap{
+  /* DIALOGS — modal popups */
+  dialog{
+    border:none; border-radius:var(--r-lg); padding:0;
+    width:min(720px, 92vw);
+    max-height:90vh;
     background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:var(--r-lg);
-    padding:8px;
+    color:var(--ink);
+    box-shadow:0 24px 64px -8px rgba(0,0,0,.35);
     overflow:hidden;
-    box-shadow:var(--shadow-soft);
   }
-  .join-wrap iframe{
-    display:block;
-    width:100%;
-    border:0;
-    border-radius:calc(var(--r-lg) - 6px);
-    background:#fff;
+  dialog::backdrop{
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(4px);
+  }
+  dialog[open]{
+    animation:dialogIn .22s var(--easing) both;
+  }
+  @keyframes dialogIn{
+    from { opacity:0; transform:translateY(20px) scale(.98); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+  .dialog-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 26px 16px;
+    border-bottom:1px solid var(--line);
+    gap:14px;
+  }
+  .dialog-head h3{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:22px; font-weight:600; letter-spacing:-.01em;
+    margin:0; line-height:1.2;
+  }
+  .dialog-close{
+    width:32px; height:32px; border-radius:50%;
+    background:var(--line-soft); border:none; cursor:pointer;
+    font-size:18px; line-height:1; color:var(--ink); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:inherit; padding:0;
+    transition:background .15s, transform .15s;
+  }
+  .dialog-close:hover{background:var(--line); transform:rotate(90deg)}
+  .dialog-body{
+    padding:22px 26px 26px;
+    overflow-y:auto;
+    max-height:calc(90vh - 80px);
+  }
+  .dialog-body p{margin:0 0 12px; line-height:1.6; font-size:15px}
+  .dialog-body iframe{
+    display:block; width:100%; border:0;
     min-height:600px;
   }
-  .join-fallback{
-    margin-top:20px;
-    text-align:center;
-    font-size:14px; color:var(--muted);
+  .dialog-body ul{margin:8px 0 14px; padding-left:22px; font-size:14px; line-height:1.6; color:var(--soft)}
+  .dialog-body ul li{margin-bottom:6px}
+
+  /* Listening platforms grid inside dialog */
+  .platforms-label{
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); font-weight:700;
+    margin:18px 0 10px;
   }
-  .join-fallback a{
-    color:var(--ink); font-weight:600;
-    border-bottom:2px solid var(--accent);
-    text-decoration:none; padding-bottom:1px;
+  .platforms{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+    gap:8px;
   }
+  .platforms a{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 14px;
+    border:1px solid var(--line); border-radius:10px;
+    font-size:13px; font-weight:500;
+    color:var(--ink); text-decoration:none;
+    background:var(--paper);
+    transition:border-color .15s, background .15s, transform .15s;
+  }
+  .platforms a:hover{
+    border-color:var(--ink); background:var(--line-soft); transform:translateY(-1px);
+  }
+  .platforms a .pico{font-size:16px; flex-shrink:0}
+  .platforms a .ptxt{display:flex; flex-direction:column; gap:0; min-width:0}
+  .platforms a .ptxt strong{font-weight:600; font-size:13px}
+  .platforms a .ptxt small{font-size:11px; color:var(--muted)}
 
   /* FAQ */
   .faq{display:flex; flex-direction:column}
@@ -762,7 +815,6 @@
       <a href="#start">С чего начать</a>
       <a href="#materials">Материалы</a>
       <a href="#services">Консультации</a>
-      <a href="#join">Запись</a>
       <a href="#faq">Вопросы</a>
     </nav>
   </div>
@@ -789,7 +841,7 @@
         <span class="badge">co-founder INCF</span>
       </div>
       <div class="cta-row">
-        <a href="https://t.me/" class="btn btn-primary">
+        <a href="https://t.me/dr_gruzdeva" class="btn btn-primary">
           Перейти в Telegram <span class="arrow">→</span>
         </a>
         <a href="#start" class="btn btn-ghost">С чего начать <span class="arrow">→</span></a>
@@ -855,7 +907,7 @@
     <div class="mat-grid" id="matGrid">
 
       <!-- BIG PODCAST card — slim banner -->
-      <a href="#" class="mcard pod-large" data-type="podcast">
+      <a href="#" data-dialog="belka-dialog" class="mcard pod-large" data-type="podcast">
         <div class="play-btn" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M2 1.5v11l10-5.5z"/></svg>
         </div>
@@ -914,17 +966,17 @@
       </a>
 
       <!-- FEATURED TEST card -->
-      <a href="#" class="mcard test-large" data-type="test">
+      <a href="https://drive.google.com/file/d/1NtE4WXPr-Tjw2XIaPbiZWx1rKTSVoZWg/view?usp=sharing" target="_blank" rel="noopener" class="mcard test-large" data-type="test">
         <div class="mtype">Тест</div>
-        <span class="ep-info">скоро</span>
+        <span class="ep-info">PDF</span>
         <h4>Профиль исполнительных навыков</h4>
         <div class="quote">«Часто откладываю задачу, хотя точно знаю, что её надо сделать»</div>
-        <p>Короткий опрос — посмотреть, какие навыки у вас сильнее, а где провал. Готовится — следите.</p>
-        <span class="test-cta">Узнать первой <span class="arrow">→</span></span>
+        <p>Опросник для самодиагностики — посмотреть, какие навыки у вас сильнее, а где провал.</p>
+        <span class="test-cta">Открыть тест <span class="arrow">→</span></span>
       </a>
 
       <!-- SMALL PODCAST card — normal-sized dark card, matches practice card height -->
-      <a href="#" class="mcard pod-small" data-type="podcast">
+      <a href="#" data-dialog="vyiti-dialog" class="mcard pod-small" data-type="podcast">
         <div class="mtype">Подкаст</div>
         <h4>«Выйти из тени»</h4>
         <p>отдельный проект — для тех, кому интересно копать глубже</p>
@@ -1073,7 +1125,7 @@
           <li>При необходимости — направление к психиатру</li>
         </ul>
 
-        <a href="https://t.me/" class="card-cta">Записаться на интервью <span class="arrow">→</span></a>
+        <a href="https://t.me/dr_gruzdeva" class="card-cta">Записаться на интервью <span class="arrow">→</span></a>
       </article>
 
       <article class="card featured">
@@ -1120,7 +1172,7 @@
           <li>Закрытое сообщество выпускников после курса</li>
         </ul>
 
-        <a href="#join" class="card-cta">Записаться в поток <span class="arrow">→</span></a>
+        <a href="#" data-dialog="join-dialog" class="card-cta">Записаться в поток <span class="arrow">→</span></a>
         <div class="stream-info">ближайший поток: уточняется · напишите, чтобы попасть в лист ожидания</div>
       </article>
 
@@ -1151,34 +1203,13 @@
           <li>Индивидуальные техники под ваш контекст</li>
         </ul>
 
-        <a href="https://t.me/" class="card-cta">Обсудить запрос <span class="arrow">→</span></a>
+        <a href="https://t.me/dr_gruzdeva" class="card-cta">Обсудить запрос <span class="arrow">→</span></a>
       </article>
 
     </div>
     <p class="section-sub" style="margin-top:24px; text-align:center">Оплата в ₽ возможна по договорённости — пишите в Telegram</p>
   </section>
 
-  <!-- JOIN STREAM — group registration form -->
-  <section id="join" class="reveal">
-    <div class="section-head">
-      <div>
-        <h2 class="display">Записаться в поток</h2>
-        <p class="section-lead">Заполните анкету предзаписи — я свяжусь с вами в Telegram, расскажу про ближайший поток и пришлю детали.</p>
-      </div>
-    </div>
-
-    <div class="join-wrap">
-      <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform?embedded=true"
-        title="Анкета предзаписи в группу"
-        height="900"
-        loading="lazy">
-        Загрузка анкеты…
-      </iframe>
-    </div>
-
-    <p class="join-fallback">Не открывается? Напишите напрямую в <a href="https://t.me/" target="_blank" rel="noopener">Telegram</a></p>
-  </section>
 
   <!-- FAQ -->
   <section id="faq" class="reveal">
@@ -1234,18 +1265,124 @@
   <footer>
     <div>© <span id="y"></span> Gruzdeva V.А. · be smart</div>
     <div>
-      <a href="https://t.me/">Telegram</a> &nbsp;·&nbsp;
-      <a href="#">INCF</a> &nbsp;·&nbsp;
+      <a href="https://t.me/dr_gruzdeva">Telegram</a> &nbsp;·&nbsp;
+      <a href="https://incf.eu/" target="_blank" rel="noopener">INCF</a> &nbsp;·&nbsp;
       <a href="https://www.ozon.ru/product/vnimanie-i-pamyat-i-pochemu-oni-rabotali-luchshe-poka-ty-vse-ne-isportil-gruzdeva-valentina-765884596/?at=PjtJ2GAOrcr8jrx3T9gq8zGhprWlYWsYxXJgkh931P6j" target="_blank" rel="noopener">Книга</a>
     </div>
   </footer>
 </div>
 
 <!-- FLOATING CTA -->
-<a href="https://t.me/" class="fab" id="fab" aria-label="Написать в Telegram">
+<a href="https://t.me/dr_gruzdeva" class="fab" id="fab" aria-label="Написать в Telegram">
   <span class="fab-text">Написать в Telegram</span>
   <span class="arrow">→</span>
 </a>
+
+<!-- ============== DIALOGS ============== -->
+
+<!-- JOIN: pre-registration form -->
+<dialog id="join-dialog">
+  <div class="dialog-head">
+    <h3>Записаться в поток</h3>
+    <button class="dialog-close" aria-label="Закрыть">×</button>
+  </div>
+  <div class="dialog-body">
+    <p>Заполните анкету предзаписи — я свяжусь с вами в Telegram, расскажу про ближайший поток и пришлю детали.</p>
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform?embedded=true"
+      title="Анкета предзаписи в группу"
+      height="700"
+      loading="lazy">
+      Загрузка анкеты…
+    </iframe>
+    <p style="margin-top:14px; font-size:13px; color:var(--muted); text-align:center">Не открывается? Напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener" style="color:var(--ink); border-bottom:2px solid var(--accent); text-decoration:none">Telegram</a></p>
+  </div>
+</dialog>
+
+<!-- BELKA podcast info -->
+<dialog id="belka-dialog">
+  <div class="dialog-head">
+    <h3>«Белка и Стрелка»</h3>
+    <button class="dialog-close" aria-label="Закрыть">×</button>
+  </div>
+  <div class="dialog-body">
+    <p>Подкаст про науку, мозг и поведение — простым языком. Под каждый эпизод — набор техник или рекомендаций для работы с навыком.</p>
+    <p>Если понравится, мы будем благодарны за отзывы на Apple Podcasts, репосты и звёздочки 🧡</p>
+
+    <div class="platforms-label">Слушать</div>
+    <div class="platforms">
+      <a href="https://t.me/mavestreambot/app?startapp=belkastrelkapodcast_146" target="_blank" rel="noopener">
+        <span class="pico">📱</span>
+        <span class="ptxt"><strong>Telegram</strong><small>через Mave</small></span>
+      </a>
+      <a href="https://open.spotify.com/show/4SMRPI3JsVlZh0BS1L3q1y" target="_blank" rel="noopener">
+        <span class="pico">🎧</span>
+        <span class="ptxt"><strong>Spotify</strong></span>
+      </a>
+      <a href="https://podcasts.apple.com/us/podcast/белка-и-стрелка/id1495672154?uo=4" target="_blank" rel="noopener">
+        <span class="pico">🎙</span>
+        <span class="ptxt"><strong>Apple Podcasts</strong></span>
+      </a>
+      <a href="https://www.youtube.com/channel/UCdnYFyi6tNGmD7335D6JOBQ" target="_blank" rel="noopener">
+        <span class="pico">▶︎</span>
+        <span class="ptxt"><strong>YouTube</strong></span>
+      </a>
+      <a href="https://music.yandex.com/album/10489435" target="_blank" rel="noopener">
+        <span class="pico">🎵</span>
+        <span class="ptxt"><strong>Яндекс Музыка</strong></span>
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<!-- VYITI podcast info -->
+<dialog id="vyiti-dialog">
+  <div class="dialog-head">
+    <h3>«Выйти из тени» — выпуск с Валентиной</h3>
+    <button class="dialog-close" aria-label="Закрыть">×</button>
+  </div>
+  <div class="dialog-body">
+    <p>Разговор о СДВГ с точки зрения нейрофизиологии. Две части. Разбираем:</p>
+    <ul>
+      <li>что именно «ломается» не в структуре, а в регуляции работы мозга при СДВГ;</li>
+      <li>как префронтальная кора и лобные доли влияют на внимание, мотивацию и движение;</li>
+      <li>как из фундаментальных исследований «собрать» рабочие техники — от ритуалов и визуализации до метапланирования.</li>
+    </ul>
+    <p>Поговорили и о вечном: «СДВГ — дар или диагноз?», обсудили жизненные ожидания и культуру «бесконечных списков дел».</p>
+
+    <div class="platforms-label">Слушать</div>
+    <div class="platforms">
+      <a href="https://t.me/mavestreambot/app?startapp=no-more-shadows_46" target="_blank" rel="noopener">
+        <span class="pico">📱</span>
+        <span class="ptxt"><strong>Telegram</strong><small>часть 1</small></span>
+      </a>
+      <a href="https://t.me/mavestreambot/app?startapp=no-more-shadows_43" target="_blank" rel="noopener">
+        <span class="pico">📱</span>
+        <span class="ptxt"><strong>Telegram</strong><small>часть 2</small></span>
+      </a>
+      <a href="https://podcasts.apple.com/ru/podcast/выйти-из-тени/id1685129361?i=1000727444747" target="_blank" rel="noopener">
+        <span class="pico">🎙</span>
+        <span class="ptxt"><strong>Apple Podcasts</strong><small>часть 1</small></span>
+      </a>
+      <a href="https://podcasts.apple.com/ru/podcast/выйти-из-тени/id1685129361?i=1000726434159" target="_blank" rel="noopener">
+        <span class="pico">🎙</span>
+        <span class="ptxt"><strong>Apple Podcasts</strong><small>часть 2</small></span>
+      </a>
+      <a href="https://music.yandex.ru/track/143090474?utm_source=web&utm_medium=copy_link" target="_blank" rel="noopener">
+        <span class="pico">🎵</span>
+        <span class="ptxt"><strong>Яндекс Музыка</strong></span>
+      </a>
+      <a href="https://vk.com/wall-224623996_34" target="_blank" rel="noopener">
+        <span class="pico">💬</span>
+        <span class="ptxt"><strong>VK</strong><small>часть 1</small></span>
+      </a>
+      <a href="https://vk.com/wall-224623996_31" target="_blank" rel="noopener">
+        <span class="pico">💬</span>
+        <span class="ptxt"><strong>VK</strong><small>часть 2</small></span>
+      </a>
+    </div>
+  </div>
+</dialog>
 
 <script>
   document.getElementById('y').textContent = new Date().getFullYear();
@@ -1253,6 +1390,26 @@
   /* FAQ */
   document.querySelectorAll('.faq-q').forEach(q=>{
     q.addEventListener('click', ()=> q.parentElement.classList.toggle('open'));
+  });
+
+  /* DIALOGS — open via [data-dialog], close via X / backdrop / Esc */
+  document.querySelectorAll('[data-dialog]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const dlg = document.getElementById(el.getAttribute('data-dialog'));
+      if(dlg && typeof dlg.showModal === 'function') dlg.showModal();
+    });
+  });
+  document.querySelectorAll('.dialog-close').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('dialog').close());
+  });
+  document.querySelectorAll('dialog').forEach(d => {
+    d.addEventListener('click', e => {
+      const r = d.getBoundingClientRect();
+      if(e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom){
+        d.close();
+      }
+    });
   });
 
   /* SCROLL-IN reveal */
