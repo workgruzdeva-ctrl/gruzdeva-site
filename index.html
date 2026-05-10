@@ -843,12 +843,14 @@
     section{padding:48px 0}
 
     /* CTA-кнопки в столбик на мобиле, чтобы не обрезались */
-    .cta-row{flex-direction:column; align-items:stretch}
-    .cta-row .btn{justify-content:center; width:100%}
+    .cta-row{flex-direction:column; align-items:stretch; width:100%}
+    .cta-row .btn{justify-content:center; width:100%; max-width:100%}
 
-    /* Бейджи — каждый со своей строки, чтобы не вылезали */
-    .badges, .badges-secondary{flex-wrap:wrap}
-    .badge{max-width:100%; min-width:0}
+    /* Бейджи: жёсткое ограничение, чтобы flex-контейнер не расширялся под длинный текст */
+    .badges, .badges-secondary{flex-wrap:wrap; width:100%; max-width:100%}
+    .badge{max-width:100%; min-width:0; flex-shrink:1}
+    /* Книжный бейдж на мобиле — на всю ширину, своя строка */
+    .badge.book{flex-basis:100%; width:100%}
 
     /* sticky bottom on mobile */
     .fab{
