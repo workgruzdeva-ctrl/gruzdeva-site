@@ -809,11 +809,23 @@
     .topnav nav{display:none}
     .start{grid-template-columns:1fr}
     .mat-grid{grid-template-columns:1fr}
-    .mat-grid > .mcard.pod-large{grid-column:span 1; flex-wrap:wrap}
-    .mcard.pod-large{padding:14px 18px}
-    .mcard.pod-large h4{font-size:15px}
+    /* Pod-large на мобиле — column layout, чтобы не было перекрытия */
+    .mat-grid > .mcard.pod-large{grid-column:span 1; flex-direction:column; align-items:flex-start; gap:10px; padding:18px}
+    .mcard.pod-large h4{font-size:16px; white-space:normal}
     .mcard.pod-large .ep-info{display:none}
-    .mcard.test-large{padding:22px; min-height:auto}
+    .mcard.pod-large .player, .mcard.pod-large .pod-info{width:100%}
+    .mcard.pod-large .waveform{min-width:0}
+    /* Test-large на мобиле — не растягивать на 2 строки */
+    .mcard.test-large{padding:22px; min-height:auto; grid-row:auto}
+    .mcard.pod-small{padding:18px}
+    .mcard.lecture{padding:18px}
+    /* Dialog на мобиле — меньше отступы */
+    dialog{width:96vw; max-width:96vw}
+    .dialog-head{padding:16px 18px 14px}
+    .dialog-head h3{font-size:18px}
+    .dialog-body{padding:16px 18px 22px}
+    .dialog-body iframe{min-height:540px}
+    .platforms{grid-template-columns:1fr}
     .formats{grid-template-columns:1fr}
     .card{padding:28px 24px}
     .card h3{font-size:28px}
