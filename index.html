@@ -335,15 +335,15 @@
     text-align:right;
   }
 
-  /* SMALL PODCAST — same dimensions as practice cards, dark theme */
+  /* SMALL PODCAST — белая карточка с жёлтым подкастным акцентом, не перетягивает внимание */
   .mcard.pod-small{
-    background:#1a1a1a; color:#fff; border-color:#1a1a1a;
+    background:var(--paper); color:var(--ink); border-color:var(--line);
     padding:20px;
     display:flex; flex-direction:column;
   }
-  .mcard.pod-small:hover{background:#222; border-color:#1a1a1a}
+  .mcard.pod-small:hover{border-color:var(--ink)}
   .mcard.pod-small .mtype{
-    color:var(--accent); margin-bottom:8px; font-size:11px;
+    color:var(--accent-deep); margin-bottom:8px; font-size:11px;
     display:inline-flex; align-items:center; gap:6px;
     letter-spacing:.14em; text-transform:uppercase; font-weight:700;
   }
@@ -352,20 +352,21 @@
   }
   .mcard.pod-small h4{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:18px; color:#fff; line-height:1.2; font-weight:600;
+    font-size:18px; color:var(--ink); line-height:1.2; font-weight:600;
     margin:0 0 6px;
   }
-  .mcard.pod-small p{font-size:12px; color:#8a8a8a; margin:0 0 16px; line-height:1.45}
+  .mcard.pod-small p{font-size:13px; color:var(--soft); margin:0 0 16px; line-height:1.45}
   .mcard.pod-small .player{
     margin-top:auto;
     display:flex; align-items:center; gap:10px;
   }
   .mcard.pod-small .play-btn{
-    width:28px; height:28px; border-radius:50%;
-    background:var(--accent); color:#0d0d0d;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--accent); color:var(--ink);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
   }
-  .mcard.pod-small .waveform{flex:1; height:18px; color:var(--accent); opacity:.85}
+  .mcard.pod-small .waveform{flex:1; height:18px; color:var(--accent-deep); opacity:.7}
 
   /* Test card spans 2 rows so pod-small can match practice cards in row 2 */
   .mcard.test-large{
@@ -438,11 +439,40 @@
   .mcard.practice .pfoot .open .arrow{transition:transform .15s}
   .mcard.practice:hover .pfoot .open .arrow{transform:translateX(3px)}
 
-  /* lecture placeholder */
-  .mcard.lecture.placeholder{border-style:dashed; background:transparent}
-  .mcard.lecture .mtype{color:#3a3a3a}
-  .mcard.lecture .mtype::before{background:#3a3a3a}
-  .mcard.lecture.placeholder p{color:var(--muted)}
+  /* LECTURE cards — like practices, but with play icon top-right */
+  .mcard.lecture{
+    display:flex; flex-direction:column;
+    background:var(--paper); border:1px solid var(--line);
+    padding:20px; position:relative;
+    transition:border-color .2s, transform .2s var(--easing), box-shadow .2s;
+  }
+  .mcard.lecture:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
+  .mcard.lecture .mtype{color:var(--soft); margin-bottom:8px}
+  .mcard.lecture .mtype::before{background:#666}
+  .mcard.lecture .lec-icon{
+    position:absolute; top:16px; right:16px;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; line-height:1; padding-left:2px;
+    transition:transform .2s var(--easing), background .2s;
+  }
+  .mcard.lecture:hover .lec-icon{background:var(--accent); color:var(--ink); transform:scale(1.08)}
+  .mcard.lecture h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; letter-spacing:-.01em;
+    margin:0 0 6px;
+  }
+  .mcard.lecture p{font-size:13px; color:var(--soft); margin:0 0 auto; padding-bottom:18px; line-height:1.5}
+  .mcard.lecture .pfoot{
+    margin-top:auto; padding-top:14px;
+    border-top:1px dashed var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px; color:var(--muted);
+  }
+  .mcard.lecture .pfoot .open{color:var(--ink); font-weight:600; display:inline-flex; align-items:center; gap:4px}
+  .mcard.lecture .pfoot .open .arrow{transition:transform .15s}
+  .mcard.lecture:hover .pfoot .open .arrow{transform:translateX(3px)}
 
   /* CONSULTATIONS */
   .formats{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch}
@@ -1015,12 +1045,12 @@
       </a>
 
       <!-- PRACTICE cards -->
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="https://drive.google.com/file/d/1besOCCG8epxP_d_0t2u2oglQoz-TUHlu/view" target="_blank" rel="noopener" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">01</span>
         <h4>Метапознание</h4>
         <p>как замечать, что у тебя в голове</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
       <a href="#" class="mcard practice" data-type="practice">
@@ -1039,51 +1069,61 @@
         <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="https://drive.google.com/file/d/1rgrkipf4DB0VdC9Cs5ga84DUuxXTSxL-/view" target="_blank" rel="noopener" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">04</span>
         <h4>Ощущение времени</h4>
         <p>как не терять часы</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="https://drive.google.com/file/d/1oTSX5W0iEUmVDHwSpNDehFkh1l7nlmzB/view" target="_blank" rel="noopener" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">05</span>
         <h4>Планирование</h4>
         <p>как прям брать и планировать</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice alt" data-type="practice">
+      <a href="https://drive.google.com/file/d/18X9UQ1x47bXxay4XKYHOUXXq13i9ZbYh/view" target="_blank" rel="noopener" class="mcard practice alt" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">06</span>
         <h4>Управление стрессом</h4>
         <p>как не сгореть на ровном месте</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="https://drive.google.com/file/d/1UOs6EQmXMuQ6VgNT_td0TUdpKFrvm1vW/view" target="_blank" rel="noopener" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">07</span>
         <h4>Поддержание внимания</h4>
         <p>как не уплывать каждые 5 минут</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <a href="#" class="mcard practice" data-type="practice">
+      <a href="https://drive.google.com/file/d/1Nk3boSAwNFbBYRYBNsFdQ87tAy135lvQ/view" target="_blank" rel="noopener" class="mcard practice" data-type="practice">
         <div class="mtype">Практика</div>
         <span class="pnum">08</span>
         <h4>Рабочая память</h4>
         <p>как помнить всякое</p>
-        <div class="pfoot"><span>тема · короткое чтение</span><span class="open">Открыть <span class="arrow">→</span></span></div>
+        <div class="pfoot"><span>гайд · PDF</span><span class="open">Открыть <span class="arrow">→</span></span></div>
       </a>
 
-      <div class="mcard lecture placeholder" data-type="lecture">
+      <a href="https://www.youtube.com/watch?v=jVKbwp0Ub4M" target="_blank" rel="noopener" class="mcard lecture" data-type="lecture">
         <div class="mtype">Лекция</div>
-        <h4>Скоро</h4>
-        <p>лекции в записи появятся здесь — пока в работе</p>
-      </div>
+        <span class="lec-icon" aria-hidden="true">▶</span>
+        <h4>Нейрофизиология сна</h4>
+        <p>Как мозг отдыхает и почему сон важен для внимания и памяти.</p>
+        <div class="pfoot"><span>видео · YouTube</span><span class="open">Смотреть <span class="arrow">→</span></span></div>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=IbU8RMEwjHU" target="_blank" rel="noopener" class="mcard lecture" data-type="lecture">
+        <div class="mtype">Лекция</div>
+        <span class="lec-icon" aria-hidden="true">▶</span>
+        <h4>Нейрофизиология внимания</h4>
+        <p>Что происходит в мозге, когда мы концентрируемся, и почему это так трудно.</p>
+        <div class="pfoot"><span>видео · YouTube</span><span class="open">Смотреть <span class="arrow">→</span></span></div>
+      </a>
 
     </div>
   </section>
