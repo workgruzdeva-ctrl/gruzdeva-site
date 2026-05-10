@@ -113,6 +113,11 @@
     min-width:0;
     flex:1 1 0;
   }
+  a.badge.book .title-short{display:none}
+  @media (max-width: 880px){
+    a.badge.book .title-full{display:none}
+    a.badge.book .title-short{display:inline}
+  }
 
   .cta-row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
   .btn{
@@ -148,7 +153,7 @@
     0%   { background-position: 0% 0%, 100% 100%, 0 0; }
     100% { background-position: 30% 20%, 70% 70%, 0 0; }
   }
-  .portrait img{width:100%; height:100%; object-fit:cover; display:block}
+  .portrait img{width:100%; height:100%; object-fit:cover; object-position:50% 20%; display:block}
   .portrait .fallback{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
     font-size:120px; color:#7a5b00; font-weight:600; opacity:.45;
@@ -842,15 +847,30 @@
     .step .dot{position:absolute; left:0; top:0; margin:0}
     section{padding:48px 0}
 
-    /* CTA-кнопки в столбик на мобиле, чтобы не обрезались */
+    /* CTA-кнопки в столбик на мобиле, единая ширина */
     .cta-row{flex-direction:column; align-items:stretch; width:100%}
-    .cta-row .btn{justify-content:center; width:100%; max-width:100%}
+    .cta-row .btn{
+      justify-content:center; width:100%; max-width:100%;
+      padding:14px 20px; box-sizing:border-box;
+    }
 
-    /* Бейджи: жёсткое ограничение, чтобы flex-контейнер не расширялся под длинный текст */
-    .badges, .badges-secondary{flex-wrap:wrap; width:100%; max-width:100%}
-    .badge{max-width:100%; min-width:0; flex-shrink:1}
-    /* Книжный бейдж на мобиле — на всю ширину, своя строка */
-    .badge.book{flex-basis:100%; width:100%}
+    /* Бейджи: контейнер ограничен ширине родителя, элементы переносятся */
+    .badges, .badges-secondary{
+      flex-wrap:wrap; width:100%; max-width:100%;
+    }
+    .badge{
+      max-width:100%; min-width:0; flex-shrink:1;
+      white-space:normal; overflow-wrap:break-word; word-break:break-word;
+    }
+    /* Книжный бейдж — на всю ширину, своя строка, с переносом */
+    .badge.book{
+      flex-basis:100%; width:100%;
+      padding:8px 14px;
+    }
+    .badge.book .title-text{
+      white-space:normal; overflow:visible; text-overflow:clip;
+      flex:1 1 auto;
+    }
 
     /* sticky bottom on mobile */
     .fab{
@@ -859,6 +879,15 @@
       justify-content:center; padding:16px;
       font-size:15px;
     }
+  }
+
+  /* Очень узкий экран (~320–380px) — ещё ужать hero */
+  @media (max-width:380px){
+    .wrap{padding:20px 16px 110px}
+    .hero h1{font-size:36px}
+    .hero .lead{font-size:17px}
+    .badge{font-size:12px; padding:5px 10px}
+    .badge.book{padding:7px 12px; font-size:12px}
   }
 </style>
 </head>
@@ -887,7 +916,8 @@
       <div class="badges">
         <span class="badge tier1">ADHD-CCSP</span>
         <a class="badge book" href="https://www.ozon.ru/product/vnimanie-i-pamyat-i-pochemu-oni-rabotali-luchshe-poka-ty-vse-ne-isportil-gruzdeva-valentina-765884596/?at=PjtJ2GAOrcr8jrx3T9gq8zGhprWlYWsYxXJgkh931P6j" target="_blank" rel="noopener">
-          <span class="title-text">«Внимание и память, и почему они работали лучше, пока ты все не испортил»</span>
+          <span class="title-text title-full">«Внимание и память, и почему они работали лучше, пока ты все не испортил»</span>
+          <span class="title-text title-short">Автор книги «Внимание и память»</span>
         </a>
       </div>
       <!-- Tier 2: остальное в нейтрально-сером -->
