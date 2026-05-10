@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Профиль исполнительных навыков · Gruzdeva V.А.</title>
+<meta name="description" content="Короткий онлайн-тест: понять, какие исполнительные навыки сейчас сильнее, а какие требуют поддержки.">
+<style>
+  :root{
+    --ink:#141414;
+    --soft:#4a4a4a;
+    --muted:#8c8c8c;
+    --line:#ececec;
+    --line-soft:#f5f5f5;
+    --bg:#ffffff;
+    --paper:#ffffff;
+    --accent:#ffd93d;
+    --accent-soft:#fff8d6;
+    --accent-deep:#a07800;
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --shadow-soft:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.08);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.04), 0 16px 36px -18px rgba(0,0,0,.16);
+    --easing:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0; overflow-x:hidden; max-width:100vw}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink); background:var(--bg);
+    font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--ink); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--ink)}
+
+  .wrap{max-width:760px; margin:0 auto; padding:24px 24px 96px}
+
+  /* TOP NAV */
+  .topnav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0 24px; font-size:14px;
+  }
+  .logo{font-weight:600; letter-spacing:.04em; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+  .logo .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent)}
+  .topnav .back{
+    color:var(--soft); text-decoration:none;
+    font-size:13px; transition:color .15s;
+  }
+  .topnav .back:hover{color:var(--ink)}
+  .topnav .back::before{content:"← "}
+
+  /* PROGRESS */
+  .progress{
+    position:sticky; top:0; left:0; right:0;
+    background:var(--bg);
+    padding:14px 0 10px;
+    z-index:5;
+    border-bottom:1px solid var(--line);
+    margin-bottom:32px;
+  }
+  .progress-bar{
+    height:4px; background:var(--line-soft); border-radius:100px; overflow:hidden;
+    margin-bottom:8px;
+  }
+  .progress-fill{
+    height:100%; background:var(--accent); width:0%;
+    transition:width .35s var(--easing);
+  }
+  .progress-meta{
+    display:flex; justify-content:space-between;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); font-weight:600;
+  }
+
+  /* TYPOGRAPHY */
+  h1.display{
+    font-family:"Charter","Iowan Old Style","Apple Garamond","Georgia",serif;
+    font-size:clamp(36px, 6.5vw, 56px);
+    font-weight:600; letter-spacing:-.025em; line-height:1.05;
+    margin:0 0 18px;
+  }
+  h2{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:clamp(24px, 4vw, 32px);
+    font-weight:600; letter-spacing:-.015em; line-height:1.15;
+    margin:0 0 12px;
+  }
+  h3{font-size:18px; font-weight:600; margin:0 0 8px; letter-spacing:-.005em}
+  p{margin:0 0 16px; line-height:1.65}
+  .lead{
+    font-size:18px; color:var(--soft); margin:0 0 24px; line-height:1.55;
+  }
+  .muted{color:var(--muted); font-size:14px}
+
+  /* CARD-LIKE BLOCK */
+  .panel{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:32px;
+    margin:0 0 18px;
+  }
+  .panel.subtle{background:var(--line-soft); border-color:var(--line-soft)}
+  .panel.warn{
+    background:var(--accent-soft);
+    border-color:#f0d96a;
+    color:#5a4500;
+    font-size:14px; line-height:1.5;
+  }
+
+  /* SCREENS */
+  #screen-start, #screen-questions, #screen-result { display:none }
+  #screen-start.active, #screen-questions.active, #screen-result.active{ display:block }
+
+  /* START SCREEN */
+  .start-meta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--accent-soft); color:var(--accent-deep);
+    padding:6px 14px; border-radius:100px;
+    font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .start-meta::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--accent-deep)}
+
+  /* SCALE INFO */
+  .scale-help{
+    margin:18px 0 24px; padding:18px 20px;
+    background:var(--line-soft); border-radius:var(--r-md);
+    font-size:13px; color:var(--soft); line-height:1.6;
+  }
+  .scale-help strong{color:var(--ink); font-weight:600}
+  .scale-help ol{margin:8px 0 0; padding-left:20px}
+  .scale-help li{padding:1px 0}
+
+  /* QUESTION */
+  .skill-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:var(--accent-deep); margin:0 0 14px;
+  }
+  .skill-tag::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  .question-text{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:clamp(22px, 4vw, 28px);
+    font-weight:500; letter-spacing:-.01em; line-height:1.3;
+    margin:0 0 28px;
+  }
+
+  /* SCALE 1-7 buttons */
+  .scale{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:8px;
+    margin:0 0 20px;
+  }
+  .scale-btn{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:14px 6px; gap:4px;
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    font:inherit; cursor:pointer;
+    color:var(--ink);
+    transition:border-color .15s, background .15s, transform .15s var(--easing), color .15s;
+    min-height:62px;
+  }
+  .scale-btn:hover{border-color:var(--ink); background:var(--line-soft); transform:translateY(-1px)}
+  .scale-btn .num{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; line-height:1;
+  }
+  .scale-btn .lbl{
+    font-size:10px; color:var(--muted);
+    letter-spacing:.02em; text-align:center;
+    line-height:1.2;
+  }
+  .scale-btn.selected{
+    background:var(--accent); border-color:var(--accent); color:var(--ink);
+  }
+  .scale-btn.selected .lbl{color:var(--ink); opacity:.8}
+
+  /* NAV CONTROLS */
+  .controls{
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    margin-top:20px;
+  }
+  .controls-spacer{flex:1}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:14px 22px; border-radius:100px;
+    text-decoration:none; font-size:14px; font-weight:600;
+    transition:transform .15s var(--easing), box-shadow .15s, background .15s, opacity .15s;
+    border:1px solid transparent; cursor:pointer; font-family:inherit;
+    white-space:nowrap;
+  }
+  .btn-primary{background:var(--ink); color:#fff}
+  .btn-primary .arrow{color:var(--accent); font-size:16px; line-height:1; transition:transform .15s}
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+  .btn-primary:hover .arrow{transform:translateX(3px)}
+  .btn-primary:disabled{background:var(--line); color:var(--muted); box-shadow:none; transform:none; cursor:not-allowed}
+  .btn-primary:disabled .arrow{color:var(--muted)}
+  .btn-ghost{color:var(--ink); background:transparent; border-color:var(--line)}
+  .btn-ghost:hover{background:var(--line-soft); border-color:var(--ink)}
+  .btn-ghost.subtle{color:var(--muted); border-color:transparent; padding:14px 12px}
+  .btn-ghost.subtle:hover{color:var(--ink); background:var(--line-soft)}
+  .btn-yellow{background:var(--accent); color:var(--ink); border-color:var(--accent); font-weight:700}
+  .btn-yellow:hover{background:#ffe066; transform:translateY(-1px)}
+
+  /* RESULT */
+  .res-section{margin:28px 0}
+  .res-section h2{margin:0 0 6px}
+  .res-section .lead{margin-bottom:18px; font-size:15px}
+
+  /* Top/Bottom skill cards */
+  .skill-cards{display:grid; gap:10px}
+  .skill-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+    padding:18px 20px;
+  }
+  .skill-card.strong{background:var(--accent-soft); border-color:#f0d96a}
+  .skill-card .sc-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    gap:14px; flex-wrap:wrap; margin-bottom:6px;
+  }
+  .skill-card h3{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; letter-spacing:-.005em;
+    margin:0; line-height:1.2;
+  }
+  .skill-card .sc-score{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600;
+    color:var(--accent-deep);
+  }
+  .skill-card.strong .sc-score{color:#5a4500}
+  .skill-card p{margin:0; font-size:14px; color:var(--soft); line-height:1.55}
+  .skill-card.strong p{color:#5a4500}
+
+  /* Profile bars (12 skills) */
+  .profile-bars{display:grid; gap:10px; margin-top:6px}
+  .bar-row{
+    display:grid;
+    grid-template-columns: 200px 1fr 56px;
+    gap:14px; align-items:center;
+  }
+  .bar-name{font-size:14px; color:var(--ink); font-weight:500; line-height:1.3}
+  .bar-track{
+    height:8px; background:var(--line-soft); border-radius:100px; overflow:hidden;
+  }
+  .bar-fill{
+    height:100%; background:var(--muted); border-radius:100px;
+    transition:width .8s var(--easing);
+  }
+  .bar-row.strong .bar-fill{background:var(--accent)}
+  .bar-row.weak .bar-fill{background:var(--ink)}
+  .bar-score{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:14px; color:var(--muted); text-align:right;
+  }
+  .bar-row.strong .bar-score{color:var(--accent-deep); font-weight:600}
+  .bar-row.weak .bar-score{color:var(--ink); font-weight:600}
+
+  /* Recommendation cards (per weak skill) */
+  .rec-list{display:grid; gap:14px; margin-top:6px}
+  .rec-card{
+    border:1px solid var(--line);
+    border-radius:var(--r-md);
+    padding:20px 22px;
+    background:var(--paper);
+  }
+  .rec-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; margin:0 0 8px;
+  }
+  .rec-card p{margin:0 0 12px; font-size:14px; color:var(--soft); line-height:1.55}
+  .rec-card .rec-cta{
+    color:var(--ink); font-weight:600; font-size:13px;
+    text-decoration:none; border-bottom:2px solid var(--accent);
+    padding-bottom:1px; display:inline-flex; align-items:center; gap:4px;
+  }
+  .rec-card .rec-cta:hover{color:var(--accent-deep)}
+  .rec-card .rec-cta .arrow{transition:transform .15s var(--easing)}
+  .rec-card .rec-cta:hover .arrow{transform:translateX(3px)}
+
+  /* Final CTA grid */
+  .final-cta{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:8px}
+  .cta-card{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:22px 20px;
+    text-decoration:none; color:var(--ink);
+    display:flex; flex-direction:column; gap:8px;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .cta-card:hover{border-color:var(--ink); transform:translateY(-2px); box-shadow:var(--shadow-soft)}
+  .cta-card.primary{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .cta-card.primary:hover{background:#000}
+  .cta-card h4{font-size:15px; font-weight:600; margin:0; line-height:1.3}
+  .cta-card p{margin:0; font-size:13px; color:var(--soft); line-height:1.5}
+  .cta-card.primary p{color:#bdbdbd}
+  .cta-card .more{
+    margin-top:auto; font-size:13px; font-weight:600; color:var(--ink);
+    border-bottom:2px solid var(--accent); padding-bottom:1px; align-self:flex-start;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .cta-card.primary .more{color:#fff; border-bottom-color:var(--accent)}
+
+  /* Copy result */
+  .copy-row{
+    display:flex; justify-content:center;
+    margin-top:24px;
+  }
+  .copy-toast{
+    position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(40px);
+    background:var(--ink); color:#fff;
+    padding:12px 22px; border-radius:100px;
+    font-size:14px; font-weight:500;
+    box-shadow:0 12px 28px -10px rgba(0,0,0,.4);
+    opacity:0; transition:opacity .25s, transform .25s var(--easing);
+    z-index:50; pointer-events:none;
+  }
+  .copy-toast.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto}
+
+  /* RESPONSIVE */
+  @media (max-width: 720px){
+    .wrap{padding:16px 18px 72px}
+    .panel{padding:24px 22px}
+    .scale{grid-template-columns:repeat(7, 1fr); gap:5px}
+    .scale-btn{padding:12px 4px; min-height:58px}
+    .scale-btn .num{font-size:16px}
+    .scale-btn .lbl{display:none} /* show only on focus/selected */
+    .bar-row{grid-template-columns:1fr 56px; gap:6px 12px}
+    .bar-name{grid-column:1 / -1; font-size:13px}
+    .final-cta{grid-template-columns:1fr}
+    .controls{flex-wrap:wrap}
+    .controls .btn{flex:1 1 auto}
+    .skill-card .sc-score{font-size:16px}
+  }
+  @media (max-width: 380px){
+    .scale{gap:4px}
+    .scale-btn{padding:10px 2px; min-height:48px}
+    .scale-btn .num{font-size:14px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <a href="index.html" class="logo"><span class="dot"></span>Gruzdeva V.А.</a>
+    <a href="index.html#materials" class="back">К материалам</a>
+  </div>
+
+  <!-- ========== START SCREEN ========== -->
+  <section id="screen-start" class="active">
+    <span class="start-meta">тест · 5–8 минут · 36 утверждений</span>
+    <h1 class="display">Профиль исполнительных навыков</h1>
+    <p class="lead">Исполнительные навыки — это когнитивные процессы, которые помогают планировать, организовывать, контролировать и выполнять задачи.</p>
+    <p>Этот опросник поможет увидеть ваши сильные и слабые исполнительные навыки: что уже помогает вам справляться с задачами, а что может мешать достигать целей.</p>
+    <p>Понимание своего профиля — это не диагноз, а карта: с ней проще выбирать стратегии, которые подходят именно вам, а не просто «как правильно написано в интернетах».</p>
+
+    <div class="panel warn">
+      Опросник не ставит диагноз и не заменяет консультацию специалиста. Он помогает сориентироваться и понять, с какими навыками можно работать дальше.
+    </div>
+
+    <div class="scale-help">
+      <strong>Как отвечать.</strong> Читайте утверждение и оценивайте, насколько оно описывает вас по шкале от 1 до 7 — от «вообще нет» до «точно да».
+      <ol>
+        <li>1 — вообще нет</li>
+        <li>2 — ну, нет</li>
+        <li>3 — кажется, нет</li>
+        <li>4 — никак не кажется</li>
+        <li>5 — кажется, да</li>
+        <li>6 — ну, да</li>
+        <li>7 — точно да</li>
+      </ol>
+    </div>
+
+    <button class="btn btn-primary" id="btnStart" type="button">Начать тест <span class="arrow">→</span></button>
+  </section>
+
+  <!-- ========== QUESTIONS SCREEN ========== -->
+  <section id="screen-questions">
+    <div class="progress">
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+      <div class="progress-meta">
+        <span id="progLabel">Вопрос 1 из 36</span>
+        <span id="progSkill">Навык 1 из 12</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="skill-tag" id="qSkill">—</div>
+      <p class="question-text" id="qText">—</p>
+
+      <div class="scale" id="qScale" role="radiogroup" aria-label="Шкала ответов от 1 до 7"></div>
+      <p class="muted" style="font-size:12px; text-align:center; margin:0 0 8px">1 — вообще нет · 7 — точно да</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-ghost subtle" id="btnBack" type="button">← Назад</button>
+      <span class="controls-spacer"></span>
+      <button class="btn btn-primary" id="btnNext" type="button" disabled>Дальше <span class="arrow">→</span></button>
+    </div>
+  </section>
+
+  <!-- ========== RESULT SCREEN ========== -->
+  <section id="screen-result">
+    <h1 class="display">Ваш профиль исполнительных навыков</h1>
+    <p class="lead">Вот какие навыки сейчас выглядят самыми сильными, а какие могут требовать поддержки.</p>
+
+    <!-- STRONG -->
+    <div class="res-section">
+      <h2>Сильные навыки</h2>
+      <p class="lead">Здесь вы уже справляетесь — именно эти три навыка часто объясняют, как у вас получилось дойти до того, что у вас уже есть.</p>
+      <div class="skill-cards" id="resStrong"></div>
+    </div>
+
+    <!-- WEAK -->
+    <div class="res-section">
+      <h2>Навыки, которым может нужна поддержка</h2>
+      <p class="lead">Здесь, скорее всего, происходит большая часть ваших «а почему опять так получается». Не «починить себя» — а понять, какой навык тормозит, и подобрать стратегию.</p>
+      <div class="skill-cards" id="resWeak"></div>
+    </div>
+
+    <!-- FULL PROFILE -->
+    <div class="res-section">
+      <h2>Полный профиль</h2>
+      <p class="lead">Все 12 навыков от слабого к сильному. Жёлтым подсвечены три самых сильных, чёрным — три, которым может нужна поддержка.</p>
+      <div class="profile-bars" id="resBars"></div>
+    </div>
+
+    <!-- REFLECTION -->
+    <div class="panel subtle res-section">
+      <p style="margin:0; font-size:15px; line-height:1.7">
+        Здесь начинается магия рефлексии: посмотрите на навыки с низкими баллами и подумайте, как часто они мешали вам добиваться целей. Потом посмотрите на сильные — часто именно они объясняют, как у вас уже получилось дойти до того, что есть.
+      </p>
+    </div>
+
+    <!-- WHAT TO DO -->
+    <div class="res-section">
+      <h2>Что с этим делать?</h2>
+      <p>Можно снова и снова составлять идеальные планы — но если не хватает гибкости, рабочей памяти или умения приступать к действиям, результат останется прежним: планы будут красиво лежать на бумаге.</p>
+      <p>Смысл профиля — не в том, чтобы «починить себя», а в том, чтобы понять, какой навык тормозит вас сейчас, и подобрать стратегию под него.</p>
+      <p style="color:var(--soft); font-size:14px"><strong style="color:var(--ink)">Пример.</strong> Если слабое место — инициирование действия, а сильный навык — организация, можно не пытаться «просто заставить себя», а использовать организацию как компенсацию: подготовить одежду, убрать лишние решения, поставить кроссовки у двери и сделать первый шаг максимально коротким.</p>
+    </div>
+
+    <!-- RECOMMENDATIONS for weak skills -->
+    <div class="res-section">
+      <h2>Что попробовать с тремя слабыми</h2>
+      <div class="rec-list" id="resRecs"></div>
+    </div>
+
+    <!-- COPY -->
+    <div class="copy-row">
+      <button class="btn btn-ghost" id="btnCopy" type="button">📋 Скопировать результат</button>
+    </div>
+
+    <!-- FINAL CTA -->
+    <div class="res-section">
+      <h2>Что дальше?</h2>
+      <div class="final-cta">
+        <a href="index.html#materials" class="cta-card">
+          <h4>Смотреть материалы</h4>
+          <p>Подкасты, гайды и практики — по слабым навыкам</p>
+          <span class="more">Перейти <span class="arrow">→</span></span>
+        </a>
+        <a href="index.html#services" class="cta-card primary">
+          <h4>Записаться на консультацию</h4>
+          <p>Разберём ваш профиль и подберём стратегии под вашу реальную жизнь</p>
+          <span class="more">К консультациям <span class="arrow">→</span></span>
+        </a>
+        <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener" class="cta-card">
+          <h4>Написать в Telegram</h4>
+          <p>Если хочется обсудить результат лично</p>
+          <span class="more">Открыть Telegram <span class="arrow">→</span></span>
+        </a>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:32px">
+      <button class="btn btn-ghost subtle" id="btnRestart" type="button">Пройти ещё раз</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="copy-toast" id="copyToast">Скопировано в буфер</div>
+
+<script>
+  /* ========== DATA ========== */
+  const SKILL_NAMES = {
+    impulse_control: 'Контроль импульсов',
+    working_memory: 'Рабочая память',
+    emotional_control: 'Контроль эмоций',
+    task_initiation: 'Инициирование действия',
+    sustained_attention: 'Устойчивое внимание',
+    planning_prioritization: 'Планирование и приоритизация',
+    organization: 'Организация',
+    time_management: 'Управление временем',
+    flexibility: 'Гибкость',
+    metacognition: 'Метапознание',
+    goal_directed_persistence: 'Целенаправленная настойчивость',
+    stress_tolerance: 'Толерантность к стрессу',
+  };
+
+  const SKILL_ORDER = Object.keys(SKILL_NAMES);
+
+  /* For STRONG skills — what this strength helps you with */
+  const SKILL_STRONG_DESC = {
+    impulse_control: 'Этот навык помогает делать паузу между «захотелось» и «сделал» — обдумывать прежде, чем действовать.',
+    working_memory: 'Этот навык помогает удерживать детали, помнить обязательства и не терять важную информацию.',
+    emotional_control: 'Этот навык помогает не давать эмоциям сбивать с задачи и принимать решения не в моменте.',
+    task_initiation: 'Этот навык помогает переходить от намерения к действию — начинать без долгих раскачек.',
+    sustained_attention: 'Этот навык помогает удерживать фокус и доводить начатое до конца, даже если вмешались.',
+    planning_prioritization: 'Этот навык помогает выбирать главное, разбивать большое на шаги и видеть план целиком.',
+    organization: 'Этот навык помогает поддерживать порядок в делах, вещах и информации без специальных усилий.',
+    time_management: 'Этот навык помогает реалистично оценивать время и успевать к срокам.',
+    flexibility: 'Этот навык помогает спокойно переключаться между задачами и адаптироваться к изменениям.',
+    metacognition: 'Этот навык помогает видеть себя со стороны, корректировать поведение и учиться на опыте.',
+    goal_directed_persistence: 'Этот навык помогает держать в фокусе долгосрочные цели и идти к ним через рутину и быстрые удовольствия.',
+    stress_tolerance: 'Этот навык помогает работать в нестабильной среде без потери эффективности.',
+  };
+
+  /* For WEAK skills — short framing */
+  const SKILL_WEAK_DESC = {
+    impulse_control: 'Этот навык про паузу между «захотелось» и «сделал/сказал». Если он проседает, реакция часто опережает мысль.',
+    working_memory: 'Этот навык про удержание информации в моменте. Если он проседает, важные вещи легко выпадают из головы.',
+    emotional_control: 'Этот навык про работу с эмоциями. Если он проседает, эмоции могут сбивать с задачи и перехватывать управление.',
+    task_initiation: 'Этот навык про переход от намерения к действию. Если он проседает, задача может быть понятной — но начать всё равно трудно.',
+    sustained_attention: 'Этот навык про удержание фокуса. Если он проседает, начать может быть легче, чем удержаться в задаче.',
+    planning_prioritization: 'Этот навык про выбор главного и разбиение на шаги. Если он проседает, задач много — но непонятно, что делать первым.',
+    organization: 'Этот навык про систему хранения дел и вещей. Если он проседает, вещи и договорённости расползаются по разным местам.',
+    time_management: 'Этот навык про чувство времени. Если он проседает, задачи занимают больше, чем казалось, а сроки наступают внезапно.',
+    flexibility: 'Этот навык про переключение между планами. Если он проседает, неожиданные изменения могут выбивать из колеи.',
+    metacognition: 'Этот навык про взгляд на себя со стороны. Если он проседает, трудно понять, что именно пошло не так.',
+    goal_directed_persistence: 'Этот навык про долгосрочную настойчивость. Если он проседает, цели проигрывают быстрым удовольствиям и текущим задачам.',
+    stress_tolerance: 'Этот навык про работу под давлением. Если он проседает, нагрузка и непредсказуемость быстро истощают.',
+  };
+
+  /* Recommendations for weak skills (top 3) */
+  const SKILL_RECS = {
+    impulse_control: 'Помогают паузы, внешние правила, заранее принятые решения и стратегии, которые снижают вероятность импульсивного действия.',
+    working_memory: 'Помогают внешние опоры: списки, напоминания, чек-листы, визуальные подсказки и системы, которые не требуют держать всё в голове.',
+    emotional_control: 'Помогает учиться замечать состояние раньше, снижать перегрузку и не принимать все решения в моменте.',
+    task_initiation: 'Помогают короткие первые шаги, снижение неопределённости и заранее подготовленная среда.',
+    sustained_attention: 'Помогают короткие рабочие интервалы, защита от прерываний и понятная точка возвращения.',
+    planning_prioritization: 'Помогают внешние критерии выбора, ограничение списка и разделение больших задач на конкретные шаги.',
+    organization: 'Помогают простые системы хранения, повторяющиеся ритуалы и меньшее количество точек входа.',
+    time_management: 'Помогают таймеры, буферы и внешняя визуализация времени.',
+    flexibility: 'Помогают запасные сценарии, заранее продуманные «если — то» и тренировка переключения между планами.',
+    metacognition: 'Помогают короткие разборы после задачи, вопросы к себе и внешняя обратная связь.',
+    goal_directed_persistence: 'Помогают промежуточные вехи, видимый прогресс и связь цели с личным смыслом.',
+    stress_tolerance: 'Важны восстановление, снижение перегруза, реалистичные планы и работа с уровнем нагрузки.',
+  };
+
+  const QUESTIONS = [
+    { skill: 'impulse_control', text: 'Я не делаю поспешных выводов.' },
+    { skill: 'impulse_control', text: 'Я думаю, прежде чем сказать.' },
+    { skill: 'impulse_control', text: 'Я не предпринимаю никаких действий, не располагая всеми фактами.' },
+    { skill: 'working_memory', text: 'У меня хорошая память на факты, даты и детали.' },
+    { skill: 'working_memory', text: 'Я очень хорошо запоминаю то, что обещал/обещала сделать.' },
+    { skill: 'working_memory', text: 'Мне редко нужны напоминания.' },
+    { skill: 'emotional_control', text: 'Мои эмоции редко мешают мне выполнять работу.' },
+    { skill: 'emotional_control', text: 'Мелочи не влияют на меня эмоционально и не отвлекают от текущей задачи.' },
+    { skill: 'emotional_control', text: 'Я могу отложить свои личные переживания до тех пор, пока задача не будет выполнена.' },
+    { skill: 'task_initiation', text: 'Какой бы ни была задача, я считаю, что нужно начинать как можно скорее.' },
+    { skill: 'task_initiation', text: 'Прокрастинация обычно не является для меня проблемой.' },
+    { skill: 'task_initiation', text: 'Я редко оставляю выполнение задач на последнюю минуту.' },
+    { skill: 'sustained_attention', text: 'Мне легко сосредоточиться на своей работе.' },
+    { skill: 'sustained_attention', text: 'Как только я приступаю к выполнению задания, я усердно работаю до его завершения.' },
+    { skill: 'sustained_attention', text: 'Даже когда меня прерывают, я с лёгкостью возвращаюсь и завершаю начатое.' },
+    { skill: 'planning_prioritization', text: 'Когда я планирую свой день, я определяю приоритеты и делаю важное первым.' },
+    { skill: 'planning_prioritization', text: 'Когда у меня много дел, я могу легко сосредоточиться на самых важных вещах.' },
+    { skill: 'planning_prioritization', text: 'Обычно я разбиваю большие задачи на подзадачи и соблюдаю временные рамки.' },
+    { skill: 'organization', text: 'Я организованный человек.' },
+    { skill: 'organization', text: 'Для меня естественно содержать своё рабочее место в чистоте и порядке.' },
+    { skill: 'organization', text: 'Я умею поддерживать систему для организации своей работы.' },
+    { skill: 'time_management', text: 'В конце дня я обычно заканчиваю то, что планировал/планировала сделать.' },
+    { skill: 'time_management', text: 'Я хорошо умею оценивать, сколько времени требуется на выполнение задачи.' },
+    { skill: 'time_management', text: 'Обычно я вовремя прихожу на встречи и другие мероприятия.' },
+    { skill: 'flexibility', text: 'Я спокойно отношусь к неожиданным событиям.' },
+    { skill: 'flexibility', text: 'Я легко приспосабливаюсь к изменениям в планах.' },
+    { skill: 'flexibility', text: 'Я считаю себя гибким человеком, легко приспосабливающимся к переменам.' },
+    { skill: 'metacognition', text: 'Я регулярно оцениваю свою работу и разрабатываю методы личного совершенствования.' },
+    { skill: 'metacognition', text: 'Я способен/способна отстраниться от ситуации, чтобы принять объективное решение.' },
+    { skill: 'metacognition', text: 'Я хорошо «читаю» ситуации и могу корректировать своё поведение, основываясь на реакции других.' },
+    { skill: 'goal_directed_persistence', text: 'Я думаю о себе как о человеке, стремящемся к достижению своих целей.' },
+    { skill: 'goal_directed_persistence', text: 'Я легко отказываюсь от сиюминутных удовольствий ради работы над долгосрочными целями.' },
+    { skill: 'goal_directed_persistence', text: 'Я верю, что могу достигнуть высоких результатов, если поставлю цель.' },
+    { skill: 'stress_tolerance', text: 'Мне нравится работать в очень требовательной, быстро меняющейся среде.' },
+    { skill: 'stress_tolerance', text: 'Определённое давление помогает мне работать с максимальной отдачей.' },
+    { skill: 'stress_tolerance', text: 'Мне нравится работа, в которой присутствует определённая степень непредсказуемости.' },
+  ];
+
+  const SCALE_LABELS = [
+    'вообще нет','ну, нет','кажется, нет','никак не кажется','кажется, да','ну, да','точно да'
+  ];
+
+  /* ========== STATE ========== */
+  let state = {
+    answers: new Array(QUESTIONS.length).fill(null),
+    idx: 0,
+    view: 'start',
+  };
+
+  // Restore from localStorage if available
+  try{
+    const saved = JSON.parse(localStorage.getItem('eskt_state') || 'null');
+    if(saved && Array.isArray(saved.answers) && saved.answers.length === QUESTIONS.length){
+      state = saved;
+    }
+  }catch(e){}
+
+  function persist(){
+    try{ localStorage.setItem('eskt_state', JSON.stringify(state)); }catch(e){}
+  }
+
+  /* ========== VIEW MGMT ========== */
+  const screens = {
+    start: document.getElementById('screen-start'),
+    questions: document.getElementById('screen-questions'),
+    result: document.getElementById('screen-result'),
+  };
+
+  function showView(v){
+    state.view = v;
+    Object.entries(screens).forEach(([k, el]) => {
+      el.classList.toggle('active', k === v);
+    });
+    window.scrollTo({top:0, behavior:'instant'});
+    persist();
+  }
+
+  /* ========== QUESTIONS ========== */
+  function renderQuestion(){
+    const q = QUESTIONS[state.idx];
+    const skillName = SKILL_NAMES[q.skill];
+    const skillIndex = SKILL_ORDER.indexOf(q.skill) + 1;
+
+    document.getElementById('qSkill').textContent = skillName;
+    document.getElementById('qText').textContent = q.text;
+    document.getElementById('progLabel').textContent = `Вопрос ${state.idx + 1} из ${QUESTIONS.length}`;
+    document.getElementById('progSkill').textContent = `Навык ${skillIndex} из ${SKILL_ORDER.length}`;
+
+    const pct = ((state.idx) / QUESTIONS.length) * 100;
+    document.getElementById('progFill').style.width = pct + '%';
+
+    // Render scale
+    const scaleEl = document.getElementById('qScale');
+    scaleEl.innerHTML = '';
+    for(let i = 1; i <= 7; i++){
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'scale-btn';
+      btn.setAttribute('role','radio');
+      btn.setAttribute('aria-checked', state.answers[state.idx] === i ? 'true' : 'false');
+      btn.dataset.score = String(i);
+      btn.innerHTML = `<span class="num">${i}</span><span class="lbl">${SCALE_LABELS[i-1]}</span>`;
+      if(state.answers[state.idx] === i) btn.classList.add('selected');
+      btn.addEventListener('click', () => answerQuestion(i));
+      scaleEl.appendChild(btn);
+    }
+
+    // Buttons
+    document.getElementById('btnBack').style.visibility = state.idx > 0 ? 'visible' : 'hidden';
+    document.getElementById('btnNext').disabled = state.answers[state.idx] == null;
+    document.getElementById('btnNext').innerHTML = (state.idx === QUESTIONS.length - 1)
+      ? 'Смотреть результат <span class="arrow">→</span>'
+      : 'Дальше <span class="arrow">→</span>';
+  }
+
+  function answerQuestion(score){
+    state.answers[state.idx] = score;
+    persist();
+    document.querySelectorAll('#qScale .scale-btn').forEach(b => {
+      const s = Number(b.dataset.score);
+      b.classList.toggle('selected', s === score);
+      b.setAttribute('aria-checked', s === score ? 'true' : 'false');
+    });
+    document.getElementById('btnNext').disabled = false;
+    // Auto-advance after small delay if not last
+    if(state.idx < QUESTIONS.length - 1){
+      setTimeout(() => { goNext(); }, 220);
+    }
+  }
+
+  function goBack(){
+    if(state.idx > 0){
+      state.idx--;
+      renderQuestion();
+      persist();
+    }
+  }
+
+  function goNext(){
+    if(state.answers[state.idx] == null) return;
+    if(state.idx < QUESTIONS.length - 1){
+      state.idx++;
+      renderQuestion();
+      persist();
+    } else {
+      computeAndShowResult();
+    }
+  }
+
+  /* ========== SCORING ========== */
+  function computeScores(){
+    const scores = {};
+    SKILL_ORDER.forEach(s => { scores[s] = 0; });
+    QUESTIONS.forEach((q, i) => {
+      scores[q.skill] += state.answers[i] || 0;
+    });
+    return scores; // each 3..21
+  }
+
+  function rankSkills(scores){
+    const arr = SKILL_ORDER.map(s => ({ skill: s, score: scores[s] }));
+    const sortedDesc = [...arr].sort((a, b) => b.score - a.score);
+    const top3 = sortedDesc.slice(0, 3).map(x => x.skill);
+    const sortedAsc = [...arr].sort((a, b) => a.score - b.score);
+    const bottom3 = sortedAsc.slice(0, 3).map(x => x.skill);
+    return { top3, bottom3, sortedAsc };
+  }
+
+  /* ========== RESULT RENDER ========== */
+  function computeAndShowResult(){
+    const scores = computeScores();
+    const ranks = rankSkills(scores);
+
+    // Strong skills
+    const strongEl = document.getElementById('resStrong');
+    strongEl.innerHTML = '';
+    ranks.top3.forEach(skill => {
+      const card = document.createElement('div');
+      card.className = 'skill-card strong';
+      card.innerHTML = `
+        <div class="sc-head">
+          <h3>${SKILL_NAMES[skill]}</h3>
+          <span class="sc-score">${scores[skill]} / 21</span>
+        </div>
+        <p>${SKILL_STRONG_DESC[skill]}</p>
+      `;
+      strongEl.appendChild(card);
+    });
+
+    // Weak skills
+    const weakEl = document.getElementById('resWeak');
+    weakEl.innerHTML = '';
+    ranks.bottom3.forEach(skill => {
+      const card = document.createElement('div');
+      card.className = 'skill-card';
+      card.innerHTML = `
+        <div class="sc-head">
+          <h3>${SKILL_NAMES[skill]}</h3>
+          <span class="sc-score">${scores[skill]} / 21</span>
+        </div>
+        <p>${SKILL_WEAK_DESC[skill]}</p>
+      `;
+      weakEl.appendChild(card);
+    });
+
+    // Profile bars (sorted weak → strong)
+    const barsEl = document.getElementById('resBars');
+    barsEl.innerHTML = '';
+    const topSet = new Set(ranks.top3);
+    const botSet = new Set(ranks.bottom3);
+    ranks.sortedAsc.forEach(({ skill, score }) => {
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      if(topSet.has(skill)) row.classList.add('strong');
+      else if(botSet.has(skill)) row.classList.add('weak');
+      const pct = Math.round(((score - 3) / (21 - 3)) * 100);
+      row.innerHTML = `
+        <div class="bar-name">${SKILL_NAMES[skill]}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="bar-score">${score}/21</div>
+      `;
+      barsEl.appendChild(row);
+    });
+
+    // Recommendations for weak skills
+    const recsEl = document.getElementById('resRecs');
+    recsEl.innerHTML = '';
+    ranks.bottom3.forEach(skill => {
+      const card = document.createElement('div');
+      card.className = 'rec-card';
+      card.innerHTML = `
+        <h4>${SKILL_NAMES[skill]}</h4>
+        <p>${SKILL_RECS[skill]}</p>
+        <a class="rec-cta" href="index.html#materials">Смотреть материалы по теме <span class="arrow">→</span></a>
+      `;
+      recsEl.appendChild(card);
+    });
+
+    // Set progress to 100%
+    document.getElementById('progFill').style.width = '100%';
+
+    // Save scores in state for copy
+    state.lastScores = scores;
+    state.lastRanks = ranks;
+    persist();
+
+    showView('result');
+  }
+
+  /* ========== COPY ========== */
+  function copyResult(){
+    if(!state.lastRanks) return;
+    const top = state.lastRanks.top3.map(s => SKILL_NAMES[s]).join(', ');
+    const bot = state.lastRanks.bottom3.map(s => SKILL_NAMES[s]).join(', ');
+    const txt = `Мой профиль исполнительных навыков:
+
+Сильные навыки: ${top}.
+Навыки, которым нужна поддержка: ${bot}.
+
+Хочу обсудить, какие стратегии могут подойти под этот профиль.
+
+(тест на сайте: workgruzdeva-ctrl.github.io/gruzdeva-site)`;
+    navigator.clipboard.writeText(txt).then(() => {
+      const t = document.getElementById('copyToast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    });
+  }
+
+  /* ========== RESTART ========== */
+  function restart(){
+    state = {
+      answers: new Array(QUESTIONS.length).fill(null),
+      idx: 0,
+      view: 'start',
+    };
+    persist();
+    showView('start');
+  }
+
+  /* ========== INIT ========== */
+  document.getElementById('btnStart').addEventListener('click', () => {
+    state.idx = 0;
+    showView('questions');
+    renderQuestion();
+  });
+  document.getElementById('btnBack').addEventListener('click', goBack);
+  document.getElementById('btnNext').addEventListener('click', goNext);
+  document.getElementById('btnCopy').addEventListener('click', copyResult);
+  document.getElementById('btnRestart').addEventListener('click', restart);
+
+  // Keyboard 1-7 for fast answering, arrow left/right for nav
+  document.addEventListener('keydown', e => {
+    if(state.view !== 'questions') return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if(/^[1-7]$/.test(e.key)){
+      answerQuestion(Number(e.key));
+    } else if(e.key === 'ArrowLeft'){
+      goBack();
+    } else if(e.key === 'ArrowRight' || e.key === 'Enter'){
+      if(state.answers[state.idx] != null) goNext();
+    }
+  });
+
+  // Restore view if returning
+  if(state.view === 'questions' && state.answers.some(a => a != null)){
+    showView('questions');
+    renderQuestion();
+  } else if(state.view === 'result' && state.lastRanks){
+    computeAndShowResult();
+  }
+
+</script>
+</body>
+</html>
