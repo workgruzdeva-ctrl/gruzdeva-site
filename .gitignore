@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Private templates and documents (never publish to repo)
+templates/
+*.docx
