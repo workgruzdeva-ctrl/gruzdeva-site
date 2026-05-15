@@ -148,21 +148,26 @@
   }
   .doc-card.checked .doc-check{color:#3a7a3a; font-weight:600}
 
-  .docs-progress{
-    margin-top:18px; padding:18px 22px;
-    background:var(--line-soft); border-radius:var(--r-md);
-    font-size:14px; color:var(--soft); display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+  /* Consent CTA (Google Form link) */
+  .consent-cta{
+    margin-top:18px; padding:22px 24px;
+    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 65%);
+    border:1.5px solid var(--accent);
+    border-radius:var(--r-md);
   }
-  .docs-progress.done{
-    background:#e9f5ea; color:#2e5d33;
+  .consent-cta p{
+    font-size:14px; color:#5a4500; margin:0 0 14px; line-height:1.55;
   }
-  .docs-progress strong{color:inherit}
-  .docs-instructions{
-    margin-top:14px; padding:18px 22px;
-    border:1px dashed var(--line); border-radius:var(--r-md);
-    font-size:14px; color:var(--soft); line-height:1.6;
+  .consent-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ink); color:#fff;
+    padding:14px 24px; border-radius:100px;
+    text-decoration:none; font-size:14px; font-weight:600;
+    transition:transform .15s var(--easing), box-shadow .15s;
   }
-  .docs-instructions strong{color:var(--ink)}
+  .consent-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+  .consent-btn .arrow{color:var(--accent); font-size:16px; line-height:1; transition:transform .15s}
+  .consent-btn:hover .arrow{transform:translateX(3px)}
 
   /* QUESTIONNAIRES */
   .ql-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin:0 0 20px}
@@ -194,6 +199,17 @@
   .ql-card .ql-open{color:var(--ink); font-weight:600; display:inline-flex; align-items:center; gap:4px}
   .ql-card .ql-open::after{content:"→"; transition:transform .15s}
   .ql-card:hover .ql-open::after{transform:translateX(3px)}
+
+  /* Telegram note (for sending results) */
+  .telegram-note{
+    margin:20px 0 0; padding:16px 20px;
+    background:var(--accent-soft);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    font-size:14px; color:#5a4500; line-height:1.55;
+  }
+  .telegram-note strong{color:var(--ink); font-weight:700}
+  .telegram-note a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--accent-deep); text-decoration-thickness:2px}
 
   /* ACCORDIONS for childhood/parent questionnaires */
   .accordion{
@@ -348,10 +364,6 @@
       <p>Описание услуг, границы работы, формат, стоимость, конфиденциальность, кризисные контакты.</p>
       <div class="doc-actions">
         <a class="doc-link" href="#" data-placeholder="rf-consent-link" target="_blank" rel="noopener">Открыть документ →</a>
-        <label class="doc-check">
-          <input type="checkbox" data-doc-id="rf-consent">
-          Прочитал/прочитала и согласен/согласна
-        </label>
       </div>
     </div>
     <div class="doc-card" data-doc="rf-data">
@@ -359,10 +371,6 @@
       <p>Какие данные обрабатываются, цели, сроки хранения, ваши права, трансграничная передача в сервисы за пределами РФ.</p>
       <div class="doc-actions">
         <a class="doc-link" href="#" data-placeholder="rf-data-link" target="_blank" rel="noopener">Открыть документ →</a>
-        <label class="doc-check">
-          <input type="checkbox" data-doc-id="rf-data">
-          Прочитал/прочитала и согласен/согласна
-        </label>
       </div>
     </div>
   </div>
@@ -374,10 +382,6 @@
       <p>Описание услуг, границы работы, формат, стоимость, конфиденциальность, кризисные контакты.</p>
       <div class="doc-actions">
         <a class="doc-link" href="#" data-placeholder="eu-consent-link" target="_blank" rel="noopener">Открыть документ →</a>
-        <label class="doc-check">
-          <input type="checkbox" data-doc-id="eu-consent">
-          Прочитал/прочитала и согласен/согласна
-        </label>
       </div>
     </div>
     <div class="doc-card" data-doc="eu-gdpr">
@@ -385,21 +389,13 @@
       <p>Согласно Регламенту 2016/679 (GDPR) и LOPDGDD (Испания). Какие данные обрабатываются, цели, сроки, ваши права, надзорный орган.</p>
       <div class="doc-actions">
         <a class="doc-link" href="#" data-placeholder="eu-gdpr-link" target="_blank" rel="noopener">Открыть документ →</a>
-        <label class="doc-check">
-          <input type="checkbox" data-doc-id="eu-gdpr">
-          Прочитал/прочитала и согласен/согласна
-        </label>
       </div>
     </div>
   </div>
 
-  <div class="docs-progress" id="docsProgress" style="display:none">
-    <span>Отмечено: <strong id="docsCount">0 из 2</strong></span>
-    <span class="muted" id="docsHint">Отметьте оба документа, чтобы продолжить</span>
-  </div>
-
-  <div class="docs-instructions" id="docsInstructions" style="display:none">
-    <strong>Готово.</strong> Распечатайте оба документа (или подпишите электронно), укажите ваше имя и дату, и пришлите сканы или фото на <a href="mailto:work.gruzdeva@gmail.com">work.gruzdeva@gmail.com</a>. Можно одним письмом, тема: «Подписанные документы».
+  <div class="consent-cta" id="consentCta" style="display:none">
+    <p>Прочитайте оба документа, затем заполните короткую форму согласия — это электронная подпись (юридически валидна по GDPR и ФЗ-152), занимает 1 минуту.</p>
+    <a href="#" data-placeholder="consent-form-link" target="_blank" rel="noopener" class="consent-btn">Заполнить форму согласия <span class="arrow">→</span></a>
   </div>
 
   <!-- ========== STEP 2: ОПРОСНИКИ ========== -->
@@ -410,54 +406,51 @@
   </div>
   <p class="step-lead">Если пройдёте до встречи — мы быстрее разберёмся со скринингом и больше времени посвятим вашему запросу. Каждый — короткий, 2–10 минут.</p>
 
-  <h3 style="margin:0 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Стандартные скринеры</h3>
+  <h3 style="margin:0 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Стандартные опросники</h3>
 
   <div class="ql-grid">
-    <a href="#" class="ql-card" data-placeholder="asrs-link" target="_blank" rel="noopener">
-      <span class="ql-tag">СДВГ · ASRS v1.1</span>
-      <h4>Скрининг СДВГ у взрослых</h4>
-      <p>18 утверждений, оценка симптомов СДВГ по DSM‑5</p>
-      <div class="ql-foot"><span>~5 минут</span><span class="ql-open">Пройти</span></div>
-    </a>
-
-    <a href="#" class="ql-card" data-placeholder="phq9-link" target="_blank" rel="noopener">
-      <span class="ql-tag">Настроение · PHQ‑9</span>
-      <h4>Опросник депрессии</h4>
-      <p>9 утверждений за последние 2 недели</p>
-      <div class="ql-foot"><span>~3 минуты</span><span class="ql-open">Пройти</span></div>
-    </a>
-
-    <a href="#" class="ql-card" data-placeholder="gad7-link" target="_blank" rel="noopener">
-      <span class="ql-tag">Тревожность · GAD‑7</span>
-      <h4>Опросник тревоги</h4>
-      <p>7 утверждений за последние 2 недели</p>
-      <div class="ql-foot"><span>~2 минуты</span><span class="ql-open">Пройти</span></div>
-    </a>
-
     <a href="test.html" class="ql-card">
-      <span class="ql-tag">Навыки · BDEFS-style</span>
+      <span class="ql-tag">Исполнительные навыки</span>
       <h4>Профиль исполнительных навыков</h4>
-      <p>Сильные и слабые навыки — карта, не диагноз</p>
+      <p>Карта сильных и слабых навыков — встроенный тест на сайте</p>
       <div class="ql-foot"><span>~6 минут</span><span class="ql-open">Пройти</span></div>
     </a>
 
-    <a href="#" class="ql-card" data-placeholder="wfirs-link" target="_blank" rel="noopener">
-      <span class="ql-tag">Функционирование · WFIRS‑S</span>
-      <h4>Влияние на повседневную жизнь</h4>
-      <p>Как трудности проявляются в работе, отношениях, быту</p>
-      <div class="ql-foot"><span>~10 минут</span><span class="ql-open">Пройти</span></div>
+    <a href="https://psytests.org/diag/asrs5.html" class="ql-card" target="_blank" rel="noopener">
+      <span class="ql-tag">СДВГ · ASRS</span>
+      <h4>Скрининг СДВГ у взрослых</h4>
+      <p>Шкала самооценки симптомов СДВГ (DSM‑5)</p>
+      <div class="ql-foot"><span>psytests.org</span><span class="ql-open">Пройти</span></div>
     </a>
 
-    <a href="#" class="ql-card" data-placeholder="sleep-link" target="_blank" rel="noopener">
-      <span class="ql-tag">Сон</span>
-      <h4>Короткий блок про сон</h4>
-      <p>3 вопроса: время, качество, засыпание</p>
-      <div class="ql-foot"><span>~1 минута</span><span class="ql-open">Пройти</span></div>
+    <a href="https://psytests.org/depr/bdi.html" class="ql-card" target="_blank" rel="noopener">
+      <span class="ql-tag">Депрессия · Beck</span>
+      <h4>Шкала депрессии Бека</h4>
+      <p>BDI — оценка симптомов депрессии</p>
+      <div class="ql-foot"><span>psytests.org</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="https://psytests.org/anxiety/stai.html" class="ql-card" target="_blank" rel="noopener">
+      <span class="ql-tag">Тревога · STAI</span>
+      <h4>Шкала тревоги Спилбергера-Ханина</h4>
+      <p>Реактивная и личностная тревожность</p>
+      <div class="ql-foot"><span>psytests.org</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="https://psytests.org/diag/wurs.html" class="ql-card" target="_blank" rel="noopener">
+      <span class="ql-tag">Детство · WURS</span>
+      <h4>Ретроспективная шкала детских симптомов</h4>
+      <p>Wender Utah Rating Scale — оценка симптомов СДВГ в возрасте 6–10 лет, вспоминаете себя</p>
+      <div class="ql-foot"><span>psytests.org</span><span class="ql-open">Пройти</span></div>
     </a>
   </div>
 
-  <h3 style="margin:28px 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Детство 5–12 лет</h3>
-  <p class="step-lead" style="font-size:14px; margin-bottom:14px">У взрослых с СДВГ симптомы должны были проявляться в детстве. Эти два блока помогают собрать ретроспективную картину — и от вас, и от родителя, если есть возможность спросить.</p>
+  <div class="telegram-note">
+    <strong>Когда заполните</strong> — сделайте скрин результата каждого опросника и пришлите мне в Telegram <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">@dr_gruzdeva</a>. Я просмотрю до встречи.
+  </div>
+
+  <h3 style="margin:32px 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Детство 5–12 лет — взгляд родителей</h3>
+  <p class="step-lead" style="font-size:14px; margin-bottom:14px">У взрослых с СДВГ симптомы должны были проявляться в детстве. Если есть возможность — попросите родителя (или старшего родственника) ответить на вопросы ниже. Это сильно помогает собрать ретроспективную картину.</p>
 
   <!-- Parent questionnaire -->
   <div class="accordion" id="acc-parent">
@@ -515,75 +508,7 @@
       </div>
 
       <div class="help-note">
-        Эти вопросы — не тест, а заготовка для разговора. Можно ответить письменно по списку, голосовым сообщением, или просто обсудить с родителем перед встречей. Если родителей нет / нет контакта — это нормально, мы найдём другой способ собрать картину.
-      </div>
-    </div>
-  </div>
-
-  <!-- Childhood self-recall -->
-  <div class="accordion" id="acc-wurs">
-    <button class="acc-toggle" type="button">
-      <div class="left">
-        <span class="acc-tag">Вспоминание · WURS-style</span>
-        <h4>Самоопросник про детство 5–12 лет</h4>
-        <p>~19 утверждений · вспомнить, какими вы были в школе</p>
-      </div>
-      <span class="acc-plus">+</span>
-    </button>
-    <div class="acc-body">
-      <p>Вспомните себя в возрасте 5–12 лет. Отвечайте по тому, что помните или знаете из рассказов родителей.</p>
-
-      <div class="qgroup">
-        <h5>Внимание и работа</h5>
-        <ol>
-          <li>Я часто отвлекался/отвлекалась в школе.</li>
-          <li>Я начинал/начинала задания и не доводил/доводила до конца.</li>
-          <li>В дневнике писали «может, но не хочет», «несобран/несобранна».</li>
-          <li>Я делал/делала глупые ошибки в простых задачах.</li>
-          <li>Мне было сложно слушать длинные объяснения, я уплывал/уплывала мыслями.</li>
-        </ol>
-      </div>
-
-      <div class="qgroup">
-        <h5>Активность и импульсивность</h5>
-        <ol start="6">
-          <li>Я был/была энергичным/энергичной, постоянно в движении.</li>
-          <li>Я перебивал/перебивала других.</li>
-          <li>Я выкрикивал/выкрикивала ответы, не дослушав вопрос.</li>
-          <li>Мне было сложно дождаться своей очереди.</li>
-          <li>Я делал/делала что-то «не подумав», импульсивно.</li>
-        </ol>
-      </div>
-
-      <div class="qgroup">
-        <h5>Организация</h5>
-        <ol start="11">
-          <li>Я постоянно терял/теряла вещи — учебники, ключи, одежду.</li>
-          <li>У меня был беспорядок — в комнате, в портфеле, в тетрадях.</li>
-          <li>Я забывал/забывала про обязанности, обещания, домашние задания.</li>
-        </ol>
-      </div>
-
-      <div class="qgroup">
-        <h5>Эмоции</h5>
-        <ol start="14">
-          <li>У меня случались эмоциональные срывы — больше, чем у других детей.</li>
-          <li>Я был/была вспыльчивым/вспыльчивой.</li>
-          <li>Я переживал/переживала сильнее других в похожих ситуациях.</li>
-        </ol>
-      </div>
-
-      <div class="qgroup">
-        <h5>Социальное</h5>
-        <ol start="17">
-          <li>Мне было сложно дружить или поддерживать дружбу долго.</li>
-          <li>Меня часто упрекали в «несобранности», «несобранности», «лени».</li>
-          <li>У меня были «странные» интересы, которые я мог/могла обсуждать часами.</li>
-        </ol>
-      </div>
-
-      <div class="help-note">
-        Если что-то из этого узнаваемо — пометьте мысленно. Это не «тест на СДВГ», а материал для разговора. На встрече мы пройдёмся по тому, что отозвалось.
+        Эти вопросы — не тест, а заготовка для разговора. Можно ответить письменно по списку, голосовым сообщением или просто обсудить с родителем заранее. <strong>Пришлите ответы в Telegram <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">@dr_gruzdeva</a></strong> — я посмотрю до встречи. Если родителей нет / нет контакта — это нормально, мы найдём другой способ собрать картину.
       </div>
     </div>
   </div>
@@ -627,22 +552,38 @@
     </div>
   </div>
 
+  <div class="telegram-note">
+    <strong>Если записывали ответы</strong> — пришлите мне в Telegram <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">@dr_gruzdeva</a>. Я прочитаю заранее и приду на встречу уже с пониманием контекста.
+  </div>
+
   <!-- ========== STEP 4: ТЕХНИКА ========== -->
   <div class="step-head">
     <span class="step-num">04</span>
     <h2>Техническая подготовка</h2>
     <span class="step-meta">5 минут</span>
   </div>
-  <p class="step-lead">За день до встречи я пришлю Zoom-ссылку. Прежде чем подключиться, пробегитесь по чек-листу.</p>
+  <p class="step-lead">За день до встречи я пришлю Zoom-ссылку. Перед подключением можно пробежаться по короткому чек-листу — разверните, если хотите проверить себя.</p>
 
-  <div class="tech-list">
-    <label class="tech-item"><input type="checkbox" data-tech="zoom"><span>Zoom установлен на устройстве, через которое будете подключаться</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="audio"><span>Микрофон и камера протестированы — слышно и видно нормально</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="headphones"><span>Наушники подключены — так и приватнее, и звук лучше</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="space"><span>Тихое приватное пространство, где никто не зайдёт 60 минут</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="battery"><span>Устройство заряжено или подключено к зарядке</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="internet"><span>Стабильный интернет (если есть выбор — кабель надёжнее Wi-Fi)</span></label>
-    <label class="tech-item"><input type="checkbox" data-tech="notes"><span>Блокнот и ручка под рукой — на случай если захочется записать что-то по ходу</span></label>
+  <div class="accordion" id="acc-tech">
+    <button class="acc-toggle" type="button">
+      <div class="left">
+        <span class="acc-tag">Чек-лист</span>
+        <h4>Проверить готовность к Zoom-встрече</h4>
+        <p>7 пунктов · 5 минут</p>
+      </div>
+      <span class="acc-plus">+</span>
+    </button>
+    <div class="acc-body">
+      <div class="tech-list">
+        <label class="tech-item"><input type="checkbox" data-tech="zoom"><span>Zoom установлен на устройстве, через которое будете подключаться</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="audio"><span>Микрофон и камера протестированы — слышно и видно нормально</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="headphones"><span>Наушники подключены — так и приватнее, и звук лучше</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="space"><span>Тихое приватное пространство, где никто не зайдёт 60 минут</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="battery"><span>Устройство заряжено или подключено к зарядке</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="internet"><span>Стабильный интернет (если есть выбор — кабель надёжнее Wi-Fi)</span></label>
+        <label class="tech-item"><input type="checkbox" data-tech="notes"><span>Блокнот и ручка под рукой — на случай если захочется записать что-то по ходу</span></label>
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -657,15 +598,11 @@
   const jurisCards = document.querySelectorAll('.juris-card');
   const docsRF = document.getElementById('docs-rf');
   const docsOther = document.getElementById('docs-other');
-  const docsProgress = document.getElementById('docsProgress');
-  const docsInstructions = document.getElementById('docsInstructions');
-  const docsCount = document.getElementById('docsCount');
-  const docsHint = document.getElementById('docsHint');
+  const consentCta = document.getElementById('consentCta');
 
   // Load persisted state
   let state = {};
   try{ state = JSON.parse(localStorage.getItem('prep_state') || '{}'); }catch(e){ state = {}; }
-  state.docs = state.docs || {};
   state.tech = state.tech || {};
   state.juris = state.juris || null;
 
@@ -678,46 +615,13 @@
     jurisCards.forEach(c => c.classList.toggle('active', c.dataset.juris === j));
     docsRF.classList.toggle('show', j === 'rf');
     docsOther.classList.toggle('show', j === 'other');
-    docsProgress.style.display = 'flex';
-    updateDocsProgress();
+    consentCta.style.display = 'block';
     persist();
   }
 
   jurisCards.forEach(c => {
     c.addEventListener('click', () => setJuris(c.dataset.juris));
   });
-
-  // Document checkboxes
-  document.querySelectorAll('.doc-check input').forEach(cb => {
-    const id = cb.dataset.docId;
-    if(state.docs[id]) cb.checked = true;
-    if(cb.checked) cb.closest('.doc-card').classList.add('checked');
-
-    cb.addEventListener('change', () => {
-      state.docs[id] = cb.checked;
-      cb.closest('.doc-card').classList.toggle('checked', cb.checked);
-      updateDocsProgress();
-      persist();
-    });
-  });
-
-  function updateDocsProgress(){
-    if(!state.juris) return;
-    const container = state.juris === 'rf' ? docsRF : docsOther;
-    const boxes = container.querySelectorAll('.doc-check input');
-    let checked = 0;
-    boxes.forEach(b => { if(b.checked) checked++; });
-    docsCount.textContent = `${checked} из ${boxes.length}`;
-    if(checked === boxes.length){
-      docsProgress.classList.add('done');
-      docsHint.textContent = '✓ Документы готовы — пришлите сканы на email';
-      docsInstructions.style.display = 'block';
-    } else {
-      docsProgress.classList.remove('done');
-      docsHint.textContent = 'Отметьте оба документа, чтобы продолжить';
-      docsInstructions.style.display = 'none';
-    }
-  }
 
   // Restore juris on load
   if(state.juris) setJuris(state.juris);
