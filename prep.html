@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подготовка к первой встрече · Gruzdeva V.А.</title>
+<meta name="description" content="Что сделать до первой консультации: документы, опросники, рефлексия, техническая подготовка.">
+<style>
+  :root{
+    --ink:#141414;
+    --soft:#4a4a4a;
+    --muted:#8c8c8c;
+    --line:#ececec;
+    --line-soft:#f5f5f5;
+    --bg:#ffffff;
+    --paper:#ffffff;
+    --accent:#ffd93d;
+    --accent-soft:#fff8d6;
+    --accent-deep:#a07800;
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --shadow-soft:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.08);
+    --easing:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0; overflow-x:hidden; max-width:100vw}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink); background:var(--bg);
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--ink); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--ink)}
+
+  .wrap{max-width:820px; margin:0 auto; padding:24px 24px 96px}
+
+  /* TOP NAV */
+  .topnav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0 32px; font-size:14px;
+  }
+  .logo{font-weight:600; letter-spacing:.04em; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+  .logo .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent)}
+  .topnav .back{color:var(--soft); text-decoration:none; font-size:13px; transition:color .15s}
+  .topnav .back:hover{color:var(--ink)}
+  .topnav .back::before{content:"← "}
+
+  /* TYPOGRAPHY */
+  h1.display{
+    font-family:"Charter","Iowan Old Style","Apple Garamond","Georgia",serif;
+    font-size:clamp(36px, 6vw, 56px);
+    font-weight:600; letter-spacing:-.025em; line-height:1.05;
+    margin:0 0 18px;
+  }
+  h2{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:clamp(24px, 4vw, 30px);
+    font-weight:600; letter-spacing:-.015em; line-height:1.2;
+    margin:0 0 12px;
+  }
+  h3{font-size:17px; font-weight:600; margin:0 0 8px; letter-spacing:-.005em}
+  p{margin:0 0 14px; line-height:1.65}
+  .lead{font-size:18px; color:var(--soft); margin:0 0 24px; line-height:1.55}
+  .muted{color:var(--muted); font-size:14px}
+
+  .intro-block{
+    background:var(--accent-soft);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    padding:20px 22px;
+    margin:0 0 36px;
+  }
+  .intro-block p{margin:0; font-size:15px; line-height:1.6; color:#5a4500}
+
+  /* STEP HEADER */
+  .step-head{
+    display:flex; align-items:baseline; gap:12px; margin:48px 0 12px;
+  }
+  .step-num{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; color:var(--accent-deep);
+  }
+  .step-head h2{margin:0; flex:1}
+  .step-meta{
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); font-weight:700;
+    background:var(--line-soft); padding:4px 10px; border-radius:100px;
+  }
+  .step-meta.required{
+    background:var(--ink); color:#fff;
+  }
+  .step-meta.required::before{content:"●  "}
+  .step-lead{
+    font-size:15px; color:var(--soft); margin:0 0 24px; line-height:1.55;
+  }
+
+  /* JURISDICTION CARDS */
+  .juris{display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin:0 0 24px}
+  .juris-card{
+    border:1.5px solid var(--line); border-radius:var(--r-lg);
+    padding:22px; cursor:pointer;
+    text-align:left; background:var(--paper);
+    transition:border-color .2s var(--easing), transform .15s var(--easing), background .15s;
+    font:inherit;
+    color:var(--ink);
+  }
+  .juris-card:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
+  .juris-card.active{border-color:var(--accent); background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 60%); border-width:2px}
+  .juris-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; margin:0 0 4px;
+  }
+  .juris-card p{font-size:13px; color:var(--soft); margin:0; line-height:1.45}
+
+  /* DOCUMENTS LIST */
+  .docs{display:none; flex-direction:column; gap:12px; margin-top:8px}
+  .docs.show{display:flex}
+  .doc-card{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:20px 22px;
+    transition:border-color .2s, background .2s;
+  }
+  .doc-card.checked{
+    border-color:#cce5cd; background:#f7fdf7;
+  }
+  .doc-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; font-weight:600; margin:0 0 6px;
+  }
+  .doc-card p{font-size:13px; color:var(--soft); margin:0 0 14px; line-height:1.5}
+  .doc-actions{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap}
+  .doc-link{
+    color:var(--ink); font-weight:600; font-size:13px;
+    border-bottom:2px solid var(--accent); padding-bottom:1px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:4px;
+  }
+  .doc-link:hover{color:var(--accent-deep)}
+  .doc-check{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--soft); cursor:pointer;
+    user-select:none;
+  }
+  .doc-check input{
+    width:18px; height:18px; cursor:pointer; accent-color:var(--accent-deep);
+  }
+  .doc-card.checked .doc-check{color:#3a7a3a; font-weight:600}
+
+  .docs-progress{
+    margin-top:18px; padding:18px 22px;
+    background:var(--line-soft); border-radius:var(--r-md);
+    font-size:14px; color:var(--soft); display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .docs-progress.done{
+    background:#e9f5ea; color:#2e5d33;
+  }
+  .docs-progress strong{color:inherit}
+  .docs-instructions{
+    margin-top:14px; padding:18px 22px;
+    border:1px dashed var(--line); border-radius:var(--r-md);
+    font-size:14px; color:var(--soft); line-height:1.6;
+  }
+  .docs-instructions strong{color:var(--ink)}
+
+  /* QUESTIONNAIRES */
+  .ql-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin:0 0 20px}
+  .ql-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+    padding:18px 20px;
+    display:flex; flex-direction:column; gap:6px;
+    text-decoration:none; color:var(--ink);
+    transition:border-color .15s, transform .15s var(--easing), box-shadow .15s;
+  }
+  .ql-card:hover{transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-soft)}
+  .ql-card .ql-tag{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    color:var(--accent-deep); display:inline-flex; align-items:center; gap:6px;
+  }
+  .ql-card .ql-tag::before{
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--accent);
+  }
+  .ql-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; font-weight:600; margin:2px 0 0;
+  }
+  .ql-card p{font-size:13px; color:var(--soft); margin:0; line-height:1.45}
+  .ql-card .ql-foot{
+    margin-top:auto; padding-top:8px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:12px; color:var(--muted);
+  }
+  .ql-card .ql-open{color:var(--ink); font-weight:600; display:inline-flex; align-items:center; gap:4px}
+  .ql-card .ql-open::after{content:"→"; transition:transform .15s}
+  .ql-card:hover .ql-open::after{transform:translateX(3px)}
+
+  /* ACCORDIONS for childhood/parent questionnaires */
+  .accordion{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+    margin:0 0 12px; overflow:hidden;
+  }
+  .acc-toggle{
+    width:100%; text-align:left; cursor:pointer;
+    background:none; border:none; font:inherit;
+    padding:20px 22px;
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    color:var(--ink);
+  }
+  .acc-toggle:hover{background:var(--line-soft)}
+  .acc-toggle .left{display:flex; flex-direction:column; gap:4px; text-align:left}
+  .acc-toggle .acc-tag{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    color:var(--accent-deep); display:inline-flex; align-items:center; gap:6px;
+  }
+  .acc-toggle .acc-tag::before{
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--accent);
+  }
+  .acc-toggle h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; font-weight:600; margin:0; line-height:1.2;
+  }
+  .acc-toggle p{font-size:13px; color:var(--soft); margin:0; line-height:1.4}
+  .acc-plus{
+    width:28px; height:28px; border-radius:50%;
+    background:var(--line-soft); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; line-height:1; color:var(--ink);
+    transition:transform .25s var(--easing), background .2s;
+  }
+  .accordion.open .acc-plus{transform:rotate(45deg); background:var(--accent)}
+  .acc-body{
+    max-height:0; overflow:hidden;
+    transition:max-height .35s var(--easing);
+    padding:0 22px;
+    color:var(--soft); font-size:14px; line-height:1.65;
+  }
+  .accordion.open .acc-body{
+    max-height:3000px; padding:0 22px 22px;
+  }
+  .acc-body .qgroup{margin-top:14px}
+  .acc-body .qgroup h5{
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); font-weight:700;
+    margin:14px 0 8px;
+  }
+  .acc-body ol{padding-left:22px; margin:0}
+  .acc-body ol li{padding:3px 0; line-height:1.55}
+  .acc-body .help-note{
+    margin-top:18px; padding:14px 16px;
+    background:var(--accent-soft); border-radius:8px;
+    color:#5a4500; font-size:13px; line-height:1.5;
+  }
+
+  /* REFLECTION list */
+  .reflect{display:flex; flex-direction:column; gap:14px; margin-top:8px}
+  .reflect-item{
+    display:flex; align-items:flex-start; gap:14px;
+    padding:18px 22px;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+  }
+  .reflect-num{
+    flex-shrink:0;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:13px;
+  }
+  .reflect-body{flex:1}
+  .reflect-body h4{font-size:15px; font-weight:600; margin:0 0 4px; line-height:1.35}
+  .reflect-body p{font-size:13px; color:var(--soft); margin:0; line-height:1.5}
+
+  /* TECH CHECKLIST */
+  .tech-list{display:flex; flex-direction:column; gap:10px; margin-top:8px}
+  .tech-item{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 18px;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r-md);
+    cursor:pointer; user-select:none;
+    transition:background .15s, border-color .15s;
+  }
+  .tech-item:hover{background:var(--line-soft)}
+  .tech-item.checked{background:#f7fdf7; border-color:#cce5cd}
+  .tech-item input{width:20px; height:20px; cursor:pointer; accent-color:var(--accent-deep)}
+  .tech-item span{font-size:14px; line-height:1.4}
+  .tech-item.checked span{color:#3a7a3a; text-decoration:line-through; text-decoration-color:#7ca080}
+
+  /* FOOTER */
+  footer{
+    margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:14px; text-align:center;
+  }
+  footer a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:2px}
+
+  /* RESPONSIVE */
+  @media (max-width: 640px){
+    .wrap{padding:16px 18px 72px}
+    .juris{grid-template-columns:1fr}
+    .ql-grid{grid-template-columns:1fr}
+    .doc-actions{flex-direction:column; align-items:flex-start; gap:12px}
+    .step-head{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <a href="index.html" class="logo"><span class="dot"></span>Gruzdeva V.А.</a>
+    <a href="index.html#services" class="back">К консультациям</a>
+  </div>
+
+  <!-- HEADER -->
+  <h1 class="display">Подготовка к первой встрече</h1>
+  <p class="lead">Четыре шага перед нашей первой консультацией. Обязательный — только первый. Остальные не строго нужны, но сильно сэкономят время на встрече.</p>
+
+  <div class="intro-block">
+    <p><strong>Важно про диагностику.</strong> Это не одна встреча с готовым диагнозом, а процесс. У кого-то картина становится понятной с первой встречи, у кого-то нужно собрать полный анамнез, отчёты родителей о возрасте 5–12 лет, иногда дополнительные опросники или дополнительная встреча. Обычно занимает от одной до трёх встреч, иногда больше — в зависимости от того, как пойдёт.</p>
+  </div>
+
+  <!-- ========== STEP 1: ДОКУМЕНТЫ ========== -->
+  <div class="step-head">
+    <span class="step-num">01</span>
+    <h2>Документы</h2>
+    <span class="step-meta required">Обязательно</span>
+  </div>
+  <p class="step-lead">Прочитайте оба документа, отметьте чекбоксы и пришлите подписанные сканы или фото на <a href="mailto:work.gruzdeva@gmail.com">work.gruzdeva@gmail.com</a>. Без подписанных документов работу начать не могу — это базовая защита и для вас, и для меня.</p>
+
+  <p style="margin-bottom:14px">Сначала выберите, где вы находитесь:</p>
+
+  <div class="juris">
+    <button class="juris-card" data-juris="rf" type="button">
+      <h4>Я в России</h4>
+      <p>Информированное согласие + Согласие на персональные данные по ФЗ‑152</p>
+    </button>
+    <button class="juris-card" data-juris="other" type="button">
+      <h4>Я в другой стране</h4>
+      <p>Информированное согласие + Privacy Notice по GDPR (ЕС/Великобритания) или применимое к вашей юрисдикции</p>
+    </button>
+  </div>
+
+  <!-- RF documents -->
+  <div class="docs" id="docs-rf">
+    <div class="doc-card" data-doc="rf-consent">
+      <h4>Информированное согласие на консультационные услуги</h4>
+      <p>Описание услуг, границы работы, формат, стоимость, конфиденциальность, кризисные контакты.</p>
+      <div class="doc-actions">
+        <a class="doc-link" href="#" data-placeholder="rf-consent-link" target="_blank" rel="noopener">Открыть документ →</a>
+        <label class="doc-check">
+          <input type="checkbox" data-doc-id="rf-consent">
+          Прочитал/прочитала и согласен/согласна
+        </label>
+      </div>
+    </div>
+    <div class="doc-card" data-doc="rf-data">
+      <h4>Согласие на обработку персональных данных (ФЗ‑152)</h4>
+      <p>Какие данные обрабатываются, цели, сроки хранения, ваши права, трансграничная передача в сервисы за пределами РФ.</p>
+      <div class="doc-actions">
+        <a class="doc-link" href="#" data-placeholder="rf-data-link" target="_blank" rel="noopener">Открыть документ →</a>
+        <label class="doc-check">
+          <input type="checkbox" data-doc-id="rf-data">
+          Прочитал/прочитала и согласен/согласна
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other (EU/UK/world) documents -->
+  <div class="docs" id="docs-other">
+    <div class="doc-card" data-doc="eu-consent">
+      <h4>Информированное согласие на консультационные услуги</h4>
+      <p>Описание услуг, границы работы, формат, стоимость, конфиденциальность, кризисные контакты.</p>
+      <div class="doc-actions">
+        <a class="doc-link" href="#" data-placeholder="eu-consent-link" target="_blank" rel="noopener">Открыть документ →</a>
+        <label class="doc-check">
+          <input type="checkbox" data-doc-id="eu-consent">
+          Прочитал/прочитала и согласен/согласна
+        </label>
+      </div>
+    </div>
+    <div class="doc-card" data-doc="eu-gdpr">
+      <h4>Privacy Notice и согласие на обработку данных (GDPR)</h4>
+      <p>Согласно Регламенту 2016/679 (GDPR) и LOPDGDD (Испания). Какие данные обрабатываются, цели, сроки, ваши права, надзорный орган.</p>
+      <div class="doc-actions">
+        <a class="doc-link" href="#" data-placeholder="eu-gdpr-link" target="_blank" rel="noopener">Открыть документ →</a>
+        <label class="doc-check">
+          <input type="checkbox" data-doc-id="eu-gdpr">
+          Прочитал/прочитала и согласен/согласна
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="docs-progress" id="docsProgress" style="display:none">
+    <span>Отмечено: <strong id="docsCount">0 из 2</strong></span>
+    <span class="muted" id="docsHint">Отметьте оба документа, чтобы продолжить</span>
+  </div>
+
+  <div class="docs-instructions" id="docsInstructions" style="display:none">
+    <strong>Готово.</strong> Распечатайте оба документа (или подпишите электронно), укажите ваше имя и дату, и пришлите сканы или фото на <a href="mailto:work.gruzdeva@gmail.com">work.gruzdeva@gmail.com</a>. Можно одним письмом, тема: «Подписанные документы».
+  </div>
+
+  <!-- ========== STEP 2: ОПРОСНИКИ ========== -->
+  <div class="step-head">
+    <span class="step-num">02</span>
+    <h2>Опросники</h2>
+    <span class="step-meta">Не обязательно</span>
+  </div>
+  <p class="step-lead">Если пройдёте до встречи — мы быстрее разберёмся со скринингом и больше времени посвятим вашему запросу. Каждый — короткий, 2–10 минут.</p>
+
+  <h3 style="margin:0 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Стандартные скринеры</h3>
+
+  <div class="ql-grid">
+    <a href="#" class="ql-card" data-placeholder="asrs-link" target="_blank" rel="noopener">
+      <span class="ql-tag">СДВГ · ASRS v1.1</span>
+      <h4>Скрининг СДВГ у взрослых</h4>
+      <p>18 утверждений, оценка симптомов СДВГ по DSM‑5</p>
+      <div class="ql-foot"><span>~5 минут</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="#" class="ql-card" data-placeholder="phq9-link" target="_blank" rel="noopener">
+      <span class="ql-tag">Настроение · PHQ‑9</span>
+      <h4>Опросник депрессии</h4>
+      <p>9 утверждений за последние 2 недели</p>
+      <div class="ql-foot"><span>~3 минуты</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="#" class="ql-card" data-placeholder="gad7-link" target="_blank" rel="noopener">
+      <span class="ql-tag">Тревожность · GAD‑7</span>
+      <h4>Опросник тревоги</h4>
+      <p>7 утверждений за последние 2 недели</p>
+      <div class="ql-foot"><span>~2 минуты</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="test.html" class="ql-card">
+      <span class="ql-tag">Навыки · BDEFS-style</span>
+      <h4>Профиль исполнительных навыков</h4>
+      <p>Сильные и слабые навыки — карта, не диагноз</p>
+      <div class="ql-foot"><span>~6 минут</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="#" class="ql-card" data-placeholder="wfirs-link" target="_blank" rel="noopener">
+      <span class="ql-tag">Функционирование · WFIRS‑S</span>
+      <h4>Влияние на повседневную жизнь</h4>
+      <p>Как трудности проявляются в работе, отношениях, быту</p>
+      <div class="ql-foot"><span>~10 минут</span><span class="ql-open">Пройти</span></div>
+    </a>
+
+    <a href="#" class="ql-card" data-placeholder="sleep-link" target="_blank" rel="noopener">
+      <span class="ql-tag">Сон</span>
+      <h4>Короткий блок про сон</h4>
+      <p>3 вопроса: время, качество, засыпание</p>
+      <div class="ql-foot"><span>~1 минута</span><span class="ql-open">Пройти</span></div>
+    </a>
+  </div>
+
+  <h3 style="margin:28px 0 12px; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)">Детство 5–12 лет</h3>
+  <p class="step-lead" style="font-size:14px; margin-bottom:14px">У взрослых с СДВГ симптомы должны были проявляться в детстве. Эти два блока помогают собрать ретроспективную картину — и от вас, и от родителя, если есть возможность спросить.</p>
+
+  <!-- Parent questionnaire -->
+  <div class="accordion" id="acc-parent">
+    <button class="acc-toggle" type="button">
+      <div class="left">
+        <span class="acc-tag">Опросник для родителей</span>
+        <h4>Вопросы родителю о вас в возрасте 5–12 лет</h4>
+        <p>~18 вопросов · можно распечатать или скинуть текстом</p>
+      </div>
+      <span class="acc-plus">+</span>
+    </button>
+    <div class="acc-body">
+      <p>Перед началом: вспомните вашего ребёнка (того, кто сейчас читает) в возрасте от 5 до 12 лет — это начальная и средняя школа. Отвечайте по тому, что помните.</p>
+
+      <div class="qgroup">
+        <h5>Школа и учёба</h5>
+        <ol>
+          <li>Учителя жаловались, что ребёнок невнимателен или отвлекается?</li>
+          <li>Ребёнок забывал домашние задания, тетради, ручки, физкультурную форму?</li>
+          <li>Начинал задание и не доводил до конца?</li>
+          <li>Делал «глупые» ошибки по невнимательности — в простых задачах, которые умел решать?</li>
+          <li>Часто не мог усидеть на уроке, ёрзал, вертелся, вставал?</li>
+          <li>Были сильные стороны в учёбе? Какие предметы давались легко, какие тяжело?</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Поведение и импульсивность</h5>
+        <ol start="7">
+          <li>Перебивал других в разговоре?</li>
+          <li>Трудно было дождаться своей очереди (в играх, в очереди, при разговоре)?</li>
+          <li>Делал что-то импульсивно, без обдумывания — а потом жалел?</li>
+          <li>Терял вещи — игрушки, школьные принадлежности, одежду?</li>
+          <li>Был «активным» — бегал, лазил, не мог сидеть на месте, было много энергии?</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Эмоции и социальное</h5>
+        <ol start="12">
+          <li>Эмоциональные реакции были яркими, непредсказуемыми, «больше нормы»?</li>
+          <li>Были сложности с друзьями — конфликты, изоляция, или быстрая смена компаний?</li>
+          <li>«Загорался» интересом к чему-то новому и быстро терял интерес?</li>
+          <li>Становился вспыльчивым или сильно злился по мелочам?</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Развитие и помощь</h5>
+        <ol start="16">
+          <li>Был ли поставлен диагноз — СДВГ, аутизм, дислексия, тревожное расстройство, другое?</li>
+          <li>Обращались ли к психологу, психиатру, неврологу в детстве?</li>
+          <li>Что родители помнят как «особенное» в ребёнке — сильные или сложные стороны?</li>
+        </ol>
+      </div>
+
+      <div class="help-note">
+        Эти вопросы — не тест, а заготовка для разговора. Можно ответить письменно по списку, голосовым сообщением, или просто обсудить с родителем перед встречей. Если родителей нет / нет контакта — это нормально, мы найдём другой способ собрать картину.
+      </div>
+    </div>
+  </div>
+
+  <!-- Childhood self-recall -->
+  <div class="accordion" id="acc-wurs">
+    <button class="acc-toggle" type="button">
+      <div class="left">
+        <span class="acc-tag">Вспоминание · WURS-style</span>
+        <h4>Самоопросник про детство 5–12 лет</h4>
+        <p>~19 утверждений · вспомнить, какими вы были в школе</p>
+      </div>
+      <span class="acc-plus">+</span>
+    </button>
+    <div class="acc-body">
+      <p>Вспомните себя в возрасте 5–12 лет. Отвечайте по тому, что помните или знаете из рассказов родителей.</p>
+
+      <div class="qgroup">
+        <h5>Внимание и работа</h5>
+        <ol>
+          <li>Я часто отвлекался/отвлекалась в школе.</li>
+          <li>Я начинал/начинала задания и не доводил/доводила до конца.</li>
+          <li>В дневнике писали «может, но не хочет», «несобран/несобранна».</li>
+          <li>Я делал/делала глупые ошибки в простых задачах.</li>
+          <li>Мне было сложно слушать длинные объяснения, я уплывал/уплывала мыслями.</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Активность и импульсивность</h5>
+        <ol start="6">
+          <li>Я был/была энергичным/энергичной, постоянно в движении.</li>
+          <li>Я перебивал/перебивала других.</li>
+          <li>Я выкрикивал/выкрикивала ответы, не дослушав вопрос.</li>
+          <li>Мне было сложно дождаться своей очереди.</li>
+          <li>Я делал/делала что-то «не подумав», импульсивно.</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Организация</h5>
+        <ol start="11">
+          <li>Я постоянно терял/теряла вещи — учебники, ключи, одежду.</li>
+          <li>У меня был беспорядок — в комнате, в портфеле, в тетрадях.</li>
+          <li>Я забывал/забывала про обязанности, обещания, домашние задания.</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Эмоции</h5>
+        <ol start="14">
+          <li>У меня случались эмоциональные срывы — больше, чем у других детей.</li>
+          <li>Я был/была вспыльчивым/вспыльчивой.</li>
+          <li>Я переживал/переживала сильнее других в похожих ситуациях.</li>
+        </ol>
+      </div>
+
+      <div class="qgroup">
+        <h5>Социальное</h5>
+        <ol start="17">
+          <li>Мне было сложно дружить или поддерживать дружбу долго.</li>
+          <li>Меня часто упрекали в «несобранности», «несобранности», «лени».</li>
+          <li>У меня были «странные» интересы, которые я мог/могла обсуждать часами.</li>
+        </ol>
+      </div>
+
+      <div class="help-note">
+        Если что-то из этого узнаваемо — пометьте мысленно. Это не «тест на СДВГ», а материал для разговора. На встрече мы пройдёмся по тому, что отозвалось.
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== STEP 3: ПОДУМАТЬ ЗАРАНЕЕ ========== -->
+  <div class="step-head">
+    <span class="step-num">03</span>
+    <h2>Подумать заранее</h2>
+    <span class="step-meta">Не обязательно</span>
+  </div>
+  <p class="step-lead">Подумайте над этими вопросами. Записывать ответы не обязательно — главное, чтобы у вас была картина в голове к моменту встречи.</p>
+
+  <div class="reflect">
+    <div class="reflect-item">
+      <div class="reflect-num">1</div>
+      <div class="reflect-body">
+        <h4>С чем именно вы пришли?</h4>
+        <p>Опишите в 3–5 предложениях своими словами. Что именно «не получается» сейчас?</p>
+      </div>
+    </div>
+    <div class="reflect-item">
+      <div class="reflect-num">2</div>
+      <div class="reflect-body">
+        <h4>Приведите 2–3 конкретных примера за последнюю неделю</h4>
+        <p>Не «вообще трудно сосредоточиться», а «вчера сел поработать в 10 — встал в 13, ничего не сделал, был на телефоне». Конкретика помогает увидеть точки сбоя.</p>
+      </div>
+    </div>
+    <div class="reflect-item">
+      <div class="reflect-num">3</div>
+      <div class="reflect-body">
+        <h4>Что у вас уже было — диагнозы, специалисты, методы?</h4>
+        <p>Какие диагнозы ставили (если ставили). Какие препараты принимаете сейчас или принимали. К кому обращались — психологи, психиатры, неврологи. Что пробовали — методы, схемы, приложения. Что сработало, что нет.</p>
+      </div>
+    </div>
+    <div class="reflect-item">
+      <div class="reflect-num">4</div>
+      <div class="reflect-body">
+        <h4>Что для вас будет «получилось» через 3 месяца работы?</h4>
+        <p>Если бы вы вернулись через 3 месяца — по чему вы поняли бы, что мы поработали не зря? Какие изменения были бы заметны вам и/или вашим близким?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== STEP 4: ТЕХНИКА ========== -->
+  <div class="step-head">
+    <span class="step-num">04</span>
+    <h2>Техническая подготовка</h2>
+    <span class="step-meta">5 минут</span>
+  </div>
+  <p class="step-lead">За день до встречи я пришлю Zoom-ссылку. Прежде чем подключиться, пробегитесь по чек-листу.</p>
+
+  <div class="tech-list">
+    <label class="tech-item"><input type="checkbox" data-tech="zoom"><span>Zoom установлен на устройстве, через которое будете подключаться</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="audio"><span>Микрофон и камера протестированы — слышно и видно нормально</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="headphones"><span>Наушники подключены — так и приватнее, и звук лучше</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="space"><span>Тихое приватное пространство, где никто не зайдёт 60 минут</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="battery"><span>Устройство заряжено или подключено к зарядке</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="internet"><span>Стабильный интернет (если есть выбор — кабель надёжнее Wi-Fi)</span></label>
+    <label class="tech-item"><input type="checkbox" data-tech="notes"><span>Блокнот и ручка под рукой — на случай если захочется записать что-то по ходу</span></label>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Если что-то непонятно — пишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram @dr_gruzdeva</a>. До встречи!
+  </footer>
+
+</div>
+
+<script>
+  /* ========== JURISDICTION + DOCUMENTS ========== */
+  const jurisCards = document.querySelectorAll('.juris-card');
+  const docsRF = document.getElementById('docs-rf');
+  const docsOther = document.getElementById('docs-other');
+  const docsProgress = document.getElementById('docsProgress');
+  const docsInstructions = document.getElementById('docsInstructions');
+  const docsCount = document.getElementById('docsCount');
+  const docsHint = document.getElementById('docsHint');
+
+  // Load persisted state
+  let state = {};
+  try{ state = JSON.parse(localStorage.getItem('prep_state') || '{}'); }catch(e){ state = {}; }
+  state.docs = state.docs || {};
+  state.tech = state.tech || {};
+  state.juris = state.juris || null;
+
+  function persist(){
+    try{ localStorage.setItem('prep_state', JSON.stringify(state)); }catch(e){}
+  }
+
+  function setJuris(j){
+    state.juris = j;
+    jurisCards.forEach(c => c.classList.toggle('active', c.dataset.juris === j));
+    docsRF.classList.toggle('show', j === 'rf');
+    docsOther.classList.toggle('show', j === 'other');
+    docsProgress.style.display = 'flex';
+    updateDocsProgress();
+    persist();
+  }
+
+  jurisCards.forEach(c => {
+    c.addEventListener('click', () => setJuris(c.dataset.juris));
+  });
+
+  // Document checkboxes
+  document.querySelectorAll('.doc-check input').forEach(cb => {
+    const id = cb.dataset.docId;
+    if(state.docs[id]) cb.checked = true;
+    if(cb.checked) cb.closest('.doc-card').classList.add('checked');
+
+    cb.addEventListener('change', () => {
+      state.docs[id] = cb.checked;
+      cb.closest('.doc-card').classList.toggle('checked', cb.checked);
+      updateDocsProgress();
+      persist();
+    });
+  });
+
+  function updateDocsProgress(){
+    if(!state.juris) return;
+    const container = state.juris === 'rf' ? docsRF : docsOther;
+    const boxes = container.querySelectorAll('.doc-check input');
+    let checked = 0;
+    boxes.forEach(b => { if(b.checked) checked++; });
+    docsCount.textContent = `${checked} из ${boxes.length}`;
+    if(checked === boxes.length){
+      docsProgress.classList.add('done');
+      docsHint.textContent = '✓ Документы готовы — пришлите сканы на email';
+      docsInstructions.style.display = 'block';
+    } else {
+      docsProgress.classList.remove('done');
+      docsHint.textContent = 'Отметьте оба документа, чтобы продолжить';
+      docsInstructions.style.display = 'none';
+    }
+  }
+
+  // Restore juris on load
+  if(state.juris) setJuris(state.juris);
+
+  /* ========== ACCORDIONS ========== */
+  document.querySelectorAll('.acc-toggle').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('.accordion').classList.toggle('open'));
+  });
+
+  /* ========== TECH CHECKLIST ========== */
+  document.querySelectorAll('.tech-item input').forEach(cb => {
+    const id = cb.dataset.tech;
+    if(state.tech[id]) cb.checked = true;
+    if(cb.checked) cb.closest('.tech-item').classList.add('checked');
+
+    cb.addEventListener('change', () => {
+      state.tech[id] = cb.checked;
+      cb.closest('.tech-item').classList.toggle('checked', cb.checked);
+      persist();
+    });
+  });
+
+  /* ========== PLACEHOLDER LINKS ==========
+     Эти ссылки нужно подставить после загрузки документов на Google Drive
+     и создания Google Forms для опросников.
+     data-placeholder атрибуты помечают где это сделать.
+  */
+</script>
+
+</body>
+</html>
