@@ -366,7 +366,48 @@
     .juris{grid-template-columns:1fr}
     .ql-grid{grid-template-columns:1fr}
     .doc-actions{flex-direction:column; align-items:flex-start; gap:12px}
-    .step-head{flex-wrap:wrap}
+
+    /* Step head wraps nicely with smaller meta */
+    .step-head{flex-wrap:wrap; gap:10px}
+    .step-meta{font-size:11px; padding:5px 12px; letter-spacing:.14em}
+    h2{flex-basis:100%}
+
+    /* Intro block compact */
+    .intro-block{padding:16px 18px; margin-bottom:28px}
+    .intro-block p{font-size:14px}
+
+    /* Doc cards compact */
+    .doc-card{padding:18px 20px}
+    .doc-text{padding:16px 18px; font-size:13px}
+    .doc-text table{font-size:11px}
+    /* Allow first table column to wrap on narrow screens */
+    .doc-text td:first-child{white-space:normal; padding-right:10px; min-width:90px}
+
+    /* Consent CTA fits screen */
+    .consent-cta{padding:18px 20px}
+    .consent-btn{width:100%; justify-content:center; padding:14px 18px}
+
+    /* Reflect items more compact */
+    .reflect-item{padding:14px 16px; gap:12px}
+    .reflect-num{width:26px; height:26px; font-size:12px; flex-shrink:0}
+    .reflect-body h4{font-size:14px}
+    .reflect-body p{font-size:13px}
+
+    /* Accordions */
+    .acc-toggle{padding:18px 20px}
+    .acc-toggle h4{font-size:16px}
+    .acc-toggle p{font-size:12px}
+    .accordion.open .acc-body{padding:0 20px 20px}
+
+    /* Telegram-note compact */
+    .telegram-note{padding:14px 16px; font-size:13px}
+
+    /* Tech list */
+    .tech-item{padding:12px 14px; gap:12px}
+    .tech-item span{font-size:13px}
+
+    /* Footer */
+    footer{font-size:13px}
   }
 </style>
 </head>
