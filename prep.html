@@ -85,14 +85,24 @@
   }
   .step-head h2{margin:0; flex:1}
   .step-meta{
-    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--muted); font-weight:700;
-    background:var(--line-soft); padding:4px 10px; border-radius:100px;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--soft); font-weight:700;
+    background:var(--paper); border:1.5px dashed #cccccc;
+    padding:6px 14px; border-radius:100px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .step-meta::before{
+    content:""; width:8px; height:8px; border-radius:50%; background:#cccccc;
   }
   .step-meta.required{
     background:var(--ink); color:#fff;
+    border:1.5px solid var(--ink);
+    box-shadow:0 4px 12px -4px rgba(0,0,0,.4);
   }
-  .step-meta.required::before{content:"●  "}
+  .step-meta.required::before{
+    background:var(--accent); width:9px; height:9px;
+    box-shadow:0 0 0 3px rgba(255,217,61,.3);
+  }
   .step-lead{
     font-size:15px; color:var(--soft); margin:0 0 24px; line-height:1.55;
   }
@@ -561,41 +571,53 @@
     <h2>Подумать заранее</h2>
     <span class="step-meta">Не обязательно</span>
   </div>
-  <p class="step-lead">Подумайте над этими вопросами. Записывать ответы не обязательно — главное, чтобы у вас была картина в голове к моменту встречи.</p>
+  <p class="step-lead">Четыре вопроса для размышления о вашем запросе. Записывать ответы не обязательно — главное, чтобы у вас была картина в голове к моменту встречи.</p>
 
-  <div class="reflect">
-    <div class="reflect-item">
-      <div class="reflect-num">1</div>
-      <div class="reflect-body">
-        <h4>С чем именно вы пришли?</h4>
-        <p>Опишите в 3–5 предложениях своими словами. Что именно «не получается» сейчас?</p>
+  <div class="accordion" id="acc-reflect">
+    <button class="acc-toggle" type="button">
+      <div class="left">
+        <span class="acc-tag">4 вопроса</span>
+        <h4>Раскрыть вопросы для размышления</h4>
+        <p>о запросе, конкретных примерах, истории и целях</p>
       </div>
-    </div>
-    <div class="reflect-item">
-      <div class="reflect-num">2</div>
-      <div class="reflect-body">
-        <h4>Приведите 2–3 конкретных примера за последнюю неделю</h4>
-        <p>Не «вообще трудно сосредоточиться», а «вчера сел поработать в 10 — встал в 13, ничего не сделал, был на телефоне». Конкретика помогает увидеть точки сбоя.</p>
+      <span class="acc-plus">+</span>
+    </button>
+    <div class="acc-body">
+      <div class="reflect">
+        <div class="reflect-item">
+          <div class="reflect-num">1</div>
+          <div class="reflect-body">
+            <h4>С чем именно вы пришли?</h4>
+            <p>Опишите в 3–5 предложениях своими словами. Что именно «не получается» сейчас?</p>
+          </div>
+        </div>
+        <div class="reflect-item">
+          <div class="reflect-num">2</div>
+          <div class="reflect-body">
+            <h4>Приведите 2–3 конкретных примера за последнюю неделю</h4>
+            <p>Не «вообще трудно сосредоточиться», а «вчера сел поработать в 10 — встал в 13, ничего не сделал, был на телефоне». Конкретика помогает увидеть точки сбоя.</p>
+          </div>
+        </div>
+        <div class="reflect-item">
+          <div class="reflect-num">3</div>
+          <div class="reflect-body">
+            <h4>Что у вас уже было — диагнозы, специалисты, методы?</h4>
+            <p>Какие диагнозы ставили (если ставили). Какие препараты принимаете сейчас или принимали. К кому обращались — психологи, психиатры, неврологи. Что пробовали — методы, схемы, приложения. Что сработало, что нет.</p>
+          </div>
+        </div>
+        <div class="reflect-item">
+          <div class="reflect-num">4</div>
+          <div class="reflect-body">
+            <h4>Что для вас будет «получилось» через 3 месяца работы?</h4>
+            <p>Если бы вы вернулись через 3 месяца — по чему вы поняли бы, что мы поработали не зря? Какие изменения были бы заметны вам и/или вашим близким?</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="reflect-item">
-      <div class="reflect-num">3</div>
-      <div class="reflect-body">
-        <h4>Что у вас уже было — диагнозы, специалисты, методы?</h4>
-        <p>Какие диагнозы ставили (если ставили). Какие препараты принимаете сейчас или принимали. К кому обращались — психологи, психиатры, неврологи. Что пробовали — методы, схемы, приложения. Что сработало, что нет.</p>
-      </div>
-    </div>
-    <div class="reflect-item">
-      <div class="reflect-num">4</div>
-      <div class="reflect-body">
-        <h4>Что для вас будет «получилось» через 3 месяца работы?</h4>
-        <p>Если бы вы вернулись через 3 месяца — по чему вы поняли бы, что мы поработали не зря? Какие изменения были бы заметны вам и/или вашим близким?</p>
-      </div>
-    </div>
-  </div>
 
-  <div class="telegram-note">
-    <strong>Если записывали ответы</strong> — пришлите мне в Telegram <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">@dr_gruzdeva</a>. Я прочитаю заранее и приду на встречу уже с пониманием контекста.
+      <div class="telegram-note">
+        <strong>Если записывали ответы</strong> — пришлите мне в Telegram <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">@dr_gruzdeva</a>. Я прочитаю заранее и приду на встречу уже с пониманием контекста.
+      </div>
+    </div>
   </div>
 
   <!-- ========== STEP 4: ТЕХНИКА ========== -->
