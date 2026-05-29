@@ -57,12 +57,40 @@
     padding-top:56px; padding-bottom:56px;
   }
   .bleed > .inner{max-width:860px; margin:0 auto}
-  .bleed.sage{background:var(--sage-soft)}
-  .bleed.mint{background:var(--mint-soft)}
-  .bleed.milk{background:var(--milk)}
-  .bleed.sage-deep{background:var(--sage-deep); color:#f3ecdb}
+  /* Цветные секции "тают" в фон страницы у краёв — переходы незаметные */
+  .bleed.sage{
+    background:linear-gradient(180deg,
+      var(--bg) 0%,
+      var(--sage-soft) 120px,
+      var(--sage-soft) calc(100% - 120px),
+      var(--bg) 100%);
+  }
+  .bleed.mint{
+    background:linear-gradient(180deg,
+      var(--bg) 0%,
+      var(--mint-soft) 120px,
+      var(--mint-soft) calc(100% - 120px),
+      var(--bg) 100%);
+  }
+  .bleed.milk{
+    background:linear-gradient(180deg,
+      var(--bg) 0%,
+      var(--milk) 100px,
+      var(--milk) calc(100% - 100px),
+      var(--bg) 100%);
+  }
+  .bleed.sage-deep{
+    background:linear-gradient(180deg,
+      var(--bg) 0%,
+      var(--sage-deep) 160px,
+      var(--sage-deep) calc(100% - 30px),
+      var(--bg) 100%);
+    color:#f3ecdb;
+  }
   .bleed.sage-deep h2, .bleed.sage-deep h3{color:#f3ecdb}
   .bleed.sage-deep h2.scribble::after{filter:none}
+  /* Больше внутреннего паддинга, чтобы контент не попадал в зону «таяния» */
+  .bleed{padding-top:96px; padding-bottom:96px}
 
   /* Декоративная веточка/листик в углу секции */
   .leaf-deco{
@@ -70,10 +98,10 @@
     width:120px; height:120px;
     opacity:.85;
   }
-  .leaf-deco.tl{top:18px; left:18px}
-  .leaf-deco.tr{top:18px; right:18px; transform:scaleX(-1)}
-  .leaf-deco.br{bottom:18px; right:18px}
-  .leaf-deco.bl{bottom:18px; left:18px; transform:scaleX(-1)}
+  .leaf-deco.tl{top:96px; left:18px}
+  .leaf-deco.tr{top:96px; right:18px; transform:scaleX(-1)}
+  .leaf-deco.br{bottom:96px; right:18px}
+  .leaf-deco.bl{bottom:96px; left:18px; transform:scaleX(-1)}
   /* Волна между секциями (опциональный декор) */
   .wave-top{
     position:absolute; left:0; right:0; top:-1px; height:32px;
@@ -570,7 +598,26 @@
   /* RESPONSIVE */
   @media (max-width: 640px){
     .wrap{padding:16px 18px 0}
-    .bleed{padding-top:40px; padding-bottom:40px; padding-left:18px; padding-right:18px}
+    .bleed{padding-top:72px; padding-bottom:72px; padding-left:18px; padding-right:18px}
+    .bleed.sage, .bleed.mint{
+      background-size:100% 100%;
+    }
+    /* На мобильном уменьшаем зону «таяния» до 60px */
+    .bleed.sage{
+      background:linear-gradient(180deg,
+        var(--bg) 0%, var(--sage-soft) 60px,
+        var(--sage-soft) calc(100% - 60px), var(--bg) 100%);
+    }
+    .bleed.mint{
+      background:linear-gradient(180deg,
+        var(--bg) 0%, var(--mint-soft) 60px,
+        var(--mint-soft) calc(100% - 60px), var(--bg) 100%);
+    }
+    .bleed.sage-deep{
+      background:linear-gradient(180deg,
+        var(--bg) 0%, var(--sage-deep) 100px,
+        var(--sage-deep) calc(100% - 24px), var(--bg) 100%);
+    }
 
     .hero{padding:28px 0 16px}
     .hero h1.display{font-size:30px; max-width:100%; padding-right:0}
