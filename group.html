@@ -17,6 +17,12 @@
     --accent:#ffd93d;
     --accent-soft:#fff8d6;
     --accent-deep:#a07800;
+    --milk:#fbf9f2;
+    --sage:#7a9a7e;
+    --sage-deep:#3f5840;
+    --sage-soft:#e8efe5;
+    --mint:#c7dac4;
+    --mint-soft:#f0f5ed;
     --r-sm:8px;
     --r-md:14px;
     --r-lg:20px;
@@ -36,6 +42,29 @@
   a:hover{text-decoration-color:var(--ink)}
 
   .wrap{max-width:860px; margin:0 auto; padding:24px 24px 96px}
+
+  /* FULL-BLEED секции с природными фонами + волны между */
+  .bleed{
+    position:relative;
+    margin-left:calc(-50vw + 50%);
+    margin-right:calc(-50vw + 50%);
+    padding-left:24px; padding-right:24px;
+    padding-top:56px; padding-bottom:56px;
+  }
+  .bleed > .inner{max-width:860px; margin:0 auto}
+  .bleed.sage{background:var(--sage-soft)}
+  .bleed.mint{background:var(--mint-soft)}
+  .bleed.milk{background:var(--milk)}
+  .bleed.sage-deep{background:var(--sage-deep); color:#fdfcf7}
+  .bleed.sage-deep h2, .bleed.sage-deep h3{color:#fdfcf7}
+  /* Волна между секциями (опциональный декор) */
+  .wave-top{
+    position:absolute; left:0; right:0; top:-1px; height:32px;
+    background:inherit;
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 32' preserveAspectRatio='none'><path d='M0 18 Q 200 -2 400 14 T 800 14 T 1200 14 L1200 32 L0 32 Z' fill='black'/></svg>") top/100% 100% no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 32' preserveAspectRatio='none'><path d='M0 18 Q 200 -2 400 14 T 800 14 T 1200 14 L1200 32 L0 32 Z' fill='black'/></svg>") top/100% 100% no-repeat;
+    transform:translateY(-100%);
+  }
 
   /* TOP NAV */
   .topnav{
@@ -66,56 +95,58 @@
   .lead{font-size:18px; color:var(--soft); margin:0 0 24px; line-height:1.55}
   .muted{color:var(--muted); font-size:14px}
 
-  /* HERO with goose */
+  /* HERO — атмосферный, без рамок, с органической формой и гусем-линиями */
   .hero{
     position:relative;
-    padding:32px 28px 28px;
-    margin:0 0 32px;
-    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 75%);
-    border:1.5px solid var(--accent);
-    border-radius:var(--r-lg);
-    overflow:hidden;
+    padding:48px 0 36px;
+    margin:0 0 0;
+    overflow:visible;
   }
+  .hero-blob{
+    position:absolute; pointer-events:none;
+    z-index:0;
+    top:-40px; right:-80px;
+    width:520px; height:520px;
+    background:radial-gradient(closest-side, rgba(199,218,196,.65), rgba(199,218,196,0) 70%);
+    filter:blur(6px);
+  }
+  .hero-content{position:relative; z-index:1}
   .hero-tag{
     display:inline-flex; align-items:center; gap:8px;
     font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
-    color:var(--accent-deep); margin-bottom:14px;
+    color:var(--sage-deep); margin-bottom:16px;
   }
   .hero-tag::before{
     content:""; width:8px; height:8px; border-radius:50%; background:var(--accent);
   }
-  .hero h1.display{margin-bottom:14px}
-  .hero .lead{color:#3a2f10; margin-bottom:24px; max-width:580px}
+  .hero h1.display{margin-bottom:18px; max-width:600px}
+  .hero .lead{color:var(--soft); margin-bottom:22px; max-width:580px}
   .hero-mascot{
-    position:absolute; right:18px; top:18px;
-    width:96px; height:106px;
-    animation:goose-wiggle 4.5s ease-in-out infinite;
-    transform-origin:50% 90%;
-  }
-  @keyframes goose-wiggle{
-    0%,100%{transform:rotate(-2deg)}
-    50%{transform:rotate(3deg)}
+    position:absolute; right:0; top:8px;
+    width:108px; height:118px;
+    z-index:1;
   }
 
-  /* METRICS row */
-  .metrics{
-    display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
-    margin-top:20px;
+  /* METRICS — компактная строка, не четыре карточки */
+  .metrics-bar{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px;
+    margin:8px 0 28px;
+    font-size:14px; color:var(--soft);
   }
-  .metric{
-    background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--r-md); padding:14px 16px;
-    text-align:left;
+  .metrics-bar .m{
+    display:inline-flex; align-items:center; gap:8px;
+    line-height:1.2;
   }
-  .metric .mv{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:22px; font-weight:600; line-height:1.1;
-    letter-spacing:-.01em; color:var(--ink);
+  .metrics-bar .m::before{
+    content:""; width:4px; height:4px; border-radius:50%; background:var(--muted);
   }
-  .metric .ml{
-    margin-top:4px; font-size:12px; color:var(--soft); line-height:1.35;
-    letter-spacing:.02em;
+  .metrics-bar .m:first-child::before{display:none}
+  .metrics-bar .m.price{
+    color:var(--ink); font-weight:600;
+    padding:5px 12px; border-radius:100px;
+    background:var(--accent-soft);
   }
+  .metrics-bar .m.price::before{display:none}
 
   /* Section spacing */
   section{margin:48px 0 0}
@@ -302,49 +333,39 @@
   .faq-item.open .week-plus{transform:rotate(45deg); background:var(--accent)}
   .faq-item.open .faq-a{max-height:600px; padding:0 22px 20px}
 
-  /* CTA */
+  /* CTA — full-bleed sage-deep блок с тёплым контрастом */
   .cta-block{
-    margin-top:48px; padding:36px 32px;
-    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 70%);
-    border:1.5px solid var(--accent);
-    border-radius:var(--r-lg);
     text-align:center;
   }
-  .cta-block h2{margin:0 0 10px}
-  .cta-block p{font-size:15px; color:#5a4500; margin:0 0 22px; line-height:1.55}
+  .cta-block h2{margin:0 0 12px; color:#fdfcf7}
+  .cta-block p{
+    font-size:16px; color:rgba(253,252,247,.85); margin:0 auto 26px;
+    line-height:1.55; max-width:520px;
+  }
   .cta-btn{
     display:inline-flex; align-items:center; gap:10px;
-    background:var(--ink); color:#fff;
+    background:var(--accent); color:var(--ink);
     padding:16px 28px; border-radius:100px;
     text-decoration:none; font-size:15px; font-weight:600;
     transition:transform .15s var(--easing), box-shadow .15s;
   }
   .cta-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
-  .cta-btn .arrow{color:var(--accent); font-size:18px; line-height:1; transition:transform .15s}
+  .cta-btn .arrow{color:var(--ink); font-size:18px; line-height:1; transition:transform .15s}
   .cta-btn:hover .arrow{transform:translateX(3px)}
   .cta-sub{
-    margin-top:14px; font-size:13px; color:var(--soft);
+    margin-top:16px; font-size:14px; color:rgba(253,252,247,.7);
   }
-  .cta-sub a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--accent-deep); text-decoration-thickness:2px}
+  .cta-sub a{color:#fdfcf7; font-weight:600; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:2px}
 
-  /* MID CTA — компактный, сразу под hero */
+  /* MID CTA — компактный, в одной композиции с hero (без рамок) */
   .mid-cta{
-    margin:20px 0 0;
-    padding:20px 24px;
-    background:#fff;
-    border:1.5px solid var(--accent);
-    border-radius:var(--r-md);
-    box-shadow:0 1px 2px rgba(255,217,61,.15), 0 8px 24px -16px rgba(160,120,0,.15);
-    display:flex; align-items:center; justify-content:space-between; gap:18px;
+    margin:0 0 28px;
+    display:flex; align-items:center; gap:14px 18px;
     flex-wrap:wrap;
   }
   .mid-cta p{
-    margin:0; font-size:14px; line-height:1.55; color:var(--ink);
-    flex:1; min-width:240px;
-  }
-  .mid-cta p strong{
-    display:block; font-weight:700; font-size:15px;
-    margin-bottom:4px; color:var(--ink);
+    margin:0; font-size:14px; line-height:1.55; color:var(--soft);
+    flex:1; min-width:260px; max-width:520px;
   }
   .mid-cta .mid-actions{
     display:flex; gap:10px; flex-wrap:wrap;
@@ -365,6 +386,8 @@
     border:1.5px solid var(--ink);
   }
   .mid-btn.ghost:hover{background:var(--ink); color:#fff}
+  .mid-btn.ghost.on-dark{color:#fdfcf7; border-color:#fdfcf7}
+  .mid-btn.ghost.on-dark:hover{background:#fdfcf7; color:var(--sage-deep)}
 
   /* "Если коротко" preface */
   .tldr{
@@ -380,33 +403,39 @@
   }
   .tldr p{margin:0; font-size:15px; line-height:1.55; color:var(--ink)}
 
-  /* Маршрут 6 недель — карточки с воздухом */
+  /* Маршрут 6 недель — лёгкий вертикальный путь, тонкая линия слева */
   .roadmap-head{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:18px; font-weight:600; margin:0 0 16px; letter-spacing:-.005em;
+    font-size:20px; font-weight:600; margin:0 0 22px; letter-spacing:-.005em;
     color:var(--ink);
   }
-  .roadmap-grid{
-    margin:0 0 8px;
-    display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;
-    list-style:none; padding:0;
+  .roadmap-path{
+    margin:0; padding:0 0 0 36px; list-style:none;
+    position:relative;
   }
-  .roadmap-grid li{
-    background:#fff; border:1px solid var(--line);
-    border-radius:var(--r-md); padding:18px 20px;
-    display:flex; flex-direction:column; gap:6px;
-    transition:border-color .15s, transform .15s var(--easing);
+  .roadmap-path::before{
+    content:""; position:absolute;
+    left:14px; top:8px; bottom:8px; width:2px;
+    background:linear-gradient(180deg, var(--accent) 0%, var(--mint) 100%);
+    border-radius:2px;
   }
-  .roadmap-grid li:hover{border-color:var(--accent); transform:translateY(-2px)}
-  .roadmap-grid li .rm-num{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-weight:700; color:var(--accent-deep); font-size:13px;
-    letter-spacing:.04em;
+  .roadmap-path li{
+    position:relative;
+    padding:14px 0;
+    font-size:16px; line-height:1.45; color:var(--ink);
+    letter-spacing:-.005em;
   }
-  .roadmap-grid li .rm-text{
-    font-size:14px; line-height:1.5; color:var(--ink);
+  .roadmap-path li::before{
+    content:""; position:absolute;
+    left:-29px; top:18px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--accent);
+    box-shadow:0 0 0 4px rgba(255,217,61,.12);
   }
-  .roadmap-grid li strong{font-weight:600}
+  .roadmap-path li .rm-step{
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:var(--sage-deep); display:block; margin-bottom:2px;
+  }
 
   /* "После встречи вы" в каждой неделе */
   .week-body .outcome{
@@ -416,42 +445,37 @@
   }
   .week-body .outcome strong{color:var(--ink); font-weight:700}
 
-  /* Узнаваемые ситуации — список "вам сюда, если вы" */
+  /* Узнаваемые ситуации — список без карточной рамки */
   .recognize{
-    background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--r-md); padding:24px 26px;
     margin:8px 0 0;
-  }
-  .recognize h3{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:19px; font-weight:600; margin:0 0 14px; letter-spacing:-.005em;
   }
   .recognize-list{margin:0; padding:0; list-style:none}
   .recognize-list li{
     position:relative;
-    padding:10px 0 10px 26px;
-    border-bottom:1px dashed var(--line);
-    font-size:14px; line-height:1.55; color:var(--ink);
+    padding:14px 0 14px 32px;
+    border-bottom:1px solid rgba(63,88,64,.12);
+    font-size:16px; line-height:1.5; color:var(--ink);
   }
   .recognize-list li:last-child{border-bottom:none}
   .recognize-list li::before{
-    content:""; position:absolute; left:0; top:18px;
-    width:8px; height:8px; border-radius:50%; background:var(--accent);
+    content:""; position:absolute; left:6px; top:22px;
+    width:10px; height:10px; border-radius:50%;
+    background:var(--accent); box-shadow:0 0 0 4px rgba(255,217,61,.16);
   }
 
-  /* Reassurance — мягкий блок про домашку */
+  /* Reassurance — спокойный молочный блок про домашку */
   .reassure{
     margin:16px 0 0;
-    padding:20px 22px;
-    background:var(--accent-soft);
-    border-left:3px solid var(--accent);
+    padding:22px 24px;
+    background:var(--milk);
+    border-left:3px solid var(--sage);
     border-radius:8px;
   }
   .reassure-label{
     font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
-    color:var(--accent-deep); margin-bottom:6px;
+    color:var(--sage-deep); margin-bottom:8px;
   }
-  .reassure p{margin:0; font-size:14px; line-height:1.6; color:#5a4500}
+  .reassure p{margin:0; font-size:15px; line-height:1.6; color:var(--ink)}
   .reassure p + p{margin-top:8px}
 
   /* Inline-перевод термина */
@@ -466,19 +490,40 @@
 
   /* RESPONSIVE */
   @media (max-width: 640px){
-    .wrap{padding:16px 18px 72px}
-    .hero{padding:24px 20px 22px}
-    .hero h1.display{font-size:32px; padding-right:90px}
-    .hero .lead{font-size:15px; padding-right:0}
-    .hero-mascot{width:74px; height:84px; right:10px; top:14px}
+    .wrap{padding:16px 18px 0}
+    .bleed{padding-top:40px; padding-bottom:40px; padding-left:18px; padding-right:18px}
 
-    .metrics{grid-template-columns:repeat(2, 1fr); gap:8px}
-    .metric{padding:12px 14px}
-    .metric .mv{font-size:18px}
-    .metric .ml{font-size:11px}
+    .hero{padding:28px 0 16px}
+    .hero h1.display{font-size:30px; max-width:100%; padding-right:0}
+    .hero .lead{font-size:15px; max-width:100%}
+    /* На мобильном гусь уходит ВНИЗ, чтобы не зажимать заголовок */
+    .hero-mascot{
+      position:static; width:78px; height:86px;
+      display:block; margin:8px 0 -12px;
+    }
+    .hero-blob{
+      top:-40px; right:-100px;
+      width:340px; height:340px;
+    }
+
+    .metrics-bar{font-size:13px; gap:8px 14px; margin:6px 0 22px}
+    .metrics-bar .m.price{padding:4px 10px}
 
     .fit-grid{grid-template-columns:1fr}
     .format-grid{grid-template-columns:1fr}
+
+    .roadmap-path{padding-left:30px}
+    .roadmap-path::before{left:11px}
+    .roadmap-path li{font-size:15px; padding:12px 0}
+    .roadmap-path li::before{left:-25px; top:16px}
+
+    .recognize-list li{font-size:15px; padding:12px 0 12px 28px}
+    .recognize-list li::before{top:20px; left:4px}
+
+    .reassure{padding:18px 20px}
+    .reassure p{font-size:14px}
+
+    .cta-block p{font-size:15px}
 
     .week-toggle{padding:18px 18px; grid-template-columns:38px 1fr 24px; gap:12px}
     .week-num{width:36px; height:36px; font-size:15px}
@@ -489,34 +534,23 @@
     .bio{grid-template-columns:1fr; gap:12px; padding:20px}
     .bio-avatar{width:56px; height:56px; font-size:22px}
 
-    .cta-block{padding:28px 22px}
-    .cta-btn{width:100%; justify-content:center; padding:14px 18px}
+    .cta-btn{width:100%; justify-content:center; padding:14px 18px; max-width:380px}
 
     .faq-q{padding:16px 18px}
     .faq-q span.q-text{font-size:14px}
     .faq-item.open .faq-a{padding:0 18px 16px}
 
-    .mid-cta{padding:16px 18px; gap:12px}
-    .mid-cta p{font-size:13px}
+    .mid-cta{margin-bottom:8px; gap:10px}
+    .mid-cta p{font-size:13px; min-width:100%}
     .mid-btn{width:100%; justify-content:center; padding:12px 16px}
-    .mid-cta .mid-actions{width:100%}
+    .mid-cta .mid-actions{width:100%; display:flex; flex-direction:column; gap:8px}
 
     .tldr{padding:16px 18px}
     .tldr p{font-size:14px}
 
-    .roadmap-head{font-size:17px}
-    .roadmap-grid{grid-template-columns:1fr; gap:10px}
-    .roadmap-grid li{padding:16px 18px}
-    .roadmap-grid li .rm-text{font-size:13px}
+    .roadmap-head{font-size:18px; margin-bottom:18px}
 
-    .recognize{padding:20px 20px}
-    .recognize h3{font-size:17px}
-    .recognize-list li{font-size:13px}
-
-    .reassure{padding:16px 18px}
-    .reassure p{font-size:13px}
-
-    section{margin-top:40px}
+    section{margin-top:36px}
     footer{font-size:13px}
   }
 </style>
@@ -532,75 +566,61 @@
   </div>
 
   <!-- HERO -->
-  <section class="hero" style="margin-top:0">
-    <!-- Goose mascot -->
-    <svg class="hero-mascot" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <ellipse cx="52" cy="100" rx="28" ry="3" fill="#000" opacity=".4"/>
-      <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
-      <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M 28 62 Q 18 38 32 22" stroke="#0d0d0d" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
-      <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
-      <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="35" cy="20" r="1.6" fill="#0d0d0d"/>
-      <line x1="46" y1="93" x2="44" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
-      <line x1="58" y1="93" x2="60" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 38 105 L 50 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+  <section class="hero">
+    <div class="hero-blob" aria-hidden="true"></div>
+
+    <!-- Goose: line-art, спокойнее, без жёлтого живота -->
+    <svg class="hero-mascot" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+         fill="none" stroke="#141414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="55" cy="72" rx="32" ry="22"/>
+      <path d="M 50 67 Q 60 64 72 71"/>
+      <path d="M 28 62 Q 18 38 32 22"/>
+      <circle cx="33" cy="22" r="9"/>
+      <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke-width="1.4"/>
+      <circle cx="35" cy="20" r="1.4" fill="#141414" stroke="none"/>
+      <line x1="46" y1="93" x2="44" y2="106"/>
+      <line x1="58" y1="93" x2="60" y2="106"/>
     </svg>
 
-    <div class="hero-tag">Группа · стаей идти веселее</div>
-    <h1 class="display">Группа работы с навыками при СДВГ</h1>
-    <p class="lead">6-недельная мини-группа для взрослых с СДВГ. Тренируем не «силу воли», а конкретные исполнительные навыки: старт задач, планирование, переключение, эмоциональную регуляцию и возвращение после срывов.</p>
+    <div class="hero-content">
+      <div class="hero-tag">Практическая группа · СДВГ у взрослых</div>
+      <h1 class="display">Группа работы с навыками при СДВГ</h1>
+      <p class="lead">6 недель практики для взрослых с СДВГ: разбираем, где ломается выполнение задач, и собираем инструменты для старта, планирования, эмоций и возвращения после срывов.</p>
 
-    <div class="metrics">
-      <div class="metric">
-        <div class="mv">6 встреч</div>
-        <div class="ml">раз в неделю</div>
+      <div class="metrics-bar">
+        <span class="m">6 встреч</span>
+        <span class="m">90 минут</span>
+        <span class="m">онлайн</span>
+        <span class="m price">240 €</span>
       </div>
-      <div class="metric">
-        <div class="mv">90 минут</div>
-        <div class="ml">каждая встреча</div>
-      </div>
-      <div class="metric">
-        <div class="mv">240 €</div>
-        <div class="ml">за весь курс · ≈ 24 000 ₽</div>
-      </div>
-      <div class="metric">
-        <div class="mv">Онлайн</div>
-        <div class="ml">фиксированный состав</div>
-      </div>
-    </div>
 
-    <!-- MID CTA — сразу под метриками, чтобы не ждать конца страницы -->
-    <div class="mid-cta">
-      <p><strong>Хочу в группу</strong>Заполните короткую анкету — я посмотрю, подойдёт ли вам формат, и напишу в Telegram с деталями ближайшего потока.</p>
-      <div class="mid-actions">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
-           target="_blank" rel="noopener" class="mid-btn primary">
-          Заполнить анкету <span class="arrow">→</span>
-        </a>
-        <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener" class="mid-btn ghost">
-          Написать в Telegram
-        </a>
+      <div class="mid-cta">
+        <div class="mid-actions">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
+             target="_blank" rel="noopener" class="mid-btn primary">
+            Заполнить анкету <span class="arrow">→</span>
+          </a>
+          <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener" class="mid-btn ghost">
+            Написать в Telegram
+          </a>
+        </div>
+        <p>Я посмотрю ваш запрос и напишу, подойдёт ли вам ближайший поток.</p>
       </div>
     </div>
   </section>
 
   <!-- О ЧЁМ ЭТО -->
-  <section id="about">
-    <h2>О чём эта группа</h2>
+  <section id="about" class="bleed sage" style="margin-top:48px">
+    <div class="inner">
+      <h2>О чём эта группа</h2>
 
-    <div class="tldr">
-      <div class="tldr-label">Если коротко</div>
-      <p>Мы не будем искать идеальную систему продуктивности. Мы будем разбирать, где именно у вас ломается действие, и подбирать инструменты под этот конкретный момент.</p>
-    </div>
+      <div class="tldr">
+        <div class="tldr-label">Если коротко</div>
+        <p>Мы не ищем идеальную систему продуктивности. Мы разбираем, где именно у вас ломается действие, и подбираем инструменты под этот конкретный момент.</p>
+      </div>
 
-    <p>СДВГ у взрослых — это не «лень» и не «недостаток мотивации». Это особенности работы исполнительных функций: способности начать, удержать внимание, спланировать, довести до конца, переключиться, отрегулировать эмоциональный фон. Когда эти механизмы работают с перебоями, обычные «возьми и сделай» не помогают — нужны другие инструменты.</p>
-    <p>Программа собрана из четырёх рабочих направлений: когнитивно-поведенческая работа (как мысли запускают срывы), реализационные намерения (как превращать «надо» в реальный первый шаг), эмоциональная регуляция (включая RSD — болезненную чувствительность к отвержению) и устойчивые привычки. Каждую неделю мы не просто разбираем тему — мы пробуем конкретный инструмент в жизни и смотрим, что сработало.</p>
-
-    <div class="intro-block">
-      <p><strong>Это не просто лекции и не «поговорить в кругу».</strong> Поддержка будет — без неё в группе нет смысла. Но главный фокус — практика: пробуем инструменты, смотрим, что сработало, разбираем, где сломалось, и пробуем снова. Каждая встреча начинается с короткого разбора «успехов недели». Между встречами — чат-сопровождение.</p>
+      <p>При СДВГ часто страдает не знание, а выполнение: вы можете понимать, что нужно сделать, но застревать на старте, терять фокус, срываться после ошибки или не возвращаться к задаче после паузы.</p>
+      <p>На встречах мы берём реальные ситуации из вашей жизни, пробуем инструменты и смотрим, что помогает именно вам. Каждая встреча начинается с короткого разбора «успехов недели». Между встречами — чат-сопровождение.</p>
     </div>
   </section>
 
@@ -609,35 +629,16 @@
     <h2>Что вы получите за 6 недель</h2>
     <p class="sec-lead">Маршрут в одну строку на неделю — чтобы видеть всю траекторию сразу. Подробности по каждой встрече ниже.</p>
 
-    <h3 class="roadmap-head">За 6 недель вы:</h3>
-    <ul class="roadmap-grid">
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 1</span>
-        <span class="rm-text">поймёте, <strong>где именно</strong> у вас ломается выполнение задач — старт, план, фокус, эмоции или удержание усилия</span>
-      </li>
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 2</span>
-        <span class="rm-text">научитесь <strong>останавливать негативную спираль</strong> после ошибок и возвращаться к действию</span>
-      </li>
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 3</span>
-        <span class="rm-text">выберете <strong>одну привычку</strong> и соберёте её без насилия над собой</span>
-      </li>
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 4</span>
-        <span class="rm-text">разберёте свои <strong>эмоциональные срывы и RSD</strong> — где захлёстывает и как восстанавливаться</span>
-      </li>
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 5</span>
-        <span class="rm-text">научитесь <strong>переводить намерения в конкретные первые шаги</strong> по 30 секунд</span>
-      </li>
-      <li>
-        <span class="rm-num">НЕДЕЛЯ 6</span>
-        <span class="rm-text">соберёте <strong>личный набор инструментов</strong> и план поддержки на 3 месяца</span>
-      </li>
+    <ul class="roadmap-path">
+      <li><span class="rm-step">Неделя 1</span>Найдёте, где ломается выполнение задач</li>
+      <li><span class="rm-step">Неделя 2</span>Научитесь возвращаться после ошибок</li>
+      <li><span class="rm-step">Неделя 3</span>Соберёте одну привычку без насилия над собой</li>
+      <li><span class="rm-step">Неделя 4</span>Разберёте эмоции и RSD</li>
+      <li><span class="rm-step">Неделя 5</span>Переведёте намерения в первые шаги</li>
+      <li><span class="rm-step">Неделя 6</span>Соберёте личный набор инструментов</li>
     </ul>
 
-    <h2 style="margin-top:36px">Программа по неделям</h2>
+    <h2 style="margin-top:48px">Программа по неделям</h2>
     <p class="sec-lead">Каждая встреча сочетает короткую содержательную часть, обсуждение в группе, практическое упражнение и постановку домашнего задания на неделю.</p>
 
     <div class="weeks">
@@ -783,12 +784,11 @@
   </section>
 
   <!-- КОМУ ПОДОЙДЁТ -->
-  <section id="fit">
-    <h2>Вам сюда, если вы узнаёте себя</h2>
-    <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
+  <section id="fit" class="bleed mint">
+    <div class="inner">
+      <h2>Вам сюда, если вы узнаёте себя</h2>
+      <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
 
-    <div class="recognize">
-      <h3>Вам сюда, если вы часто:</h3>
       <ul class="recognize-list">
         <li>понимаете, что надо сделать, но не можете начать;</li>
         <li>делаете срочное вместо важного;</li>
@@ -797,42 +797,43 @@
         <li>откладываете не потому, что не хотите, а потому что задача мутная, неприятная или слишком большая;</li>
         <li>устаёте от собственной непредсказуемости и резких эмоциональных качелей.</li>
       </ul>
-    </div>
 
-    <h2 style="margin-top:36px">Подойдёт / не подойдёт</h2>
-    <p class="sec-lead">Если вы узнаёте себя в блоке «не подойдёт» — лучше выбрать другой формат, а не идти в группу через силу.</p>
+      <h2 style="margin-top:48px">Подойдёт / не подойдёт</h2>
+      <p class="sec-lead">Если вы узнаёте себя в блоке «не подойдёт» — лучше выбрать другой формат, а не идти в группу через силу.</p>
 
-    <div class="fit-grid">
-      <div class="fit-card">
-        <span class="fit-tag">Подойдёт, если</span>
-        <h4>Это про вас</h4>
-        <ul class="fit-list">
-          <li>У вас СДВГ — диагноз поставлен или вы в процессе диагностики</li>
-          <li>Хочется структуры и регулярности, а не разовых лайфхаков</li>
-          <li>Готовы пробовать между встречами хотя бы маленькие задания — не идеально, а по-настоящему</li>
-          <li>Интересен формат группы — поддержка и опыт похожих людей</li>
-        </ul>
+      <div class="fit-grid">
+        <div class="fit-card">
+          <span class="fit-tag">Подойдёт, если</span>
+          <h4>Это про вас</h4>
+          <ul class="fit-list">
+            <li>У вас СДВГ — диагноз поставлен или вы в процессе диагностики</li>
+            <li>Хочется структуры и регулярности, а не разовых лайфхаков</li>
+            <li>Готовы пробовать между встречами хотя бы маленькие задания — не идеально, а по-настоящему</li>
+            <li>Интересен формат группы — поддержка и опыт похожих людей</li>
+          </ul>
+        </div>
+        <div class="fit-card no">
+          <span class="fit-tag">Не подойдёт, если</span>
+          <h4>Тогда лучше другой формат</h4>
+          <ul class="fit-list">
+            <li>Нужна диагностика — это отдельный процесс, начинайте с неё</li>
+            <li>Ищете «быстро и универсально» — здесь нужна еженедельная работа</li>
+            <li>Формат «иногда зайти посмотреть» — состав закрытый, важна регулярность</li>
+            <li>Сейчас острый кризис — стоит начать с индивидуальной поддержки</li>
+          </ul>
+        </div>
       </div>
-      <div class="fit-card no">
-        <span class="fit-tag">Не подойдёт, если</span>
-        <h4>Тогда лучше другой формат</h4>
-        <ul class="fit-list">
-          <li>Нужна диагностика — это отдельный процесс, начинайте с неё</li>
-          <li>Ищете «быстро и универсально» — здесь нужна еженедельная работа</li>
-          <li>Формат «иногда зайти посмотреть» — состав закрытый, важна регулярность</li>
-          <li>Сейчас острый кризис — стоит начать с индивидуальной поддержки</li>
-        </ul>
-      </div>
-    </div>
 
-    <div class="reassure">
-      <div class="reassure-label">Важно сразу</div>
-      <p><strong>Задания не нужно делать идеально.</strong> Мы как раз работаем с тем, что у людей с СДВГ системы часто срываются. Если задание не получилось — это не провал, а материал для разбора: где именно сломался запуск, что было непонятно, какая эмоция вмешалась, какой шаг оказался слишком большим. В группе мы учимся не только делать, но и возвращаться после срыва.</p>
+      <div class="reassure">
+        <div class="reassure-label">Важно сразу</div>
+        <p><strong>Задания не нужно делать идеально.</strong> Мы как раз работаем с тем, что у людей с СДВГ системы часто срываются. Если задание не получилось — это не провал, а материал для разбора: где именно сломался запуск, что было непонятно, какая эмоция вмешалась, какой шаг оказался слишком большим.</p>
+      </div>
     </div>
   </section>
 
   <!-- ФОРМАТ -->
-  <section id="format">
+  <section id="format" class="bleed sage">
+    <div class="inner">
     <h2>Формат и логистика</h2>
     <div class="format-grid">
       <div class="format-card">
@@ -852,6 +853,7 @@
         <div class="pv">240 €<span style="font-size:14px; font-weight:400; color:var(--soft); margin-left:6px">≈ 24 000 ₽</span></div>
         <div class="sub">За весь курс — 6 встреч, чат и домашние задания. Оплата в ₽ по договорённости.</div>
       </div>
+    </div>
     </div>
   </section>
 
@@ -948,14 +950,16 @@
   </section>
 
   <!-- CTA -->
-  <section class="cta-block">
-    <h2>Записаться в ближайший поток</h2>
-    <p>Заполните короткую анкету — я посмотрю ваш запрос и напишу, подойдёт ли вам ближайший поток. Обычно это занимает 5–7 минут.</p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
-       target="_blank" rel="noopener" class="cta-btn">
-      Заполнить анкету <span class="arrow">→</span>
-    </a>
-    <div class="cta-sub">Или напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a> — отвечу лично.</div>
+  <section class="bleed sage-deep cta-block">
+    <div class="inner">
+      <h2>Записаться в ближайший поток</h2>
+      <p>Заполните короткую анкету — я посмотрю ваш запрос и напишу, подойдёт ли вам ближайший поток.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
+         target="_blank" rel="noopener" class="cta-btn">
+        Заполнить анкету <span class="arrow">→</span>
+      </a>
+      <div class="cta-sub">Или напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a> — отвечу лично.</div>
+    </div>
   </section>
 
   <footer>
