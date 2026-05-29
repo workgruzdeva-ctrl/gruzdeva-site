@@ -215,6 +215,109 @@
   }
   .metrics-bar .m.price::before{display:none}
 
+  /* HUB — 3 крупные карточки-входа, editorial calm */
+  .hub{padding:24px 0 32px}
+  .hub-tldr{
+    font-size:18px; line-height:1.55; color:var(--soft);
+    max-width:640px; margin:0 0 36px;
+    font-style:italic;
+  }
+  .hub-cards{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
+    align-items:start;
+  }
+  .hub-card{
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:18px; overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:transform .15s var(--easing), box-shadow .15s;
+  }
+  .hub-card-top{
+    padding:28px 26px 22px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .hub-num{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:12px; letter-spacing:.22em; font-weight:700;
+    color:var(--sage-deep);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .hub-num::after{
+    content:""; flex:1; height:1px; background:rgba(47,68,52,.15);
+    margin-left:4px;
+  }
+  .hub-card h2.hub-title{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:26px; font-weight:600; margin:0;
+    letter-spacing:-.015em; line-height:1.15;
+    color:var(--ink);
+    display:block;
+  }
+  .hub-card h2.hub-title::after{display:none}
+  .hub-summary{
+    margin:4px 0 8px; padding:0; list-style:none;
+    display:flex; flex-direction:column;
+  }
+  .hub-summary li{
+    position:relative;
+    padding:8px 0 8px 18px;
+    font-size:14px; line-height:1.45; color:var(--ink);
+    border-bottom:1px dashed rgba(47,68,52,.14);
+  }
+  .hub-summary li:last-child{border-bottom:none}
+  .hub-summary li::before{
+    content:""; position:absolute; left:0; top:15px;
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+  }
+  .hub-cta{
+    align-self:flex-start;
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 20px; border-radius:100px;
+    background:var(--ink); color:#fbf8ee;
+    border:none; cursor:pointer; font:inherit;
+    font-size:13.5px; font-weight:600;
+    transition:transform .15s var(--easing);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .hub-cta:hover{transform:translateY(-1px)}
+  .hub-cta .arrow{color:var(--accent); transition:transform .2s var(--easing); line-height:1}
+  .hub-card.open .hub-cta .arrow{transform:rotate(90deg)}
+  .hub-cta .label-open{display:none}
+  .hub-card.open .hub-cta .label-closed{display:none}
+  .hub-card.open .hub-cta .label-open{display:inline}
+
+  .hub-detail{
+    max-height:0; overflow:hidden;
+    transition:max-height .45s var(--easing);
+    border-top:1.5px solid rgba(47,68,52,.12);
+    background:var(--milk);
+  }
+  .hub-card.open .hub-detail{max-height:9000px}
+  .hub-detail-inner{padding:24px 26px 28px}
+  .hub-detail h3{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; font-weight:600; margin:20px 0 8px;
+    letter-spacing:-.005em;
+  }
+  .hub-detail h3:first-child{margin-top:0}
+  .hub-detail p{font-size:14px; line-height:1.6; color:var(--ink); margin:0 0 10px}
+  .hub-detail p:last-child{margin-bottom:0}
+
+  /* Внутри hub-detail аккордеоны недель и fit-блоки чуть компактнее */
+  .hub-detail .week-toggle{padding:16px 18px; grid-template-columns:40px 1fr 24px; gap:12px}
+  .hub-detail .week-num{width:36px; height:36px; font-size:14px}
+  .hub-detail .week-head h3{font-size:15px; margin:0}
+  .hub-detail .weeks{gap:8px}
+  .hub-detail .roadmap-path{padding-left:32px}
+  .hub-detail .roadmap-path li{font-size:14.5px; padding:11px 0}
+
+  @media (max-width: 760px){
+    .hub-cards{grid-template-columns:1fr; gap:14px}
+    .hub-card-top{padding:24px 22px 20px}
+    .hub-card h2.hub-title{font-size:22px}
+    .hub-detail-inner{padding:20px 22px 24px}
+  }
+
   /* Section spacing */
   section{margin:48px 0 0}
   section > h2{margin-bottom:14px}
@@ -237,12 +340,10 @@
     margin:8px 0 0;
   }
   .fit-card{
-    background:var(--paper); border:1.5px solid var(--ink);
+    background:var(--paper); border:1.5px solid rgba(47,68,52,.18);
     border-radius:var(--r-md); padding:22px 24px;
-    box-shadow:4px 4px 0 0 rgba(47,68,52,.18);
-    transform:rotate(-.3deg);
   }
-  .fit-card.no{transform:rotate(.3deg); box-shadow:-4px 4px 0 0 rgba(160,90,60,.18)}
+  .fit-card.no{border-color:rgba(160,90,60,.25)}
   .fit-card.no .fit-tag{color:#9a4a2a}
   .fit-card.no .fit-tag::before{background:#e08a5a}
   .fit-tag{
@@ -271,12 +372,11 @@
   /* WEEK accordions */
   .weeks{display:flex; flex-direction:column; gap:12px; margin-top:8px}
   .week{
-    background:var(--paper); border:1.5px solid var(--ink);
+    background:var(--paper); border:1.5px solid rgba(47,68,52,.18);
     border-radius:var(--r-md); overflow:hidden;
-    box-shadow:3px 3px 0 0 rgba(47,68,52,.12);
-    transition:transform .15s var(--easing), box-shadow .15s;
+    transition:border-color .15s;
   }
-  .week:hover{transform:translateY(-1px); box-shadow:4px 5px 0 0 rgba(47,68,52,.16)}
+  .week:hover{border-color:rgba(47,68,52,.4)}
   .week-toggle{
     width:100%; text-align:left; cursor:pointer;
     background:none; border:none; font:inherit;
@@ -349,12 +449,9 @@
     margin-top:8px;
   }
   .format-card{
-    background:var(--paper); border:1.5px solid var(--ink);
+    background:var(--paper); border:1.5px solid rgba(47,68,52,.18);
     border-radius:var(--r-md); padding:22px 24px;
-    box-shadow:3px 3px 0 0 rgba(47,68,52,.14);
   }
-  .format-card:nth-child(odd){transform:rotate(-.4deg)}
-  .format-card:nth-child(even){transform:rotate(.4deg)}
   .format-card h4{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
     font-size:16px; font-weight:600; margin:0 0 8px;
@@ -376,8 +473,6 @@
   .bio-avatar{
     width:72px; height:72px; border-radius:50%;
     background:var(--sage-deep); color:var(--accent);
-    border:1.5px solid var(--ink);
-    box-shadow:3px 3px 0 0 var(--accent);
     display:flex; align-items:center; justify-content:center;
     font-family:"Charter","Iowan Old Style","Georgia",serif;
     font-size:26px; font-weight:700;
@@ -394,9 +489,8 @@
   /* FAQ accordion (same as week) */
   .faq{display:flex; flex-direction:column; gap:8px; margin-top:8px}
   .faq-item{
-    background:var(--paper); border:1.5px solid var(--ink);
+    background:var(--paper); border:1.5px solid rgba(47,68,52,.18);
     border-radius:var(--r-md); overflow:hidden;
-    box-shadow:2px 2px 0 0 rgba(47,68,52,.1);
   }
   .faq-q{
     width:100%; text-align:left; cursor:pointer;
@@ -420,26 +514,26 @@
   .faq-item.open .week-plus{transform:rotate(45deg); background:var(--accent)}
   .faq-item.open .faq-a{max-height:600px; padding:0 22px 20px}
 
-  /* CTA — full-bleed sage-deep блок с тёплым контрастом */
-  .cta-block{
-    text-align:center;
+  /* CTA — full-bleed sage-deep блок, главное действие на странице */
+  .cta-block{text-align:center; padding-top:120px; padding-bottom:120px}
+  .cta-block h2{
+    margin:0 0 16px; color:#fdfcf7;
+    font-size:clamp(30px, 5vw, 40px);
   }
-  .cta-block h2{margin:0 0 12px; color:#fdfcf7}
   .cta-block p{
-    font-size:16px; color:rgba(253,252,247,.85); margin:0 auto 26px;
-    line-height:1.55; max-width:520px;
+    font-size:17px; color:rgba(253,252,247,.88); margin:0 auto 32px;
+    line-height:1.55; max-width:540px;
   }
   .cta-btn{
-    display:inline-flex; align-items:center; gap:10px;
+    display:inline-flex; align-items:center; gap:12px;
     background:var(--accent); color:var(--ink);
-    padding:16px 28px; border-radius:100px;
-    text-decoration:none; font-size:15px; font-weight:700;
-    border:1.5px solid #f3ecdb;
-    box-shadow:4px 4px 0 0 #f3ecdb;
+    padding:20px 36px; border-radius:100px;
+    text-decoration:none; font-size:17px; font-weight:700;
+    letter-spacing:-.005em;
     transition:transform .15s var(--easing), box-shadow .15s;
   }
-  .cta-btn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 0 #f3ecdb}
-  .cta-btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 0 #f3ecdb}
+  .cta-btn:hover{transform:translateY(-2px); box-shadow:0 16px 32px -10px rgba(0,0,0,.35)}
+  .cta-btn:active{transform:translateY(0)}
   .cta-btn .arrow{color:var(--ink); font-size:18px; line-height:1; transition:transform .15s}
   .cta-btn:hover .arrow{transform:translateX(3px)}
   .cta-sub{
@@ -758,271 +852,251 @@
   </section>
 
   <!-- О ЧЁМ ЭТО -->
-  <section id="about" class="bleed sage" style="margin-top:48px">
-    <svg class="leaf-deco tr" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 100 10 C 80 30, 60 55, 50 90" opacity="0.55"/>
-      <path d="M 88 28 C 76 26, 70 32, 72 44 C 80 44, 90 38, 88 28 Z" fill="#a8c0a0" opacity="0.55"/>
-      <path d="M 76 50 C 64 50, 58 58, 62 68 C 72 66, 80 60, 76 50 Z" fill="#a8c0a0" opacity="0.5"/>
-      <path d="M 62 76 C 52 78, 48 86, 54 94 C 62 92, 68 84, 62 76 Z" fill="#a8c0a0" opacity="0.45"/>
-    </svg>
-    <div class="inner">
-      <h2 class="scribble">О чём эта группа</h2>
+  <!-- HUB — 3 крупные карточки-входа -->
+  <section class="hub" id="hub">
+    <p class="hub-tldr">Если коротко: мы разбираем, где у вас ломается действие, и подбираем инструменты под этот конкретный момент. Ниже — три точки входа, посмотрите ту, что нужна сейчас.</p>
 
-      <div class="tldr">
-        <div class="tldr-label">Если коротко</div>
-        <p>Мы не ищем идеальную систему продуктивности. Мы разбираем, где именно у вас ломается действие, и подбираем инструменты под этот конкретный момент.</p>
-      </div>
+    <div class="hub-cards">
 
-      <p>При СДВГ часто страдает не знание, а выполнение: вы можете понимать, что нужно сделать, но застревать на старте, терять фокус, срываться после ошибки или не возвращаться к задаче после паузы.</p>
-      <p>На встречах мы берём реальные ситуации из вашей жизни, пробуем инструменты и смотрим, что помогает именно вам. Каждая встреча начинается с короткого разбора «успехов недели». Между встречами — чат-сопровождение.</p>
-    </div>
-  </section>
-
-  <!-- ПРОГРАММА -->
-  <section id="program">
-    <h2 class="scribble">Что вы получите за 6 недель</h2>
-    <p class="sec-lead">Маршрут в одну строку на неделю — чтобы видеть всю траекторию сразу. Подробности по каждой встрече ниже.</p>
-
-    <ul class="roadmap-path">
-      <li><span class="rm-step">Неделя 1</span>Найдёте, где ломается выполнение задач</li>
-      <li><span class="rm-step">Неделя 2</span>Научитесь возвращаться после ошибок</li>
-      <li><span class="rm-step">Неделя 3</span>Соберёте одну привычку без насилия над собой</li>
-      <li><span class="rm-step">Неделя 4</span>Разберёте эмоции и RSD</li>
-      <li><span class="rm-step">Неделя 5</span>Переведёте намерения в первые шаги</li>
-      <li><span class="rm-step">Неделя 6</span>Соберёте личный набор инструментов</li>
-    </ul>
-
-    <h2 class="scribble" style="margin-top:48px">Программа по неделям</h2>
-    <p class="sec-lead">Каждая встреча сочетает короткую содержательную часть, обсуждение в группе, практическое упражнение и постановку домашнего задания на неделю.</p>
-
-    <div class="weeks">
-
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">01</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 1 · знакомство</span>
-            <h3>Карта исполнительных навыков. Где у вас «проседает»</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи вы уйдёте с картой:</strong> где именно у вас ломается выполнение задач — старт, планирование, переключение, эмоции или удержание усилия.</div>
-          <p>Знакомимся с группой, договариваемся о правилах. Дальше — разбор, что такое исполнительные функции и как они проявляются именно у вас. Каждый составит свой профиль: где сильно, где слабо, где привычно «выгребает» ценой выгорания.</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Что такое исполнительные функции в человеческих словах — и почему «возьми и сделай» не работает</li>
-            <li>Личный профиль: ваши сильные и слабые зоны, типовые сценарии срывов</li>
-            <li>Эмоциональная регуляция как часть исполнительных функций, а не отдельная история</li>
+      <!-- КАРТОЧКА 1: ФОРМАТ -->
+      <article class="hub-card" id="hub-format">
+        <div class="hub-card-top">
+          <span class="hub-num">01 · Формат</span>
+          <h2 class="hub-title">Как устроено</h2>
+          <ul class="hub-summary">
+            <li>6 встреч раз в неделю</li>
+            <li>Zoom или Google Meet</li>
+            <li>Чат поддержки между встречами</li>
+            <li>Закрытая мини-группа</li>
+            <li>Небольшие домашние задания</li>
           </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> неделю вести короткие заметки — в каких ситуациях «проседает» что именно. Это материал, на котором мы будем работать дальше.</div>
+          <button class="hub-cta" type="button" aria-expanded="false">
+            <span class="label-closed">Подробнее</span>
+            <span class="label-open">Свернуть</span>
+            <span class="arrow">→</span>
+          </button>
         </div>
-      </div>
+        <div class="hub-detail">
+          <div class="hub-detail-inner">
+            <div class="format-grid">
+              <div class="format-card">
+                <h4>Когда</h4>
+                <p>Группы стартуют примерно раз в три месяца. Ближайший старт — в июне, точное время согласовываем с потоком.</p>
+              </div>
+              <div class="format-card">
+                <h4>Где</h4>
+                <p>Онлайн, в Google&nbsp;Meet или Zoom. Чат — в Telegram.</p>
+              </div>
+              <div class="format-card">
+                <h4>Сколько человек</h4>
+                <p>Мини-группа с фиксированным составом на все 6 встреч. После старта новые участники не добавляются.</p>
+              </div>
+              <div class="format-card">
+                <h4>Сколько стоит</h4>
+                <div class="pv">240 €<span style="font-size:14px; font-weight:400; color:var(--soft); margin-left:6px">≈ 24 000 ₽</span></div>
+                <div class="sub">За весь курс. Оплата в ₽ — по договорённости.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
 
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">02</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 2 · мысль → действие</span>
-            <h3>Когнитивная работа. Как мысли запускают негативную спираль</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи вы научитесь</strong> ловить момент «всё, я опять провалил» и не сваливаться в самокритику, а возвращаться к действию по конкретной 4-шаговой схеме.</div>
-          <p>Берём ситуации из вашей жизни и разбираем их по цепочке <strong>ситуация → мысль → эмоция → действие</strong> <span class="term-gloss">— то есть как одна и та же неудача либо запускает срыв, либо оставляет вам шанс действовать дальше</span>.</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Кейс «Фред забыл про задачу»: где провалил, что начинает крутиться в голове, что делает вместо решения</li>
-            <li>Цепочка ситуация → мысль → эмоция → действие — на ваших примерах</li>
-            <li>Авторский метод <strong>«Разведка → Малое дело → Трезвое слово → Мера»</strong> — как останавливать негативную спираль и делать первый шаг обратно</li>
-            <li>Сильные стороны как «щит»: 3 опоры, на которые можно встать в трудный момент</li>
+      <!-- КАРТОЧКА 2: ПРОГРАММА -->
+      <article class="hub-card" id="hub-program">
+        <div class="hub-card-top">
+          <span class="hub-num">02 · Программа</span>
+          <h2 class="hub-title">Что мы будем делать</h2>
+          <ul class="hub-summary">
+            <li>Старт задач без насилия над собой</li>
+            <li>Привычки и зоны их застревания</li>
+            <li>Эмоции и RSD</li>
+            <li>Самокритика и возвращение после срывов</li>
+            <li>Реализационные намерения по 30 секунд</li>
           </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> разобрать 2–3 ситуации недели по цепочке и пройти их через «Разведку → Малое дело → Трезвое слово → Меру».</div>
+          <button class="hub-cta" type="button" aria-expanded="false">
+            <span class="label-closed">Посмотреть программу</span>
+            <span class="label-open">Свернуть</span>
+            <span class="arrow">→</span>
+          </button>
         </div>
-      </div>
+        <div class="hub-detail">
+          <div class="hub-detail-inner">
+            <h3>Маршрут 6 недель</h3>
+            <ul class="roadmap-path">
+              <li><span class="rm-step">Неделя 1</span>Найдёте, где ломается выполнение задач</li>
+              <li><span class="rm-step">Неделя 2</span>Научитесь возвращаться после ошибок</li>
+              <li><span class="rm-step">Неделя 3</span>Соберёте одну привычку без насилия</li>
+              <li><span class="rm-step">Неделя 4</span>Разберёте эмоции и RSD</li>
+              <li><span class="rm-step">Неделя 5</span>Переведёте намерения в первые шаги</li>
+              <li><span class="rm-step">Неделя 6</span>Соберёте личный набор инструментов</li>
+            </ul>
 
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">03</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 3 · привычки</span>
-            <h3>Привычки: этапы формирования и зоны застревания</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи вы выберете одну привычку</strong> и поймёте, в какой именно «зоне» она у вас застревает — и какие инструменты под эту зону работают.</div>
-          <p>Привычки при СДВГ строятся не так, как в обычных книгах про «21 день». Работаем с моделью этапов и разбираем, где именно «зависает» каждая ваша привычка — потому что в разных точках помогают разные приёмы.</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Пять этапов привычки: думаю → планирую → работаю → закрепляю → возвращаюсь после срыва</li>
-            <li>Матрица «скучно / интересно × легко / сложно»: зоны угасания, избегания, срыва запуска <span class="term-gloss">— где привычки чаще всего «умирают»</span></li>
-            <li>Три рабочих метрики: автоматизация, частота, сила самоидентификации <span class="term-gloss">(«я — человек, который…»)</span></li>
-            <li>Якоря и микро-привычки вместо силы воли</li>
+            <h3 style="margin-top:28px">По неделям подробнее</h3>
+            <div class="weeks">
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">01</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 1 · знакомство</span>
+                    <h3>Карта исполнительных навыков</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи вы уйдёте с картой:</strong> где именно у вас ломается выполнение задач — старт, планирование, переключение, эмоции или удержание усилия.</div>
+                  <p>Знакомимся, договариваемся о правилах, составляем личный профиль исполнительных функций.</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> неделю вести короткие заметки — в каких ситуациях «проседает» что именно.</div>
+                </div>
+              </div>
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">02</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 2 · мысль → действие</span>
+                    <h3>Когнитивная работа и негативная спираль</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи вы научитесь</strong> ловить момент «всё, я опять провалил» и не сваливаться в самокритику.</div>
+                  <p>Цепочка <strong>ситуация → мысль → эмоция → действие</strong>, авторский метод <strong>«Разведка → Малое дело → Трезвое слово → Мера»</strong>, сильные стороны как «щит».</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> разобрать 2–3 ситуации недели через 4-шаговую схему.</div>
+                </div>
+              </div>
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">03</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 3 · привычки</span>
+                    <h3>Этапы и зоны застревания</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи вы выберете одну привычку</strong> и поймёте, в какой «зоне» она у вас застревает.</div>
+                  <p>5 этапов формирования, матрица «скучно/сложно», три метрики (автоматизация, частота, самоидентификация), микро-привычки.</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> заполнять недельный трекер 7 дней — без оценок.</div>
+                </div>
+              </div>
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">04</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 4 · эмоции и RSD</span>
+                    <h3>Эмоциональная регуляция и RSD</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи вы увидите свой профиль чувствительности</strong> и попробуете один эксперимент по восстановлению.</div>
+                  <p><strong>RSD</strong> <span class="term-gloss">— болезненная чувствительность к отвержению</span>. Опросник, «эмоциональный стакан», поведенческий эксперимент.</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> опросник RSD, «эмоциональный стакан», один эксперимент.</div>
+                </div>
+              </div>
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">05</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 5 · реализационные намерения</span>
+                    <h3>Триггер и первый шаг на 30 секунд</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи у вас будет 3 конкретных намерения</strong> с триггером и первым шагом на 30 секунд.</div>
+                  <p>Формула <strong>намерение → триггер → 30 секунд → отметить</strong>. Три приоритета: ВАЖНОЕ · ЧУТЬ ЛЕГЧЕ · ПРОСТЫЕ.</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> 3 намерения, ежедневная отметка «сделано».</div>
+                </div>
+              </div>
+
+              <div class="week">
+                <button class="week-toggle" type="button">
+                  <span class="week-num">06</span>
+                  <span class="week-head">
+                    <span class="week-tag">Неделя 6 · сборка</span>
+                    <h3>Личный набор инструментов</h3>
+                  </span>
+                  <span class="week-plus">+</span>
+                </button>
+                <div class="week-body">
+                  <div class="outcome"><strong>После встречи у вас будет «набор первой помощи»</strong> — 5–7 инструментов и план на 3 месяца.</div>
+                  <p>Общий разбор, сценарии возврата после срыва, что дальше после группы.</p>
+                  <div class="hw"><strong>Домашнее задание:</strong> собрать свой «набор первой помощи» и план на 3 месяца.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- КАРТОЧКА 3: ПОДОЙДЁТ ЛИ МНЕ -->
+      <article class="hub-card" id="hub-fit">
+        <div class="hub-card-top">
+          <span class="hub-num">03 · Подойдёт ли</span>
+          <h2 class="hub-title">Кому сюда</h2>
+          <ul class="hub-summary">
+            <li>Взрослым с СДВГ или в процессе диагностики</li>
+            <li>Тем, кто буксует на старте задач</li>
+            <li>С эмоциональными качелями и срывами</li>
+            <li>Со сложностями в построении привычек</li>
+            <li>Готовым пробовать понемногу между встречами</li>
           </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> выбрать одну привычку, определить её зону и этап, заполнять недельный трекер 7 дней — без оценок.</div>
+          <button class="hub-cta" type="button" aria-expanded="false">
+            <span class="label-closed">Кому подойдёт</span>
+            <span class="label-open">Свернуть</span>
+            <span class="arrow">→</span>
+          </button>
         </div>
-      </div>
+        <div class="hub-detail">
+          <div class="hub-detail-inner">
+            <h3>Вам сюда, если вы часто:</h3>
+            <ul class="recognize-list">
+              <li>понимаете, что надо сделать, но не можете начать;</li>
+              <li>делаете срочное вместо важного;</li>
+              <li>срываетесь после одной ошибки и бросаете всю систему;</li>
+              <li>покупаете планеры, приложения и курсы, но они не приживаются;</li>
+              <li>откладываете не потому, что не хотите, а потому что задача мутная или слишком большая;</li>
+              <li>устаёте от собственной непредсказуемости.</li>
+            </ul>
 
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">04</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 4 · эмоции и RSD</span>
-            <h3>Эмоциональная регуляция и чувствительность к отвержению</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи вы увидите свой профиль эмоциональной чувствительности</strong> и попробуете один конкретный эксперимент по восстановлению — для себя и для отношений.</div>
-          <p><strong>RSD</strong> <span class="term-gloss">— болезненная чувствительность к отвержению: когда нейтральный комментарий ощущается как удар, а ошибка потом крутится в голове сутками</span>. Разбираем, как это устроено при СДВГ и что с этим делать.</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Опросник RSD: 12 признаков и ваш профиль чувствительности</li>
-            <li>«Эмоциональный стакан» — какие стрессоры (СДВГ, работа, отношения, другое) сейчас заливают ваш стакан и где у вас точка «затопления»</li>
-            <li>Сигналы тела и поведенческие сигналы перед срывом — на кейсах Джона, Салли и Дорис</li>
-            <li>Поведенческий эксперимент <span class="term-gloss">по формуле «если в ситуации ___ применю стратегию ___, то ___»</span></li>
-          </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> заполнить опросник RSD, нарисовать свой «эмоциональный стакан», запустить один поведенческий эксперимент.</div>
+            <h3 style="margin-top:24px">Подойдёт / не подойдёт</h3>
+            <div class="fit-grid">
+              <div class="fit-card">
+                <span class="fit-tag">Подойдёт, если</span>
+                <h4>Это про вас</h4>
+                <ul class="fit-list">
+                  <li>У вас СДВГ — диагноз поставлен или в процессе</li>
+                  <li>Хочется структуры, а не разовых лайфхаков</li>
+                  <li>Готовы пробовать маленькие задания между встречами</li>
+                  <li>Интересен формат группы — поддержка похожих людей</li>
+                </ul>
+              </div>
+              <div class="fit-card no">
+                <span class="fit-tag">Не подойдёт, если</span>
+                <h4>Тогда лучше другой формат</h4>
+                <ul class="fit-list">
+                  <li>Нужна диагностика — начинайте с неё</li>
+                  <li>Ищете «быстро и универсально»</li>
+                  <li>«Иногда зайти посмотреть» — состав закрытый</li>
+                  <li>Сейчас острый кризис — лучше индивидуально</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="reassure">
+              <div class="reassure-label">Важно сразу</div>
+              <p><strong>Задания не нужно делать идеально.</strong> Мы как раз работаем с тем, что у людей с СДВГ системы часто срываются. Если задание не получилось — это не провал, а материал для разбора.</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </article>
 
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">05</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 5 · реализационные намерения</span>
-            <h3>Как переводить намерения в действия. Триггер и первый шаг на 30 секунд</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи у вас будет 3 конкретных намерения</strong>, каждое с триггером и первым шагом на 30 секунд — и понимание, почему обычные «надо начать» не работают.</div>
-          <p><strong>Реализационные намерения</strong> <span class="term-gloss">— это техника «если наступает X, я делаю Y»</span>. Не «я буду заниматься спортом», а «когда / где / после чего я сделаю первый шаг, который занимает 30 секунд».</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Формула: <strong>намерение → триггер (когда / где / после чего) → первый шаг на 30 секунд → отметить «сделано»</strong></li>
-            <li>Три уровня приоритета: ВАЖНОЕ · ЧУТЬ ЛЕГЧЕ · ПРОСТЫЕ — как распределить дела недели</li>
-            <li>Почему «30 секунд» работает лучше, чем «надо начать»</li>
-            <li>Что делать, если шаг не сработал — пересборка триггера, а не самокритика</li>
-          </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> выбрать 3 намерения (по одному с каждого уровня), прописать триггер и первый шаг на 30 секунд, отмечать «сделано» каждый день.</div>
-        </div>
-      </div>
-
-      <div class="week">
-        <button class="week-toggle" type="button">
-          <span class="week-num">06</span>
-          <span class="week-head">
-            <span class="week-tag">Неделя 6 · сборка</span>
-            <h3>Личный набор инструментов. Что забираем с собой</h3>
-          </span>
-          <span class="week-plus">+</span>
-        </button>
-        <div class="week-body">
-          <div class="outcome"><strong>После встречи у вас будет личный «набор первой помощи»</strong> — 5–7 инструментов, которые именно для вас работают, и план поддержки на ближайшие 3 месяца.</div>
-          <p>Финальная встреча — про то, как удержать движение после окончания группы. Без иллюзии, что вы внезапно станете другим человеком: с конкретными сценариями возврата после срывов.</p>
-          <div class="focus-line">Что разберём</div>
-          <ul>
-            <li>Что сработало у каждого за курс — общий разбор</li>
-            <li>«Набор первой помощи»: 5–7 инструментов из курса, которые именно для вас рабочие</li>
-            <li>План поддержки на 3 месяца и сценарии возврата после срыва</li>
-            <li>Что дальше: индивидуальная работа, самостоятельная практика, поддерживающие форматы</li>
-          </ul>
-          <div class="hw"><strong>Домашнее задание:</strong> собрать свой «набор первой помощи» и план на 3 месяца. По желанию — поделиться им в чате после окончания группы.</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- КОМУ ПОДОЙДЁТ -->
-  <section id="fit" class="bleed mint">
-    <svg class="leaf-deco br" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 100 110 C 90 84, 76 64, 56 50" opacity="0.5"/>
-      <path d="M 80 80 C 68 80, 62 88, 66 96 C 76 96, 84 88, 80 80 Z" fill="#a8c0a0" opacity="0.5"/>
-      <path d="M 64 66 C 54 68, 50 76, 56 84 C 64 80, 70 74, 64 66 Z" fill="#a8c0a0" opacity="0.45"/>
-      <circle cx="48" cy="48" r="3" fill="#f0b400" opacity="0.7"/>
-    </svg>
-    <div class="inner">
-      <h2 class="scribble">Вам сюда, если вы узнаёте себя</h2>
-      <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
-
-      <ul class="recognize-list">
-        <li>понимаете, что надо сделать, но не можете начать;</li>
-        <li>делаете срочное вместо важного;</li>
-        <li>срываетесь после одной ошибки и бросаете всю систему;</li>
-        <li>покупаете планеры, приложения и курсы, но они у вас не приживаются;</li>
-        <li>откладываете не потому, что не хотите, а потому что задача мутная, неприятная или слишком большая;</li>
-        <li>устаёте от собственной непредсказуемости и резких эмоциональных качелей.</li>
-      </ul>
-
-      <h2 class="scribble" style="margin-top:48px">Подойдёт / не подойдёт</h2>
-      <p class="sec-lead">Если вы узнаёте себя в блоке «не подойдёт» — лучше выбрать другой формат, а не идти в группу через силу.</p>
-
-      <div class="fit-grid">
-        <div class="fit-card">
-          <span class="fit-tag">Подойдёт, если</span>
-          <h4>Это про вас</h4>
-          <ul class="fit-list">
-            <li>У вас СДВГ — диагноз поставлен или вы в процессе диагностики</li>
-            <li>Хочется структуры и регулярности, а не разовых лайфхаков</li>
-            <li>Готовы пробовать между встречами хотя бы маленькие задания — не идеально, а по-настоящему</li>
-            <li>Интересен формат группы — поддержка и опыт похожих людей</li>
-          </ul>
-        </div>
-        <div class="fit-card no">
-          <span class="fit-tag">Не подойдёт, если</span>
-          <h4>Тогда лучше другой формат</h4>
-          <ul class="fit-list">
-            <li>Нужна диагностика — это отдельный процесс, начинайте с неё</li>
-            <li>Ищете «быстро и универсально» — здесь нужна еженедельная работа</li>
-            <li>Формат «иногда зайти посмотреть» — состав закрытый, важна регулярность</li>
-            <li>Сейчас острый кризис — стоит начать с индивидуальной поддержки</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="reassure">
-        <div class="reassure-label">Важно сразу</div>
-        <p><strong>Задания не нужно делать идеально.</strong> Мы как раз работаем с тем, что у людей с СДВГ системы часто срываются. Если задание не получилось — это не провал, а материал для разбора: где именно сломался запуск, что было непонятно, какая эмоция вмешалась, какой шаг оказался слишком большим.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ФОРМАТ -->
-  <section id="format" class="bleed sage">
-    <svg class="leaf-deco bl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M 20 110 C 30 80, 45 60, 70 50" opacity="0.55"/>
-      <ellipse cx="40" cy="78" rx="8" ry="5" fill="#a8c0a0" opacity="0.55" transform="rotate(-30 40 78)"/>
-      <ellipse cx="55" cy="64" rx="9" ry="5" fill="#a8c0a0" opacity="0.5" transform="rotate(-30 55 64)"/>
-      <ellipse cx="68" cy="52" rx="7" ry="4" fill="#a8c0a0" opacity="0.45" transform="rotate(-30 68 52)"/>
-    </svg>
-    <div class="inner">
-    <h2 class="scribble">Формат и логистика</h2>
-    <div class="format-grid">
-      <div class="format-card">
-        <h4>Когда</h4>
-        <p>Группы стартуют примерно раз в три месяца. Ближайший старт ожидается в июне — точная дата и время согласовываются с потоком.</p>
-      </div>
-      <div class="format-card">
-        <h4>Где</h4>
-        <p>Онлайн, видеовстречи в Google&nbsp;Meet или Zoom. Чат между встречами — в Telegram.</p>
-      </div>
-      <div class="format-card">
-        <h4>Сколько человек</h4>
-        <p>Мини-группа, фиксированный состав на все 6 встреч. Состав закрывается после старта, новые участники не присоединяются.</p>
-      </div>
-      <div class="format-card">
-        <h4>Сколько стоит</h4>
-        <div class="pv">240 €<span style="font-size:14px; font-weight:400; color:var(--soft); margin-left:6px">≈ 24 000 ₽</span></div>
-        <div class="sub">За весь курс — 6 встреч, чат и домашние задания. Оплата в ₽ по договорённости.</div>
-      </div>
-    </div>
     </div>
   </section>
 
@@ -1150,9 +1224,14 @@
     });
   });
 
-  // Auto-open first week on load for visual cue
-  var firstWeek = document.querySelector('.week');
-  if (firstWeek) firstWeek.classList.add('open');
+  // Hub cards: один CTA внутри карточки раскрывает/сворачивает детали
+  document.querySelectorAll('.hub-cta').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.hub-card');
+      var isOpen = card.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
 </script>
 
 </body>
