@@ -330,18 +330,22 @@
   /* MID CTA — компактный, сразу под hero */
   .mid-cta{
     margin:20px 0 0;
-    padding:18px 22px;
-    background:var(--paper);
-    border:1.5px dashed var(--accent);
+    padding:20px 24px;
+    background:#fff;
+    border:1.5px solid var(--accent);
     border-radius:var(--r-md);
+    box-shadow:0 1px 2px rgba(255,217,61,.15), 0 8px 24px -16px rgba(160,120,0,.15);
     display:flex; align-items:center; justify-content:space-between; gap:18px;
     flex-wrap:wrap;
   }
   .mid-cta p{
-    margin:0; font-size:14px; line-height:1.5; color:var(--ink);
-    flex:1; min-width:220px;
+    margin:0; font-size:14px; line-height:1.55; color:var(--ink);
+    flex:1; min-width:240px;
   }
-  .mid-cta p strong{font-weight:700}
+  .mid-cta p strong{
+    display:block; font-weight:700; font-size:15px;
+    margin-bottom:4px; color:var(--ink);
+  }
   .mid-cta .mid-actions{
     display:flex; gap:10px; flex-wrap:wrap;
   }
@@ -376,28 +380,33 @@
   }
   .tldr p{margin:0; font-size:15px; line-height:1.55; color:var(--ink)}
 
-  /* Маршрут 6 недель */
-  .roadmap{
-    margin:8px 0 28px;
-    padding:24px 26px;
-    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 75%);
-    border:1.5px solid var(--accent);
-    border-radius:var(--r-md);
-  }
-  .roadmap h3{
+  /* Маршрут 6 недель — карточки с воздухом */
+  .roadmap-head{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:18px; font-weight:600; margin:0 0 14px; letter-spacing:-.005em;
+    font-size:18px; font-weight:600; margin:0 0 16px; letter-spacing:-.005em;
+    color:var(--ink);
   }
-  .roadmap-list{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px}
-  .roadmap-list li{
-    display:grid; grid-template-columns:28px 1fr; gap:14px; align-items:baseline;
+  .roadmap-grid{
+    margin:0 0 8px;
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;
+    list-style:none; padding:0;
+  }
+  .roadmap-grid li{
+    background:#fff; border:1px solid var(--line);
+    border-radius:var(--r-md); padding:18px 20px;
+    display:flex; flex-direction:column; gap:6px;
+    transition:border-color .15s, transform .15s var(--easing);
+  }
+  .roadmap-grid li:hover{border-color:var(--accent); transform:translateY(-2px)}
+  .roadmap-grid li .rm-num{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-weight:700; color:var(--accent-deep); font-size:13px;
+    letter-spacing:.04em;
+  }
+  .roadmap-grid li .rm-text{
     font-size:14px; line-height:1.5; color:var(--ink);
   }
-  .roadmap-list li .rm-num{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-weight:700; color:var(--accent-deep); font-size:14px;
-  }
-  .roadmap-list li strong{font-weight:600}
+  .roadmap-grid li strong{font-weight:600}
 
   /* "После встречи вы" в каждой неделе */
   .week-body .outcome{
@@ -495,9 +504,10 @@
     .tldr{padding:16px 18px}
     .tldr p{font-size:14px}
 
-    .roadmap{padding:20px 20px}
-    .roadmap h3{font-size:17px}
-    .roadmap-list li{grid-template-columns:24px 1fr; gap:10px; font-size:13px}
+    .roadmap-head{font-size:17px}
+    .roadmap-grid{grid-template-columns:1fr; gap:10px}
+    .roadmap-grid li{padding:16px 18px}
+    .roadmap-grid li .rm-text{font-size:13px}
 
     .recognize{padding:20px 20px}
     .recognize h3{font-size:17px}
@@ -564,7 +574,7 @@
 
     <!-- MID CTA — сразу под метриками, чтобы не ждать конца страницы -->
     <div class="mid-cta">
-      <p><strong>Хотите в ближайший поток?</strong> Заполните короткую анкету — это не обязательство, а предзапись.</p>
+      <p><strong>Хочу в группу</strong>Заполните короткую анкету — я посмотрю, подойдёт ли вам формат, и напишу в Telegram с деталями ближайшего потока.</p>
       <div class="mid-actions">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
            target="_blank" rel="noopener" class="mid-btn primary">
@@ -599,17 +609,33 @@
     <h2>Что вы получите за 6 недель</h2>
     <p class="sec-lead">Маршрут в одну строку на неделю — чтобы видеть всю траекторию сразу. Подробности по каждой встрече ниже.</p>
 
-    <div class="roadmap">
-      <h3>За 6 недель вы:</h3>
-      <ul class="roadmap-list">
-        <li><span class="rm-num">1.</span><span>поймёте, <strong>где именно</strong> у вас ломается выполнение задач — старт, план, фокус, эмоции или удержание усилия;</span></li>
-        <li><span class="rm-num">2.</span><span>научитесь <strong>останавливать негативную спираль</strong> после ошибок и возвращаться к действию;</span></li>
-        <li><span class="rm-num">3.</span><span>выберете <strong>одну привычку</strong> и соберёте её без насилия над собой;</span></li>
-        <li><span class="rm-num">4.</span><span>разберёте свои <strong>эмоциональные срывы и RSD</strong> — где захлёстывает и как восстанавливаться;</span></li>
-        <li><span class="rm-num">5.</span><span>научитесь <strong>переводить намерения в конкретные первые шаги</strong> по 30 секунд;</span></li>
-        <li><span class="rm-num">6.</span><span>соберёте <strong>личный набор инструментов</strong> и план поддержки на 3 месяца после группы.</span></li>
-      </ul>
-    </div>
+    <h3 class="roadmap-head">За 6 недель вы:</h3>
+    <ul class="roadmap-grid">
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 1</span>
+        <span class="rm-text">поймёте, <strong>где именно</strong> у вас ломается выполнение задач — старт, план, фокус, эмоции или удержание усилия</span>
+      </li>
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 2</span>
+        <span class="rm-text">научитесь <strong>останавливать негативную спираль</strong> после ошибок и возвращаться к действию</span>
+      </li>
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 3</span>
+        <span class="rm-text">выберете <strong>одну привычку</strong> и соберёте её без насилия над собой</span>
+      </li>
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 4</span>
+        <span class="rm-text">разберёте свои <strong>эмоциональные срывы и RSD</strong> — где захлёстывает и как восстанавливаться</span>
+      </li>
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 5</span>
+        <span class="rm-text">научитесь <strong>переводить намерения в конкретные первые шаги</strong> по 30 секунд</span>
+      </li>
+      <li>
+        <span class="rm-num">НЕДЕЛЯ 6</span>
+        <span class="rm-text">соберёте <strong>личный набор инструментов</strong> и план поддержки на 3 месяца</span>
+      </li>
+    </ul>
 
     <h2 style="margin-top:36px">Программа по неделям</h2>
     <p class="sec-lead">Каждая встреча сочетает короткую содержательную часть, обсуждение в группе, практическое упражнение и постановку домашнего задания на неделю.</p>
@@ -759,7 +785,7 @@
   <!-- КОМУ ПОДОЙДЁТ -->
   <section id="fit">
     <h2>Вам сюда, если вы узнаёте себя</h2>
-    <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если хотя бы три из этого списка про вас — значит, попадёт и в этот раз.</p>
+    <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
 
     <div class="recognize">
       <h3>Вам сюда, если вы часто:</h3>
@@ -774,7 +800,7 @@
     </div>
 
     <h2 style="margin-top:36px">Подойдёт / не подойдёт</h2>
-    <p class="sec-lead">Если запрос совпадает с правой колонкой — лучше выбрать другой формат, а не идти в группу через силу.</p>
+    <p class="sec-lead">Если вы узнаёте себя в блоке «не подойдёт» — лучше выбрать другой формат, а не идти в группу через силу.</p>
 
     <div class="fit-grid">
       <div class="fit-card">
@@ -924,10 +950,10 @@
   <!-- CTA -->
   <section class="cta-block">
     <h2>Записаться в ближайший поток</h2>
-    <p>Заполните анкету предзаписи — 5–7 минут. Я свяжусь с вами в течение пары дней и расскажу детали ближайшего старта.</p>
+    <p>Заполните короткую анкету — я посмотрю ваш запрос и напишу, подойдёт ли вам ближайший поток. Обычно это занимает 5–7 минут.</p>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
        target="_blank" rel="noopener" class="cta-btn">
-      Заполнить анкету предзаписи <span class="arrow">→</span>
+      Заполнить анкету <span class="arrow">→</span>
     </a>
     <div class="cta-sub">Или напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a> — отвечу лично.</div>
   </section>
