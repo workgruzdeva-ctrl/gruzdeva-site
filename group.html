@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Группа работы с навыками при СДВГ · Gruzdeva V.А.</title>
+<meta name="description" content="Закрытая мини-группа для взрослых с СДВГ. 6 встреч по 90 минут, работа с исполнительными навыками, домашние задания и чат между встречами. 240 € за курс.">
+<style>
+  :root{
+    --ink:#141414;
+    --soft:#4a4a4a;
+    --muted:#8c8c8c;
+    --line:#ececec;
+    --line-soft:#f5f5f5;
+    --bg:#ffffff;
+    --paper:#ffffff;
+    --accent:#ffd93d;
+    --accent-soft:#fff8d6;
+    --accent-deep:#a07800;
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --shadow-soft:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.08);
+    --easing:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0; overflow-x:hidden; max-width:100vw}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink); background:var(--bg);
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--ink); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--ink)}
+
+  .wrap{max-width:860px; margin:0 auto; padding:24px 24px 96px}
+
+  /* TOP NAV */
+  .topnav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0 32px; font-size:14px;
+  }
+  .logo{font-weight:600; letter-spacing:.04em; text-decoration:none; display:inline-flex; align-items:center; gap:8px}
+  .logo .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent)}
+  .topnav .back{color:var(--soft); text-decoration:none; font-size:13px; transition:color .15s}
+  .topnav .back:hover{color:var(--ink)}
+  .topnav .back::before{content:"← "}
+
+  /* TYPOGRAPHY */
+  h1.display{
+    font-family:"Charter","Iowan Old Style","Apple Garamond","Georgia",serif;
+    font-size:clamp(36px, 6vw, 56px);
+    font-weight:600; letter-spacing:-.025em; line-height:1.05;
+    margin:0 0 18px;
+  }
+  h2{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:clamp(24px, 4vw, 30px);
+    font-weight:600; letter-spacing:-.015em; line-height:1.2;
+    margin:0 0 12px;
+  }
+  h3{font-size:17px; font-weight:600; margin:0 0 8px; letter-spacing:-.005em}
+  p{margin:0 0 14px; line-height:1.65}
+  .lead{font-size:18px; color:var(--soft); margin:0 0 24px; line-height:1.55}
+  .muted{color:var(--muted); font-size:14px}
+
+  /* HERO with goose */
+  .hero{
+    position:relative;
+    padding:32px 28px 28px;
+    margin:0 0 32px;
+    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 75%);
+    border:1.5px solid var(--accent);
+    border-radius:var(--r-lg);
+    overflow:hidden;
+  }
+  .hero-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--accent-deep); margin-bottom:14px;
+  }
+  .hero-tag::before{
+    content:""; width:8px; height:8px; border-radius:50%; background:var(--accent);
+  }
+  .hero h1.display{margin-bottom:14px}
+  .hero .lead{color:#3a2f10; margin-bottom:24px; max-width:580px}
+  .hero-mascot{
+    position:absolute; right:18px; top:18px;
+    width:96px; height:106px;
+    animation:goose-wiggle 4.5s ease-in-out infinite;
+    transform-origin:50% 90%;
+  }
+  @keyframes goose-wiggle{
+    0%,100%{transform:rotate(-2deg)}
+    50%{transform:rotate(3deg)}
+  }
+
+  /* METRICS row */
+  .metrics{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
+    margin-top:20px;
+  }
+  .metric{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:14px 16px;
+    text-align:left;
+  }
+  .metric .mv{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:22px; font-weight:600; line-height:1.1;
+    letter-spacing:-.01em; color:var(--ink);
+  }
+  .metric .ml{
+    margin-top:4px; font-size:12px; color:var(--soft); line-height:1.35;
+    letter-spacing:.02em;
+  }
+
+  /* Section spacing */
+  section{margin:48px 0 0}
+  section > h2{margin-bottom:14px}
+  .sec-lead{font-size:15px; color:var(--soft); margin:0 0 24px; line-height:1.6}
+
+  /* INTRO BLOCK (yellow note) */
+  .intro-block{
+    background:var(--accent-soft);
+    border-left:3px solid var(--accent);
+    border-radius:8px;
+    padding:20px 22px;
+    margin:0 0 12px;
+  }
+  .intro-block p{margin:0; font-size:15px; line-height:1.6; color:#5a4500}
+  .intro-block p + p{margin-top:10px}
+
+  /* Two-col fit / no-fit blocks */
+  .fit-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
+    margin:8px 0 0;
+  }
+  .fit-card{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:22px 24px;
+  }
+  .fit-card.no .fit-tag{color:#9a4a2a}
+  .fit-card.no .fit-tag::before{background:#e08a5a}
+  .fit-tag{
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:var(--accent-deep); display:inline-flex; align-items:center; gap:6px;
+    margin-bottom:10px;
+  }
+  .fit-tag::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  .fit-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; margin:0 0 12px; line-height:1.25;
+  }
+  .fit-list{margin:0; padding:0; list-style:none}
+  .fit-list li{
+    padding:7px 0 7px 22px;
+    position:relative; font-size:14px; line-height:1.5; color:var(--ink);
+    border-bottom:1px dashed var(--line);
+  }
+  .fit-list li:last-child{border-bottom:none}
+  .fit-list li::before{
+    content:"+"; position:absolute; left:0; top:7px;
+    color:var(--accent-deep); font-weight:700; font-size:14px;
+  }
+  .fit-card.no .fit-list li::before{content:"−"; color:#9a4a2a}
+
+  /* WEEK accordions */
+  .weeks{display:flex; flex-direction:column; gap:10px; margin-top:8px}
+  .week{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); overflow:hidden;
+  }
+  .week-toggle{
+    width:100%; text-align:left; cursor:pointer;
+    background:none; border:none; font:inherit;
+    padding:20px 22px;
+    display:grid; grid-template-columns:48px 1fr 28px; align-items:center; gap:16px;
+    color:var(--ink);
+    transition:background .15s;
+  }
+  .week-toggle:hover{background:var(--line-soft)}
+  .week-num{
+    width:44px; height:44px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-weight:700; font-size:18px;
+    transition:background .2s, color .2s;
+  }
+  .week.open .week-num{background:var(--accent); color:var(--ink)}
+  .week-head{display:flex; flex-direction:column; gap:4px; min-width:0}
+  .week-tag{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+    color:var(--soft);
+  }
+  .week-head h3{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; margin:0; line-height:1.25;
+    letter-spacing:-.005em;
+  }
+  .week-plus{
+    width:28px; height:28px; border-radius:50%;
+    background:var(--line-soft); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; line-height:1; color:var(--ink);
+    transition:transform .25s var(--easing), background .2s;
+  }
+  .week.open .week-plus{transform:rotate(45deg); background:var(--accent)}
+  .week-body{
+    max-height:0; overflow:hidden;
+    transition:max-height .35s var(--easing);
+    padding:0 22px;
+    color:var(--soft); font-size:14px; line-height:1.65;
+  }
+  .week.open .week-body{
+    max-height:1600px; padding:6px 22px 22px;
+  }
+  .week-body p{margin:0 0 10px; color:var(--ink)}
+  .week-body .focus-line{
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); font-weight:700; margin:14px 0 6px;
+  }
+  .week-body ul{margin:0; padding-left:22px}
+  .week-body ul li{padding:3px 0; color:var(--ink); line-height:1.55}
+  .week-body .hw{
+    margin-top:14px; padding:14px 16px;
+    background:var(--accent-soft); border-radius:8px;
+    color:#5a4500; font-size:13px; line-height:1.55;
+  }
+  .week-body .hw strong{color:var(--ink); font-weight:700}
+
+  /* FORMAT BLOCKS */
+  .format-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
+    margin-top:8px;
+  }
+  .format-card{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:20px 22px;
+  }
+  .format-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:16px; font-weight:600; margin:0 0 8px;
+  }
+  .format-card p{font-size:14px; color:var(--soft); margin:0; line-height:1.55}
+  .format-card .pv{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:24px; font-weight:600; color:var(--ink); margin-top:4px;
+    letter-spacing:-.01em;
+  }
+  .format-card .sub{font-size:13px; color:var(--muted); margin-top:2px}
+
+  /* BIO */
+  .bio{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:22px 24px;
+    display:grid; grid-template-columns:64px 1fr; gap:18px; align-items:start;
+  }
+  .bio-avatar{
+    width:64px; height:64px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:24px; font-weight:700;
+  }
+  .bio h3{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; margin:0 0 4px;
+  }
+  .bio .role{font-size:13px; color:var(--muted); margin:0 0 12px; letter-spacing:.02em}
+  .bio p{font-size:14px; line-height:1.6; color:var(--soft); margin:0 0 10px}
+  .bio p:last-child{margin-bottom:0}
+
+  /* FAQ accordion (same as week) */
+  .faq{display:flex; flex-direction:column; gap:8px; margin-top:8px}
+  .faq-item{
+    background:var(--paper); border:1px solid var(--line);
+    border-radius:var(--r-md); overflow:hidden;
+  }
+  .faq-q{
+    width:100%; text-align:left; cursor:pointer;
+    background:none; border:none; font:inherit;
+    padding:18px 22px;
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    color:var(--ink);
+  }
+  .faq-q:hover{background:var(--line-soft)}
+  .faq-q span.q-text{
+    font-weight:600; font-size:15px; line-height:1.4;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+  }
+  .faq-q .week-plus{flex-shrink:0}
+  .faq-a{
+    max-height:0; overflow:hidden;
+    transition:max-height .35s var(--easing);
+    padding:0 22px;
+    color:var(--soft); font-size:14px; line-height:1.65;
+  }
+  .faq-item.open .week-plus{transform:rotate(45deg); background:var(--accent)}
+  .faq-item.open .faq-a{max-height:600px; padding:0 22px 20px}
+
+  /* CTA */
+  .cta-block{
+    margin-top:48px; padding:36px 32px;
+    background:linear-gradient(180deg, var(--accent-soft) 0%, var(--paper) 70%);
+    border:1.5px solid var(--accent);
+    border-radius:var(--r-lg);
+    text-align:center;
+  }
+  .cta-block h2{margin:0 0 10px}
+  .cta-block p{font-size:15px; color:#5a4500; margin:0 0 22px; line-height:1.55}
+  .cta-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ink); color:#fff;
+    padding:16px 28px; border-radius:100px;
+    text-decoration:none; font-size:15px; font-weight:600;
+    transition:transform .15s var(--easing), box-shadow .15s;
+  }
+  .cta-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+  .cta-btn .arrow{color:var(--accent); font-size:18px; line-height:1; transition:transform .15s}
+  .cta-btn:hover .arrow{transform:translateX(3px)}
+  .cta-sub{
+    margin-top:14px; font-size:13px; color:var(--soft);
+  }
+  .cta-sub a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--accent-deep); text-decoration-thickness:2px}
+
+  /* FOOTER */
+  footer{
+    margin-top:64px; padding-top:28px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:14px; text-align:center;
+  }
+  footer a{color:var(--ink); font-weight:600; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:2px}
+
+  /* RESPONSIVE */
+  @media (max-width: 640px){
+    .wrap{padding:16px 18px 72px}
+    .hero{padding:24px 20px 22px}
+    .hero h1.display{font-size:32px; padding-right:90px}
+    .hero .lead{font-size:15px; padding-right:0}
+    .hero-mascot{width:74px; height:84px; right:10px; top:14px}
+
+    .metrics{grid-template-columns:repeat(2, 1fr); gap:8px}
+    .metric{padding:12px 14px}
+    .metric .mv{font-size:18px}
+    .metric .ml{font-size:11px}
+
+    .fit-grid{grid-template-columns:1fr}
+    .format-grid{grid-template-columns:1fr}
+
+    .week-toggle{padding:18px 18px; grid-template-columns:38px 1fr 24px; gap:12px}
+    .week-num{width:36px; height:36px; font-size:15px}
+    .week-head h3{font-size:16px}
+    .week-tag{font-size:10px}
+    .week.open .week-body{padding:4px 18px 18px}
+
+    .bio{grid-template-columns:1fr; gap:12px; padding:20px}
+    .bio-avatar{width:56px; height:56px; font-size:22px}
+
+    .cta-block{padding:28px 22px}
+    .cta-btn{width:100%; justify-content:center; padding:14px 18px}
+
+    .faq-q{padding:16px 18px}
+    .faq-q span.q-text{font-size:14px}
+    .faq-item.open .faq-a{padding:0 18px 16px}
+
+    section{margin-top:40px}
+    footer{font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <a href="index.html" class="logo"><span class="dot"></span>Gruzdeva V.А.</a>
+    <a href="index.html#services" class="back">К консультациям</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" style="margin-top:0">
+    <!-- Goose mascot -->
+    <svg class="hero-mascot" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="52" cy="100" rx="28" ry="3" fill="#000" opacity=".4"/>
+      <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+      <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M 28 62 Q 18 38 32 22" stroke="#0d0d0d" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
+      <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+      <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="35" cy="20" r="1.6" fill="#0d0d0d"/>
+      <line x1="46" y1="93" x2="44" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+      <line x1="58" y1="93" x2="60" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 38 105 L 50 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+
+    <div class="hero-tag">Группа · стаей идти веселее</div>
+    <h1 class="display">Группа работы с навыками при СДВГ</h1>
+    <p class="lead">Закрытая мини-группа для взрослых с СДВГ. Шесть встреч, в которых вы тренируете исполнительные навыки — не мотивацию и не силу воли, а конкретные механики, которые отказываются работать сами по себе.</p>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="mv">6 встреч</div>
+        <div class="ml">раз в неделю</div>
+      </div>
+      <div class="metric">
+        <div class="mv">90 минут</div>
+        <div class="ml">каждая встреча</div>
+      </div>
+      <div class="metric">
+        <div class="mv">240 €</div>
+        <div class="ml">за весь курс · ≈ 24 000 ₽</div>
+      </div>
+      <div class="metric">
+        <div class="mv">Онлайн</div>
+        <div class="ml">фиксированный состав</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- О ЧЁМ ЭТО -->
+  <section id="about">
+    <h2>О чём эта группа</h2>
+    <p>СДВГ у взрослых — это не «лень» и не «недостаток мотивации». Это особенности работы исполнительных функций: способности начать, удержать внимание, спланировать, довести до конца, переключиться, отрегулировать эмоциональный фон. Когда эти механизмы работают с перебоями, обычные «возьми и сделай» не помогают — нужны другие инструменты.</p>
+    <p>Мы работаем по структурированной программе, основанной на модели Томаса Брауна и протоколе CADDAC (канадский центр СДВГ), адаптированной под взрослых и под русскоязычный контекст. За 6 недель вы пройдёте через шесть зон, в которых при СДВГ чаще всего возникают сложности — и попробуете на практике конкретные стратегии.</p>
+
+    <div class="intro-block">
+      <p><strong>Это не лекции и не поддерживающая группа.</strong> Здесь мы пробуем, ошибаемся, разбираемся и пробуем снова. Каждую неделю — небольшое домашнее задание, между встречами — чат-сопровождение для вопросов и поддержки.</p>
+    </div>
+  </section>
+
+  <!-- ПРОГРАММА -->
+  <section id="program">
+    <h2>Программа: 6 недель</h2>
+    <p class="sec-lead">Каждая встреча сочетает короткую содержательную часть, обсуждение в группе, практическое упражнение и постановку домашнего задания на неделю.</p>
+
+    <div class="weeks">
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">01</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 1</span>
+            <h3>Карта исполнительных навыков. Где у вас «проседает»</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>Начинаем с понимания: что такое исполнительные функции и как они проявляются именно у вас. Мы пройдёмся по модели Томаса Брауна — шесть зон, которые при СДВГ работают с перебоями, и каждый составит свой профиль.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>Активация: запуск дела, переход «думать → делать»</li>
+            <li>Фокус: удержание и переключение внимания</li>
+            <li>Усилие: поддержание скорости, бодрости, темпа</li>
+            <li>Эмоции: фрустрация, обида, тревога как помеха работе</li>
+            <li>Память: рабочая память, доступ к нужной информации</li>
+            <li>Действие: самоконтроль, торможение импульсов</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> заполнить свой профиль исполнительных навыков и понаблюдать неделю — в каких ситуациях «проседает» что именно.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">02</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 2</span>
+            <h3>Сильные стороны СДВГ. Сдвиг мышления и устойчивость</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>СДВГ редко приходит «чистым» — рядом с трудностями обычно есть сильные стороны, которые в обычном разговоре про «диагноз» теряются. Эта встреча — про то, как видеть и опираться на них, не превращая это в пустой позитив.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>Типичные сильные стороны при СДВГ: гиперфокус, нестандартное мышление, скорость, эмпатия</li>
+            <li>Гибкое мышление вместо ярлыков «я ленивый / я провальный»</li>
+            <li>Самосострадание как рабочий инструмент, а не утешение</li>
+            <li>Устойчивость: что помогает не разваливаться от срывов плана</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> зафиксировать три ситуации за неделю, где сработала ваша сильная сторона — и одну, где вы обошлись с собой жёстче, чем нужно было.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">03</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 3</span>
+            <h3>Привычки: фундамент, на котором всё держится</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>Привычки при СДВГ строятся не так, как в обычных книгах про «21 день». Дофаминовая система работает иначе, поэтому стандартные приёмы часто буксуют. Разбираем, что работает именно при СДВГ — и почему.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>Сон, движение, питание — три опоры, без которых техники не работают</li>
+            <li>Якоря и контекстные триггеры вместо силы воли</li>
+            <li>Микро-привычки: размер шага, который ваш мозг готов проглотить</li>
+            <li>Что делать со срывами и пропусками</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> выбрать одну микро-привычку и привязать её к существующему якорю в дне. Отслеживать неделю, без оценок.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">04</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 4</span>
+            <h3>Эмоциональная регуляция. Когда чувства сносят план</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>При СДВГ эмоции часто приходят быстрее и сильнее, чем у нейротипичных людей, — и они умеют снести любой график. Эта встреча про то, как замечать момент «накрывает» и расширять окно, в котором вы можете действовать осознанно.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>RSD — чувствительность к отвержению, как её узнавать и не воевать с ней</li>
+            <li>Эмоциональная регуляция: тело, дыхание, переключение состояния</li>
+            <li>Скрипты для трудных разговоров с собой и с другими</li>
+            <li>Когда обращаться за дополнительной поддержкой (терапия, психиатр)</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> завести «карту триггеров» — три ситуации недели, где эмоция перехватила управление, и что помогло вернуться.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">05</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 5</span>
+            <h3>Планирование и управление временем</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>«Слепота ко времени» — одна из главных штук, которую СДВГ делает с жизнью. Часы идут, а в голове ощущение, что времени всё ещё много. Разбираем, как этому компенсировать — без иллюзии, что вы внезапно станете человеком с идеальным календарём.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>Внешние якоря времени: таймеры, визуальные часы, чек-ины</li>
+            <li>Планирование от энергии, а не только от часов</li>
+            <li>Декомпозиция задач: как не утонуть в «надо сделать проект»</li>
+            <li>Календарь как рабочий инструмент, а не упрёк</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> спланировать одну неделю с учётом своей реальной энергии и понаблюдать расхождение между планом и фактом.</div>
+        </div>
+      </div>
+
+      <div class="week">
+        <button class="week-toggle" type="button">
+          <span class="week-num">06</span>
+          <span class="week-head">
+            <span class="week-tag">Неделя 6</span>
+            <h3>Продуктивность и прокрастинация. Что забираем с собой</h3>
+          </span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="week-body">
+          <p>Финальная встреча — про то, как удержать движение после окончания группы. Разбираем механику прокрастинации именно при СДВГ (она другая, чем «у всех»), и собираем личный набор инструментов, который вы дальше будете дорабатывать сами.</p>
+          <div class="focus-line">Что разберём</div>
+          <ul>
+            <li>Прокрастинация при СДВГ: почему «просто начни» не работает</li>
+            <li>Техники запуска: 2-минутное правило, body doubling, внешние свидетели</li>
+            <li>Личный план поддержки на 3 месяца после группы</li>
+            <li>Обмен опытом: что у кого сработало за курс</li>
+          </ul>
+          <div class="hw"><strong>Домашнее задание:</strong> собрать свой «набор первой помощи» — 5–7 инструментов, которые точно работают для вас, и где они лежат под рукой.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- КОМУ ПОДОЙДЁТ -->
+  <section id="fit">
+    <h2>Кому подойдёт, а кому — нет</h2>
+    <p class="sec-lead">Группа работает хорошо для конкретного типа задач и состояния. Если ваш запрос не совпадает с этим — лучше не идти, а выбрать другой формат.</p>
+
+    <div class="fit-grid">
+      <div class="fit-card">
+        <span class="fit-tag">Подойдёт, если</span>
+        <h4>Это про вас</h4>
+        <ul class="fit-list">
+          <li>У вас СДВГ — диагноз поставлен или вы в процессе диагностики</li>
+          <li>Хочется структуры и регулярности, а не разовых лайфхаков</li>
+          <li>Готовы быть включёнными: приходить, делать задания, делиться</li>
+          <li>Интересен формат группы — поддержка и опыт похожих людей</li>
+          <li>Хотите формат дешевле, чем индивидуальная работа</li>
+        </ul>
+      </div>
+      <div class="fit-card no">
+        <span class="fit-tag">Не подойдёт, если</span>
+        <h4>Тогда лучше другой формат</h4>
+        <ul class="fit-list">
+          <li>Нужна диагностика — это отдельный процесс, начинайте с неё</li>
+          <li>Ищете «быстро и универсально» — здесь нужна еженедельная работа</li>
+          <li>Формат «иногда зайти посмотреть» — состав фиксированный, пропуски ломают динамику</li>
+          <li>Сейчас острый кризис — стоит начать с индивидуальной поддержки</li>
+          <li>Хочется только теории про СДВГ — это не лекционный курс</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФОРМАТ -->
+  <section id="format">
+    <h2>Формат и логистика</h2>
+    <div class="format-grid">
+      <div class="format-card">
+        <h4>Когда</h4>
+        <p>Группы стартуют примерно раз в три месяца. Ближайший старт ожидается в июне — точная дата и время согласовываются с потоком.</p>
+      </div>
+      <div class="format-card">
+        <h4>Где</h4>
+        <p>Онлайн, видеовстречи в Google&nbsp;Meet или Zoom. Чат между встречами — в Telegram.</p>
+      </div>
+      <div class="format-card">
+        <h4>Сколько человек</h4>
+        <p>Мини-группа, фиксированный состав на все 6 встреч. Состав закрывается после старта, новые участники не присоединяются.</p>
+      </div>
+      <div class="format-card">
+        <h4>Сколько стоит</h4>
+        <div class="pv">240 €<span style="font-size:14px; font-weight:400; color:var(--soft); margin-left:6px">≈ 24 000 ₽</span></div>
+        <div class="sub">За весь курс — 6 встреч, чат и домашние задания. Оплата в ₽ по договорённости.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- О ВЕДУЩЕЙ -->
+  <section id="bio">
+    <h2>Кто ведёт</h2>
+    <div class="bio">
+      <div class="bio-avatar">ВГ</div>
+      <div>
+        <h3>Груздева Валентина Андреевна</h3>
+        <p class="role">Психолог, специализация — СДВГ у взрослых</p>
+        <p>Работаю с диагностикой и сопровождением взрослых с СДВГ. Веду индивидуальные консультации и закрытые группы. Программа группы построена на международных протоколах работы с исполнительными функциями (модель Брауна, протоколы CADDAC), адаптированных под реальный русскоязычный контекст.</p>
+        <p>Подробнее о подходе и формате работы — на <a href="index.html">главной странице</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>Частые вопросы</h2>
+    <div class="faq">
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">А если у меня ещё нет диагноза — можно прийти?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Можно, если вы в процессе диагностики или уверенно подозреваете у себя СДВГ и работаете с этим. Группа не ставит диагноз и не заменяет диагностическую сессию. Если хочется сначала разобраться, СДВГ ли это — лучше начать с диагностики, а потом приходить в группу.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">Что если я пропущу встречу?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Одна-две пропущенные встречи — не страшно, материалы можно догнать через записи и чат. Регулярные пропуски ломают групповую динамику и снижают эффект для вас — поэтому состав закрытый, и важно заходить настолько регулярно, насколько вы можете.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">Я интроверт, не люблю делиться в группе. Это для меня?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Делиться — это не делать большой каминг-аут. Это говорить, что у вас сработало, что нет, и слушать других. Иногда самая полезная встреча — та, где вы в основном слушали. Никто никого не вытаскивает на исповеди.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">А если индивидуально лучше? Можно и то и то?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Да. Группа и индивидуальные консультации не исключают друг друга — некоторым подходит сочетание. Если есть сомнения, что выбрать первым, напишите в Telegram — обсудим.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">Что с записями встреч?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Содержательные части (то, что мы разбираем) записываются и доступны участникам группы. Обсуждения и личные истории — не записываются и не выходят за пределы группы. Все детали по конфиденциальности обсуждаются перед стартом.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" type="button">
+          <span class="q-text">Как происходит запись?</span>
+          <span class="week-plus">+</span>
+        </button>
+        <div class="faq-a">
+          <p style="padding-top:6px">Вы заполняете короткую анкету — это помогает мне понять, подходит ли группа именно вам. После этого я связываюсь с вами в Telegram, и мы согласуем детали: даты, оплату, формальности. Если вижу, что формат не подойдёт, скажу прямо и порекомендую другой.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-block">
+    <h2>Записаться в ближайший поток</h2>
+    <p>Заполните анкету предзаписи — 5–7 минут. Я свяжусь с вами в течение пары дней и расскажу детали ближайшего старта.</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
+       target="_blank" rel="noopener" class="cta-btn">
+      Заполнить анкету предзаписи <span class="arrow">→</span>
+    </a>
+    <div class="cta-sub">Или напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a> — отвечу лично.</div>
+  </section>
+
+  <footer>
+    <p>© Gruzdeva V.А. · <a href="index.html">на главную</a> · <a href="prep.html">подготовка к первой встрече</a></p>
+  </footer>
+
+</div>
+
+<script>
+  // Toggle weeks and FAQ
+  document.querySelectorAll('.week-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.closest('.week').classList.toggle('open');
+    });
+  });
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.closest('.faq-item').classList.toggle('open');
+    });
+  });
+
+  // Auto-open first week on load for visual cue
+  var firstWeek = document.querySelector('.week');
+  if (firstWeek) firstWeek.classList.add('open');
+</script>
+
+</body>
+</html>
