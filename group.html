@@ -563,32 +563,112 @@
   .faq-item.open .week-plus{transform:rotate(45deg); background:var(--accent)}
   .faq-item.open .faq-a{max-height:600px; padding:0 22px 20px}
 
-  /* CTA — full-bleed sage-deep блок, главное действие на странице */
-  .cta-block{text-align:center; padding-top:120px; padding-bottom:120px}
-  .cta-block h2{
-    margin:0 0 16px; color:#fdfcf7;
-    font-size:clamp(30px, 5vw, 40px);
+  /* CTA — full-bleed sage-deep блок, 2 колонки + шаги */
+  .cta-block{padding-top:96px; padding-bottom:96px}
+  .cta-grid{
+    display:grid; grid-template-columns:1.1fr 1fr;
+    gap:48px; align-items:center;
   }
-  .cta-block p{
-    font-size:17px; color:rgba(253,252,247,.88); margin:0 auto 32px;
-    line-height:1.55; max-width:540px;
+  .cta-text h2{
+    margin:0 0 18px; color:#fdfcf7;
+    font-size:clamp(34px, 4.5vw, 48px);
+    line-height:1.08; letter-spacing:-.02em;
+    display:inline-block;
+  }
+  .cta-text p{
+    font-size:16px; color:rgba(253,252,247,.78); margin:0 0 28px;
+    line-height:1.55; max-width:400px;
+  }
+  /* Статус-пилл сверху */
+  .cta-status{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:8px 16px; margin-bottom:22px;
+    background:rgba(0,0,0,.22);
+    border:1px solid rgba(240,180,0,.32);
+    border-radius:100px;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:var(--accent);
+  }
+  .cta-status::before{
+    content:""; width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px rgba(240,180,0,.18);
+    animation:cta-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes cta-pulse{
+    0%, 100%{box-shadow:0 0 0 4px rgba(240,180,0,.18)}
+    50%{box-shadow:0 0 0 7px rgba(240,180,0,.08)}
+  }
+
+  .cta-actions{
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
   }
   .cta-btn{
     display:inline-flex; align-items:center; gap:12px;
     background:var(--accent); color:var(--ink);
-    padding:20px 36px; border-radius:100px;
-    text-decoration:none; font-size:17px; font-weight:700;
+    padding:16px 28px; border-radius:100px;
+    text-decoration:none; font-size:15px; font-weight:700;
     letter-spacing:-.005em;
+    box-shadow:
+      0 0 0 1px rgba(240,180,0,.5),
+      0 0 28px rgba(240,180,0,.42),
+      0 10px 24px -8px rgba(0,0,0,.4);
     transition:transform .15s var(--easing), box-shadow .15s;
   }
-  .cta-btn:hover{transform:translateY(-2px); box-shadow:0 16px 32px -10px rgba(0,0,0,.35)}
+  .cta-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(240,180,0,.6),
+      0 0 36px rgba(240,180,0,.55),
+      0 14px 32px -8px rgba(0,0,0,.45);
+  }
   .cta-btn:active{transform:translateY(0)}
   .cta-btn .arrow{color:var(--ink); font-size:18px; line-height:1; transition:transform .15s}
   .cta-btn:hover .arrow{transform:translateX(3px)}
-  .cta-sub{
-    margin-top:16px; font-size:14px; color:rgba(253,252,247,.7);
+  .cta-tg-inline{
+    font-size:14px; color:rgba(253,252,247,.6);
   }
-  .cta-sub a{color:#fdfcf7; font-weight:600; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:2px}
+  .cta-tg-inline a{
+    color:rgba(253,252,247,.95); font-weight:600;
+    text-decoration:underline; text-decoration-color:var(--accent);
+    text-decoration-thickness:2px; text-underline-offset:3px;
+  }
+
+  /* Карточка справа — Что после анкеты */
+  .cta-steps{
+    background:rgba(0,0,0,.22);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:20px;
+    padding:28px 30px;
+  }
+  .cta-steps-label{
+    font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:700;
+    color:rgba(253,252,247,.5); margin-bottom:18px;
+  }
+  .cta-steps ol{
+    list-style:none; margin:0; padding:0;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .cta-steps li{
+    display:grid; grid-template-columns:40px 1fr; gap:14px;
+    align-items:center;
+  }
+  .cta-steps .num{
+    width:40px; height:40px; border-radius:50%;
+    border:1.5px solid var(--accent);
+    background:rgba(240,180,0,.06);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    color:var(--accent); font-weight:700; font-size:16px;
+  }
+  .cta-steps .step-text strong{
+    display:block; color:#f3ecdb;
+    font-size:15px; font-weight:700; line-height:1.3;
+    margin-bottom:2px;
+  }
+  .cta-steps .step-text .sub{
+    font-size:13px; color:rgba(253,252,247,.55); line-height:1.4;
+  }
 
   /* MID CTA — компактный, в одной композиции с hero (без рамок) */
   .mid-cta{
@@ -803,7 +883,14 @@
     .reassure{padding:18px 20px}
     .reassure p{font-size:14px}
 
-    .cta-block p{font-size:15px}
+    .cta-block{padding-top:64px; padding-bottom:64px}
+    .cta-grid{grid-template-columns:1fr; gap:28px}
+    .cta-text h2{font-size:30px}
+    .cta-text p{max-width:none; font-size:15px}
+    .cta-actions{gap:14px}
+    .cta-steps{padding:22px 22px; border-radius:16px}
+    .cta-steps li{grid-template-columns:36px 1fr; gap:12px}
+    .cta-steps .num{width:36px; height:36px; font-size:15px}
 
     .week-toggle{padding:18px 18px; grid-template-columns:38px 1fr 24px; gap:12px}
     .week-num{width:36px; height:36px; font-size:15px}
@@ -1160,16 +1247,49 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA — 2 колонки + шаги -->
   <section class="bleed sage-deep cta-block">
     <div class="inner">
-      <h2 class="scribble on-dark">Записаться в ближайший поток</h2>
-      <p>Запись — через короткую анкету. Я посмотрю ваш запрос и напишу в Telegram, подойдёт ли вам ближайший поток. Анкета занимает 5–7 минут.</p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
-         target="_blank" rel="noopener" class="cta-btn">
-        Записаться в группу <span class="arrow">→</span>
-      </a>
-      <div class="cta-sub">Или напишите в <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a> — отвечу лично.</div>
+      <div class="cta-grid">
+        <div class="cta-text">
+          <div class="cta-status">Набор открыт · старт в июне</div>
+          <h2 class="scribble on-dark">Записаться в ближайший поток</h2>
+          <p>Запись — через короткую анкету на 5–7 минут. Без оплаты на этом шаге.</p>
+          <div class="cta-actions">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
+               target="_blank" rel="noopener" class="cta-btn">
+              Заполнить анкету <span class="arrow">→</span>
+            </a>
+            <span class="cta-tg-inline">или <a href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">Telegram</a></span>
+          </div>
+        </div>
+        <aside class="cta-steps">
+          <div class="cta-steps-label">Что после анкеты</div>
+          <ol>
+            <li>
+              <span class="num">1</span>
+              <span class="step-text">
+                <strong>Вы заполняете анкету</strong>
+                <span class="sub">5–7 минут, без оплаты</span>
+              </span>
+            </li>
+            <li>
+              <span class="num">2</span>
+              <span class="step-text">
+                <strong>Я смотрю ваш запрос</strong>
+                <span class="sub">и пишу лично в Telegram</span>
+              </span>
+            </li>
+            <li>
+              <span class="num">3</span>
+              <span class="step-text">
+                <strong>Подбираем поток</strong>
+                <span class="sub">ближайший или следующий</span>
+              </span>
+            </li>
+          </ol>
+        </aside>
+      </div>
     </div>
   </section>
 
