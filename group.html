@@ -303,11 +303,48 @@
   .hub-detail p{font-size:14px; line-height:1.6; color:var(--ink); margin:0 0 10px}
   .hub-detail p:last-child{margin-bottom:0}
 
-  /* Внутри hub-detail аккордеоны недель и fit-блоки чуть компактнее */
-  .hub-detail .week-toggle{padding:16px 18px; grid-template-columns:40px 1fr 24px; gap:12px}
-  .hub-detail .week-num{width:36px; height:36px; font-size:14px}
-  .hub-detail .week-head h3{font-size:15px; margin:0}
-  .hub-detail .weeks{gap:8px}
+  /* Editorial-flow внутри раскрытия: больше воздуха, никаких вложенных боксов */
+  .hub-detail-inner.editorial h3{
+    font-size:15px; font-weight:700; margin:24px 0 6px;
+    letter-spacing:.02em; text-transform:uppercase;
+    color:var(--sage-deep);
+  }
+  .hub-detail-inner.editorial h3:first-child{margin-top:0}
+  .hub-detail-inner.editorial p{
+    font-size:15px; line-height:1.65; color:var(--ink); margin:0 0 4px;
+  }
+  .hub-detail-inner.editorial ul{
+    margin:8px 0 14px; padding:0; list-style:none;
+  }
+  .hub-detail-inner.editorial ul li{
+    position:relative; padding:6px 0 6px 18px;
+    font-size:14.5px; line-height:1.55; color:var(--ink);
+  }
+  .hub-detail-inner.editorial ul li::before{
+    content:""; position:absolute; left:0; top:14px;
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+  }
+
+  /* Внутри hub-detail — недели легче, без двойной "карточечности" */
+  .hub-detail .weeks{
+    gap:0;
+    border-top:1px solid rgba(47,68,52,.14);
+  }
+  .hub-detail .week{
+    background:transparent;
+    border:none; border-bottom:1px solid rgba(47,68,52,.14);
+    border-radius:0;
+  }
+  .hub-detail .week:hover{border-color:rgba(47,68,52,.14)}
+  .hub-detail .week-toggle{
+    padding:14px 0; grid-template-columns:36px 1fr 24px; gap:12px;
+    background:transparent;
+  }
+  .hub-detail .week-toggle:hover{background:transparent}
+  .hub-detail .week-num{width:32px; height:32px; font-size:13px}
+  .hub-detail .week-head h3{font-size:15px; margin:0; font-family:"Charter","Iowan Old Style","Georgia",serif}
+  .hub-detail .week-body{padding:0 0 0 0}
+  .hub-detail .week.open .week-body{padding:0 0 18px 0}
   .hub-detail .roadmap-path{padding-left:32px}
   .hub-detail .roadmap-path li{font-size:14.5px; padding:11px 0}
 
@@ -463,28 +500,6 @@
     letter-spacing:-.01em;
   }
   .format-card .sub{font-size:13px; color:var(--muted); margin-top:2px}
-
-  /* BIO */
-  .bio{
-    background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--r-md); padding:22px 24px;
-    display:grid; grid-template-columns:64px 1fr; gap:18px; align-items:start;
-  }
-  .bio-avatar{
-    width:72px; height:72px; border-radius:50%;
-    background:var(--sage-deep); color:var(--accent);
-    display:flex; align-items:center; justify-content:center;
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:26px; font-weight:700;
-    flex-shrink:0;
-  }
-  .bio h3{
-    font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:18px; margin:0 0 4px;
-  }
-  .bio .role{font-size:13px; color:var(--muted); margin:0 0 12px; letter-spacing:.02em}
-  .bio p{font-size:14px; line-height:1.6; color:var(--soft); margin:0 0 10px}
-  .bio p:last-child{margin-bottom:0}
 
   /* FAQ accordion (same as week) */
   .faq{display:flex; flex-direction:column; gap:8px; margin-top:8px}
@@ -751,9 +766,6 @@
     .week-tag{font-size:10px}
     .week.open .week-body{padding:4px 18px 18px}
 
-    .bio{grid-template-columns:1fr; gap:12px; padding:20px}
-    .bio-avatar{width:56px; height:56px; font-size:22px}
-
     .cta-btn{width:100%; justify-content:center; padding:14px 18px; max-width:380px}
 
     .faq-q{padding:16px 18px}
@@ -854,7 +866,7 @@
   <!-- О ЧЁМ ЭТО -->
   <!-- HUB — 3 крупные карточки-входа -->
   <section class="hub" id="hub">
-    <p class="hub-tldr">Если коротко: мы разбираем, где у вас ломается действие, и подбираем инструменты под этот конкретный момент. Ниже — три точки входа, посмотрите ту, что нужна сейчас.</p>
+    <p class="hub-tldr">Если коротко: мы разбираем, где у вас ломается действие, и подбираем инструменты под этот конкретный момент. Собрала ниже коротко самое важное — как проходит группа, что внутри и кому она подходит.</p>
 
     <div class="hub-cards">
 
@@ -865,8 +877,7 @@
           <h2 class="hub-title">Как устроено</h2>
           <ul class="hub-summary">
             <li>6 встреч раз в неделю</li>
-            <li>Zoom или Google Meet</li>
-            <li>Чат поддержки между встречами</li>
+            <li>Zoom для встреч, Telegram для чата</li>
             <li>Закрытая мини-группа</li>
             <li>Небольшие домашние задания</li>
           </ul>
@@ -877,26 +888,18 @@
           </button>
         </div>
         <div class="hub-detail">
-          <div class="hub-detail-inner">
-            <div class="format-grid">
-              <div class="format-card">
-                <h4>Когда</h4>
-                <p>Группы стартуют примерно раз в три месяца. Ближайший старт — в июне, точное время согласовываем с потоком.</p>
-              </div>
-              <div class="format-card">
-                <h4>Где</h4>
-                <p>Онлайн, в Google&nbsp;Meet или Zoom. Чат — в Telegram.</p>
-              </div>
-              <div class="format-card">
-                <h4>Сколько человек</h4>
-                <p>Мини-группа с фиксированным составом на все 6 встреч. После старта новые участники не добавляются.</p>
-              </div>
-              <div class="format-card">
-                <h4>Сколько стоит</h4>
-                <div class="pv">240 €<span style="font-size:14px; font-weight:400; color:var(--soft); margin-left:6px">≈ 24 000 ₽</span></div>
-                <div class="sub">За весь курс. Оплата в ₽ — по договорённости.</div>
-              </div>
-            </div>
+          <div class="hub-detail-inner editorial">
+            <h3>Когда</h3>
+            <p>Группы стартуют примерно раз в три месяца. Ближайший старт — в июне, точное время согласовываем с потоком.</p>
+
+            <h3>Где</h3>
+            <p>Онлайн, в Zoom. Чат поддержки между встречами — в Telegram.</p>
+
+            <h3>Как проходит</h3>
+            <p>Закрытая мини-группа с фиксированным составом на все 6 встреч. Каждую неделю — небольшое домашнее задание и сопровождение в чате между встречами.</p>
+
+            <h3>Стоимость</h3>
+            <p><strong>240 €</strong> за весь курс <span style="color:var(--muted)">(≈ 24 000 ₽)</span>. Оплата в ₽ — по договорённости.</p>
           </div>
         </div>
       </article>
@@ -1054,40 +1057,33 @@
           </button>
         </div>
         <div class="hub-detail">
-          <div class="hub-detail-inner">
-            <h3>Вам сюда, если вы часто:</h3>
-            <ul class="recognize-list">
-              <li>понимаете, что надо сделать, но не можете начать;</li>
-              <li>делаете срочное вместо важного;</li>
-              <li>срываетесь после одной ошибки и бросаете всю систему;</li>
-              <li>покупаете планеры, приложения и курсы, но они не приживаются;</li>
-              <li>откладываете не потому, что не хотите, а потому что задача мутная или слишком большая;</li>
-              <li>устаёте от собственной непредсказуемости.</li>
+          <div class="hub-detail-inner editorial">
+            <h3>Узнаваемые ситуации</h3>
+            <p>Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
+            <ul>
+              <li>Понимаете, что надо сделать, но не можете начать.</li>
+              <li>Делаете срочное вместо важного.</li>
+              <li>Срываетесь после одной ошибки и бросаете всю систему.</li>
+              <li>Покупаете планеры, приложения и курсы, но они не приживаются.</li>
+              <li>Откладываете не потому, что не хотите, а потому что задача мутная или слишком большая.</li>
+              <li>Устаёте от собственной непредсказуемости.</li>
             </ul>
 
-            <h3 style="margin-top:24px">Подойдёт / не подойдёт</h3>
-            <div class="fit-grid">
-              <div class="fit-card">
-                <span class="fit-tag">Подойдёт, если</span>
-                <h4>Это про вас</h4>
-                <ul class="fit-list">
-                  <li>У вас СДВГ — диагноз поставлен или в процессе</li>
-                  <li>Хочется структуры, а не разовых лайфхаков</li>
-                  <li>Готовы пробовать маленькие задания между встречами</li>
-                  <li>Интересен формат группы — поддержка похожих людей</li>
-                </ul>
-              </div>
-              <div class="fit-card no">
-                <span class="fit-tag">Не подойдёт, если</span>
-                <h4>Тогда лучше другой формат</h4>
-                <ul class="fit-list">
-                  <li>Нужна диагностика — начинайте с неё</li>
-                  <li>Ищете «быстро и универсально»</li>
-                  <li>«Иногда зайти посмотреть» — состав закрытый</li>
-                  <li>Сейчас острый кризис — лучше индивидуально</li>
-                </ul>
-              </div>
-            </div>
+            <h3>Группа подойдёт, если</h3>
+            <ul>
+              <li>У вас СДВГ — диагноз поставлен или вы в процессе диагностики.</li>
+              <li>Хочется структуры, а не разовых лайфхаков.</li>
+              <li>Готовы пробовать маленькие задания между встречами.</li>
+              <li>Интересен формат группы — поддержка похожих людей.</li>
+            </ul>
+
+            <h3>Лучше другой формат, если</h3>
+            <ul>
+              <li>Нужна диагностика — начинайте с неё.</li>
+              <li>Ищете «быстро и универсально».</li>
+              <li>Хотите «иногда зайти посмотреть» — состав здесь закрытый.</li>
+              <li>Сейчас острый кризис — лучше начать с индивидуальной поддержки.</li>
+            </ul>
 
             <div class="reassure">
               <div class="reassure-label">Важно сразу</div>
@@ -1097,20 +1093,6 @@
         </div>
       </article>
 
-    </div>
-  </section>
-
-  <!-- О ВЕДУЩЕЙ -->
-  <section id="bio">
-    <h2 class="scribble">Кто ведёт</h2>
-    <div class="bio">
-      <div class="bio-avatar">ВГ</div>
-      <div>
-        <h3>Груздева Валентина Андреевна</h3>
-        <p class="role">Психолог, специализация — СДВГ у взрослых</p>
-        <p>Работаю с диагностикой и сопровождением взрослых с СДВГ. Веду индивидуальные консультации и закрытые группы. Программа группы — авторская методика, в основе которой когнитивно-поведенческая работа со СДВГ, работа с реализационными намерениями, регуляция эмоций (в т.ч. RSD) и формирование устойчивых привычек.</p>
-        <p>Подробнее о подходе и формате работы — на <a href="index.html">главной странице</a>.</p>
-      </div>
     </div>
   </section>
 
