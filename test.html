@@ -884,8 +884,10 @@
 <!-- Верхний баннер -->
 <div id="eventTopBanner" style="
   display: none;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   background: #ffd93d;
   color: #141414;
@@ -921,13 +923,31 @@
 <!-- Карточка в результатах -->
 <div id="eventResultsCTA" style="
   display: none;
-  margin: 24px 0;
-  padding: 24px;
+  margin: 32px 0 24px;
+  padding: 28px 24px 24px;
   border: 2px solid #ffd93d;
   border-radius: 16px;
   background: #fff8d6;
   font-family: inherit;
+  position: relative;
+  overflow: visible;
 ">
+  <!-- Гусь из featured group card -->
+  <svg style="position:absolute; top:-30px; right:14px; width:80px; height:80px; pointer-events:none; transform-origin:60% 90%;" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="52" cy="100" rx="28" ry="3" fill="#000" opacity=".15"/>
+    <ellipse cx="55" cy="72" rx="32" ry="22" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+    <path d="M 38 65 Q 55 56 80 70 Q 70 78 55 76 Q 45 75 38 65 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 50 67 Q 60 64 72 71" fill="none" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 28 62 Q 18 38 32 22" stroke="#0d0d0d" stroke-width="2.5" fill="#ffffff" stroke-linejoin="round"/>
+    <circle cx="33" cy="22" r="9" fill="#ffffff" stroke="#0d0d0d" stroke-width="2.5"/>
+    <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke="#0d0d0d" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="35" cy="20" r="1.6" fill="#0d0d0d"/>
+    <line x1="46" y1="93" x2="44" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+    <line x1="58" y1="93" x2="60" y2="104" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 38 105 L 50 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+
   <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #a07800; margin-bottom: 8px; font-weight: 700;">
     Бонус для участников конференции
   </div>
@@ -965,7 +985,24 @@
   if (!params.has('event')) return;
 
   var topBanner = document.getElementById('eventTopBanner');
-  if (topBanner) topBanner.style.display = 'block';
+  if (topBanner) {
+    topBanner.style.display = 'block';
+    // Сдвигаем содержимое страницы вниз на высоту баннера, чтобы он не перекрывал контент
+    function updateBodyPadding() {
+      if (topBanner.style.display === 'none') {
+        document.body.style.paddingTop = '0';
+      } else {
+        document.body.style.paddingTop = topBanner.offsetHeight + 'px';
+      }
+    }
+    updateBodyPadding();
+    window.addEventListener('resize', updateBodyPadding);
+    // На случай закрытия баннера крестиком — снимем padding
+    var closeBtn = topBanner.querySelector('button');
+    if (closeBtn) closeBtn.addEventListener('click', function() {
+      setTimeout(updateBodyPadding, 0);
+    });
+  }
 
   var cta = document.getElementById('eventResultsCTA');
   if (!cta) return;

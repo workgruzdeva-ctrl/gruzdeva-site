@@ -4,3 +4,6 @@
 # Private templates and documents (never publish to repo)
 templates/
 *.docx
+
+# QR codes for slides (assets, not website files)
+qr_*.png
