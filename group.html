@@ -7,26 +7,27 @@
 <meta name="description" content="Закрытая мини-группа для взрослых с СДВГ: 6 встреч по 90 минут. КПТ, реализационные намерения, работа с эмоциональной регуляцией и RSD, привычки. Домашние задания и чат. 240 € за курс.">
 <style>
   :root{
-    --ink:#141414;
-    --soft:#4a4a4a;
-    --muted:#8c8c8c;
-    --line:#ececec;
-    --line-soft:#f5f5f5;
-    --bg:#ffffff;
-    --paper:#ffffff;
-    --accent:#ffd93d;
-    --accent-soft:#fff8d6;
-    --accent-deep:#a07800;
-    --milk:#fbf9f2;
-    --sage:#7a9a7e;
-    --sage-deep:#3f5840;
-    --sage-soft:#e8efe5;
-    --mint:#c7dac4;
-    --mint-soft:#f0f5ed;
+    --ink:#1a1614;
+    --soft:#4a423d;
+    --muted:#857c75;
+    --line:#e1dcd1;
+    --line-soft:#ece6d8;
+    --bg:#f7f2e7;          /* off-white paper */
+    --paper:#fbf8ee;
+    --accent:#f0b400;      /* deeper, less candy yellow */
+    --accent-soft:#f4ebd0; /* warm parchment yellow — used rarely */
+    --accent-deep:#7a5b00;
+    --milk:#f3ecdb;
+    --sage:#6f8a6a;
+    --sage-deep:#2f4434;
+    --sage-soft:#cfd9c2;   /* deeper sage */
+    --mint:#a8c0a0;
+    --mint-soft:#d9e2cd;   /* deeper herbal */
+    --rust:#a05a3c;        /* для редких иллюстр. акцентов */
     --r-sm:8px;
     --r-md:14px;
     --r-lg:20px;
-    --shadow-soft:0 1px 2px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.08);
+    --shadow-soft:0 1px 2px rgba(47,68,52,.06), 0 10px 28px -18px rgba(47,68,52,.18);
     --easing:cubic-bezier(.2,.7,.2,1);
   }
   *{box-sizing:border-box}
@@ -37,6 +38,10 @@
     color:var(--ink); background:var(--bg);
     font-size:16px; line-height:1.65;
     -webkit-font-smoothing:antialiased;
+    /* Бумажная зернистость */
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0 0.1  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-attachment:fixed;
   }
   a{color:var(--ink); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px}
   a:hover{text-decoration-color:var(--ink)}
@@ -55,8 +60,20 @@
   .bleed.sage{background:var(--sage-soft)}
   .bleed.mint{background:var(--mint-soft)}
   .bleed.milk{background:var(--milk)}
-  .bleed.sage-deep{background:var(--sage-deep); color:#fdfcf7}
-  .bleed.sage-deep h2, .bleed.sage-deep h3{color:#fdfcf7}
+  .bleed.sage-deep{background:var(--sage-deep); color:#f3ecdb}
+  .bleed.sage-deep h2, .bleed.sage-deep h3{color:#f3ecdb}
+  .bleed.sage-deep h2.scribble::after{filter:none}
+
+  /* Декоративная веточка/листик в углу секции */
+  .leaf-deco{
+    position:absolute; pointer-events:none;
+    width:120px; height:120px;
+    opacity:.85;
+  }
+  .leaf-deco.tl{top:18px; left:18px}
+  .leaf-deco.tr{top:18px; right:18px; transform:scaleX(-1)}
+  .leaf-deco.br{bottom:18px; right:18px}
+  .leaf-deco.bl{bottom:18px; left:18px; transform:scaleX(-1)}
   /* Волна между секциями (опциональный декор) */
   .wave-top{
     position:absolute; left:0; right:0; top:-1px; height:32px;
@@ -86,9 +103,21 @@
   }
   h2{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:clamp(24px, 4vw, 30px);
+    font-size:clamp(26px, 4vw, 32px);
     font-weight:600; letter-spacing:-.015em; line-height:1.2;
-    margin:0 0 12px;
+    margin:0 0 18px;
+    position:relative;
+    display:inline-block;
+  }
+  /* Рукотворное скетч-подчёркивание под H2 */
+  h2.scribble::after{
+    content:""; display:block;
+    width:88px; height:10px; margin-top:6px;
+    background:no-repeat left center / contain
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'><path d='M2 8 C 18 2, 36 11, 58 6 S 100 3, 118 7' fill='none' stroke='%23f0b400' stroke-width='2.4' stroke-linecap='round'/></svg>");
+  }
+  h2.scribble.on-dark::after{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'><path d='M2 8 C 18 2, 36 11, 58 6 S 100 3, 118 7' fill='none' stroke='%23f0b400' stroke-width='2.6' stroke-linecap='round'/></svg>");
   }
   h3{font-size:17px; font-weight:600; margin:0 0 8px; letter-spacing:-.005em}
   p{margin:0 0 14px; line-height:1.65}
@@ -105,10 +134,9 @@
   .hero-blob{
     position:absolute; pointer-events:none;
     z-index:0;
-    top:-40px; right:-80px;
-    width:520px; height:520px;
-    background:radial-gradient(closest-side, rgba(199,218,196,.65), rgba(199,218,196,0) 70%);
-    filter:blur(6px);
+    top:-60px; right:-120px;
+    width:560px; height:520px;
+    background:no-repeat center / contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 520'><path d='M120 110 C 160 40, 320 -10, 430 60 C 540 130, 560 280, 480 380 C 400 480, 220 500, 120 420 C 20 340, 80 180, 120 110 Z' fill='%23cfd9c2' opacity='0.75'/><path d='M150 130 C 200 80, 320 40, 410 100 C 500 160, 520 290, 460 370 C 400 450, 240 460, 160 400 C 80 340, 100 180, 150 130 Z' fill='none' stroke='%232f4434' stroke-width='1.4' opacity='0.35' stroke-dasharray='2 4'/></svg>");
   }
   .hero-content{position:relative; z-index:1}
   .hero-tag{
@@ -122,9 +150,11 @@
   .hero h1.display{margin-bottom:18px; max-width:600px}
   .hero .lead{color:var(--soft); margin-bottom:22px; max-width:580px}
   .hero-mascot{
-    position:absolute; right:0; top:8px;
-    width:108px; height:118px;
-    z-index:1;
+    position:absolute; right:-8px; top:0;
+    width:140px; height:165px;
+    z-index:2;
+    transform:rotate(-3deg);
+    filter:drop-shadow(0 6px 10px rgba(47,68,52,.12));
   }
 
   /* METRICS — компактная строка, не четыре карточки */
@@ -142,9 +172,18 @@
   }
   .metrics-bar .m:first-child::before{display:none}
   .metrics-bar .m.price{
-    color:var(--ink); font-weight:600;
-    padding:5px 12px; border-radius:100px;
-    background:var(--accent-soft);
+    color:var(--ink); font-weight:700;
+    padding:5px 14px; border-radius:100px;
+    background:transparent;
+    border:1.5px solid var(--ink);
+    position:relative;
+  }
+  .metrics-bar .m.price::after{
+    content:""; position:absolute;
+    left:-2px; right:-2px; bottom:-4px; height:6px;
+    background:no-repeat center bottom / 100% 100%
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8'><path d='M2 5 C 20 1, 40 7, 60 4 S 90 6, 98 4' fill='none' stroke='%23f0b400' stroke-width='2.2' stroke-linecap='round'/></svg>");
+    z-index:-1;
   }
   .metrics-bar .m.price::before{display:none}
 
@@ -170,9 +209,12 @@
     margin:8px 0 0;
   }
   .fit-card{
-    background:var(--paper); border:1px solid var(--line);
+    background:var(--paper); border:1.5px solid var(--ink);
     border-radius:var(--r-md); padding:22px 24px;
+    box-shadow:4px 4px 0 0 rgba(47,68,52,.18);
+    transform:rotate(-.3deg);
   }
+  .fit-card.no{transform:rotate(.3deg); box-shadow:-4px 4px 0 0 rgba(160,90,60,.18)}
   .fit-card.no .fit-tag{color:#9a4a2a}
   .fit-card.no .fit-tag::before{background:#e08a5a}
   .fit-tag{
@@ -199,11 +241,14 @@
   .fit-card.no .fit-list li::before{content:"−"; color:#9a4a2a}
 
   /* WEEK accordions */
-  .weeks{display:flex; flex-direction:column; gap:10px; margin-top:8px}
+  .weeks{display:flex; flex-direction:column; gap:12px; margin-top:8px}
   .week{
-    background:var(--paper); border:1px solid var(--line);
+    background:var(--paper); border:1.5px solid var(--ink);
     border-radius:var(--r-md); overflow:hidden;
+    box-shadow:3px 3px 0 0 rgba(47,68,52,.12);
+    transition:transform .15s var(--easing), box-shadow .15s;
   }
+  .week:hover{transform:translateY(-1px); box-shadow:4px 5px 0 0 rgba(47,68,52,.16)}
   .week-toggle{
     width:100%; text-align:left; cursor:pointer;
     background:none; border:none; font:inherit;
@@ -257,11 +302,18 @@
   .week-body ul{margin:0; padding-left:22px}
   .week-body ul li{padding:3px 0; color:var(--ink); line-height:1.55}
   .week-body .hw{
-    margin-top:14px; padding:14px 16px;
-    background:var(--accent-soft); border-radius:8px;
-    color:#5a4500; font-size:13px; line-height:1.55;
+    margin-top:16px; padding:14px 0 14px 18px;
+    background:transparent;
+    border-left:2px solid var(--accent);
+    color:var(--soft); font-size:13.5px; line-height:1.6;
+    font-style:italic;
   }
-  .week-body .hw strong{color:var(--ink); font-weight:700}
+  .week-body .hw strong{
+    color:var(--ink); font-weight:700; font-style:normal;
+    display:block; margin-bottom:2px;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-deep);
+  }
 
   /* FORMAT BLOCKS */
   .format-grid{
@@ -269,9 +321,12 @@
     margin-top:8px;
   }
   .format-card{
-    background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--r-md); padding:20px 22px;
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:var(--r-md); padding:22px 24px;
+    box-shadow:3px 3px 0 0 rgba(47,68,52,.14);
   }
+  .format-card:nth-child(odd){transform:rotate(-.4deg)}
+  .format-card:nth-child(even){transform:rotate(.4deg)}
   .format-card h4{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
     font-size:16px; font-weight:600; margin:0 0 8px;
@@ -291,11 +346,14 @@
     display:grid; grid-template-columns:64px 1fr; gap:18px; align-items:start;
   }
   .bio-avatar{
-    width:64px; height:64px; border-radius:50%;
-    background:var(--accent-soft); color:var(--accent-deep);
+    width:72px; height:72px; border-radius:50%;
+    background:var(--sage-deep); color:var(--accent);
+    border:1.5px solid var(--ink);
+    box-shadow:3px 3px 0 0 var(--accent);
     display:flex; align-items:center; justify-content:center;
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:24px; font-weight:700;
+    font-size:26px; font-weight:700;
+    flex-shrink:0;
   }
   .bio h3{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
@@ -308,8 +366,9 @@
   /* FAQ accordion (same as week) */
   .faq{display:flex; flex-direction:column; gap:8px; margin-top:8px}
   .faq-item{
-    background:var(--paper); border:1px solid var(--line);
+    background:var(--paper); border:1.5px solid var(--ink);
     border-radius:var(--r-md); overflow:hidden;
+    box-shadow:2px 2px 0 0 rgba(47,68,52,.1);
   }
   .faq-q{
     width:100%; text-align:left; cursor:pointer;
@@ -346,10 +405,13 @@
     display:inline-flex; align-items:center; gap:10px;
     background:var(--accent); color:var(--ink);
     padding:16px 28px; border-radius:100px;
-    text-decoration:none; font-size:15px; font-weight:600;
+    text-decoration:none; font-size:15px; font-weight:700;
+    border:1.5px solid #f3ecdb;
+    box-shadow:4px 4px 0 0 #f3ecdb;
     transition:transform .15s var(--easing), box-shadow .15s;
   }
-  .cta-btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+  .cta-btn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 0 #f3ecdb}
+  .cta-btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 0 #f3ecdb}
   .cta-btn .arrow{color:var(--ink); font-size:18px; line-height:1; transition:transform .15s}
   .cta-btn:hover .arrow{transform:translateX(3px)}
   .cta-sub{
@@ -377,31 +439,40 @@
     transition:transform .15s var(--easing), box-shadow .15s;
     white-space:nowrap;
   }
-  .mid-btn.primary{background:var(--ink); color:#fff}
-  .mid-btn.primary:hover{transform:translateY(-1px); box-shadow:0 8px 18px -10px rgba(0,0,0,.4)}
-  .mid-btn.primary .arrow{color:var(--accent); transition:transform .15s}
+  .mid-btn.primary{
+    background:var(--accent); color:var(--ink);
+    border:1.5px solid var(--ink);
+    box-shadow:3px 3px 0 0 var(--ink);
+  }
+  .mid-btn.primary:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 0 var(--ink)}
+  .mid-btn.primary:active{transform:translate(2px,2px); box-shadow:1px 1px 0 0 var(--ink)}
+  .mid-btn.primary .arrow{color:var(--ink); transition:transform .15s}
   .mid-btn.primary:hover .arrow{transform:translateX(2px)}
   .mid-btn.ghost{
     background:transparent; color:var(--ink);
     border:1.5px solid var(--ink);
   }
-  .mid-btn.ghost:hover{background:var(--ink); color:#fff}
+  .mid-btn.ghost:hover{background:var(--ink); color:#fbf8ee}
   .mid-btn.ghost.on-dark{color:#fdfcf7; border-color:#fdfcf7}
   .mid-btn.ghost.on-dark:hover{background:#fdfcf7; color:var(--sage-deep)}
 
-  /* "Если коротко" preface */
+  /* "Если коротко" — заметка на полях с рукотворной скобкой */
   .tldr{
-    margin:0 0 18px;
-    padding:18px 22px;
-    background:var(--line-soft);
-    border-radius:var(--r-md);
-    border-left:3px solid var(--ink);
+    position:relative;
+    margin:0 0 22px;
+    padding:6px 0 6px 32px;
+  }
+  .tldr::before{
+    content:""; position:absolute;
+    left:0; top:0; bottom:0; width:22px;
+    background:no-repeat center / contain
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 100' preserveAspectRatio='none'><path d='M16 4 C 6 8, 6 24, 12 30 C 6 36, 6 64, 12 70 C 6 76, 6 92, 16 96' fill='none' stroke='%231a1614' stroke-width='2' stroke-linecap='round'/></svg>");
   }
   .tldr-label{
-    font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
-    color:var(--soft); margin-bottom:6px;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--sage-deep); margin-bottom:6px;
   }
-  .tldr p{margin:0; font-size:15px; line-height:1.55; color:var(--ink)}
+  .tldr p{margin:0; font-size:16px; line-height:1.55; color:var(--ink); font-style:italic}
 
   /* Маршрут 6 недель — лёгкий вертикальный путь, тонкая линия слева */
   .roadmap-head{
@@ -415,22 +486,27 @@
   }
   .roadmap-path::before{
     content:""; position:absolute;
-    left:14px; top:8px; bottom:8px; width:2px;
-    background:linear-gradient(180deg, var(--accent) 0%, var(--mint) 100%);
-    border-radius:2px;
+    left:14px; top:14px; bottom:14px; width:2px;
+    background:repeating-linear-gradient(180deg, var(--ink) 0 4px, transparent 4px 9px);
+    opacity:.55;
   }
   .roadmap-path li{
     position:relative;
     padding:14px 0;
-    font-size:16px; line-height:1.45; color:var(--ink);
+    font-size:16px; line-height:1.5; color:var(--ink);
     letter-spacing:-.005em;
   }
   .roadmap-path li::before{
     content:""; position:absolute;
-    left:-29px; top:18px;
-    width:14px; height:14px; border-radius:50%;
-    background:var(--paper); border:2px solid var(--accent);
-    box-shadow:0 0 0 4px rgba(255,217,61,.12);
+    left:-30px; top:18px;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--accent); border:1.8px solid var(--ink);
+  }
+  .roadmap-path li::after{
+    content:""; position:absolute;
+    left:-25px; top:23px;
+    width:6px; height:6px; border-radius:50%;
+    background:var(--ink); opacity:.5;
   }
   .roadmap-path li .rm-step{
     font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
@@ -439,11 +515,14 @@
 
   /* "После встречи вы" в каждой неделе */
   .week-body .outcome{
-    margin:0 0 12px; padding:12px 14px;
-    background:var(--accent-soft); border-radius:8px;
-    font-size:14px; line-height:1.55; color:#3a2f10;
+    margin:0 0 14px; padding:14px 18px;
+    background:var(--milk);
+    border:1px solid var(--line-soft);
+    border-left:3px solid var(--sage);
+    border-radius:6px;
+    font-size:14px; line-height:1.6; color:var(--ink);
   }
-  .week-body .outcome strong{color:var(--ink); font-weight:700}
+  .week-body .outcome strong{color:var(--sage-deep); font-weight:700}
 
   /* Узнаваемые ситуации — список без карточной рамки */
   .recognize{
@@ -569,17 +648,39 @@
   <section class="hero">
     <div class="hero-blob" aria-hidden="true"></div>
 
-    <!-- Goose: line-art, спокойнее, без жёлтого живота -->
-    <svg class="hero-mascot" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-         fill="none" stroke="#141414" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <ellipse cx="55" cy="72" rx="32" ry="22"/>
-      <path d="M 50 67 Q 60 64 72 71"/>
-      <path d="M 28 62 Q 18 38 32 22"/>
-      <circle cx="33" cy="22" r="9"/>
-      <path d="M 25 21 L 13 23 L 25 27 Z" fill="#ffd93d" stroke-width="1.4"/>
-      <circle cx="35" cy="20" r="1.4" fill="#141414" stroke="none"/>
-      <line x1="46" y1="93" x2="44" y2="106"/>
-      <line x1="58" y1="93" x2="60" y2="106"/>
+    <!-- Goose: иллюстративный, двойная штриховка, мягкая заливка -->
+    <svg class="hero-mascot" viewBox="0 0 110 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <pattern id="hatch" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(35)">
+          <line x1="0" y1="0" x2="0" y2="4" stroke="#2f4434" stroke-width="0.5" opacity="0.35"/>
+        </pattern>
+      </defs>
+      <!-- мягкая тень-форма под гусём -->
+      <ellipse cx="58" cy="118" rx="30" ry="3" fill="#2f4434" opacity="0.18"/>
+      <!-- тело: тёплый кремовый, лёгкая заливка штриховкой снизу -->
+      <path d="M 24 78 C 26 60, 42 50, 60 51 C 80 52, 92 64, 93 78 C 94 92, 80 102, 60 102 C 38 102, 22 94, 24 78 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 34 90 C 44 100, 78 100, 88 88" fill="url(#hatch)" opacity="0.5"/>
+      <!-- крыло: отдельный контур + крошечный второй штрих -->
+      <path d="M 50 72 C 60 68, 76 72, 84 80 C 76 84, 60 82, 50 76 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M 55 75 Q 65 73, 78 78" fill="none" stroke="#1a1614" stroke-width="1.1" stroke-linecap="round" opacity="0.7"/>
+      <!-- шея, двойной слегка смещённый контур для рукотворности -->
+      <path d="M 28 70 C 14 50, 12 28, 30 18" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 29 71 C 16 51, 14 30, 31 19" fill="none" stroke="#1a1614" stroke-width="0.6" opacity="0.4"/>
+      <!-- голова -->
+      <circle cx="32" cy="18" r="10" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6"/>
+      <!-- клюв — единственный жёлтый акцент, более тёплый -->
+      <path d="M 23 17 L 9 19 L 23 24 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.3" stroke-linejoin="round"/>
+      <!-- глаз: маленький, с бликом -->
+      <circle cx="34" cy="16" r="1.6" fill="#1a1614"/>
+      <circle cx="34.4" cy="15.4" r="0.5" fill="#fbf8ee"/>
+      <!-- ноги: тонкие, разной длины — небрежность от руки -->
+      <path d="M 48 100 C 47 106, 45 112, 44 116" fill="none" stroke="#1a1614" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M 62 100 C 62 107, 64 113, 63 117" fill="none" stroke="#1a1614" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- маленькая травинка — иллюстративная деталь -->
+      <path d="M 78 116 C 80 110, 82 108, 85 110" fill="none" stroke="#6f8a6a" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M 82 117 C 84 112, 86 111, 88 113" fill="none" stroke="#6f8a6a" stroke-width="1" stroke-linecap="round"/>
     </svg>
 
     <div class="hero-content">
@@ -611,8 +712,15 @@
 
   <!-- О ЧЁМ ЭТО -->
   <section id="about" class="bleed sage" style="margin-top:48px">
+    <svg class="leaf-deco tr" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 100 10 C 80 30, 60 55, 50 90" opacity="0.55"/>
+      <path d="M 88 28 C 76 26, 70 32, 72 44 C 80 44, 90 38, 88 28 Z" fill="#a8c0a0" opacity="0.55"/>
+      <path d="M 76 50 C 64 50, 58 58, 62 68 C 72 66, 80 60, 76 50 Z" fill="#a8c0a0" opacity="0.5"/>
+      <path d="M 62 76 C 52 78, 48 86, 54 94 C 62 92, 68 84, 62 76 Z" fill="#a8c0a0" opacity="0.45"/>
+    </svg>
     <div class="inner">
-      <h2>О чём эта группа</h2>
+      <h2 class="scribble">О чём эта группа</h2>
 
       <div class="tldr">
         <div class="tldr-label">Если коротко</div>
@@ -626,7 +734,7 @@
 
   <!-- ПРОГРАММА -->
   <section id="program">
-    <h2>Что вы получите за 6 недель</h2>
+    <h2 class="scribble">Что вы получите за 6 недель</h2>
     <p class="sec-lead">Маршрут в одну строку на неделю — чтобы видеть всю траекторию сразу. Подробности по каждой встрече ниже.</p>
 
     <ul class="roadmap-path">
@@ -638,7 +746,7 @@
       <li><span class="rm-step">Неделя 6</span>Соберёте личный набор инструментов</li>
     </ul>
 
-    <h2 style="margin-top:48px">Программа по неделям</h2>
+    <h2 class="scribble" style="margin-top:48px">Программа по неделям</h2>
     <p class="sec-lead">Каждая встреча сочетает короткую содержательную часть, обсуждение в группе, практическое упражнение и постановку домашнего задания на неделю.</p>
 
     <div class="weeks">
@@ -785,8 +893,15 @@
 
   <!-- КОМУ ПОДОЙДЁТ -->
   <section id="fit" class="bleed mint">
+    <svg class="leaf-deco br" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 100 110 C 90 84, 76 64, 56 50" opacity="0.5"/>
+      <path d="M 80 80 C 68 80, 62 88, 66 96 C 76 96, 84 88, 80 80 Z" fill="#a8c0a0" opacity="0.5"/>
+      <path d="M 64 66 C 54 68, 50 76, 56 84 C 64 80, 70 74, 64 66 Z" fill="#a8c0a0" opacity="0.45"/>
+      <circle cx="48" cy="48" r="3" fill="#f0b400" opacity="0.7"/>
+    </svg>
     <div class="inner">
-      <h2>Вам сюда, если вы узнаёте себя</h2>
+      <h2 class="scribble">Вам сюда, если вы узнаёте себя</h2>
       <p class="sec-lead">Конкретные ситуации, в которых группа обычно «попадает». Если несколько пунктов про вас — группа, скорее всего, будет полезной.</p>
 
       <ul class="recognize-list">
@@ -798,7 +913,7 @@
         <li>устаёте от собственной непредсказуемости и резких эмоциональных качелей.</li>
       </ul>
 
-      <h2 style="margin-top:48px">Подойдёт / не подойдёт</h2>
+      <h2 class="scribble" style="margin-top:48px">Подойдёт / не подойдёт</h2>
       <p class="sec-lead">Если вы узнаёте себя в блоке «не подойдёт» — лучше выбрать другой формат, а не идти в группу через силу.</p>
 
       <div class="fit-grid">
@@ -833,8 +948,15 @@
 
   <!-- ФОРМАТ -->
   <section id="format" class="bleed sage">
+    <svg class="leaf-deco bl" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+         fill="none" stroke="#2f4434" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 20 110 C 30 80, 45 60, 70 50" opacity="0.55"/>
+      <ellipse cx="40" cy="78" rx="8" ry="5" fill="#a8c0a0" opacity="0.55" transform="rotate(-30 40 78)"/>
+      <ellipse cx="55" cy="64" rx="9" ry="5" fill="#a8c0a0" opacity="0.5" transform="rotate(-30 55 64)"/>
+      <ellipse cx="68" cy="52" rx="7" ry="4" fill="#a8c0a0" opacity="0.45" transform="rotate(-30 68 52)"/>
+    </svg>
     <div class="inner">
-    <h2>Формат и логистика</h2>
+    <h2 class="scribble">Формат и логистика</h2>
     <div class="format-grid">
       <div class="format-card">
         <h4>Когда</h4>
@@ -859,7 +981,7 @@
 
   <!-- О ВЕДУЩЕЙ -->
   <section id="bio">
-    <h2>Кто ведёт</h2>
+    <h2 class="scribble">Кто ведёт</h2>
     <div class="bio">
       <div class="bio-avatar">ВГ</div>
       <div>
@@ -873,7 +995,7 @@
 
   <!-- FAQ -->
   <section id="faq">
-    <h2>Частые вопросы</h2>
+    <h2 class="scribble">Частые вопросы</h2>
     <div class="faq">
 
       <div class="faq-item">
@@ -952,7 +1074,7 @@
   <!-- CTA -->
   <section class="bleed sage-deep cta-block">
     <div class="inner">
-      <h2>Записаться в ближайший поток</h2>
+      <h2 class="scribble on-dark">Записаться в ближайший поток</h2>
       <p>Заполните короткую анкету — я посмотрю ваш запрос и напишу, подойдёт ли вам ближайший поток.</p>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSea_vqfO8bfFCmgwQC3gupUVcsMQWKo6tAwyrFS3e0o7Gcn9w/viewform"
          target="_blank" rel="noopener" class="cta-btn">
