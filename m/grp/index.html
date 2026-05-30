@@ -1501,10 +1501,9 @@ document.getElementById('reportCopy').addEventListener('click', async () => {
 const FEEDBACK_FORM_URL = 'https://forms.gle/ewWzj4UrLd6mpsih8';
 
 // Окно показывается:
-//  • не раньше 2 дней после первого визита
-//  • не чаще раз в 2.5 дня
-//  • в течение первых 14 дней с первого визита
-//  • если отзыв уже оставлен — больше не показываем
+//  • первый раз через 3 дня после первого визита (даём освоиться)
+//  • дальше — раз в 7 дней
+//  • пока не оставят отзыв (без ограничения по дням курса)
 function maybeShowFeedback(){
   if (state.feedbackDone) return;
   const now = Date.now();
@@ -1514,12 +1513,11 @@ function maybeShowFeedback(){
     return; // первый визит — ничего не показываем
   }
   const daysSinceStart = (now - state.startedAt) / (1000 * 60 * 60 * 24);
-  if (daysSinceStart > 14) return; // окно сбора закрыто
-  if (daysSinceStart < 2) return;  // слишком рано
+  if (daysSinceStart < 3) return; // первые 3 дня — пауза
 
   const last = state.feedbackLastShown || 0;
   const daysSinceLast = (now - last) / (1000 * 60 * 60 * 24);
-  if (daysSinceLast < 2.5) return; // ещё не время
+  if (last && daysSinceLast < 7) return; // ждём неделю с последнего показа
 
   // Покажем через 2 секунды после загрузки страницы
   setTimeout(showFeedback, 2000);
