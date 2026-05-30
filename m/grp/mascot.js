@@ -20,7 +20,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 1, threshold: 30, name: "Птенец",
+    tier: 1, threshold: 80, name: "Птенец",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="226" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
       <!-- нижняя половина скорлупы как чаша -->
@@ -55,7 +55,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 2, threshold: 80, name: "Гусёнок",
+    tier: 2, threshold: 160, name: "Гусёнок",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="226" rx="50" ry="3" fill="#2f4434" opacity=".18"/>
       <!-- круглое пушистое ТЕЛО -->
@@ -106,7 +106,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 3, threshold: 150, name: "Подросток",
+    tier: 3, threshold: 240, name: "Подросток",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="222" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
       <!-- удлинённое тело -->
@@ -145,7 +145,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 4, threshold: 230, name: "Молодой гусь",
+    tier: 4, threshold: 320, name: "Молодой гусь",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="225" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
       <!-- тело -->
@@ -184,7 +184,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 5, threshold: 310, name: "Гусь-страж",
+    tier: 5, threshold: 400, name: "Гусь-страж",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- паттерн кольчуги -->
@@ -250,7 +250,7 @@ const MASCOTS = [
     </svg>`
   },
   {
-    tier: 6, threshold: 400, name: "Боевой гусь",
+    tier: 6, threshold: 480, name: "Боевой гусь",
     svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="chain6" patternUnits="userSpaceOnUse" width="4" height="4">
