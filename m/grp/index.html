@@ -100,19 +100,24 @@
 
   /* WEEK SELECTOR */
   .weeks-pill{
-    display:grid; grid-template-columns:repeat(6, 1fr); gap:4px;
+    display:grid; grid-template-columns:repeat(6, 1fr); gap:5px;
     margin-bottom:18px;
+    padding:6px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
   }
   .weeks-pill button{
-    background:var(--paper); border:1.2px solid var(--line);
-    border-radius:8px; padding:8px 0;
-    font:inherit; font-size:12px; font-weight:600;
-    cursor:pointer; color:var(--muted);
+    background:var(--milk); border:1.2px solid var(--ink);
+    border-radius:8px; padding:10px 0;
+    font:inherit; font-size:13px; font-weight:700;
+    cursor:pointer; color:var(--ink);
     transition:all .15s;
+    min-height:34px;
   }
-  .weeks-pill button:hover{border-color:var(--ink); color:var(--ink)}
+  .weeks-pill button:hover{background:var(--accent-soft); transform:translateY(-1px)}
   .weeks-pill button.active{
-    background:var(--ink); color:var(--paper);
+    background:var(--ink); color:var(--accent);
     border-color:var(--ink);
   }
   .week-label{
@@ -561,6 +566,71 @@
   }
   .mascot-modal-cta:hover{transform:translateY(-1px)}
 
+  /* FEEDBACK CARD — выезжает снизу-справа раз в 2-3 дня */
+  .feedback-card{
+    position:fixed; bottom:80px; right:20px;
+    width:300px; z-index:80;
+    background:var(--paper);
+    border:1.8px solid var(--ink);
+    border-radius:18px;
+    padding:18px 18px 16px;
+    box-shadow:0 12px 32px -8px rgba(0,0,0,.35);
+    transform:translateY(20px) scale(.95);
+    opacity:0; pointer-events:none;
+    transition:transform .4s var(--easing), opacity .4s;
+  }
+  .feedback-card.show{
+    opacity:1; transform:translateY(0) scale(1); pointer-events:auto;
+  }
+  .feedback-card .gosling{
+    width:48px; height:56px;
+    position:absolute; top:-30px; left:18px;
+    background:var(--paper); border-radius:50%;
+    padding:2px;
+  }
+  .feedback-card .gosling svg{width:100%; height:100%}
+  .feedback-card-close{
+    position:absolute; top:8px; right:8px;
+    background:transparent; border:none;
+    width:26px; height:26px; border-radius:50%;
+    cursor:pointer; font-size:14px; color:var(--muted);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .feedback-card-close:hover{background:var(--milk); color:var(--ink)}
+  .feedback-card h4{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:16px; font-weight:600; margin:24px 0 6px;
+    line-height:1.25;
+  }
+  .feedback-card p{
+    font-size:13px; color:var(--soft); line-height:1.45;
+    margin:0 0 14px;
+  }
+  .feedback-card .actions{
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .feedback-card a, .feedback-card button{
+    flex:1; min-width:0;
+    padding:8px 12px; border-radius:100px;
+    font:inherit; font-size:12px; font-weight:700;
+    text-align:center; text-decoration:none; cursor:pointer;
+    transition:transform .15s;
+  }
+  .feedback-card .btn-primary{
+    background:var(--accent); color:var(--ink);
+    border:1.5px solid var(--ink);
+  }
+  .feedback-card .btn-secondary{
+    background:transparent; color:var(--soft);
+    border:1.5px solid var(--line);
+  }
+  .feedback-card .btn-secondary:hover{border-color:var(--ink); color:var(--ink)}
+  @media (max-width:640px){
+    .feedback-card{
+      bottom:78px; right:12px; left:12px; width:auto;
+    }
+  }
+
   /* TOAST (+points animation) */
   .toast{
     position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
@@ -579,18 +649,23 @@
   @media (max-width: 840px){
     .page{grid-template-columns:1fr}
     .sidebar{
-      position:relative; height:auto; border-right:none;
-      border-bottom:1px solid var(--line);
-      padding:16px 18px 28px;
+      position:relative; height:auto; overflow:visible;
+      border-right:none; border-bottom:1px solid var(--line);
+      padding:16px 18px 36px;
     }
     .main{padding:24px 18px 110px}
     .mascot-card{
-      display:grid; grid-template-columns:120px 1fr; gap:14px; align-items:center;
-      padding:14px;
+      display:flex; flex-direction:column; align-items:center;
+      padding:22px 18px 18px;
     }
-    .mascot-svg{width:120px; margin:0}
-    .mascot-name{text-align:left; margin-top:0; font-size:18px}
-    .mascot-pts, .mascot-tier, .mascot-next{text-align:left}
+    .mascot-svg{
+      width:200px; aspect-ratio:200/240;
+      margin:0 0 14px;
+    }
+    .mascot-name{text-align:center; margin-top:0; font-size:22px}
+    .mascot-pts, .mascot-tier, .mascot-next{text-align:center}
+    .mascot-card .bar{width:100%; max-width:280px; margin-left:auto; margin-right:auto}
+    .mascot-card::after{font-size:9px}
     .weeks-pill{margin-top:8px; margin-bottom:6px}
     .weeks-pill button{padding:10px 0; font-size:13px}
     h1{font-size:26px}
@@ -740,6 +815,18 @@
 
 </div>
 
+<!-- FEEDBACK CARD — появляется раз в 2-3 дня в течение 2 недель -->
+<div class="feedback-card" id="feedbackCard" aria-live="polite">
+  <div class="gosling" id="feedbackGosling"></div>
+  <button class="feedback-card-close" id="feedbackClose" aria-label="Закрыть">✕</button>
+  <h4>Как тебе курс?</h4>
+  <p>Это короткая анонимная анкета — пара вопросов, чтобы я могла подкручивать программу под вас.</p>
+  <div class="actions">
+    <a class="btn-primary" id="feedbackOpen" target="_blank" rel="noopener">Оставить отзыв</a>
+    <button class="btn-secondary" id="feedbackLater">Не сейчас</button>
+  </div>
+</div>
+
 <!-- FAB — плавающая кнопка отчёта всегда видна -->
 <button class="report-fab" id="reportFab" type="button">
   <span class="icon">📝</span>
@@ -796,6 +883,12 @@ const DEFAULT_STATE = {
   experiment: { weeks: {}, viewWeek: null },
   // if-then plans
   ifthen: [],
+  // первый визит (для тайминга фидбэка)
+  startedAt: null,
+  // последний показ окна фидбэка
+  feedbackLastShown: null,
+  // отзыв оставлен (тогда больше не показываем)
+  feedbackDone: false,
 };
 
 function loadState(){
@@ -1403,6 +1496,58 @@ document.getElementById('reportCopy').addEventListener('click', async () => {
   }
 });
 
+// ============ FEEDBACK WIDGET ============
+// Ссылка на Google Form для сбора отзывов (Валентина подставит свою)
+const FEEDBACK_FORM_URL = 'https://forms.gle/ЗАМЕНИТЕ_НА_СВОЮ_ССЫЛКУ';
+
+// Окно показывается:
+//  • не раньше 2 дней после первого визита
+//  • не чаще раз в 2.5 дня
+//  • в течение первых 14 дней с первого визита
+//  • если отзыв уже оставлен — больше не показываем
+function maybeShowFeedback(){
+  if (state.feedbackDone) return;
+  const now = Date.now();
+  if (!state.startedAt){
+    state.startedAt = now;
+    saveState();
+    return; // первый визит — ничего не показываем
+  }
+  const daysSinceStart = (now - state.startedAt) / (1000 * 60 * 60 * 24);
+  if (daysSinceStart > 14) return; // окно сбора закрыто
+  if (daysSinceStart < 2) return;  // слишком рано
+
+  const last = state.feedbackLastShown || 0;
+  const daysSinceLast = (now - last) / (1000 * 60 * 60 * 24);
+  if (daysSinceLast < 2.5) return; // ещё не время
+
+  // Покажем через 2 секунды после загрузки страницы
+  setTimeout(showFeedback, 2000);
+}
+
+function showFeedback(){
+  const card = document.getElementById('feedbackCard');
+  // Поместим маленького гусёнка из MASCOTS[1] (Птенец) в верхний угол
+  document.getElementById('feedbackGosling').innerHTML = MASCOTS[1].svg;
+  document.getElementById('feedbackOpen').href = FEEDBACK_FORM_URL;
+  card.classList.add('show');
+  state.feedbackLastShown = Date.now();
+  saveState();
+}
+function hideFeedback(later){
+  document.getElementById('feedbackCard').classList.remove('show');
+  if (!later){
+    // если кликнули "Оставить отзыв" — фиксируем done после небольшой задержки
+    setTimeout(() => {
+      state.feedbackDone = true;
+      saveState();
+    }, 500);
+  }
+}
+document.getElementById('feedbackClose').addEventListener('click', () => hideFeedback(true));
+document.getElementById('feedbackLater').addEventListener('click', () => hideFeedback(true));
+document.getElementById('feedbackOpen').addEventListener('click', () => hideFeedback(false));
+
 // ============ INIT ============
 function renderAll(){
   renderName();
@@ -1413,6 +1558,7 @@ function renderAll(){
   renderWeeks();
 }
 renderAll();
+maybeShowFeedback();
 </script>
 </body>
 </html>
