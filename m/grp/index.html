@@ -578,9 +578,9 @@
     .sidebar{
       position:relative; height:auto; border-right:none;
       border-bottom:1px solid var(--line);
-      padding:16px 18px;
+      padding:16px 18px 28px;
     }
-    .main{padding:24px 18px 96px}
+    .main{padding:24px 18px 110px}
     .mascot-card{
       display:grid; grid-template-columns:120px 1fr; gap:14px; align-items:center;
       padding:14px;
@@ -588,7 +588,8 @@
     .mascot-svg{width:120px; margin:0}
     .mascot-name{text-align:left; margin-top:0; font-size:18px}
     .mascot-pts, .mascot-tier, .mascot-next{text-align:left}
-    .weeks-pill{margin-top:8px}
+    .weeks-pill{margin-top:8px; margin-bottom:6px}
+    .weeks-pill button{padding:10px 0; font-size:13px}
     h1{font-size:26px}
     h2{font-size:19px}
     .ifthen-add{grid-template-columns:1fr; gap:6px}
@@ -1264,6 +1265,18 @@ document.getElementById('mascotNextMsg').addEventListener('click', () => {
 // Ссылка на групповой Telegram-чат — Валентина подставит свою
 const GROUP_TG_CHAT = 'https://t.me/+ВАШ_INVITE_HASH'; // плейсхолдер
 
+// Подбадривающие вступления — каждый раз случайно
+const REPORT_INTROS = [
+  "Ух, ты молодец, что добралась до этой точки! Вот твои итоги — поделись в группе, если хочется 🌿",
+  "Ну что, неделя позади. Ты держишься, и это уже половина дела. Вот что получилось:",
+  "Маленькая остановка, чтобы посмотреть, как было. Делись с группой — поддержим стаю:",
+  "Большое или маленькое — всё равно ценное. Вот твоя неделя:",
+  "Это была твоя неделя, и ты в ней была. Не идеально — а по-настоящему. Делись смело:",
+  "Ты пришла сюда не зря. Вот итоги — отправь, чтобы вдохновить кого-то из своих:",
+  "Гусёныш гордится тобой. Вот твои итоги недели — давай похвастаемся вместе:",
+  "Дошла до конца недели — это уже победа. Делимся, поддерживаем друг друга:",
+];
+
 function buildReport(){
   const wk = expWeekKey();
   const exp = state.experiment.weeks[wk] || { strategy: '', days: {} };
@@ -1282,8 +1295,11 @@ function buildReport(){
 
   const name = state.name || 'Участник';
   const dateRange = expWeekRangeLabel(wk);
+  const intro = REPORT_INTROS[Math.floor(Math.random() * REPORT_INTROS.length)];
 
   const lines = [];
+  lines.push(intro);
+  lines.push('');
   lines.push(`📋 Отчёт за неделю · ${name}`);
   lines.push(`📅 ${dateRange}`);
   lines.push('');
