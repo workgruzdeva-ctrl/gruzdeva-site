@@ -395,6 +395,52 @@
   }
   .mascot-card:hover::after{opacity:1; color:var(--accent-deep)}
 
+  /* REPORT MODAL — отчёт недели */
+  .report-btn{
+    background:var(--sage-deep); color:var(--paper);
+    border:1.5px solid var(--ink);
+    border-radius:14px; padding:14px 20px;
+    font:inherit; font-size:14px; font-weight:700;
+    cursor:pointer; width:100%;
+    margin:14px 0 0;
+    transition:transform .15s var(--easing), box-shadow .15s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .report-btn:hover{transform:translateY(-1px); box-shadow:0 8px 20px -6px rgba(47,68,52,.4)}
+  .report-btn .icon{font-size:16px}
+
+  .report-textarea{
+    width:100%; min-height:240px;
+    background:var(--milk); border:1.5px solid var(--ink);
+    border-radius:12px; padding:14px 16px;
+    font:inherit; font-size:13px; line-height:1.55; color:var(--ink);
+    resize:vertical; outline:none;
+    white-space:pre-wrap;
+    margin-bottom:14px;
+  }
+  .report-actions{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  }
+  .report-action{
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:10px; padding:10px 8px;
+    font:inherit; font-size:12px; font-weight:600;
+    cursor:pointer; text-align:center;
+    text-decoration:none; color:var(--ink);
+    transition:transform .15s, background .15s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .report-action:hover{background:var(--accent); transform:translateY(-1px)}
+  .report-action .icon{font-size:14px}
+  .report-copied{
+    color:var(--sage-deep); font-size:12px; text-align:center;
+    margin-top:8px; opacity:0; transition:opacity .25s;
+  }
+  .report-copied.show{opacity:1}
+  @media (max-width: 540px){
+    .report-actions{grid-template-columns:1fr; gap:6px}
+  }
+
   /* MASCOT MODAL */
   .mascot-modal{
     position:fixed; inset:0; z-index:100;
@@ -564,6 +610,11 @@
       <a href="#workbooks">Воркбуки</a>
       <a href="#help">Поддержка</a>
     </div>
+
+    <button class="report-btn" id="reportBtn">
+      <span class="icon">📝</span>
+      <span>Отчёт за неделю</span>
+    </button>
   </aside>
 
   <!-- ============ MAIN ============ -->
@@ -661,6 +712,22 @@
 
 </div>
 
+<!-- Report modal -->
+<div class="mascot-modal" id="reportModal" role="dialog" aria-modal="true" aria-label="Отчёт за неделю">
+  <div class="mascot-modal-inner" style="max-width:520px">
+    <button class="mascot-close" id="reportCloseBtn" aria-label="Закрыть">×</button>
+    <h3 style="font-family:Charter,Georgia,serif; font-size:22px; margin:0 0 6px; text-align:center">Отчёт за неделю</h3>
+    <p style="font-size:13px; color:var(--muted); text-align:center; margin:0 0 16px">Текст готов. Скопируйте и отправьте, куда удобно.</p>
+    <textarea class="report-textarea" id="reportText" readonly></textarea>
+    <div class="report-actions">
+      <button class="report-action" id="reportCopy"><span class="icon">📋</span><span>Скопировать</span></button>
+      <a class="report-action" id="reportTg" target="_blank"><span class="icon">💬</span><span>В Telegram</span></a>
+      <a class="report-action" id="reportMail"><span class="icon">📧</span><span>На почту</span></a>
+    </div>
+    <div class="report-copied" id="reportCopied">Скопировано! Теперь вставьте в чат.</div>
+  </div>
+</div>
+
 <!-- Mascot modal -->
 <div class="mascot-modal" id="mascotModal" role="dialog" aria-modal="true" aria-label="Сообщение от маскота">
   <div class="mascot-modal-inner">
@@ -677,8 +744,13 @@
 
 <script src="mascot.js"></script>
 <script>
+// ============ USER ID + NAME из URL ============
+const urlParams = new URLSearchParams(location.search);
+const userId = (urlParams.get('u') || 'guest').replace(/[^a-z0-9-]/gi, '').slice(0, 32);
+const urlName = urlParams.get('n') || '';
+
 // ============ STATE ============
-const STORAGE_KEY = 'gruzdeva.members.v1';
+const STORAGE_KEY = `gruzdeva.members.v1.${userId}`;
 
 const DEFAULT_STATE = {
   name: '',
@@ -704,6 +776,32 @@ function saveState(){
 }
 
 let state = loadState();
+
+// Если в URL пришло имя — устанавливаем его (один раз)
+if (urlName && !state.name){
+  state.name = urlName;
+  saveState();
+}
+
+// Рендер имени в приветствии
+function renderName(){
+  const el = document.getElementById('userName');
+  if (!el) return;
+  if (state.name){
+    el.textContent = state.name;
+  } else {
+    el.innerHTML = '<a href="#" id="setNameLink" style="color:var(--accent-deep); border-bottom:1px dashed var(--accent-deep); text-decoration:none">подписать себя</a>';
+    document.getElementById('setNameLink').addEventListener('click', e => {
+      e.preventDefault();
+      const n = prompt('Как вас называть?');
+      if (n && n.trim()){
+        state.name = n.trim();
+        saveState();
+        renderName();
+      }
+    });
+  }
+}
 
 // ============ HELPERS ============
 function today(){ return new Date().toISOString().slice(0, 10); }
@@ -1132,8 +1230,121 @@ document.getElementById('mascotNextMsg').addEventListener('click', () => {
   mascotMessage.style.animation = 'popIn .25s var(--easing)';
 });
 
+// ============ WEEKLY REPORT ============
+// Ссылка на групповой Telegram-чат — Валентина подставит свою
+const GROUP_TG_CHAT = 'https://t.me/+ВАШ_INVITE_HASH'; // плейсхолдер
+
+function buildReport(){
+  const wk = expWeekKey();
+  const exp = state.experiment.weeks[wk] || { strategy: '', days: {} };
+  const days = expWeekDays(wk);
+  const triedDays = days.filter(d => exp.days[d.key]?.tried);
+  const greatDays = days.filter(d => exp.days[d.key]?.mood === 'great');
+  const notes = days
+    .filter(d => exp.days[d.key]?.note?.trim())
+    .map(d => `  • ${d.name}: ${exp.days[d.key].note.trim()}`);
+
+  const weeklyDone = WEEKLY_TASKS.filter(t => state.weekly.items?.[t.id]);
+  const weeklyOpen = WEEKLY_TASKS.filter(t => !state.weekly.items?.[t.id]);
+
+  const info = getMascotProgress(state.points);
+  const supportMsg = MASCOT_MESSAGES[Math.floor(Math.random() * MASCOT_MESSAGES.length)];
+
+  const name = state.name || 'Участник';
+  const dateRange = expWeekRangeLabel(wk);
+
+  const lines = [];
+  lines.push(`📋 Отчёт за неделю · ${name}`);
+  lines.push(`📅 ${dateRange}`);
+  lines.push('');
+
+  // Эксперимент
+  if (exp.strategy?.trim()){
+    lines.push(`🎯 Стратегия недели:`);
+    lines.push(`«${exp.strategy.trim()}»`);
+    lines.push('');
+  }
+
+  lines.push(`📊 Эксперимент: попробовала ${triedDays.length} из 7 дней`);
+  if (greatDays.length){
+    lines.push(`   из них «получилось!» — ${greatDays.length} раз 🎉`);
+  }
+  if (notes.length){
+    lines.push('');
+    lines.push(`📝 Что заметила:`);
+    notes.forEach(n => lines.push(n));
+  }
+  lines.push('');
+
+  // Групповая работа
+  if (weeklyDone.length){
+    lines.push(`✅ Сделано в группе:`);
+    weeklyDone.forEach(t => lines.push(`   • ${t.text}`));
+    lines.push('');
+  }
+  if (weeklyOpen.length && weeklyOpen.length < WEEKLY_TASKS.length){
+    lines.push(`💡 На следующую неделю:`);
+    weeklyOpen.forEach(t => lines.push(`   • ${t.text}`));
+    lines.push('');
+  }
+
+  // Прогресс маскота
+  lines.push(`🐣 Прогресс: ${state.points} баллов · стадия «${info.cur.name}»`);
+  if (info.next){
+    lines.push(`   до «${info.next.name}» — ${info.untilNext} баллов`);
+  } else {
+    lines.push(`   🛡️ Дошла до максимума!`);
+  }
+  lines.push('');
+
+  // Поддерживающее слово
+  lines.push(`💛 ${supportMsg}`);
+
+  return lines.join('\n');
+}
+
+const reportModal = document.getElementById('reportModal');
+const reportText = document.getElementById('reportText');
+const reportCopied = document.getElementById('reportCopied');
+
+function openReport(){
+  const text = buildReport();
+  reportText.value = text;
+  // ссылка Telegram (чат группы)
+  document.getElementById('reportTg').href = GROUP_TG_CHAT;
+  // mailto на свою почту (пустой to:, пользователь подставит)
+  const subject = encodeURIComponent(`Отчёт за неделю · ${state.name || 'Участник'}`);
+  const body = encodeURIComponent(text);
+  document.getElementById('reportMail').href = `mailto:?subject=${subject}&body=${body}`;
+  reportModal.classList.add('open');
+  reportCopied.classList.remove('show');
+}
+function closeReport(){
+  reportModal.classList.remove('open');
+}
+
+document.getElementById('reportBtn').addEventListener('click', openReport);
+document.getElementById('reportCloseBtn').addEventListener('click', closeReport);
+reportModal.addEventListener('click', e => {
+  if (e.target === reportModal) closeReport();
+});
+document.getElementById('reportCopy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(reportText.value);
+    reportCopied.classList.add('show');
+    setTimeout(() => reportCopied.classList.remove('show'), 2500);
+  } catch(e){
+    // fallback — выделить
+    reportText.select();
+    document.execCommand('copy');
+    reportCopied.classList.add('show');
+    setTimeout(() => reportCopied.classList.remove('show'), 2500);
+  }
+});
+
 // ============ INIT ============
 function renderAll(){
+  renderName();
   renderMascot();
   renderWeekly();
   renderExperiment();
