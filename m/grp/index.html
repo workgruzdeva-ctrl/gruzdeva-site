@@ -194,46 +194,118 @@
     background:var(--sage); color:var(--paper); border-color:var(--sage-deep);
   }
 
-  /* HABIT TRACKER */
-  .habit-card{
+  /* EXPERIMENT TRACKER */
+  .exp-strategy{
+    background:var(--milk); border:1.5px solid var(--ink);
+    border-radius:14px; padding:18px 20px;
+    margin-bottom:14px;
+  }
+  .exp-strategy-label{
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--sage-deep); margin-bottom:6px;
+  }
+  .exp-strategy textarea{
+    width:100%; background:transparent; border:none;
+    font:inherit; font-size:16px; line-height:1.45; color:var(--ink);
+    resize:vertical; min-height:42px;
+    outline:none;
+    padding:0;
+  }
+  .exp-strategy textarea::placeholder{color:var(--muted); font-style:italic}
+  .exp-weekmeta{
+    font-size:12px; color:var(--muted); margin-top:8px;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+  }
+  .exp-weekmeta strong{color:var(--sage-deep); font-weight:700}
+  .exp-weekmeta .nav{display:flex; gap:6px}
+  .exp-weekmeta .nav button{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:4px 10px; font:inherit; font-size:11px; cursor:pointer; color:var(--soft);
+  }
+  .exp-weekmeta .nav button:hover{border-color:var(--ink); color:var(--ink)}
+  .exp-weekmeta .nav button:disabled{opacity:.4; cursor:default}
+
+  .exp-days{display:flex; flex-direction:column; gap:8px}
+  .exp-day{
     background:var(--paper); border:1.5px solid var(--line);
-    border-radius:14px;
-    padding:18px 20px;
-    margin-bottom:12px;
+    border-radius:12px; padding:14px 16px;
+    transition:all .2s var(--easing);
+    display:grid;
+    grid-template-columns:80px 1fr;
+    gap:14px;
+    align-items:center;
   }
-  .habit-head{
-    display:flex; justify-content:space-between; align-items:flex-start;
-    gap:14px; margin-bottom:14px;
+  .exp-day.tried{
+    background:var(--mint-soft); border-color:var(--sage);
   }
-  .habit-name{
+  .exp-day.is-today{
+    border-color:var(--accent); border-width:2px;
+  }
+  .exp-day-head{
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .exp-day-name{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
-    font-size:17px; font-weight:600;
-    flex:1;
+    font-weight:700; font-size:15px; letter-spacing:.04em;
   }
-  .habit-name small{
-    display:block; font-family:inherit; font-weight:400;
-    color:var(--muted); font-size:12px; margin-top:2px;
+  .exp-day-date{font-size:11px; color:var(--muted)}
+  .exp-day.is-today .exp-day-date{color:var(--accent-deep); font-weight:700}
+
+  .exp-day-body{
+    display:flex; flex-direction:column; gap:8px;
   }
-  .habit-week{
-    display:grid; grid-template-columns:repeat(7, 1fr); gap:6px;
+  .exp-day-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
   }
-  .habit-day{
-    aspect-ratio:1;
-    background:var(--paper); border:1.5px solid var(--line);
-    border-radius:8px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    cursor:pointer;
-    font-size:10px; color:var(--muted);
-    transition:all .15s var(--easing);
+  .exp-tried{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:100px; padding:5px 14px 5px 6px;
+    cursor:pointer; font:inherit; font-size:13px; font-weight:600;
+    transition:all .15s;
     -webkit-tap-highlight-color:transparent;
   }
-  .habit-day:hover{border-color:var(--ink)}
-  .habit-day .day-name{font-weight:700; letter-spacing:.08em}
-  .habit-day .day-mark{font-size:18px; line-height:1; margin-top:2px; color:transparent}
-  .habit-day.done{
+  .exp-tried .dot{
+    width:18px; height:18px; border-radius:50%;
+    background:var(--paper); border:1.5px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px;
+  }
+  .exp-day.tried .exp-tried{
+    background:var(--sage-deep); color:var(--paper); border-color:var(--sage-deep);
+  }
+  .exp-day.tried .exp-tried .dot{
     background:var(--accent); border-color:var(--ink); color:var(--ink);
   }
-  .habit-day.done .day-mark{color:var(--ink)}
+  .exp-day.tried .exp-tried .dot::before{content:"✓"}
+
+  .exp-mood{
+    display:inline-flex; gap:4px; align-items:center;
+  }
+  .exp-mood button{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--paper); border:1.5px solid var(--line);
+    cursor:pointer; font-size:18px; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+    padding:0;
+  }
+  .exp-mood button:hover{border-color:var(--ink)}
+  .exp-mood button.active{
+    background:var(--accent); border-color:var(--ink);
+    transform:scale(1.1);
+  }
+
+  .exp-note{
+    width:100%; background:var(--milk); border:1px solid var(--line);
+    border-radius:8px; padding:8px 12px;
+    font:inherit; font-size:13px; line-height:1.4;
+    outline:none;
+    resize:none;
+    min-height:32px;
+  }
+  .exp-note:focus{border-color:var(--ink); background:var(--paper)}
+  .exp-day.tried .exp-note{background:var(--paper); border-color:var(--sage)}
 
   /* IF-THEN PLANS */
   .ifthen-list{display:flex; flex-direction:column; gap:8px; margin-bottom:8px}
@@ -374,7 +446,7 @@
     <!-- Quick nav -->
     <div class="nav-section">
       <a href="#dailies">Сегодня</a>
-      <a href="#habit">Трекер привычки</a>
+      <a href="#experiment">Эксперимент недели</a>
       <a href="#ifthen">«Если — то» план</a>
       <a href="#workbooks">Воркбуки</a>
       <a href="#help">Поддержка</a>
@@ -392,24 +464,28 @@
 
     <div class="dailies" id="dailiesList"></div>
 
-    <!-- ============ HABIT TRACKER ============ -->
-    <h2 id="habit">Трекер привычки</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Выберите одну привычку из недели 5 и отмечайте дни, когда получилось. Несколько дней в неделю — уже движение.</p>
+    <!-- ============ EXPERIMENT TRACKER ============ -->
+    <h2 id="experiment">Поведенческий эксперимент</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Каждую неделю на встрече вы выбираете одну стратегию и пробуете её в жизни. Здесь отмечаете каждый день: попробовали или нет, как прошло, и что заметили. Неделя — от четверга до среды.</p>
 
-    <div class="habit-card">
-      <div class="habit-head">
-        <div class="habit-name">
-          <input id="habitName" type="text" placeholder="Например: лечь до 23:00"
-                 style="background:transparent; border:none; font:inherit; font-size:17px; font-weight:600; width:100%; padding:0; outline:none; color:var(--ink)">
-          <small>+3 балла за каждую отмеченную клетку</small>
+    <div class="exp-strategy">
+      <div class="exp-strategy-label">Стратегия этой недели</div>
+      <textarea id="expStrategy" placeholder="Например: при прокрастинации — ставить таймер на 2 минуты и работать только эти 2 минуты."></textarea>
+      <div class="exp-weekmeta">
+        <div>Неделя <strong id="expWeekRange">…</strong> · попробовано <strong id="expWeekCount">0 / 7</strong></div>
+        <div class="nav">
+          <button id="expPrev">← пред.</button>
+          <button id="expToday">сегодня</button>
+          <button id="expNext">след. →</button>
         </div>
       </div>
-      <div class="habit-week" id="habitWeek"></div>
     </div>
 
-    <!-- ============ IF-THEN PLANS ============ -->
-    <h2 id="ifthen">«Если — то» план</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Конкретные первые шаги. Когда наступает X — вы делаете Y. Отмечайте «сделано» каждый раз — +5 баллов.</p>
+    <div class="exp-days" id="expDays"></div>
+
+    <!-- ============ IF-THEN PLANS (optional) ============ -->
+    <h2 id="ifthen">«Если — то» план <span style="font-family:inherit; font-size:12px; font-weight:400; color:var(--muted); letter-spacing:.02em; text-transform:none">— опционально</span></h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Если в рамках эксперимента полезно сформулировать конкретное «когда X — я делаю Y» — добавьте сюда. Не обязательно, входит в часть эксперимента.</p>
 
     <div class="ifthen-list" id="ifthenList"></div>
 
@@ -484,12 +560,12 @@ const DEFAULT_STATE = {
   name: '',
   points: 0,
   currentWeek: 1,
-  // dailies — отмеченные сегодня по datestring
+  // dailies — отмеченные сегодня
   daily: { date: '', items: {} },
-  // habit — название + map "YYYY-Wn" -> {0..6: bool}
-  habit: { name: '', weeks: {} },
+  // experiment — { weeks: { "YYYY-MM-DD" (thu): { strategy, days: { "YYYY-MM-DD": { tried, mood, note } } } } }
+  experiment: { weeks: {}, viewWeek: null },  // viewWeek = просматриваемая неделя (null = текущая)
   // if-then plans
-  ifthen: [],  // {id, if, then, doneTimes: [timestamps]}
+  ifthen: [],
 };
 
 function loadState(){
@@ -507,16 +583,39 @@ let state = loadState();
 
 // ============ HELPERS ============
 function today(){ return new Date().toISOString().slice(0, 10); }
-function weekKey(){
-  const d = new Date();
-  const onejan = new Date(d.getFullYear(), 0, 1);
-  const wk = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-  return `${d.getFullYear()}-W${wk}`;
+
+// «Неделя эксперимента» — начинается в четверг. Возвращает YYYY-MM-DD четверга
+function expWeekKey(date){
+  const d = new Date(date || new Date());
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay(); // 0=Вс, 4=Чт
+  const daysBack = day >= 4 ? day - 4 : day + 3;
+  d.setDate(d.getDate() - daysBack);
+  return d.toISOString().slice(0, 10);
 }
-function currentDayOfWeek(){
-  // Monday = 0, Sunday = 6
-  const d = new Date().getDay();
-  return d === 0 ? 6 : d - 1;
+function expWeekDays(weekKey){
+  const thu = new Date(weekKey);
+  const names = ['ЧТ', 'ПТ', 'СБ', 'ВС', 'ПН', 'ВТ', 'СР'];
+  const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  const out = [];
+  const todayStr = today();
+  for (let i = 0; i < 7; i++){
+    const d = new Date(thu);
+    d.setDate(thu.getDate() + i);
+    const key = d.toISOString().slice(0, 10);
+    out.push({
+      key,
+      name: names[i],
+      date: `${d.getDate()} ${months[d.getMonth()]}`,
+      isToday: key === todayStr,
+      isFuture: key > todayStr,
+    });
+  }
+  return out;
+}
+function expWeekRangeLabel(weekKey){
+  const days = expWeekDays(weekKey);
+  return `${days[0].date} → ${days[6].date}`;
 }
 
 // Сброс ежедневных в новый день
@@ -612,42 +711,139 @@ function renderDailies(){
   });
 }
 
-// ============ HABIT TRACKER ============
-const DAY_NAMES = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
-
-function renderHabit(){
-  const wk = weekKey();
-  if (!state.habit.weeks[wk]) state.habit.weeks[wk] = {};
-  const days = state.habit.weeks[wk];
-  document.getElementById('habitName').value = state.habit.name || '';
-  const c = document.getElementById('habitWeek');
-  c.innerHTML = '';
-  const todayIdx = currentDayOfWeek();
-  for (let i = 0; i < 7; i++){
-    const el = document.createElement('div');
-    el.className = 'habit-day' + (days[i] ? ' done' : '');
-    el.innerHTML = `<div class="day-name">${DAY_NAMES[i]}</div><div class="day-mark">✓</div>`;
-    if (i === todayIdx){
-      el.style.boxShadow = 'inset 0 0 0 2px var(--accent-deep)';
-    }
-    el.addEventListener('click', () => {
-      if (days[i]){
-        delete days[i];
-        addPoints(-3, 'Привычка отменена');
-      } else {
-        days[i] = true;
-        addPoints(3, 'Привычка отмечена');
-      }
-      saveState();
-      renderHabit();
-    });
-    c.appendChild(el);
-  }
+// ============ EXPERIMENT TRACKER ============
+function getViewedWeekKey(){
+  return state.experiment.viewWeek || expWeekKey();
 }
 
-document.getElementById('habitName').addEventListener('input', e => {
-  state.habit.name = e.target.value;
+function ensureExpWeek(wk){
+  if (!state.experiment.weeks[wk]){
+    state.experiment.weeks[wk] = { strategy: '', days: {} };
+  }
+  return state.experiment.weeks[wk];
+}
+
+function renderExperiment(){
+  const wk = getViewedWeekKey();
+  const data = ensureExpWeek(wk);
+  const days = expWeekDays(wk);
+  const todayWk = expWeekKey();
+
+  // Стратегия
+  document.getElementById('expStrategy').value = data.strategy || '';
+  document.getElementById('expWeekRange').textContent = expWeekRangeLabel(wk);
+  const tried = days.filter(d => data.days[d.key]?.tried).length;
+  document.getElementById('expWeekCount').textContent = `${tried} / 7`;
+
+  // Кнопки навигации
+  document.getElementById('expNext').disabled = false; // позволяем смотреть будущее
+  document.getElementById('expToday').disabled = (wk === todayWk);
+
+  // Список дней
+  const c = document.getElementById('expDays');
+  c.innerHTML = '';
+  days.forEach(day => {
+    const ds = data.days[day.key] || {};
+    const isTried = !!ds.tried;
+    const mood = ds.mood || '';
+    const note = ds.note || '';
+    const el = document.createElement('div');
+    el.className = 'exp-day' + (isTried ? ' tried' : '') + (day.isToday ? ' is-today' : '');
+    el.innerHTML = `
+      <div class="exp-day-head">
+        <div class="exp-day-name">${day.name}${day.isToday ? ' · сегодня' : ''}</div>
+        <div class="exp-day-date">${day.date}</div>
+      </div>
+      <div class="exp-day-body">
+        <div class="exp-day-row">
+          <button class="exp-tried" data-day="${day.key}">
+            <span class="dot"></span>
+            <span>${isTried ? 'Попробовала' : 'Не отмечено'}</span>
+          </button>
+          <div class="exp-mood" data-day="${day.key}">
+            <button data-mood="bad" class="${mood === 'bad' ? 'active' : ''}" title="Не получилось">😐</button>
+            <button data-mood="ok" class="${mood === 'ok' ? 'active' : ''}" title="Частично">🙂</button>
+            <button data-mood="great" class="${mood === 'great' ? 'active' : ''}" title="Получилось">🎉</button>
+          </div>
+        </div>
+        <textarea class="exp-note" data-day="${day.key}" rows="1"
+                  placeholder="Как прошло? (необязательно)">${escapeHtml(note)}</textarea>
+      </div>
+    `;
+    c.appendChild(el);
+  });
+
+  // Делегирование событий через c
+  c.querySelectorAll('.exp-tried').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.dataset.day;
+      const wasTried = !!data.days[k]?.tried;
+      data.days[k] = data.days[k] || {};
+      if (wasTried){
+        data.days[k].tried = false;
+        addPoints(-5, 'День эксперимента отменён');
+      } else {
+        data.days[k].tried = true;
+        addPoints(5, 'День эксперимента отмечен');
+      }
+      saveState();
+      renderExperiment();
+    });
+  });
+
+  c.querySelectorAll('.exp-mood button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.parentElement.dataset.day;
+      data.days[k] = data.days[k] || {};
+      const m = btn.dataset.mood;
+      const isActive = data.days[k].mood === m;
+      data.days[k].mood = isActive ? '' : m;
+      // Бонус за 🎉 при первой отметке
+      if (!isActive && m === 'great'){
+        addPoints(2, 'Получилось! Бонус');
+      }
+      saveState();
+      renderExperiment();
+    });
+  });
+
+  c.querySelectorAll('.exp-note').forEach(area => {
+    area.addEventListener('input', () => {
+      const k = area.dataset.day;
+      data.days[k] = data.days[k] || {};
+      data.days[k].note = area.value;
+      saveState();
+    });
+  });
+}
+
+document.getElementById('expStrategy').addEventListener('input', e => {
+  const wk = getViewedWeekKey();
+  const data = ensureExpWeek(wk);
+  data.strategy = e.target.value;
   saveState();
+});
+
+document.getElementById('expPrev').addEventListener('click', () => {
+  const wk = getViewedWeekKey();
+  const d = new Date(wk);
+  d.setDate(d.getDate() - 7);
+  state.experiment.viewWeek = expWeekKey(d);
+  saveState();
+  renderExperiment();
+});
+document.getElementById('expNext').addEventListener('click', () => {
+  const wk = getViewedWeekKey();
+  const d = new Date(wk);
+  d.setDate(d.getDate() + 7);
+  state.experiment.viewWeek = expWeekKey(d);
+  saveState();
+  renderExperiment();
+});
+document.getElementById('expToday').addEventListener('click', () => {
+  state.experiment.viewWeek = null;
+  saveState();
+  renderExperiment();
 });
 
 // ============ IF-THEN PLANS ============
@@ -750,7 +946,7 @@ document.getElementById('resetLink').addEventListener('click', e => {
 function renderAll(){
   renderMascot();
   renderDailies();
-  renderHabit();
+  renderExperiment();
   renderIfThen();
   renderWeeks();
 }
