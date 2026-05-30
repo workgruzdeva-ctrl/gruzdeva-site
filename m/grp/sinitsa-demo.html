@@ -6,14 +6,11 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Птичка · 9 этапов v6</title>
+<title>Птичка · 9 этапов</title>
 <style>
   :root{
     --ink:#1a1614; --soft:#4a423d; --muted:#857c75;
-    --bg:#fbf8ee; --paper:#fbf8ee; --milk:#f3ecdb;
-    --accent:#f0b400; --accent-soft:#f4ebd0; --accent-deep:#7a5b00;
-    --sage:#9aaf90; --sage-deep:#6f8a6a;
-    --cloud:#e8e3d3;
+    --bg:#fbf8ee; --paper:#fbf8ee;
   }
   *{box-sizing:border-box}
   body{
@@ -30,14 +27,17 @@
 
   .stages{
     display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
-    gap:48px 28px;
+    gap:40px 24px;
   }
   .stage{ text-align:center; }
   .stage .holder{
-    width:180px; height:160px; margin:0 auto 16px;
+    width:180px; height:180px; margin:0 auto 14px;
     display:flex; align-items:center; justify-content:center;
   }
-  .stage .holder svg{max-width:100%; max-height:100%}
+  .stage .holder img{
+    max-width:100%; max-height:100%;
+    display:block;
+  }
   .stage .num{
     font-family:"Charter","Iowan Old Style","Georgia",serif;
     font-size:13px; font-style:italic;
@@ -58,380 +58,22 @@
 <body>
 <div class="wrap">
   <h1>Птичка · 9 этапов</h1>
-  <p class="sub">Одна и та же птичка проходит свой путь. От яйца до королевы стаи.</p>
+  <p class="sub">Одна и та же птичка проходит свой путь — от яйца до королевы стаи.</p>
 
   <div class="stages" id="grid"></div>
 </div>
 
 <script>
-const INK = "#1a1614";
-const S2 = `stroke="${INK}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"`;
-const S15 = `stroke="${INK}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"`;
-const S25 = `stroke="${INK}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"`;
-
-// =============================================================
-// КАНОНИЧНЫЙ СИЛУЭТ: круглое тельце + лёгкая макушка с хохолком
-// Одна форма для всех стадий. Птичка смотрит ВЛЕВО (клюв слева).
-// cx, cy — центр; mirror=true для зеркала
-// =============================================================
-function bird(cx, cy, opts = {}){
-  const {
-    eye = 'open',           // 'open' | 'closed' | 'soft' | 'shock'
-    beakOpen = false,
-    legs = true,
-    legsLifted = false,     // лапки приподняты (прыжок/полёт)
-    wing = 'lying',         // 'lying' | 'half' | 'try' | 'fly' | 'wave' | 'cape'
-    crest = true,           // хохолок на макушке
-    crown = false,
-    cape = false,
-    cape2 = false,          // зелёный плащ
-    flip = false,           // зеркало вправо
-    rotate = 0,
-  } = opts;
-
-  const sgn = flip ? -1 : 1;
-  // Хелперы внутри
-  const ex = cx + 14 * sgn;   // позиция глаза (слева на лице если flip=false)
-  const eyeY = cy - 4;
-  // координаты тела — округлая капля, чуть выше макушка
-  const bodyD = `M ${cx} ${cy-32}
-                 Q ${cx-26} ${cy-32} ${cx-32} ${cy-12}
-                 Q ${cx-36} ${cy+18} ${cx-22} ${cy+30}
-                 Q ${cx-2} ${cy+34} ${cx+18} ${cy+32}
-                 Q ${cx+36} ${cy+22} ${cx+34} ${cy+2}
-                 Q ${cx+30} ${cy-22} ${cx+10} ${cy-30}
-                 Q ${cx+2} ${cy-32} ${cx} ${cy-32} Z`;
-
-  // Хвостик-маленький треугольник справа
-  const tail = `<path d="M ${cx+32} ${cy+6} L ${cx+44} ${cy+2} L ${cx+38} ${cy+14} Z"
-                      fill="#fbf8ee" ${S2}/>`;
-
-  // Хохолок-перышко
-  const crestSvg = crest
-    ? `<path d="M ${cx-4} ${cy-32} Q ${cx-2} ${cy-38} ${cx+4} ${cy-36}" fill="none" ${S2}/>`
-    : '';
-
-  // Крыло
-  let wingSvg = '';
-  if (wing === 'lying'){
-    wingSvg = `<path d="M ${cx-4} ${cy-2} Q ${cx+10} ${cy+2} ${cx+18} ${cy+16} Q ${cx+6} ${cy+22} ${cx-6} ${cy+16} Z"
-                     fill="#fbf8ee" ${S2}/>`;
-  } else if (wing === 'half'){
-    wingSvg = `<path d="M ${cx-4} ${cy-4} Q ${cx+14} ${cy} ${cx+24} ${cy+12} Q ${cx+12} ${cy+22} ${cx-2} ${cy+14} Z"
-                     fill="#fbf8ee" ${S2}/>`;
-  } else if (wing === 'wave'){
-    // маленькое крыло машет (для «вылупилась»)
-    wingSvg = `<path d="M ${cx+12} ${cy-4} Q ${cx+24} ${cy-12} ${cx+22} ${cy+4} Q ${cx+12} ${cy+4} ${cx+8} ${cy-2} Z"
-                     fill="#fbf8ee" ${S2}/>`;
-  } else if (wing === 'try'){
-    // оба крыла подняты — пробует
-    wingSvg = `
-      <path d="M ${cx-22} ${cy-8} Q ${cx-44} ${cy-20} ${cx-46} ${cy-2} Q ${cx-38} ${cy+8} ${cx-22} ${cy+4} Z"
-            fill="#fbf8ee" ${S2}/>
-      <path d="M ${cx-38} ${cy-6} L ${cx-44} ${cy-2}" fill="none" ${S15}/>
-      <path d="M ${cx-38} ${cy+2} L ${cx-44} ${cy+4}" fill="none" ${S15}/>
-      <path d="M ${cx+18} ${cy-8} Q ${cx+40} ${cy-20} ${cx+42} ${cy-2} Q ${cx+34} ${cy+8} ${cx+18} ${cy+4} Z"
-            fill="#fbf8ee" ${S2}/>
-      <path d="M ${cx+34} ${cy-6} L ${cx+40} ${cy-2}" fill="none" ${S15}/>
-      <path d="M ${cx+34} ${cy+2} L ${cx+40} ${cy+4}" fill="none" ${S15}/>
-    `;
-  } else if (wing === 'fly'){
-    // широко расправленные в полёте
-    wingSvg = `
-      <path d="M ${cx-22} ${cy-4} Q ${cx-56} ${cy-14} ${cx-66} ${cy+4} Q ${cx-50} ${cy+12} ${cx-22} ${cy+8} Z"
-            fill="#fbf8ee" ${S2}/>
-      <path d="M ${cx-46} ${cy-2} L ${cx-52} ${cy+4}" fill="none" ${S15}/>
-      <path d="M ${cx-54} ${cy-2} L ${cx-58} ${cy+6}" fill="none" ${S15}/>
-      <path d="M ${cx+18} ${cy-4} Q ${cx+52} ${cy-14} ${cx+62} ${cy+4} Q ${cx+46} ${cy+12} ${cx+18} ${cy+8} Z"
-            fill="#fbf8ee" ${S2}/>
-      <path d="M ${cx+42} ${cy-2} L ${cx+48} ${cy+4}" fill="none" ${S15}/>
-      <path d="M ${cx+50} ${cy-2} L ${cx+54} ${cy+6}" fill="none" ${S15}/>
-    `;
-  }
-
-  // Зелёный плащ за спиной (этапы 8 и 9)
-  const capeSvg = cape2
-    ? `<path d="M ${cx+12} ${cy-12} Q ${cx+36} ${cy+8} ${cx+30} ${cy+30} Q ${cx+18} ${cy+24} ${cx+8} ${cy+10} Z"
-             fill="#9aaf90" ${S2}/>`
-    : '';
-
-  // Тело
-  const body = `<path d="${bodyD}" fill="#fbf8ee" ${S25}/>`;
-
-  // Глаз (на левой стороне головы)
-  let eyeSvg = '';
-  if (eye === 'closed')      eyeSvg = `<path d="M ${cx-10} ${cy-6} Q ${cx-6} ${cy-3} ${cx-2} ${cy-6}" fill="none" ${S2}/>`;
-  else if (eye === 'soft')   eyeSvg = `<path d="M ${cx-10} ${cy-6} Q ${cx-6} ${cy-8} ${cx-2} ${cy-6}" fill="none" ${S2}/>`;
-  else if (eye === 'shock')  eyeSvg = `<circle cx="${cx-7}" cy="${cy-6}" r="2.5" fill="${INK}"/>`;
-  else                       eyeSvg = `<circle cx="${cx-7}" cy="${cy-6}" r="2" fill="${INK}"/>`;
-
-  // Клюв — маленький треугольный жёлтый, слева
-  const beak = beakOpen
-    ? `<path d="M ${cx-24} ${cy-2} L ${cx-32} ${cy} L ${cx-24} ${cy+4} L ${cx-22} ${cy+2} Z"
-             fill="#f0b400" ${S15}/>`
-    : `<path d="M ${cx-22} ${cy-2} L ${cx-30} ${cy+1} L ${cx-22} ${cy+4} Z"
-             fill="#f0b400" ${S15}/>`;
-
-  // Лапки
-  let legsSvg = '';
-  if (legs && !legsLifted){
-    legsSvg = `
-      <line x1="${cx-8}" y1="${cy+32}" x2="${cx-8}" y2="${cy+44}" ${S2}/>
-      <line x1="${cx+8}" y1="${cy+32}" x2="${cx+8}" y2="${cy+44}" ${S2}/>
-      <path d="M ${cx-12} ${cy+44} L ${cx-8} ${cy+47} L ${cx-4} ${cy+44}" fill="none" ${S2}/>
-      <path d="M ${cx+4} ${cy+44} L ${cx+8} ${cy+47} L ${cx+12} ${cy+44}" fill="none" ${S2}/>
-    `;
-  } else if (legs && legsLifted){
-    // лапки поджаты, торчат под телом
-    legsSvg = `
-      <line x1="${cx-8}" y1="${cy+30}" x2="${cx-8}" y2="${cy+38}" ${S2}/>
-      <line x1="${cx+8}" y1="${cy+30}" x2="${cx+8}" y2="${cy+38}" ${S2}/>
-      <path d="M ${cx-12} ${cy+38} L ${cx-4} ${cy+38}" fill="none" ${S2}/>
-      <path d="M ${cx+4} ${cy+38} L ${cx+12} ${cy+38}" fill="none" ${S2}/>
-    `;
-  }
-
-  // Корона на голове
-  const crownSvg = crown
-    ? `<path d="M ${cx-14} ${cy-30} L ${cx-12} ${cy-40} L ${cx-6} ${cy-32} L ${cx} ${cy-44} L ${cx+6} ${cy-32} L ${cx+12} ${cy-40} L ${cx+14} ${cy-30} Z"
-             fill="#f0b400" ${S25}/>
-       <circle cx="${cx}" cy="${cy-36}" r="1.6" fill="${INK}"/>`
-    : '';
-
-  // Группа — поворот вокруг центра
-  return `<g transform="${rotate ? `rotate(${rotate} ${cx} ${cy})` : ''}${flip ? ` translate(${2*cx},0) scale(-1,1)` : ''}">
-    ${capeSvg}
-    ${tail}
-    ${body}
-    ${wing === 'lying' || wing === 'half' || wing === 'wave' ? wingSvg : ''}
-    ${crestSvg}
-    ${crownSvg}
-    ${eyeSvg}
-    ${beak}
-    ${wing === 'try' || wing === 'fly' ? wingSvg : ''}
-    ${legsSvg}
-  </g>`;
-}
-
-// Тень-овал под птичкой
-function shadow(cx, cy, w=44){
-  return `<ellipse cx="${cx}" cy="${cy}" rx="${w}" ry="2.5" fill="${INK}" opacity=".15"/>`;
-}
-
-// Маленькая 4-конечная звёздочка
-function star(cx, cy, size=4, color='#1a1614'){
-  return `<path d="M ${cx} ${cy-size} L ${cx+size*0.3} ${cy-size*0.3} L ${cx+size} ${cy} L ${cx+size*0.3} ${cy+size*0.3} L ${cx} ${cy+size} L ${cx-size*0.3} ${cy+size*0.3} L ${cx-size} ${cy} L ${cx-size*0.3} ${cy-size*0.3} Z"
-                fill="${color}" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"/>`;
-}
-
-// Маленькое облачко
-function cloud(cx, cy){
-  return `<path d="M ${cx-12} ${cy} Q ${cx-12} ${cy-8} ${cx-4} ${cy-8} Q ${cx-2} ${cy-14} ${cx+4} ${cy-10} Q ${cx+12} ${cy-12} ${cx+14} ${cy-4} Q ${cx+16} ${cy+2} ${cx+10} ${cy+2} L ${cx-10} ${cy+2} Q ${cx-14} ${cy+2} ${cx-12} ${cy} Z"
-                fill="none" ${S2}/>`;
-}
-
-// =============================================================
-// 9 ИЛЛЮСТРАЦИЙ
-// =============================================================
 const STAGES = [
-
-  // ========== 1. ЯЙЦО ==========
-  {
-    num: '01', name: 'Яйцо',
-    desc: 'Только заглянула — что-то скоро начнётся',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(90, 145, 32)}
-      <path d="M 90 30 Q 60 36 56 80 Q 56 132 90 138 Q 124 132 124 80 Q 120 36 90 30 Z"
-            fill="#fbf8ee" ${S25}/>
-      <ellipse cx="78" cy="60" rx="2" ry="1.6" fill="${INK}" opacity=".55" transform="rotate(20 78 60)"/>
-      <ellipse cx="104" cy="76" rx="1.6" ry="2" fill="${INK}" opacity=".55"/>
-      <ellipse cx="72" cy="95" rx="2.2" ry="1.7" fill="${INK}" opacity=".5"/>
-      <ellipse cx="106" cy="108" rx="1.8" ry="1.7" fill="${INK}" opacity=".55"/>
-      <ellipse cx="88" cy="118" rx="1.6" ry="1.6" fill="${INK}" opacity=".5"/>
-    </svg>`,
-  },
-
-  // ========== 2. ТРЕЩИНКА ==========
-  {
-    num: '02', name: 'Трещинка',
-    desc: 'Уже слышно: внутри кто-то собирается выйти',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(90, 145, 32)}
-      <!-- лучики-штрихи звука -->
-      <path d="M 38 60 L 30 56" fill="none" ${S15}/>
-      <path d="M 36 72 L 28 72" fill="none" ${S15}/>
-      <path d="M 142 60 L 150 56" fill="none" ${S15}/>
-      <path d="M 144 72 L 152 72" fill="none" ${S15}/>
-      <path d="M 90 30 Q 60 36 56 80 Q 56 132 90 138 Q 124 132 124 80 Q 120 36 90 30 Z"
-            fill="#fbf8ee" ${S25}/>
-      <!-- зигзаг-трещинка сверху -->
-      <path d="M 76 50 L 84 56 L 80 64 L 92 60 L 88 72"
-            fill="none" ${S25}/>
-      <ellipse cx="106" cy="96" rx="1.8" ry="1.6" fill="${INK}" opacity=".5"/>
-      <ellipse cx="74" cy="110" rx="2" ry="1.6" fill="${INK}" opacity=".55"/>
-      <ellipse cx="100" cy="118" rx="1.6" ry="1.8" fill="${INK}" opacity=".55"/>
-    </svg>`,
-  },
-
-  // ========== 3. ВЫЛУПИЛАСЬ ==========
-  {
-    num: '03', name: 'Вылупилась',
-    desc: 'Появилась. Пока не поняла, куда именно',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(90, 148, 40)}
-      <!-- скорлупа-чаша снизу с зигзагом -->
-      <path d="M 50 90 Q 50 142 90 146 Q 130 142 130 90 L 120 100 L 110 88 L 100 100 L 92 88 L 82 100 L 72 88 L 62 100 Z"
-            fill="#fbf8ee" ${S25}/>
-      <!-- птичка — круглая, торчит из скорлупы -->
-      <path d="M 90 50 Q 66 50 62 78 Q 60 96 76 102 Q 90 104 104 102 Q 120 96 118 78 Q 114 50 90 50 Z"
-            fill="#fbf8ee" ${S25}/>
-      <!-- хохолок-перышко -->
-      <path d="M 86 50 Q 88 42 94 44" fill="none" ${S2}/>
-      <!-- глаз -->
-      <circle cx="80" cy="76" r="2" fill="${INK}"/>
-      <!-- клюв -->
-      <path d="M 64 80 L 56 82 L 64 86 Z" fill="#f0b400" ${S15}/>
-      <!-- кусочек скорлупы на голове — маленький треугольник -->
-      <path d="M 96 42 L 100 36 L 104 42 Z" fill="#fbf8ee" ${S2}/>
-      <!-- маленькое крылышко машет -->
-      <path d="M 112 76 Q 122 70 124 78 Q 122 84 114 84 Z" fill="#fbf8ee" ${S2}/>
-    </svg>`,
-  },
-
-  // ========== 4. Я В ПУТИ ==========
-  {
-    num: '04', name: 'Я в пути',
-    desc: 'Стою на лапках и делаю вид, что так и было задумано',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(80, 140, 32)}
-      <!-- следы -->
-      <g opacity=".5">
-        <circle cx="132" cy="138" r="1.4" fill="${INK}"/>
-        <circle cx="138" cy="142" r="1.4" fill="${INK}"/>
-        <circle cx="146" cy="138" r="1.4" fill="${INK}"/>
-        <circle cx="152" cy="142" r="1.4" fill="${INK}"/>
-        <circle cx="160" cy="138" r="1.4" fill="${INK}"/>
-      </g>
-      ${bird(80, 90, {wing:'lying', crest:true, eye:'open'})}
-      <!-- узелок на палочке — палка диагонально в крыле -->
-      <line x1="78" y1="82" x2="110" y2="56" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
-      <!-- мешочек на конце -->
-      <path d="M 108 50 Q 102 48 100 56 Q 100 64 108 66 Q 116 64 118 56 Q 116 50 108 50 Z"
-            fill="#9aaf90" ${S2}/>
-      <!-- узелок-завязка -->
-      <path d="M 104 52 L 112 50" fill="none" ${S15}/>
-    </svg>`,
-  },
-
-  // ========== 5. ОСМАТРИВАЕТСЯ ==========
-  {
-    num: '05', name: 'Осматривается',
-    desc: 'Начинаю понимать, где я и куда дальше',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(96, 140, 38)}
-      ${bird(96, 90, {wing:'half', crest:true, eye:'soft'})}
-      <!-- развёрнутая карта в крыле, держит чуть впереди -->
-      <path d="M 34 88 L 70 80 L 78 110 L 38 116 Z"
-            fill="#fbf8ee" ${S2}/>
-      <!-- зигзаг-маршрут на карте -->
-      <path d="M 42 96 L 50 92 L 56 100 L 62 94 L 70 102"
-            fill="none" ${S15}/>
-      <!-- крестик X -->
-      <path d="M 66 100 L 70 104 M 70 100 L 66 104" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
-      <!-- складка карты -->
-      <line x1="56" y1="84" x2="58" y2="114" stroke="${INK}" stroke-width="1" opacity=".4"/>
-      <!-- веточка-листок к карте -->
-      <path d="M 70 80 L 78 76 Q 82 78 80 84" fill="none" ${S15}/>
-      <path d="M 80 78 Q 84 76 82 72 Q 78 74 80 78 Z" fill="#9aaf90" ${S15}/>
-    </svg>`,
-  },
-
-  // ========== 6. СОБИРАЕТ ИНСТРУМЕНТЫ ==========
-  {
-    num: '06', name: 'Собирает инструменты',
-    desc: 'Нашла пару штуковин, которые и правда помогают',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(96, 140, 38)}
-      ${bird(96, 90, {wing:'lying', crest:true, eye:'soft'})}
-      <!-- очки на голове — два кружка с дужкой -->
-      <circle cx="80" cy="84" r="7" fill="none" ${S2}/>
-      <circle cx="96" cy="84" r="7" fill="none" ${S2}/>
-      <line x1="87" y1="84" x2="89" y2="84" ${S2}/>
-      <line x1="73" y1="82" x2="68" y2="80" ${S2}/>
-      <circle cx="80" cy="84" r="1.8" fill="${INK}"/>
-      <circle cx="96" cy="84" r="1.8" fill="${INK}"/>
-      <!-- блокнот с галочками в крыле справа -->
-      <rect x="106" y="82" width="22" height="28" rx="1" fill="#fbf8ee" ${S2}/>
-      <!-- спиральки сверху блокнота -->
-      <circle cx="110" cy="82" r="1.2" fill="none" stroke="${INK}" stroke-width="1.2"/>
-      <circle cx="116" cy="82" r="1.2" fill="none" stroke="${INK}" stroke-width="1.2"/>
-      <circle cx="122" cy="82" r="1.2" fill="none" stroke="${INK}" stroke-width="1.2"/>
-      <!-- галочки и строки -->
-      <path d="M 109 90 L 111 92 L 114 88" fill="none" ${S15}/>
-      <line x1="116" y1="91" x2="124" y2="91" stroke="${INK}" stroke-width="1.2"/>
-      <path d="M 109 98 L 111 100 L 114 96" fill="none" ${S15}/>
-      <line x1="116" y1="99" x2="124" y2="99" stroke="${INK}" stroke-width="1.2"/>
-      <line x1="109" y1="105" x2="124" y2="105" stroke="${INK}" stroke-width="1.2"/>
-      <!-- маленький карандашик торчит из-под крыла слева -->
-      <line x1="74" y1="102" x2="64" y2="116" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 62 114 L 60 120 L 66 118 Z" fill="${INK}" ${S15}/>
-      <!-- веточка-листок справа -->
-      <path d="M 128 82 L 136 78" fill="none" ${S15}/>
-      <path d="M 138 80 Q 142 78 140 74 Q 136 76 138 80 Z" fill="#9aaf90" ${S15}/>
-    </svg>`,
-  },
-
-  // ========== 7. ПРОБУЕТ КРЫЛЬЯ ==========
-  {
-    num: '07', name: 'Пробует крылья',
-    desc: 'Пока не полёт, но уже очень подозрительно',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(90, 140, 24)}
-      <!-- линии движения вокруг крыльев -->
-      <g opacity=".5">
-        <line x1="40" y1="74" x2="34" y2="78" ${S15}/>
-        <line x1="42" y1="84" x2="36" y2="88" ${S15}/>
-        <line x1="140" y1="74" x2="146" y2="78" ${S15}/>
-        <line x1="138" y1="84" x2="144" y2="88" ${S15}/>
-      </g>
-      ${bird(90, 90, {wing:'try', crest:true, eye:'open', legsLifted:true})}
-    </svg>`,
-  },
-
-  // ========== 8. ЛЕТИТ ==========
-  {
-    num: '08', name: 'Летит',
-    desc: 'Оторвалась от земли. Немного сама в шоке',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      <!-- маленькие облачка -->
-      ${cloud(40, 110)}
-      ${cloud(146, 130)}
-      <!-- маленькая звёздочка -->
-      ${star(150, 30, 4)}
-      <!-- ветер -->
-      <line x1="146" y1="80" x2="152" y2="82" ${S15}/>
-      <line x1="144" y1="92" x2="150" y2="94" ${S15}/>
-      ${bird(90, 80, {wing:'fly', crest:true, eye:'shock', beakOpen:true, legsLifted:true, cape2:true, legs:true})}
-    </svg>`,
-  },
-
-  // ========== 9. КОРОЛЕВА СТАИ ==========
-  {
-    num: '09', name: 'Королева стаи',
-    desc: 'Не стала идеальной. Просто теперь у неё есть крылья, корона и план',
-    svg: `<svg viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-      ${shadow(90, 140, 38)}
-      <!-- звёздочки вокруг -->
-      ${star(40, 40, 4)}
-      ${star(140, 50, 4)}
-      ${star(36, 100, 3)}
-      ${star(150, 100, 3)}
-      ${bird(90, 90, {wing:'half', crest:false, eye:'closed', crown:true, cape2:true})}
-      <!-- волшебная палочка со звёздочкой в крыле -->
-      <line x1="62" y1="100" x2="50" y2="60" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
-      ${star(48, 56, 6, '#f0b400')}
-    </svg>`,
-  },
+  { file: '01_yaitso.png',                num: '01', name: 'Яйцо',                desc: 'Только заглянула — что-то скоро начнётся' },
+  { file: '02_treshchinka.png',           num: '02', name: 'Трещинка',            desc: 'Уже слышно: внутри кто-то собирается выйти' },
+  { file: '03_vylupilas.png',             num: '03', name: 'Вылупилась',          desc: 'Появилась. Пока не поняла, куда именно' },
+  { file: '04_ya_v_puti.png',             num: '04', name: 'Я в пути',            desc: 'Стою на лапках и делаю вид, что так и было задумано' },
+  { file: '05_osmatrivaetsya.png',        num: '05', name: 'Осматривается',       desc: 'Начинаю понимать, где я и куда дальше' },
+  { file: '06_sobiraet_instrumenty.png',  num: '06', name: 'Собирает инструменты', desc: 'Нашла пару штуковин, которые и правда помогают' },
+  { file: '07_probuet_krylya.png',        num: '07', name: 'Пробует крылья',      desc: 'Пока не полёт, но уже очень подозрительно' },
+  { file: '08_letit.png',                 num: '08', name: 'Летит',               desc: 'Оторвалась от земли. Немного сама в шоке' },
+  { file: '09_koroleva_stai.png',         num: '09', name: 'Королева стаи',       desc: 'Не стала идеальной. Просто теперь у неё есть крылья, корона и план' },
 ];
 
 const grid = document.getElementById('grid');
@@ -439,7 +81,7 @@ STAGES.forEach(s => {
   const card = document.createElement('div');
   card.className = 'stage';
   card.innerHTML = `
-    <div class="holder">${s.svg}</div>
+    <div class="holder"><img src="birds/${s.file}" alt="${s.name}"></div>
     <div class="num">${s.num}</div>
     <div class="name">${s.name}</div>
     <div class="desc">${s.desc}</div>
