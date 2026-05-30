@@ -445,7 +445,7 @@
 
     <!-- Quick nav -->
     <div class="nav-section">
-      <a href="#dailies">Сегодня</a>
+      <a href="#weekly">Групповая работа</a>
       <a href="#experiment">Эксперимент недели</a>
       <a href="#ifthen">«Если — то» план</a>
       <a href="#workbooks">Воркбуки</a>
@@ -458,11 +458,11 @@
     <h1>Зона участника</h1>
     <p class="lead">Здесь живут воркбуки, трекеры и ваш гусёнок. Чем больше делаете — тем больше он растёт.</p>
 
-    <!-- ============ DAILIES ============ -->
-    <h2 id="dailies">Сегодня</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Маленькие коммитменты на каждый день. Галочки сбрасываются в полночь — но баллы остаются.</p>
+    <!-- ============ WEEKLY GROUP TASKS ============ -->
+    <h2 id="weekly">Групповая работа</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Универсальные задачи за участие в группе — на каждую неделю. Это не личный эксперимент, а коммитменты как члена группы. Сбрасываются в четверг вместе с новой встречей.</p>
 
-    <div class="dailies" id="dailiesList"></div>
+    <div class="dailies" id="weeklyList"></div>
 
     <!-- ============ EXPERIMENT TRACKER ============ -->
     <h2 id="experiment">Поведенческий эксперимент</h2>
@@ -560,10 +560,10 @@ const DEFAULT_STATE = {
   name: '',
   points: 0,
   currentWeek: 1,
-  // dailies — отмеченные сегодня
-  daily: { date: '', items: {} },
+  // weekly group tasks — отмеченные на этой неделе (сброс в чт)
+  weekly: { weekKey: '', items: {} },
   // experiment — { weeks: { "YYYY-MM-DD" (thu): { strategy, days: { "YYYY-MM-DD": { tried, mood, note } } } } }
-  experiment: { weeks: {}, viewWeek: null },  // viewWeek = просматриваемая неделя (null = текущая)
+  experiment: { weeks: {}, viewWeek: null },
   // if-then plans
   ifthen: [],
 };
@@ -618,12 +618,12 @@ function expWeekRangeLabel(weekKey){
   return `${days[0].date} → ${days[6].date}`;
 }
 
-// Сброс ежедневных в новый день
-function ensureFreshDay(){
-  const t = today();
-  if (state.daily.date !== t){
-    state.daily.date = t;
-    state.daily.items = {};
+// Сброс групповых задач в новую неделю (чт)
+function ensureFreshWeek(){
+  const wk = expWeekKey();
+  if (state.weekly.weekKey !== wk){
+    state.weekly.weekKey = wk;
+    state.weekly.items = {};
     saveState();
   }
 }
@@ -674,38 +674,37 @@ function showToast(delta, label){
   toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ============ DAILIES ============
-const DAILIES = [
-  { id: 'session', text: 'Пришла на встречу группы',  sub: 'отмечайте в день встречи', pts: 20 },
-  { id: 'success', text: 'Записала «успех недели»',     sub: '1–3 маленьких победы',     pts: 10 },
-  { id: 'energy',  text: 'Энергетический чек-ин',       sub: 'оценка 1–10 утром / днём / вечером', pts: 4 },
-  { id: 'trigger', text: 'Карта триггера: 1 ситуация',  sub: 'ситуация → реакция → что помогло', pts: 5 },
-  { id: 'reflect', text: 'Заметка в дневник',           sub: 'что заметила за день про себя', pts: 3 },
+// ============ WEEKLY GROUP TASKS ============
+const WEEKLY_TASKS = [
+  { id: 'session',  text: 'Пришла на встречу группы',     sub: 'четверг — встреча потока',                       pts: 20 },
+  { id: 'workbook', text: 'Сделала рабочую тетрадь',      sub: 'воркбук недели — заполнила хотя бы частично',     pts: 15 },
+  { id: 'chat',     text: 'Написала в чат группы',        sub: 'вопрос, наблюдение или ответ другому участнику', pts: 5 },
+  { id: 'support',  text: 'Поддержала кого-то из группы', sub: 'комментарий, реакция, отклик в чате',             pts: 5 },
 ];
 
-function renderDailies(){
-  ensureFreshDay();
-  const c = document.getElementById('dailiesList');
+function renderWeekly(){
+  ensureFreshWeek();
+  const c = document.getElementById('weeklyList');
   c.innerHTML = '';
-  DAILIES.forEach(d => {
+  WEEKLY_TASKS.forEach(d => {
     const el = document.createElement('div');
-    el.className = 'daily' + (state.daily.items[d.id] ? ' done' : '');
+    el.className = 'daily' + (state.weekly.items[d.id] ? ' done' : '');
     el.innerHTML = `
       <div class="daily-check"></div>
       <div class="daily-text">${d.text}<small>${d.sub}</small></div>
       <div class="daily-pts">+${d.pts}</div>
     `;
     el.addEventListener('click', () => {
-      const wasDone = !!state.daily.items[d.id];
+      const wasDone = !!state.weekly.items[d.id];
       if (wasDone){
-        delete state.daily.items[d.id];
+        delete state.weekly.items[d.id];
         addPoints(-d.pts, d.text + ' — отменено');
       } else {
-        state.daily.items[d.id] = true;
+        state.weekly.items[d.id] = true;
         addPoints(d.pts, d.text);
       }
       saveState();
-      renderDailies();
+      renderWeekly();
     });
     c.appendChild(el);
   });
@@ -945,7 +944,7 @@ document.getElementById('resetLink').addEventListener('click', e => {
 // ============ INIT ============
 function renderAll(){
   renderMascot();
-  renderDailies();
+  renderWeekly();
   renderExperiment();
   renderIfThen();
   renderWeeks();
