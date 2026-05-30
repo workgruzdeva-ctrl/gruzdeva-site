@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Птичка · путь в 9 этапах v4</title>
+<title>Птичка · 9 этапов v5</title>
 <style>
   :root{
     --ink:#1a1614; --soft:#4a423d; --muted:#857c75;
@@ -18,7 +18,7 @@
   }
   *{box-sizing:border-box}
   body{
-    margin:0; padding:40px 24px 64px;
+    margin:0; padding:48px 24px 64px;
     font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
     color:var(--ink); background:var(--bg); line-height:1.55;
   }
@@ -30,17 +30,15 @@
   .sub{color:var(--soft); font-size:15px; margin:0 0 40px; max-width:680px}
 
   .stages{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
-    gap:24px;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr));
+    gap:36px 24px;
   }
   .stage{
-    background:transparent;
-    padding:20px 18px 22px;
     text-align:center;
     position:relative;
   }
   .stage .holder{
-    width:200px; height:200px; margin:0 auto 16px;
+    width:200px; height:200px; margin:0 auto 18px;
     display:flex; align-items:center; justify-content:center;
   }
   .stage .holder svg{max-width:100%; max-height:100%}
@@ -57,387 +55,428 @@
   .stage .desc{
     font-size:14px; color:var(--soft); line-height:1.5;
     font-style:italic;
-    max-width:200px; margin:0 auto;
+    max-width:210px; margin:0 auto;
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Птичка · 9 этапов пути</h1>
-  <p class="sub">Не «скины персонажа», а одна и та же птичка, которая проходит свой путь. От яйца до короны. Тёплое, немного ироничное, живое.</p>
+  <h1>Птичка · 9 этапов</h1>
+  <p class="sub">Одна и та же птичка проходит свой путь. От яйца до королевы стаи. Hand-drawn, тёплое, немного ироничное.</p>
 
   <div class="stages" id="grid"></div>
 </div>
 
+<!-- Глобальные SVG-фильтры -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <!-- ГЛАВНЫЙ ФИЛЬТР: дрожащая ручная линия -->
-    <filter id="wobble" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="3"/>
-      <feDisplacementMap in="SourceGraphic" scale="2.4"/>
-    </filter>
-    <filter id="wobble2" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7"/>
-      <feDisplacementMap in="SourceGraphic" scale="2"/>
-    </filter>
-    <filter id="paper">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/>
-      <feColorMatrix values="0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0 0.1  0 0 0 0.06 0"/>
+    <!-- Лёгкая «дрожь» линии — намеренная, но аккуратная -->
+    <filter id="hand" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="4"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.2"/>
     </filter>
   </defs>
 </svg>
 
 <script>
-// ============ HAND-DRAWN STYLE PRIMITIVES ============
-// Все линии — толщина 2.5px чёрного ink, через filter wobble — дрожат и выглядят как от руки
-
 const INK = "#1a1614";
-const STROKE = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
-const THIN = `stroke="${INK}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"`;
-const THICK = `stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
-const WOBBLE = `filter="url(#wobble)"`;
-const WOBBLE2 = `filter="url(#wobble2)"`;
 
-// Базовая каплевидная форма тела (используется во всех стадиях после вылупления)
-function birdBody(cx, cy, rx, ry, rotate=0){
-  return `<path d="M ${cx-rx} ${cy} Q ${cx-rx} ${cy-ry+10}, ${cx-rx*0.4} ${cy-ry} Q ${cx+rx*0.6} ${cy-ry+4}, ${cx+rx*0.9} ${cy-ry*0.3} Q ${cx+rx} ${cy+ry*0.6}, ${cx+rx*0.3} ${cy+ry} Q ${cx-rx*0.6} ${cy+ry-2}, ${cx-rx} ${cy} Z"
-          fill="#fbf8ee" ${STROKE} transform="rotate(${rotate} ${cx} ${cy})"/>`;
+// =============================================================
+// КАНОНИЧНЫЙ СИЛУЭТ ТЕЛА — одна форма для всех стадий
+// Каплевидное тело с округлой головой сверху,
+// плечом сбоку (откуда выходит крыло) и хвостиком сзади.
+// Параметры: cx, cy — центр; flip=false — смотрит ВЛЕВО; tilt — наклон тела;
+// stand=true — есть лапки; eye — позиция глаза; mood — выражение.
+// =============================================================
+
+// Базовая форма тела (smooth caplevidnaya forma)
+// Птичка смотрит ВЛЕВО (клюв и глаз слева).
+function bodyPath(cx, cy){
+  // координаты относительно центра
+  // голова сверху-слева, тело округлое снизу, хвост справа
+  return `M ${cx-38} ${cy-10}
+          Q ${cx-42} ${cy-38} ${cx-18} ${cy-44}
+          Q ${cx+8}  ${cy-46} ${cx+22} ${cy-30}
+          Q ${cx+42} ${cy-14} ${cx+44} ${cy+12}
+          Q ${cx+42} ${cy+34} ${cx+18} ${cy+40}
+          Q ${cx-12} ${cy+42} ${cx-30} ${cy+30}
+          Q ${cx-42} ${cy+10} ${cx-38} ${cy-10} Z`;
 }
 
-// Маленький треугольный клюв
-function beak(x, y, dir=1){
-  return `<path d="M ${x} ${y} L ${x+8*dir} ${y-3} L ${x+8*dir} ${y+3} Z" fill="#f0b400" ${THIN}/>`;
+// Маленький треугольный хвостик справа
+function tail(cx, cy){
+  return `<path d="M ${cx+40} ${cy+8} L ${cx+58} ${cy+2} L ${cx+50} ${cy+18} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>`;
 }
 
-// Глаз — простая точка
-function eye(x, y, size=2.5){
-  return `<circle cx="${x}" cy="${y}" r="${size}" fill="${INK}"/>`;
+// Крыло "лежит" сбоку
+function wingLying(cx, cy){
+  return `<path d="M ${cx+5} ${cy-12} Q ${cx+18} ${cy-6} ${cx+22} ${cy+10} Q ${cx+10} ${cy+18} ${cx} ${cy+6} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx+8} ${cy-6} Q ${cx+16} ${cy+2} ${cx+18} ${cy+10}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
 }
 
-// Лапка-палочка
-function leg(x, y, h=14){
+// Крыло развёрнуто наполовину (для «осматривается», «осваивается»)
+function wingHalf(cx, cy){
+  return `<path d="M ${cx+2} ${cy-14} Q ${cx+22} ${cy-12} ${cx+30} ${cy+4} Q ${cx+22} ${cy+18} ${cx+4} ${cy+10} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx+10} ${cy-8} Q ${cx+22} ${cy} ${cx+25} ${cy+10}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+}
+
+// Крыло, "пробует взмах" — поднято вверх
+function wingTryLeft(cx, cy){
+  return `<path d="M ${cx-32} ${cy-12} Q ${cx-50} ${cy-30} ${cx-58} ${cy-22} Q ${cx-50} ${cy-6} ${cx-28} ${cy} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx-44} ${cy-18} Q ${cx-50} ${cy-12} ${cx-48} ${cy-6}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+}
+function wingTryRight(cx, cy){
+  return `<path d="M ${cx+10} ${cy-14} Q ${cx+30} ${cy-30} ${cx+38} ${cy-22} Q ${cx+30} ${cy-6} ${cx+14} ${cy-2} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx+24} ${cy-18} Q ${cx+30} ${cy-12} ${cx+28} ${cy-6}" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+}
+
+// Раскрытые в полёте крылья — широкие
+function wingFlyLeft(cx, cy){
+  return `<path d="M ${cx-30} ${cy-8} Q ${cx-66} ${cy-22} ${cx-78} ${cy-2} Q ${cx-60} ${cy+10} ${cx-26} ${cy+6} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx-50} ${cy-4} Q ${cx-58} ${cy} ${cx-58} ${cy+6}" fill="none" stroke="${INK}" stroke-width="1.3"/>
+          <path d="M ${cx-60} ${cy-8} Q ${cx-66} ${cy-4} ${cx-66} ${cy+4}" fill="none" stroke="${INK}" stroke-width="1.3"/>`;
+}
+function wingFlyRight(cx, cy){
+  return `<path d="M ${cx+10} ${cy-8} Q ${cx+46} ${cy-22} ${cx+58} ${cy-2} Q ${cx+40} ${cy+10} ${cx+6} ${cy+6} Z"
+                fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M ${cx+30} ${cy-4} Q ${cx+38} ${cy} ${cx+38} ${cy+6}" fill="none" stroke="${INK}" stroke-width="1.3"/>
+          <path d="M ${cx+40} ${cy-8} Q ${cx+46} ${cy-4} ${cx+46} ${cy+4}" fill="none" stroke="${INK}" stroke-width="1.3"/>`;
+}
+
+// Глаз — простая точка (mood: 'open', 'soft', 'closed', 'curious')
+function eye(x, y, mood='open'){
+  if (mood === 'closed') return `<path d="M ${x-4} ${y} Q ${x} ${y+3} ${x+4} ${y}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+  if (mood === 'soft')   return `<path d="M ${x-3} ${y} Q ${x} ${y-2} ${x+3} ${y}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+  if (mood === 'wide')   return `<circle cx="${x}" cy="${y}" r="3.2" fill="${INK}"/>`;
+  // default — open dot
+  return `<circle cx="${x}" cy="${y}" r="2.4" fill="${INK}"/>`;
+}
+
+// Маленький треугольный клюв слева
+function beak(x, y, size=8){
+  return `<path d="M ${x} ${y-2} L ${x-size} ${y+2} L ${x} ${y+6} Z" fill="#f0b400" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>`;
+}
+
+// Лапки-палочки с тремя пальцами
+function legs(x1, x2, y, h=18){
   return `
-    <line x1="${x}" y1="${y}" x2="${x}" y2="${y+h}" ${THIN}/>
-    <path d="M ${x-4} ${y+h} L ${x-1} ${y+h+3} L ${x+1} ${y+h+3} L ${x+4} ${y+h}" fill="none" ${THIN}/>
+    <line x1="${x1}" y1="${y}" x2="${x1-1}" y2="${y+h}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+    <line x1="${x2}" y1="${y}" x2="${x2+1}" y2="${y+h}" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+    <path d="M ${x1-6} ${y+h} L ${x1-1} ${y+h+3} L ${x1+4} ${y+h}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M ${x2-4} ${y+h} L ${x2+1} ${y+h+3} L ${x2+6} ${y+h}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   `;
 }
 
+// =============================================================
 // 9 ИЛЛЮСТРАЦИЙ
+// =============================================================
 const STAGES = [
 
   // ========== 1. ЯЙЦО ==========
   {
-    num: '01',
-    name: 'Яйцо',
+    num: '01', name: 'Яйцо',
     desc: 'Только заглянула — что-то скоро начнётся',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="180" rx="42" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <path d="M 100 50 Q 65 60 60 110 Q 60 165 100 170 Q 140 165 140 110 Q 135 60 100 50 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- крапинки тоже от руки -->
-        <ellipse cx="84" cy="85" rx="2.5" ry="2" fill="${INK}" opacity=".6"/>
-        <ellipse cx="118" cy="100" rx="2" ry="2.5" fill="${INK}" opacity=".55"/>
-        <ellipse cx="78" cy="125" rx="2.8" ry="2" fill="${INK}" opacity=".5"/>
-        <ellipse cx="122" cy="140" rx="2.2" ry="2.4" fill="${INK}" opacity=".55"/>
-        <ellipse cx="98" cy="145" rx="2" ry="2" fill="${INK}" opacity=".5"/>
+      <g filter="url(#hand)">
+        <path d="M 100 52 Q 65 58 60 110 Q 60 166 100 170 Q 140 166 140 110 Q 135 58 100 52 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.6"/>
+        <!-- 5 аккуратных крапинок -->
+        <ellipse cx="86" cy="85" rx="2.5" ry="2" fill="${INK}" opacity=".55" transform="rotate(20 86 85)"/>
+        <ellipse cx="118" cy="100" rx="2" ry="2.5" fill="${INK}" opacity=".55" transform="rotate(-15 118 100)"/>
+        <ellipse cx="78" cy="125" rx="2.8" ry="2.2" fill="${INK}" opacity=".5" transform="rotate(30 78 125)"/>
+        <ellipse cx="122" cy="138" rx="2.4" ry="2" fill="${INK}" opacity=".55"/>
+        <ellipse cx="98" cy="148" rx="2" ry="2" fill="${INK}" opacity=".5"/>
       </g>
     </svg>`,
   },
 
   // ========== 2. ТРЕЩИНКА ==========
   {
-    num: '02',
-    name: 'Трещинка',
-    desc: 'Уже слышно: внутри кто-то собирается наружу',
+    num: '02', name: 'Трещинка',
+    desc: 'Уже слышно: внутри кто-то собирается выйти',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="180" rx="42" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <path d="M 100 50 Q 65 60 60 110 Q 60 165 100 170 Q 140 165 140 110 Q 135 60 100 50 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- ТРЕЩИНА — зигзаг -->
-        <path d="M 75 75 L 85 82 L 78 92 L 92 95 L 86 105 L 100 100 L 95 112 L 110 108 L 105 122"
-              fill="none" ${THICK}/>
+      <g filter="url(#hand)">
+        <path d="M 100 52 Q 65 58 60 110 Q 60 166 100 170 Q 140 166 140 110 Q 135 58 100 52 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.6"/>
+        <!-- аккуратная диагональная трещинка -->
+        <path d="M 78 80 L 88 85 L 84 92 L 96 96 L 92 105 L 105 102"
+              fill="none" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- крошечный глазик подглядывает из трещины -->
+        <circle cx="93" cy="98" r="1.5" fill="${INK}"/>
         <!-- маленькие звуковые штрихи -->
-        <line x1="50" y1="90" x2="42" y2="88" ${THIN}/>
-        <line x1="50" y1="100" x2="40" y2="100" ${THIN}/>
-        <line x1="148" y1="90" x2="158" y2="86" ${THIN}/>
-        <line x1="150" y1="102" x2="160" y2="102" ${THIN}/>
-        <!-- крапинки -->
-        <ellipse cx="118" cy="100" rx="2" ry="2" fill="${INK}" opacity=".55"/>
-        <ellipse cx="78" cy="140" rx="2.5" ry="2" fill="${INK}" opacity=".5"/>
-        <ellipse cx="120" cy="150" rx="2" ry="2.5" fill="${INK}" opacity=".55"/>
+        <path d="M 50 88 L 44 86" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M 50 96 L 42 96" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M 150 88 L 156 86" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M 150 96 L 158 96" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- крапинки на нижней части -->
+        <ellipse cx="80" cy="135" rx="2.5" ry="2" fill="${INK}" opacity=".5"/>
+        <ellipse cx="120" cy="130" rx="2.2" ry="2.4" fill="${INK}" opacity=".5"/>
+        <ellipse cx="100" cy="150" rx="2" ry="2" fill="${INK}" opacity=".5"/>
       </g>
     </svg>`,
   },
 
   // ========== 3. ВЫЛУПИЛАСЬ ==========
   {
-    num: '03',
-    name: 'Вылупилась',
+    num: '03', name: 'Вылупилась',
     desc: 'Появилась. Пока не поняла, куда именно',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="190" rx="55" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <!-- нижняя половинка скорлупы как чаша -->
-        <path d="M 50 140 Q 50 185 100 188 Q 150 185 150 140 L 138 148 L 124 138 L 110 150 L 98 138 L 86 148 L 74 140 L 62 148 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- птичка торчит из скорлупы -->
-        <path d="M 75 130 Q 75 80 100 75 Q 125 75 130 110 Q 130 138 100 142 Q 75 142 75 130 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- кусочек скорлупы на голове как шапочка -->
-        <path d="M 84 70 L 96 60 L 98 72 L 110 64 L 114 76"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- растерянные глазки -->
-        <circle cx="88" cy="105" r="2.5" fill="${INK}"/>
-        <circle cx="116" cy="105" r="2.5" fill="${INK}"/>
-        <!-- маленькие брови вверх — удивление -->
-        <path d="M 84 96 Q 88 92 92 96" fill="none" ${THIN}/>
-        <path d="M 112 96 Q 116 92 120 96" fill="none" ${THIN}/>
-        <!-- клюв -->
-        <path d="M 98 118 L 92 124 L 108 124 Z" fill="#f0b400" ${THIN}/>
+      <ellipse cx="100" cy="188" rx="55" ry="3" fill="${INK}" opacity=".15"/>
+      <g filter="url(#hand)">
+        <!-- нижняя половина скорлупы как чаша -->
+        <path d="M 50 138 Q 50 184 100 188 Q 150 184 150 138 L 138 148 L 124 138 L 110 150 L 98 138 L 86 148 L 74 138 L 62 148 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>
+        <!-- птичка-капля торчит из скорлупы, та же базовая форма -->
+        <path d="M 70 130 Q 65 80 100 70 Q 132 70 135 110 Q 135 140 100 145 Q 72 145 70 130 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.5"/>
+        <!-- кусочек скорлупы на голове -->
+        <path d="M 84 72 L 92 60 L 96 72 L 104 62 L 110 72"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- мягкие чуть растерянные глазки -->
+        <circle cx="88" cy="105" r="2.4" fill="${INK}"/>
+        <circle cx="112" cy="105" r="2.4" fill="${INK}"/>
+        <!-- приподнятые брови -->
+        <path d="M 82 96 Q 87 92 92 96" fill="none" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M 108 96 Q 113 92 118 96" fill="none" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- маленький клюв -->
+        <path d="M 100 116 L 94 122 L 106 122 Z" fill="#f0b400" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>
       </g>
     </svg>`,
   },
 
   // ========== 4. Я В ПУТИ ==========
   {
-    num: '04',
-    name: 'Я в пути',
+    num: '04', name: 'Я в пути',
     desc: 'Стою на лапках и делаю вид, что так и было задумано',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <!-- следы на земле -->
-      <g ${WOBBLE2}>
-        <ellipse cx="40" cy="180" rx="3" ry="2" fill="${INK}" opacity=".35"/>
-        <ellipse cx="50" cy="185" rx="3" ry="2" fill="${INK}" opacity=".35"/>
-        <ellipse cx="62" cy="180" rx="3" ry="2" fill="${INK}" opacity=".4"/>
-        <ellipse cx="72" cy="185" rx="3" ry="2" fill="${INK}" opacity=".4"/>
-        <ellipse cx="100" cy="195" rx="35" ry="3" fill="${INK}" opacity=".15"/>
+      <!-- следы аккуратнее, дугой -->
+      <g filter="url(#hand)" opacity=".5">
+        <path d="M 30 178 L 26 184 M 30 178 L 34 184" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 44 184 L 40 190 M 44 184 L 48 190" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 58 178 L 54 184 M 58 178 L 62 184" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
       </g>
-      <g ${WOBBLE}>
-        <!-- каплевидное тело — узнаваемая основа -->
-        <path d="M 75 70 Q 80 50 110 55 Q 145 60 150 110 Q 152 155 115 165 Q 80 168 70 130 Q 65 90 75 70 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- маленький рюкзак за плечами -->
-        <path d="M 130 75 Q 145 78 150 95 Q 152 110 144 118 Q 132 115 128 100 Q 126 85 130 75 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <line x1="120" y1="80" x2="138" y2="78" ${THIN}/>
-        <line x1="124" y1="98" x2="130" y2="98" ${THIN}/>
-        <!-- маленькое крылышко -->
-        <path d="M 105 100 Q 95 115 105 130 Q 115 122 115 110 Z" fill="none" ${THIN}/>
-        <!-- глаз -->
-        <circle cx="95" cy="92" r="2.5" fill="${INK}"/>
-        <!-- решительный клюв -->
-        <path d="M 75 95 L 65 100 L 75 105 Z" fill="#f0b400" ${THIN}/>
-        <!-- лапки -->
-        <line x1="92" y1="165" x2="92" y2="182" ${THIN}/>
-        <line x1="116" y1="165" x2="116" y2="182" ${THIN}/>
-        <path d="M 86 182 L 96 182" ${THIN}/>
-        <path d="M 110 182 L 120 182" ${THIN}/>
+      <ellipse cx="105" cy="180" rx="32" ry="3" fill="${INK}" opacity=".15"/>
+      <g filter="url(#hand)" transform="rotate(-3 105 115)">
+        <!-- единое каплевидное тело (наклон вперёд) -->
+        ${bodyPath(105, 115)}
+        <path d="${bodyPath(105, 115)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(105, 115)}
+        ${wingLying(105, 115)}
+        <!-- маленький рюкзачок сверху-сзади -->
+        <path d="M 130 88 Q 142 84 144 96 Q 142 108 132 110 Q 124 106 126 96 Q 126 88 130 88 Z"
+              fill="#a05a3c" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+        <!-- лямка рюкзака -->
+        <path d="M 130 92 Q 122 100 118 112" fill="none" stroke="${INK}" stroke-width="1.6"/>
+        <!-- глаз решительный -->
+        ${eye(75, 102, 'open')}
+        <!-- маленькая бровь -->
+        <path d="M 72 95 Q 76 93 80 95" fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <!-- клюв -->
+        ${beak(63, 108)}
+      </g>
+      <!-- лапки уверенно -->
+      <g filter="url(#hand)">
+        ${legs(94, 116, 152, 22)}
       </g>
     </svg>`,
   },
 
   // ========== 5. ОСМАТРИВАЕТСЯ ==========
   {
-    num: '05',
-    name: 'Осматривается',
-    desc: 'Начинаю понимать, куда я вообще попала',
+    num: '05', name: 'Осматривается',
+    desc: 'Начинаю понимать, где я и куда дальше',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="190" rx="45" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <!-- тело — голова повёрнута влево -->
-        <path d="M 60 95 Q 60 65 90 60 Q 130 60 140 95 Q 145 145 115 165 Q 85 168 70 145 Q 55 125 60 95 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- маленькая карта в крыле, развёрнутая -->
-        <path d="M 105 110 L 145 105 L 148 130 L 108 134 Z"
-              fill="#fbf8ee" ${THIN}/>
-        <!-- маршрут на карте -->
-        <path d="M 112 118 Q 122 115 130 122 Q 138 128 144 124"
-              fill="none" stroke="${INK}" stroke-width="1.2" stroke-dasharray="2 3" stroke-linecap="round"/>
-        <circle cx="112" cy="118" r="1.5" fill="#f0b400"/>
-        <circle cx="144" cy="124" r="1.5" fill="${INK}"/>
-        <line x1="125" y1="105" x2="123" y2="132" stroke="${INK}" stroke-width="1" opacity=".4"/>
-        <!-- глаз смотрит вниз на карту -->
-        <path d="M 75 85 Q 80 90 85 85" fill="none" ${THIN}/>
-        <!-- задумчивая бровь -->
-        <path d="M 73 75 Q 80 73 87 76" fill="none" ${THIN}/>
-        <!-- клюв -->
-        <path d="M 55 92 L 45 96 L 55 100 Z" fill="#f0b400" ${THIN}/>
-        <!-- лапки -->
-        <line x1="92" y1="165" x2="92" y2="182" ${THIN}/>
-        <line x1="116" y1="165" x2="116" y2="182" ${THIN}/>
-        <path d="M 86 182 L 96 182" ${THIN}/>
-        <path d="M 110 182 L 120 182" ${THIN}/>
+      <ellipse cx="100" cy="180" rx="42" ry="3" fill="${INK}" opacity=".15"/>
+      <g filter="url(#hand)">
+        ${bodyPath(100, 115)}
+        <path d="${bodyPath(100, 115)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(100, 115)}
+        <!-- крыло чуть приподнято — держит карту -->
+        <path d="M 100 100 Q 122 100 130 116 Q 122 128 108 124 Q 100 116 100 100 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+        <!-- голова повёрнута вправо-вниз, к карте -->
+        <!-- любопытный глаз -->
+        ${eye(78, 100, 'curious')}
+        <circle cx="78" cy="100" r="2.4" fill="${INK}"/>
+        <!-- приподнятая бровь -->
+        <path d="M 73 90 Q 78 88 83 91" fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        ${beak(60, 108)}
+        <!-- КАРТА — небольшая, аккуратно сложена -->
+        <path d="M 122 130 L 156 124 L 160 148 L 124 152 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+        <!-- маршрут пунктиром -->
+        <path d="M 130 138 Q 138 134 146 140 Q 152 144 156 140"
+              fill="none" stroke="${INK}" stroke-width="1.3" stroke-dasharray="2 3" stroke-linecap="round"/>
+        <!-- точка старта и финиша -->
+        <circle cx="130" cy="138" r="1.8" fill="#f0b400" stroke="${INK}" stroke-width="1"/>
+        <circle cx="156" cy="140" r="1.8" fill="${INK}"/>
+        <!-- складка карты -->
+        <line x1="140" y1="126" x2="142" y2="150" stroke="${INK}" stroke-width="1" opacity=".4"/>
+      </g>
+      <g filter="url(#hand)">
+        ${legs(94, 116, 152, 20)}
       </g>
     </svg>`,
   },
 
   // ========== 6. СОБИРАЕТ ИНСТРУМЕНТЫ ==========
   {
-    num: '06',
-    name: 'Собирает инструменты',
-    desc: 'Нашла пару штуковин, которые правда помогают',
+    num: '06', name: 'Собирает инструменты',
+    desc: 'Нашла пару штуковин, которые и правда помогают',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="190" rx="48" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <!-- тело -->
-        <path d="M 60 95 Q 60 60 95 55 Q 135 55 145 95 Q 150 150 115 165 Q 80 168 65 145 Q 55 125 60 95 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- очки на голове — простые круглые -->
-        <circle cx="85" cy="85" r="9" fill="none" ${THIN}/>
-        <circle cx="108" cy="85" r="9" fill="none" ${THIN}/>
-        <line x1="94" y1="85" x2="99" y2="85" ${THIN}/>
-        <circle cx="85" cy="85" r="2" fill="${INK}"/>
-        <circle cx="108" cy="85" r="2" fill="${INK}"/>
-        <!-- блокнот в крыле -->
-        <rect x="115" y="115" width="22" height="28" rx="1" fill="#fbf8ee" ${THIN}/>
-        <line x1="119" y1="123" x2="133" y2="123" stroke="${INK}" stroke-width="1" opacity=".6"/>
-        <line x1="119" y1="129" x2="133" y2="129" stroke="${INK}" stroke-width="1" opacity=".6"/>
-        <line x1="119" y1="135" x2="129" y2="135" stroke="${INK}" stroke-width="1" opacity=".6"/>
-        <!-- карандашик торчит наискосок -->
-        <line x1="138" y1="105" x2="158" y2="85" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
-        <path d="M 156 83 L 162 80 L 160 88 Z" fill="${INK}" ${THIN}/>
-        <!-- клюв -->
-        <path d="M 55 95 L 45 99 L 55 103 Z" fill="#f0b400" ${THIN}/>
-        <!-- лапки -->
-        <line x1="92" y1="165" x2="92" y2="182" ${THIN}/>
-        <line x1="116" y1="165" x2="116" y2="182" ${THIN}/>
-        <path d="M 86 182 L 96 182" ${THIN}/>
-        <path d="M 110 182 L 120 182" ${THIN}/>
+      <ellipse cx="100" cy="180" rx="44" ry="3" fill="${INK}" opacity=".15"/>
+      <g filter="url(#hand)">
+        ${bodyPath(100, 115)}
+        <path d="${bodyPath(100, 115)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(100, 115)}
+        <!-- крыло держит маленький блокнот -->
+        <path d="M 100 100 Q 122 102 128 118 Q 120 130 108 124 Q 100 116 100 100 Z"
+              fill="#fbf8ee" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+        <!-- блокнотик в крыле -->
+        <rect x="118" y="118" width="16" height="20" rx="1" fill="#fbf8ee" stroke="${INK}" stroke-width="1.8"/>
+        <line x1="121" y1="124" x2="131" y2="124" stroke="${INK}" stroke-width="1" opacity=".6"/>
+        <line x1="121" y1="129" x2="131" y2="129" stroke="${INK}" stroke-width="1" opacity=".6"/>
+        <line x1="121" y1="134" x2="128" y2="134" stroke="${INK}" stroke-width="1" opacity=".6"/>
+        <!-- галочка наверху блокнота -->
+        <path d="M 132 116 L 134 119 L 138 113" fill="none" stroke="#6f8a6a" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- маленький карандашик торчит из-за головы -->
+        <line x1="92" y1="76" x2="98" y2="58" stroke="#f0b400" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="97" y1="59" x2="100" y2="55" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- очки — лёгкие, простые -->
+        <circle cx="78" cy="100" r="7" fill="none" stroke="${INK}" stroke-width="1.8"/>
+        <ellipse cx="78" cy="100" r="1.8" fill="${INK}"/>
+        <path d="M 70 102 L 65 104" fill="none" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <!-- бровь сосредоточенная -->
+        <path d="M 72 89 L 84 91" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        ${beak(60, 108)}
+      </g>
+      <g filter="url(#hand)">
+        ${legs(94, 116, 152, 20)}
       </g>
     </svg>`,
   },
 
   // ========== 7. ПРОБУЕТ КРЫЛЬЯ ==========
   {
-    num: '07',
-    name: 'Пробует крылья',
+    num: '07', name: 'Пробует крылья',
     desc: 'Пока не полёт, но уже очень подозрительно',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="188" rx="30" ry="3" fill="${INK}" opacity=".12"/>
-      <g ${WOBBLE2}>
-        <!-- линии движения -->
-        <path d="M 35 90 Q 30 100 36 110" fill="none" ${THIN}/>
-        <path d="M 25 100 L 18 105" ${THIN}/>
-        <path d="M 165 90 Q 170 100 164 110" fill="none" ${THIN}/>
-        <path d="M 175 100 L 182 105" ${THIN}/>
+      <ellipse cx="100" cy="188" rx="30" ry="3" fill="${INK}" opacity=".1"/>
+      <!-- линии движения вокруг крыльев -->
+      <g filter="url(#hand)" opacity=".55">
+        <path d="M 35 90 L 28 95" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 32 102 L 24 105" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 165 90 L 172 95" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 168 102 L 176 105" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
       </g>
-      <g ${WOBBLE}>
-        <!-- расправленные крылья -->
-        <path d="M 75 85 Q 45 75 30 95 Q 40 110 75 105 Z" fill="#fbf8ee" ${THICK}/>
-        <path d="M 125 85 Q 155 75 170 95 Q 160 110 125 105 Z" fill="#fbf8ee" ${THICK}/>
-        <!-- линии перьев -->
-        <line x1="35" y1="92" x2="48" y2="92" ${THIN}/>
-        <line x1="38" y1="100" x2="50" y2="100" ${THIN}/>
-        <line x1="165" y1="92" x2="152" y2="92" ${THIN}/>
-        <line x1="162" y1="100" x2="150" y2="100" ${THIN}/>
-        <!-- тело -->
-        <path d="M 75 80 Q 80 60 110 60 Q 135 65 138 95 Q 138 135 110 150 Q 80 150 72 120 Q 70 95 75 80 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- сосредоточенный глаз — слегка прищуренный -->
-        <path d="M 88 88 Q 93 84 98 88" fill="none" ${THIN}/>
-        <circle cx="93" cy="88" r="2.2" fill="${INK}"/>
-        <!-- сжатый клювик -->
-        <path d="M 80 102 L 70 104 L 80 108 Z" fill="#f0b400" ${THIN}/>
-        <!-- лапки приподняты — птичка прыгнула -->
-        <line x1="92" y1="148" x2="90" y2="168" ${THIN}/>
-        <line x1="116" y1="148" x2="118" y2="168" ${THIN}/>
-        <path d="M 84 168 L 96 168" ${THIN}/>
-        <path d="M 112 168 L 124 168" ${THIN}/>
+      <g filter="url(#hand)">
+        <!-- тело — приподнято, чуть подпрыгнула -->
+        ${bodyPath(100, 110)}
+        <path d="${bodyPath(100, 110)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(100, 110)}
+        <!-- ОБА КРЫЛА — реально из тела, не уши -->
+        ${wingTryLeft(100, 105)}
+        ${wingTryRight(100, 105)}
+        <!-- сосредоточенный глаз -->
+        ${eye(78, 100, 'open')}
+        <!-- сосредоточенная бровь -->
+        <path d="M 74 92 L 84 93" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- сжатый клюв -->
+        ${beak(60, 108)}
+        <!-- лапки приподняты (прыжок) — короткие, чуть согнуты -->
+        <path d="M 92 148 Q 90 160 92 170" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 112 148 Q 114 160 112 170" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 87 170 L 96 170" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 108 170 L 117 170" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>
       </g>
     </svg>`,
   },
 
   // ========== 8. ЛЕТИТ ==========
   {
-    num: '08',
-    name: 'Летит',
+    num: '08', name: 'Летит',
     desc: 'Оторвалась от земли. Немного сама в шоке',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="195" rx="22" ry="2" fill="${INK}" opacity=".08"/>
-      <g ${WOBBLE2}>
-        <!-- ветер-штрихи -->
-        <path d="M 35 130 L 22 138" ${THIN}/>
-        <path d="M 30 145 L 18 148" ${THIN}/>
-        <path d="M 165 130 L 178 138" ${THIN}/>
-        <path d="M 170 145 L 182 148" ${THIN}/>
+      <!-- лёгкое сияние / ветер -->
+      <g filter="url(#hand)" opacity=".5">
+        <path d="M 18 130 L 8 134" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 20 144 L 10 148" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 182 130 L 192 134" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M 180 144 L 190 148" stroke="${INK}" stroke-width="1.4" stroke-linecap="round"/>
       </g>
-      <g ${WOBBLE}>
-        <!-- широко раскрытые крылья -->
-        <path d="M 65 75 Q 30 60 15 80 Q 25 105 70 95 Z" fill="#fbf8ee" ${THICK}/>
-        <path d="M 135 75 Q 170 60 185 80 Q 175 105 130 95 Z" fill="#fbf8ee" ${THICK}/>
-        <line x1="22" y1="82" x2="38" y2="80" ${THIN}/>
-        <line x1="26" y1="92" x2="42" y2="90" ${THIN}/>
-        <line x1="178" y1="82" x2="162" y2="80" ${THIN}/>
-        <line x1="174" y1="92" x2="158" y2="90" ${THIN}/>
-        <!-- лёгкий плащ -->
-        <path d="M 75 95 Q 60 130 70 170 Q 85 160 90 135 Z" fill="#f4ebd0" ${THIN}/>
-        <path d="M 125 95 Q 140 130 130 170 Q 115 160 110 135 Z" fill="#f4ebd0" ${THIN}/>
-        <!-- тело -->
-        <path d="M 75 80 Q 78 60 110 60 Q 135 62 138 95 Q 138 125 115 140 Q 85 142 75 115 Q 70 95 75 80 Z"
-              fill="#fbf8ee" ${THICK}/>
+      <ellipse cx="100" cy="190" rx="22" ry="2" fill="${INK}" opacity=".08"/>
+      <g filter="url(#hand)" transform="rotate(-8 100 105)">
+        <!-- большое крыло слева -->
+        ${wingFlyLeft(100, 100)}
+        <!-- тело — наклонено вперёд -->
+        ${bodyPath(100, 105)}
+        <path d="${bodyPath(100, 105)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(100, 105)}
+        <!-- большое крыло справа -->
+        ${wingFlyRight(100, 100)}
         <!-- удивлённые глазки -->
-        <circle cx="88" cy="85" r="2.5" fill="${INK}"/>
-        <circle cx="108" cy="85" r="2.5" fill="${INK}"/>
-        <!-- приподнятые брови -->
-        <path d="M 84 76 Q 88 72 92 76" fill="none" ${THIN}/>
-        <path d="M 104 76 Q 108 72 112 76" fill="none" ${THIN}/>
-        <!-- маленький открытый клюв (ох!) -->
-        <path d="M 75 98 L 65 100 L 75 105 Z" fill="#f0b400" ${THIN}/>
+        ${eye(75, 95, 'wide')}
+        <!-- приподнятая бровь — «ого» -->
+        <path d="M 70 84 Q 75 80 80 84" fill="none" stroke="${INK}" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- маленький открытый клюв -->
+        <path d="M 60 102 L 50 100 L 60 108 Z" fill="#f0b400" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>
+        <!-- лёгкий парчаментовый плащ из-под крыла -->
+        <path d="M 100 135 Q 88 162 96 180 Q 110 170 114 145 Z"
+              fill="#f4ebd0" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round" opacity=".95"/>
         <!-- лапки поджаты -->
-        <line x1="90" y1="135" x2="88" y2="155" ${THIN}/>
-        <line x1="112" y1="135" x2="114" y2="155" ${THIN}/>
+        <path d="M 92 142 Q 88 152 90 162" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M 110 142 Q 114 152 112 162" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/>
       </g>
     </svg>`,
   },
 
   // ========== 9. КОРОЛЕВА СТАИ ==========
   {
-    num: '09',
-    name: 'Королева стаи',
+    num: '09', name: 'Королева стаи',
     desc: 'Не стала идеальной. Просто теперь у неё есть крылья, корона и план',
     svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <!-- лёгкое сияние -->
-      <g opacity=".5">
-        <line x1="100" y1="22" x2="100" y2="30" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="55" y1="40" x2="60" y2="46" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
-        <line x1="145" y1="40" x2="140" y2="46" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
-        <circle cx="40" cy="55" r="1.5" fill="#f0b400"/>
-        <circle cx="160" cy="55" r="1.5" fill="#f0b400"/>
-        <circle cx="50" cy="90" r="1.2" fill="#f0b400"/>
-        <circle cx="150" cy="90" r="1.2" fill="#f0b400"/>
+      <g opacity=".55">
+        <line x1="100" y1="20" x2="100" y2="30" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="50" y1="40" x2="56" y2="46" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="150" y1="40" x2="144" y2="46" stroke="#f0b400" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="40" cy="65" r="1.5" fill="#f0b400"/>
+        <circle cx="160" cy="65" r="1.5" fill="#f0b400"/>
       </g>
-      <ellipse cx="100" cy="188" rx="42" ry="3" fill="${INK}" opacity=".15"/>
-      <g ${WOBBLE}>
-        <!-- лёгкий плащ за спиной -->
-        <path d="M 70 90 Q 50 130 60 175 Q 75 165 82 130 Z" fill="#f4ebd0" ${THIN}/>
-        <path d="M 130 90 Q 150 130 140 175 Q 125 165 118 130 Z" fill="#f4ebd0" ${THIN}/>
-        <!-- крылышки полураскрыты -->
-        <path d="M 70 100 Q 50 110 55 130 Q 70 128 78 115 Z" fill="#fbf8ee" ${THIN}/>
-        <path d="M 130 100 Q 150 110 145 130 Q 130 128 122 115 Z" fill="#fbf8ee" ${THIN}/>
+      <ellipse cx="100" cy="180" rx="44" ry="3" fill="${INK}" opacity=".15"/>
+      <g filter="url(#hand)">
+        <!-- лёгкий плащик за спиной -->
+        <path d="M 130 90 Q 152 130 144 175 Q 132 168 124 140 Z"
+              fill="#f4ebd0" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
         <!-- тело -->
-        <path d="M 70 100 Q 75 70 110 65 Q 138 65 138 100 Q 142 145 115 165 Q 80 168 70 145 Q 60 115 70 100 Z"
-              fill="#fbf8ee" ${THICK}/>
-        <!-- КОРОНА — три зубца сверху -->
-        <path d="M 80 60 L 84 42 L 92 55 L 100 38 L 108 55 L 116 42 L 120 60 Z"
-              fill="#f0b400" ${THICK}/>
+        ${bodyPath(100, 115)}
+        <path d="${bodyPath(100, 115)}" fill="#fbf8ee" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+        ${tail(100, 115)}
+        <!-- крыло уверенно сложено -->
+        ${wingLying(100, 115)}
+        <!-- КОРОНА — 3 зубца, аккуратная, не перегруженная -->
+        <path d="M 82 64 L 86 48 L 94 60 L 100 44 L 106 60 L 114 48 L 118 64 Z"
+              fill="#f0b400" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
         <!-- маленькие точки-камни на короне -->
-        <circle cx="100" cy="52" r="2" fill="${INK}"/>
-        <circle cx="88" cy="55" r="1.5" fill="${INK}"/>
-        <circle cx="112" cy="55" r="1.5" fill="${INK}"/>
+        <circle cx="100" cy="56" r="1.8" fill="${INK}"/>
+        <circle cx="89" cy="58" r="1.3" fill="${INK}"/>
+        <circle cx="111" cy="58" r="1.3" fill="${INK}"/>
         <!-- спокойные уверенные глаза с лёгкой улыбкой -->
-        <path d="M 85 90 Q 90 87 95 90" fill="none" ${THIN}/>
-        <path d="M 105 90 Q 110 87 115 90" fill="none" ${THIN}/>
-        <!-- маленькая улыбка под клювом -->
-        <path d="M 88 110 Q 92 113 96 110" fill="none" ${THIN}/>
-        <!-- клюв -->
-        <path d="M 75 100 L 65 103 L 75 107 Z" fill="#f0b400" ${THIN}/>
-        <!-- лапки -->
-        <line x1="92" y1="165" x2="92" y2="182" ${THIN}/>
-        <line x1="116" y1="165" x2="116" y2="182" ${THIN}/>
-        <path d="M 86 182 L 96 182" ${THIN}/>
-        <path d="M 110 182 L 120 182" ${THIN}/>
+        ${eye(78, 100, 'soft')}
+        <!-- лёгкая улыбка-намёк под клювом -->
+        <path d="M 64 116 Q 70 120 76 116" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round"/>
+        ${beak(60, 108)}
+      </g>
+      <g filter="url(#hand)">
+        ${legs(94, 116, 152, 20)}
       </g>
     </svg>`,
   },
