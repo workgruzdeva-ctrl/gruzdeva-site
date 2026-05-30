@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зона участника · Группа СДВГ</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --ink:#1a1614; --soft:#4a423d; --muted:#857c75;
+    --bg:#f7f2e7; --paper:#fbf8ee; --milk:#f3ecdb;
+    --accent:#f0b400; --accent-soft:#f4ebd0; --accent-deep:#7a5b00;
+    --sage:#6f8a6a; --sage-deep:#2f4434; --sage-soft:#cfd9c2; --mint-soft:#d9e2cd;
+    --rust:#a05a3c;
+    --line:#e1dcd1; --line-soft:#ece6d8;
+    --easing:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0; overflow-x:hidden; max-width:100vw}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink); background:var(--bg);
+    font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--ink)}
+
+  /* LAYOUT */
+  .page{
+    display:grid; grid-template-columns:280px 1fr;
+    max-width:1200px; margin:0 auto;
+    min-height:100vh;
+  }
+  .sidebar{
+    position:sticky; top:0; align-self:start;
+    height:100vh; overflow-y:auto;
+    padding:24px 18px;
+    border-right:1px solid var(--line);
+    background:var(--bg);
+  }
+  .main{padding:32px 36px 96px}
+
+  /* HEADER */
+  .logo{
+    font-weight:600; letter-spacing:.04em;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    color:var(--ink);
+    font-size:13px;
+  }
+  .logo .dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent)}
+  .greeting{
+    margin:18px 0 14px;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:14px; color:var(--soft);
+  }
+  .greeting strong{color:var(--ink); font-weight:600}
+
+  /* MASCOT */
+  .mascot-card{
+    background:var(--paper); border:1.5px solid var(--ink); border-radius:18px;
+    padding:18px 16px 20px;
+    margin-bottom:20px;
+  }
+  .mascot-svg{
+    width:100%; aspect-ratio:200/240;
+    margin:0 0 12px;
+  }
+  .mascot-svg svg{display:block; width:100%; height:100%}
+  .mascot-tier{
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--sage-deep); text-align:center;
+  }
+  .mascot-name{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:20px; font-weight:600; text-align:center;
+    margin:2px 0 12px;
+  }
+  .mascot-pts{
+    font-size:13px; color:var(--soft); text-align:center; margin-bottom:10px;
+  }
+  .mascot-pts strong{color:var(--accent-deep); font-weight:700; font-size:16px}
+  .bar{
+    height:10px; border-radius:100px;
+    background:var(--mint-soft);
+    border:1.2px solid var(--ink);
+    overflow:hidden;
+    margin-bottom:6px;
+  }
+  .bar-fill{
+    height:100%; background:var(--accent);
+    transition:width .5s var(--easing);
+    border-right:1.2px solid var(--ink);
+  }
+  .mascot-next{
+    font-size:11px; color:var(--muted); text-align:center;
+  }
+
+  /* WEEK SELECTOR */
+  .weeks-pill{
+    display:grid; grid-template-columns:repeat(6, 1fr); gap:4px;
+    margin-bottom:18px;
+  }
+  .weeks-pill button{
+    background:var(--paper); border:1.2px solid var(--line);
+    border-radius:8px; padding:8px 0;
+    font:inherit; font-size:12px; font-weight:600;
+    cursor:pointer; color:var(--muted);
+    transition:all .15s;
+  }
+  .weeks-pill button:hover{border-color:var(--ink); color:var(--ink)}
+  .weeks-pill button.active{
+    background:var(--ink); color:var(--paper);
+    border-color:var(--ink);
+  }
+  .week-label{
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:700;
+    color:var(--soft); margin-bottom:8px;
+  }
+
+  /* NAV */
+  .nav-section{
+    display:flex; flex-direction:column; gap:4px;
+    margin-bottom:18px;
+  }
+  .nav-section a{
+    text-decoration:none; padding:8px 10px; border-radius:8px;
+    color:var(--soft); font-size:13.5px;
+    transition:background .15s, color .15s;
+  }
+  .nav-section a:hover{background:var(--line-soft); color:var(--ink)}
+
+  /* MAIN H */
+  h1{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:32px; font-weight:600; letter-spacing:-.02em; line-height:1.1;
+    margin:0 0 6px;
+  }
+  .lead{font-size:15px; color:var(--soft); margin:0 0 32px}
+  h2{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:22px; font-weight:600; letter-spacing:-.015em;
+    margin:36px 0 14px;
+    display:inline-block; position:relative;
+  }
+  h2::after{
+    content:""; display:block;
+    width:64px; height:8px; margin-top:4px;
+    background:no-repeat left center / contain
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'><path d='M2 8 C 18 2, 36 11, 58 6 S 100 3, 118 7' fill='none' stroke='%23f0b400' stroke-width='2.4' stroke-linecap='round'/></svg>");
+  }
+
+  /* DAILIES */
+  .dailies{display:flex; flex-direction:column; gap:8px}
+  .daily{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
+    cursor:pointer;
+    transition:all .2s var(--easing);
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .daily:hover{border-color:var(--ink); transform:translateY(-1px)}
+  .daily.done{
+    background:var(--mint-soft); border-color:var(--sage);
+  }
+  .daily-check{
+    width:28px; height:28px; border-radius:50%;
+    background:var(--paper); border:1.5px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:all .2s var(--easing);
+    font-size:18px; line-height:1;
+  }
+  .daily.done .daily-check{
+    background:var(--sage-deep); border-color:var(--sage-deep); color:var(--accent);
+  }
+  .daily-check::before{content:""; opacity:0}
+  .daily.done .daily-check::before{content:"✓"; opacity:1}
+  .daily-text{
+    font-size:14.5px; line-height:1.4; color:var(--ink);
+  }
+  .daily-text small{display:block; color:var(--muted); font-size:12px; margin-top:2px}
+  .daily.done .daily-text{color:var(--sage-deep)}
+  .daily-pts{
+    font-size:11px; letter-spacing:.05em; color:var(--accent-deep);
+    font-weight:700; background:var(--accent-soft);
+    padding:4px 10px; border-radius:100px;
+    border:1px solid var(--accent);
+    white-space:nowrap;
+  }
+  .daily.done .daily-pts{
+    background:var(--sage); color:var(--paper); border-color:var(--sage-deep);
+  }
+
+  /* HABIT TRACKER */
+  .habit-card{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:12px;
+  }
+  .habit-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:14px; margin-bottom:14px;
+  }
+  .habit-name{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; font-weight:600;
+    flex:1;
+  }
+  .habit-name small{
+    display:block; font-family:inherit; font-weight:400;
+    color:var(--muted); font-size:12px; margin-top:2px;
+  }
+  .habit-week{
+    display:grid; grid-template-columns:repeat(7, 1fr); gap:6px;
+  }
+  .habit-day{
+    aspect-ratio:1;
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:8px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:10px; color:var(--muted);
+    transition:all .15s var(--easing);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .habit-day:hover{border-color:var(--ink)}
+  .habit-day .day-name{font-weight:700; letter-spacing:.08em}
+  .habit-day .day-mark{font-size:18px; line-height:1; margin-top:2px; color:transparent}
+  .habit-day.done{
+    background:var(--accent); border-color:var(--ink); color:var(--ink);
+  }
+  .habit-day.done .day-mark{color:var(--ink)}
+
+  /* IF-THEN PLANS */
+  .ifthen-list{display:flex; flex-direction:column; gap:8px; margin-bottom:8px}
+  .ifthen-item{
+    background:var(--paper); border:1.5px solid var(--line);
+    border-radius:12px; padding:12px 14px;
+    display:grid; grid-template-columns:1fr auto auto; gap:10px; align-items:center;
+  }
+  .ifthen-text{
+    font-size:14px; line-height:1.4;
+  }
+  .ifthen-text .if{color:var(--accent-deep); font-weight:600}
+  .ifthen-text .then{color:var(--sage-deep); font-weight:600}
+  .ifthen-check{
+    width:24px; height:24px; border-radius:50%;
+    background:var(--paper); border:1.5px solid var(--ink);
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px;
+  }
+  .ifthen-item.done .ifthen-check{
+    background:var(--sage-deep); border-color:var(--sage-deep); color:var(--accent);
+  }
+  .ifthen-item.done .ifthen-check::before{content:"✓"}
+  .ifthen-del{
+    background:transparent; border:none; cursor:pointer; color:var(--muted);
+    font-size:18px; padding:4px 6px;
+  }
+  .ifthen-del:hover{color:var(--rust)}
+  .ifthen-add{
+    display:grid; grid-template-columns:1fr 1fr auto; gap:8px;
+    background:var(--milk); border:1.5px solid var(--line);
+    border-radius:12px; padding:12px;
+    margin-bottom:8px;
+  }
+  .ifthen-add input{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:8px 10px; font:inherit; font-size:13px;
+  }
+  .ifthen-add input:focus{outline:none; border-color:var(--ink)}
+  .ifthen-add button{
+    background:var(--ink); color:var(--paper); border:none; border-radius:8px;
+    padding:0 16px; font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+  }
+
+  /* WORKBOOKS */
+  .wb-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px}
+  .wb-card{
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:14px; padding:16px 18px;
+    text-decoration:none; color:inherit;
+    transition:all .15s var(--easing);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .wb-card:hover{transform:translateY(-2px)}
+  .wb-num{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:11px; letter-spacing:.18em; font-weight:700;
+    color:var(--sage-deep);
+  }
+  .wb-title{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:16px; font-weight:600; line-height:1.25;
+  }
+  .wb-link{
+    margin-top:auto; padding-top:8px;
+    font-size:12px; color:var(--accent-deep); font-weight:600;
+  }
+  .wb-link::after{content:" →"}
+
+  /* TOAST (+points animation) */
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:var(--paper);
+    padding:12px 24px; border-radius:100px;
+    font-weight:600; font-size:14px;
+    opacity:0; pointer-events:none;
+    transition:all .35s var(--easing);
+    z-index:99;
+    box-shadow:0 10px 28px -8px rgba(0,0,0,.4);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .toast .pts{color:var(--accent)}
+
+  /* RESPONSIVE */
+  @media (max-width: 840px){
+    .page{grid-template-columns:1fr}
+    .sidebar{
+      position:relative; height:auto; border-right:none;
+      border-bottom:1px solid var(--line);
+      padding:16px 18px;
+    }
+    .main{padding:24px 18px 96px}
+    .mascot-card{
+      display:grid; grid-template-columns:120px 1fr; gap:14px; align-items:center;
+      padding:14px;
+    }
+    .mascot-svg{width:120px; margin:0}
+    .mascot-name{text-align:left; margin-top:0; font-size:18px}
+    .mascot-pts, .mascot-tier, .mascot-next{text-align:left}
+    .weeks-pill{margin-top:8px}
+    h1{font-size:26px}
+    h2{font-size:19px}
+    .ifthen-add{grid-template-columns:1fr; gap:6px}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <a class="logo" href="../../index.html"><span class="dot"></span>Gruzdeva V.А.</a>
+    <div class="greeting">Привет, <strong id="userName">участник</strong> 🐣</div>
+
+    <!-- Mascot card -->
+    <div class="mascot-card">
+      <div class="mascot-svg" id="mascotSvg"></div>
+      <div class="mascot-tier" id="mascotTier">СТАДИЯ 0</div>
+      <div class="mascot-name" id="mascotName">Яйцо</div>
+      <div class="mascot-pts"><strong id="mascotPts">0</strong> баллов</div>
+      <div class="bar"><div class="bar-fill" id="mascotBar" style="width:0%"></div></div>
+      <div class="mascot-next" id="mascotNext">до следующей стадии</div>
+    </div>
+
+    <!-- Week selector -->
+    <div class="week-label">Текущая неделя</div>
+    <div class="weeks-pill" id="weeksPill">
+      <button data-week="1">1</button>
+      <button data-week="2">2</button>
+      <button data-week="3">3</button>
+      <button data-week="4">4</button>
+      <button data-week="5">5</button>
+      <button data-week="6">6</button>
+    </div>
+
+    <!-- Quick nav -->
+    <div class="nav-section">
+      <a href="#dailies">Сегодня</a>
+      <a href="#habit">Трекер привычки</a>
+      <a href="#ifthen">«Если — то» план</a>
+      <a href="#workbooks">Воркбуки</a>
+      <a href="#help">Поддержка</a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <h1>Зона участника</h1>
+    <p class="lead">Здесь живут воркбуки, трекеры и ваш гусёнок. Чем больше делаете — тем больше он растёт.</p>
+
+    <!-- ============ DAILIES ============ -->
+    <h2 id="dailies">Сегодня</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Маленькие коммитменты на каждый день. Галочки сбрасываются в полночь — но баллы остаются.</p>
+
+    <div class="dailies" id="dailiesList"></div>
+
+    <!-- ============ HABIT TRACKER ============ -->
+    <h2 id="habit">Трекер привычки</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Выберите одну привычку из недели 5 и отмечайте дни, когда получилось. Несколько дней в неделю — уже движение.</p>
+
+    <div class="habit-card">
+      <div class="habit-head">
+        <div class="habit-name">
+          <input id="habitName" type="text" placeholder="Например: лечь до 23:00"
+                 style="background:transparent; border:none; font:inherit; font-size:17px; font-weight:600; width:100%; padding:0; outline:none; color:var(--ink)">
+          <small>+3 балла за каждую отмеченную клетку</small>
+        </div>
+      </div>
+      <div class="habit-week" id="habitWeek"></div>
+    </div>
+
+    <!-- ============ IF-THEN PLANS ============ -->
+    <h2 id="ifthen">«Если — то» план</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Конкретные первые шаги. Когда наступает X — вы делаете Y. Отмечайте «сделано» каждый раз — +5 баллов.</p>
+
+    <div class="ifthen-list" id="ifthenList"></div>
+
+    <div class="ifthen-add">
+      <input id="ifInput" type="text" placeholder="Если: после утреннего кофе…">
+      <input id="thenInput" type="text" placeholder="То: открою документ и напишу 1 строку">
+      <button id="ifthenAdd">Добавить</button>
+    </div>
+
+    <!-- ============ WORKBOOKS ============ -->
+    <h2 id="workbooks">Воркбуки</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Рабочие тетради по неделям. Открываются в новой вкладке.</p>
+
+    <div class="wb-grid">
+      <a class="wb-card" href="#" data-wb="1">
+        <div class="wb-num">НЕДЕЛЯ 1</div>
+        <div class="wb-title">Что такое исполнительные навыки</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+      <a class="wb-card" href="#" data-wb="2">
+        <div class="wb-num">НЕДЕЛЯ 2</div>
+        <div class="wb-title">Когда силы вас оставляют</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+      <a class="wb-card" href="#" data-wb="3">
+        <div class="wb-num">НЕДЕЛЯ 3</div>
+        <div class="wb-title">Защита от стыда провала</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+      <a class="wb-card" href="#" data-wb="4">
+        <div class="wb-num">НЕДЕЛЯ 4</div>
+        <div class="wb-title">Эмоции и RSD</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+      <a class="wb-card" href="#" data-wb="5">
+        <div class="wb-num">НЕДЕЛЯ 5</div>
+        <div class="wb-title">Как подойти к задаче</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+      <a class="wb-card" href="#" data-wb="6">
+        <div class="wb-num">НЕДЕЛЯ 6</div>
+        <div class="wb-title">Прокрастинация и сборка</div>
+        <div class="wb-link">Открыть PDF</div>
+      </a>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:10px">↑ Ссылки на воркбуки подставляются после того, как ведущая загружает их на Drive. Пока — placeholder.</p>
+
+    <!-- ============ HELP ============ -->
+    <h2 id="help">Поддержка</h2>
+    <p style="font-size:14px; line-height:1.6">
+      Если что-то непонятно или нужна поддержка между встречами — пишите в Telegram <a href="https://t.me/dr_gruzdeva" style="font-weight:600">@dr_gruzdeva</a>.<br>
+      <span style="color:var(--muted)">Если совсем плохо — экстренные службы: <strong>112</strong>.</span>
+    </p>
+
+    <p style="font-size:11px; color:var(--muted); margin-top:48px; padding-top:18px; border-top:1px solid var(--line)">
+      Эта страница хранит ваш прогресс в браузере (localStorage). Если очистите кэш или зайдёте с другого устройства — придётся начать заново.
+      <a href="#" id="resetLink" style="color:var(--rust); margin-left:8px">Сбросить прогресс</a>
+    </p>
+  </main>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">+0 баллов</div>
+
+<script src="mascot.js"></script>
+<script>
+// ============ STATE ============
+const STORAGE_KEY = 'gruzdeva.members.v1';
+
+const DEFAULT_STATE = {
+  name: '',
+  points: 0,
+  currentWeek: 1,
+  // dailies — отмеченные сегодня по datestring
+  daily: { date: '', items: {} },
+  // habit — название + map "YYYY-Wn" -> {0..6: bool}
+  habit: { name: '', weeks: {} },
+  // if-then plans
+  ifthen: [],  // {id, if, then, doneTimes: [timestamps]}
+};
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_STATE);
+    return { ...structuredClone(DEFAULT_STATE), ...JSON.parse(raw) };
+  } catch(e){ return structuredClone(DEFAULT_STATE); }
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+// ============ HELPERS ============
+function today(){ return new Date().toISOString().slice(0, 10); }
+function weekKey(){
+  const d = new Date();
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  const wk = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+  return `${d.getFullYear()}-W${wk}`;
+}
+function currentDayOfWeek(){
+  // Monday = 0, Sunday = 6
+  const d = new Date().getDay();
+  return d === 0 ? 6 : d - 1;
+}
+
+// Сброс ежедневных в новый день
+function ensureFreshDay(){
+  const t = today();
+  if (state.daily.date !== t){
+    state.daily.date = t;
+    state.daily.items = {};
+    saveState();
+  }
+}
+
+// ============ POINTS / MASCOT RENDER ============
+function addPoints(delta, label = ''){
+  const before = state.points;
+  state.points += delta;
+  if (state.points < 0) state.points = 0;
+  saveState();
+  renderMascot();
+  showToast(delta, label);
+  // Проверка перехода на новую стадию
+  const beforeIdx = findMascotStage(before);
+  const nowIdx = findMascotStage(state.points);
+  if (nowIdx > beforeIdx){
+    setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[nowIdx].name}!`), 1500);
+  }
+}
+
+function renderMascot(){
+  const info = getMascotProgress(state.points);
+  document.getElementById('mascotSvg').innerHTML = info.cur.svg;
+  document.getElementById('mascotTier').textContent = `СТАДИЯ ${info.cur.tier}`;
+  document.getElementById('mascotName').textContent = info.cur.name;
+  document.getElementById('mascotPts').textContent = state.points;
+  document.getElementById('mascotBar').style.width = (info.progress * 100) + '%';
+  if (info.next){
+    document.getElementById('mascotNext').textContent = `${info.untilNext} баллов до «${info.next.name}»`;
+  } else {
+    document.getElementById('mascotNext').textContent = 'максимум! 🛡️';
+  }
+}
+
+// ============ TOAST ============
+let toastTimer = null;
+function showToast(delta, label){
+  const t = document.getElementById('toast');
+  if (delta > 0){
+    t.innerHTML = `<span class="pts">+${delta}</span> ${label || 'баллов'}`;
+  } else if (delta < 0){
+    t.innerHTML = `<span class="pts" style="color:var(--rust)">${delta}</span> ${label || 'баллов'}`;
+  } else {
+    t.textContent = label;
+  }
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ============ DAILIES ============
+const DAILIES = [
+  { id: 'session', text: 'Пришла на встречу группы',  sub: 'отмечайте в день встречи', pts: 20 },
+  { id: 'success', text: 'Записала «успех недели»',     sub: '1–3 маленьких победы',     pts: 10 },
+  { id: 'energy',  text: 'Энергетический чек-ин',       sub: 'оценка 1–10 утром / днём / вечером', pts: 4 },
+  { id: 'trigger', text: 'Карта триггера: 1 ситуация',  sub: 'ситуация → реакция → что помогло', pts: 5 },
+  { id: 'reflect', text: 'Заметка в дневник',           sub: 'что заметила за день про себя', pts: 3 },
+];
+
+function renderDailies(){
+  ensureFreshDay();
+  const c = document.getElementById('dailiesList');
+  c.innerHTML = '';
+  DAILIES.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'daily' + (state.daily.items[d.id] ? ' done' : '');
+    el.innerHTML = `
+      <div class="daily-check"></div>
+      <div class="daily-text">${d.text}<small>${d.sub}</small></div>
+      <div class="daily-pts">+${d.pts}</div>
+    `;
+    el.addEventListener('click', () => {
+      const wasDone = !!state.daily.items[d.id];
+      if (wasDone){
+        delete state.daily.items[d.id];
+        addPoints(-d.pts, d.text + ' — отменено');
+      } else {
+        state.daily.items[d.id] = true;
+        addPoints(d.pts, d.text);
+      }
+      saveState();
+      renderDailies();
+    });
+    c.appendChild(el);
+  });
+}
+
+// ============ HABIT TRACKER ============
+const DAY_NAMES = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+
+function renderHabit(){
+  const wk = weekKey();
+  if (!state.habit.weeks[wk]) state.habit.weeks[wk] = {};
+  const days = state.habit.weeks[wk];
+  document.getElementById('habitName').value = state.habit.name || '';
+  const c = document.getElementById('habitWeek');
+  c.innerHTML = '';
+  const todayIdx = currentDayOfWeek();
+  for (let i = 0; i < 7; i++){
+    const el = document.createElement('div');
+    el.className = 'habit-day' + (days[i] ? ' done' : '');
+    el.innerHTML = `<div class="day-name">${DAY_NAMES[i]}</div><div class="day-mark">✓</div>`;
+    if (i === todayIdx){
+      el.style.boxShadow = 'inset 0 0 0 2px var(--accent-deep)';
+    }
+    el.addEventListener('click', () => {
+      if (days[i]){
+        delete days[i];
+        addPoints(-3, 'Привычка отменена');
+      } else {
+        days[i] = true;
+        addPoints(3, 'Привычка отмечена');
+      }
+      saveState();
+      renderHabit();
+    });
+    c.appendChild(el);
+  }
+}
+
+document.getElementById('habitName').addEventListener('input', e => {
+  state.habit.name = e.target.value;
+  saveState();
+});
+
+// ============ IF-THEN PLANS ============
+function renderIfThen(){
+  const c = document.getElementById('ifthenList');
+  c.innerHTML = '';
+  if (state.ifthen.length === 0){
+    c.innerHTML = '<p style="font-size:13px; color:var(--muted); padding:10px 0">Пока пусто. Добавьте первый план ниже.</p>';
+    return;
+  }
+  state.ifthen.forEach(plan => {
+    const t = today();
+    const doneToday = (plan.doneTimes || []).some(s => s.slice(0, 10) === t);
+    const el = document.createElement('div');
+    el.className = 'ifthen-item' + (doneToday ? ' done' : '');
+    el.innerHTML = `
+      <div class="ifthen-text">
+        <span class="if">Если</span> ${escapeHtml(plan.if)} —
+        <span class="then">то</span> ${escapeHtml(plan.then)}
+      </div>
+      <div class="ifthen-check"></div>
+      <button class="ifthen-del" title="Удалить">×</button>
+    `;
+    el.querySelector('.ifthen-check').addEventListener('click', () => {
+      if (doneToday){
+        plan.doneTimes = plan.doneTimes.filter(s => s.slice(0, 10) !== t);
+        addPoints(-5, 'План отменён');
+      } else {
+        plan.doneTimes = plan.doneTimes || [];
+        plan.doneTimes.push(new Date().toISOString());
+        addPoints(5, 'План выполнен');
+      }
+      saveState();
+      renderIfThen();
+    });
+    el.querySelector('.ifthen-del').addEventListener('click', () => {
+      if (confirm('Удалить этот план?')){
+        state.ifthen = state.ifthen.filter(p => p.id !== plan.id);
+        saveState();
+        renderIfThen();
+      }
+    });
+    c.appendChild(el);
+  });
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+document.getElementById('ifthenAdd').addEventListener('click', () => {
+  const ifVal = document.getElementById('ifInput').value.trim();
+  const thenVal = document.getElementById('thenInput').value.trim();
+  if (!ifVal || !thenVal) return;
+  state.ifthen.push({
+    id: 'p' + Date.now(),
+    if: ifVal,
+    then: thenVal,
+    doneTimes: [],
+  });
+  document.getElementById('ifInput').value = '';
+  document.getElementById('thenInput').value = '';
+  saveState();
+  renderIfThen();
+});
+
+// ============ WEEK SELECTOR ============
+function renderWeeks(){
+  document.querySelectorAll('.weeks-pill button').forEach(b => {
+    b.classList.toggle('active', +b.dataset.week === state.currentWeek);
+  });
+}
+document.querySelectorAll('.weeks-pill button').forEach(b => {
+  b.addEventListener('click', () => {
+    state.currentWeek = +b.dataset.week;
+    saveState();
+    renderWeeks();
+  });
+});
+
+// ============ WORKBOOKS placeholder ============
+document.querySelectorAll('.wb-card').forEach(card => {
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    alert('Воркбук пока не загружен. Ведущая обновит ссылку в ближайшее время.');
+  });
+});
+
+// ============ RESET ============
+document.getElementById('resetLink').addEventListener('click', e => {
+  e.preventDefault();
+  if (confirm('Сбросить весь прогресс? Это удалит баллы, трекер и планы.')){
+    localStorage.removeItem(STORAGE_KEY);
+    state = loadState();
+    renderAll();
+  }
+});
+
+// ============ INIT ============
+function renderAll(){
+  renderMascot();
+  renderDailies();
+  renderHabit();
+  renderIfThen();
+  renderWeeks();
+}
+renderAll();
+</script>
+</body>
+</html>

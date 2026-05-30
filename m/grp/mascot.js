@@ -1,0 +1,415 @@
+// Маскот-эволюция гуся по баллам — 7 стадий
+const MASCOTS = [
+  {
+    tier: 0, threshold: 0, name: "Яйцо",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <!-- травинки -->
+      <path d="M 30 220 C 35 200, 38 195, 36 180" fill="none" stroke="#6f8a6a" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 40 222 C 44 210, 46 204, 50 200" fill="none" stroke="#6f8a6a" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 160 222 C 158 210, 162 200, 168 190" fill="none" stroke="#6f8a6a" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 175 222 C 175 212, 178 206, 182 198" fill="none" stroke="#6f8a6a" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- земля -->
+      <ellipse cx="100" cy="222" rx="60" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- яйцо -->
+      <ellipse cx="100" cy="170" rx="40" ry="52" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- крапинки -->
+      <circle cx="88" cy="150" r="2" fill="#7a5b00" opacity=".4"/>
+      <circle cx="115" cy="165" r="1.6" fill="#7a5b00" opacity=".4"/>
+      <circle cx="92" cy="185" r="2.2" fill="#7a5b00" opacity=".35"/>
+      <circle cx="108" cy="195" r="1.4" fill="#7a5b00" opacity=".4"/>
+    </svg>`
+  },
+  {
+    tier: 1, threshold: 30, name: "Птенец",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="226" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- нижняя половина скорлупы как чаша -->
+      <path d="M 55 175 C 52 195, 60 218, 100 222 C 140 218, 148 195, 145 175 L 138 178 L 130 174 L 120 180 L 110 176 L 100 180 L 90 176 L 80 180 L 70 174 L 62 178 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- зигзаг трещины-края скорлупы -->
+      <path d="M 55 175 L 60 168 L 68 178 L 75 168 L 82 178 L 90 168 L 100 178 L 110 168 L 118 178 L 125 168 L 132 178 L 140 168 L 145 175"
+            fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- торчит сам птенец из скорлупы — большая круглая голова -->
+      <circle cx="100" cy="140" r="36" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- пушок-волоски -->
+      <path d="M 78 108 L 76 100" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 90 102 L 89 92" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 100 100 L 100 88" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 110 102 L 111 92" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 122 108 L 124 100" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <!-- большие умилительные глаза -->
+      <circle cx="88" cy="138" r="5" fill="#1a1614"/>
+      <circle cx="89.5" cy="136" r="1.6" fill="#fbf8ee"/>
+      <circle cx="112" cy="138" r="5" fill="#1a1614"/>
+      <circle cx="113.5" cy="136" r="1.6" fill="#fbf8ee"/>
+      <!-- клювик -->
+      <path d="M 94 152 L 88 158 L 94 162 L 106 162 L 112 158 L 106 152 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- щёчки -->
+      <ellipse cx="78" cy="152" rx="6" ry="3" fill="#f0b400" opacity=".3"/>
+      <ellipse cx="122" cy="152" rx="6" ry="3" fill="#f0b400" opacity=".3"/>
+      <!-- крылышки-плечики выглядывают из скорлупы -->
+      <path d="M 70 172 C 64 168, 62 170, 64 178" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M 130 172 C 136 168, 138 170, 136 178" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- осколок скорлупы рядом на земле -->
+      <path d="M 32 220 C 28 215, 30 210, 36 210 C 42 210, 44 216, 42 222 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4"/>
+    </svg>`
+  },
+  {
+    tier: 2, threshold: 80, name: "Гусёнок",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="226" rx="50" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- круглое пушистое ТЕЛО -->
+      <ellipse cx="100" cy="180" rx="38" ry="32" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- крылышки по бокам тела (отличают от камня) -->
+      <path d="M 65 172 C 58 184, 60 198, 72 200 C 76 196, 76 184, 72 174 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 135 172 C 142 184, 140 198, 128 200 C 124 196, 124 184, 128 174 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
+      <!-- пушок штрихами по тельцу -->
+      <g stroke="#1a1614" stroke-width="1" stroke-linecap="round" opacity=".55">
+        <path d="M 78 170 l 2 -3"/>
+        <path d="M 90 168 l 2 -3"/>
+        <path d="M 105 168 l 2 -3"/>
+        <path d="M 118 170 l 2 -3"/>
+        <path d="M 80 188 l 2 -3"/>
+        <path d="M 95 190 l 2 -3"/>
+        <path d="M 110 188 l 2 -3"/>
+        <path d="M 122 188 l 2 -3"/>
+        <path d="M 88 200 l 2 -3"/>
+        <path d="M 105 202 l 2 -3"/>
+      </g>
+      <!-- круглая ГОЛОВА отдельно -->
+      <circle cx="100" cy="125" r="24" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- короткая шейка -->
+      <path d="M 86 145 C 84 152, 88 156, 100 156 C 112 156, 116 152, 114 145"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- торчащий пушок на макушке (хохолок 3 пера) -->
+      <path d="M 90 104 C 88 96, 86 88, 84 84" fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 100 102 C 100 92, 100 84, 100 78" fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 110 104 C 112 96, 114 88, 116 84" fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <!-- большие выразительные ГЛАЗА -->
+      <circle cx="89" cy="123" r="4" fill="#1a1614"/>
+      <circle cx="90.5" cy="121.5" r="1.3" fill="#fbf8ee"/>
+      <circle cx="111" cy="123" r="4" fill="#1a1614"/>
+      <circle cx="112.5" cy="121.5" r="1.3" fill="#fbf8ee"/>
+      <!-- щёчки -->
+      <ellipse cx="78" cy="133" rx="5" ry="3" fill="#f0b400" opacity=".3"/>
+      <ellipse cx="122" cy="133" rx="5" ry="3" fill="#f0b400" opacity=".3"/>
+      <!-- маленький КЛЮВ-морковка -->
+      <path d="M 93 133 L 87 137 L 93 142 L 107 142 L 113 137 L 107 133 Z"
+            fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- ножки -->
+      <line x1="90" y1="210" x2="88" y2="222" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="110" y1="210" x2="112" y2="222" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="82" y1="226" x2="94" y2="226" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
+      <line x1="106" y1="226" x2="118" y2="226" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 3, threshold: 150, name: "Подросток",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="222" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- удлинённое тело -->
+      <ellipse cx="100" cy="155" rx="42" ry="38" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- остатки пушка на спине (короткие штрихи только сверху) -->
+      <g stroke="#1a1614" stroke-width="1" stroke-linecap="round" opacity=".55">
+        <path d="M 70 130 l 2 -4"/>
+        <path d="M 80 122 l 2 -4"/>
+        <path d="M 92 120 l 2 -4"/>
+        <path d="M 105 120 l 2 -4"/>
+        <path d="M 117 122 l 2 -4"/>
+        <path d="M 128 130 l 2 -4"/>
+      </g>
+      <!-- крыло формирующееся -->
+      <path d="M 76 152 C 96 145, 128 152, 138 165 C 128 175, 96 173, 76 165 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 86 156 Q 108 155, 130 163" fill="none" stroke="#1a1614" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>
+      <!-- шея удлинённая и тонкая -->
+      <path d="M 72 132 C 56 110, 58 80, 78 65" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова, чуть несоразмерно крупная -->
+      <ellipse cx="82" cy="62" rx="16" ry="14" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- торчащий хохолок-непослушный -->
+      <path d="M 78 48 L 76 38" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 84 46 L 84 36" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 90 48 L 92 40" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
+      <!-- большой не по размеру клюв -->
+      <path d="M 64 60 L 42 64 L 64 70 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
+      <!-- глаз -->
+      <circle cx="86" cy="58" r="2.4" fill="#1a1614"/>
+      <circle cx="86.6" cy="57.4" r=".8" fill="#fbf8ee"/>
+      <!-- ОЧЕНЬ длинные нескладные ноги -->
+      <path d="M 88 192 C 84 205, 80 218, 80 230" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 116 192 C 120 205, 124 218, 124 230" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="72" y1="230" x2="88" y2="230" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="116" y1="230" x2="132" y2="230" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 4, threshold: 230, name: "Молодой гусь",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="225" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- тело -->
+      <ellipse cx="105" cy="170" rx="50" ry="40" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- крыло -->
+      <path d="M 80 162 C 105 152, 145 162, 158 178 C 145 188, 105 186, 80 178 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 90 168 Q 115 166, 145 175" fill="none" stroke="#1a1614" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <!-- шея -->
+      <path d="M 72 144 C 50 116, 52 78, 76 56" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова -->
+      <circle cx="80" cy="54" r="17" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- БАНДАНА-повязка через лоб (отличие от стадии 3) -->
+      <path d="M 64 50 C 70 44, 92 44, 98 50 L 96 56 C 90 52, 70 52, 65 56 Z"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- узел банданы сбоку -->
+      <path d="M 96 50 L 104 46 L 108 52 L 102 56 Z"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- свисающие концы банданы -->
+      <path d="M 104 46 L 112 42 L 110 50" fill="none" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M 108 52 L 116 56 L 110 58" fill="none" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M 112 42 L 110 50" fill="#a05a3c" stroke="none"/>
+      <!-- точечки на бандане для текстуры -->
+      <circle cx="74" cy="50" r="1" fill="#f0b400" opacity=".7"/>
+      <circle cx="84" cy="50" r="1" fill="#f0b400" opacity=".7"/>
+      <!-- клюв -->
+      <path d="M 64 56 L 44 58 L 64 64 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- глаз решительный -->
+      <circle cx="84" cy="56" r="2.2" fill="#1a1614"/>
+      <circle cx="84.5" cy="55.5" r=".7" fill="#fbf8ee"/>
+      <!-- ноги -->
+      <path d="M 92 208 C 90 216, 88 222, 88 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 118 208 C 120 216, 122 222, 122 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="82" y1="232" x2="94" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="116" y1="232" x2="128" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 5, threshold: 310, name: "Гусь-страж",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- паттерн кольчуги -->
+        <pattern id="chain5" patternUnits="userSpaceOnUse" width="4" height="4">
+          <circle cx="2" cy="2" r="1.3" fill="none" stroke="#857c75" stroke-width=".6"/>
+        </pattern>
+      </defs>
+      <ellipse cx="100" cy="225" rx="58" ry="3" fill="#2f4434" opacity=".2"/>
+      <!-- тело -->
+      <ellipse cx="105" cy="170" rx="52" ry="42" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+
+      <!-- РЫЦАРСКИЙ НАГРУДНИК (cuirass) — стальной, с центральным гребнем -->
+      <path d="M 60 148 L 150 148 L 158 175 L 156 198 L 130 214 L 105 218 L 80 214 L 54 198 L 52 175 Z"
+            fill="#9aa5ab" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- блик на нагруднике -->
+      <path d="M 65 156 L 70 192" stroke="#d8dce0" stroke-width="3" opacity=".8"/>
+      <!-- центральный гребень нагрудника -->
+      <line x1="105" y1="150" x2="105" y2="216" stroke="#1a1614" stroke-width="1.4"/>
+      <!-- сегменты живота -->
+      <path d="M 60 175 Q 105 180 150 175" fill="none" stroke="#1a1614" stroke-width="1.2" opacity=".5"/>
+      <path d="M 58 192 Q 105 198 152 192" fill="none" stroke="#1a1614" stroke-width="1.2" opacity=".5"/>
+      <!-- наплечники-фолды -->
+      <path d="M 60 148 C 50 150, 46 160, 50 172" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 150 148 C 160 150, 164 160, 160 172" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <line x1="50" y1="160" x2="56" y2="160" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <line x1="154" y1="160" x2="160" y2="160" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+
+      <!-- шея -->
+      <path d="M 76 142 C 56 116, 56 80, 80 60" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- КОЛЬЧУГА на шее -->
+      <path d="M 76 142 C 64 124, 64 94, 80 80"
+            fill="url(#chain5)" stroke="#857c75" stroke-width="1.4" stroke-linejoin="round"/>
+
+      <!-- голова -->
+      <circle cx="84" cy="58" r="18" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+
+      <!-- ВЕЛИКИЙ ШЛЕМ — цилиндрический с плоским верхом и горизонтальной прорезью -->
+      <path d="M 64 36 L 104 36 L 108 60 L 60 60 Z"
+            fill="#9aa5ab" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- блик на шлеме -->
+      <path d="M 68 40 L 70 56" stroke="#d8dce0" stroke-width="2" opacity=".7"/>
+      <!-- прорезь для глаз (горизонтальная щель) -->
+      <rect x="66" y="46" width="38" height="3" fill="#1a1614"/>
+      <!-- вертикальные дыхательные прорези снизу шлема -->
+      <line x1="74" y1="54" x2="74" y2="58" stroke="#1a1614" stroke-width="1.2"/>
+      <line x1="82" y1="54" x2="82" y2="58" stroke="#1a1614" stroke-width="1.2"/>
+      <line x1="90" y1="54" x2="90" y2="58" stroke="#1a1614" stroke-width="1.2"/>
+      <line x1="98" y1="54" x2="98" y2="58" stroke="#1a1614" stroke-width="1.2"/>
+      <!-- маленький золотой шишак сверху -->
+      <circle cx="84" cy="34" r="2.5" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
+      <line x1="84" y1="31" x2="84" y2="28" stroke="#1a1614" stroke-width="1"/>
+      <!-- глаз сверкает в прорези -->
+      <circle cx="86" cy="48" r="1.4" fill="#f0b400"/>
+
+      <!-- клюв -->
+      <path d="M 60 64 L 44 66 L 60 70 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+
+      <!-- ноги в простых поножах -->
+      <rect x="86" y="216" width="6" height="10" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.4"/>
+      <rect x="116" y="216" width="6" height="10" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.4"/>
+      <line x1="82" y1="228" x2="96" y2="228" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="112" y1="228" x2="126" y2="228" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 6, threshold: 400, name: "Боевой гусь",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="chain6" patternUnits="userSpaceOnUse" width="4" height="4">
+          <circle cx="2" cy="2" r="1.4" fill="none" stroke="#5e6c74" stroke-width=".7"/>
+        </pattern>
+      </defs>
+      <ellipse cx="100" cy="228" rx="68" ry="3" fill="#2f4434" opacity=".22"/>
+
+      <!-- плащ за спиной — рыжий с золотой каймой -->
+      <path d="M 40 154 C 46 200, 70 232, 100 232 C 130 232, 154 200, 160 154 L 145 150 L 100 156 L 55 150 Z"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- складки плаща -->
+      <path d="M 60 175 Q 65 200 75 222" fill="none" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <path d="M 80 178 Q 82 208 90 230" fill="none" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <path d="M 140 175 Q 135 200 125 222" fill="none" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <path d="M 120 178 Q 118 208 110 230" fill="none" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <!-- золотая кайма по низу -->
+      <path d="M 40 154 C 46 200, 70 232, 100 232 C 130 232, 154 200, 160 154"
+            fill="none" stroke="#f0b400" stroke-width="2" stroke-linejoin="round"/>
+
+      <!-- тело -->
+      <ellipse cx="100" cy="164" rx="48" ry="38" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+
+      <!-- ПОЛНЫЙ РЫЦАРСКИЙ НАГРУДНИК — стальной серый с гребнями -->
+      <path d="M 56 144 L 144 144 L 154 175 L 150 198 L 130 214 L 100 218 L 70 214 L 50 198 L 46 175 Z"
+            fill="#9aa5ab" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- блик-полоса слева -->
+      <path d="M 62 152 L 64 200" stroke="#d8dce0" stroke-width="4" opacity=".7"/>
+      <!-- центральный гребень -->
+      <path d="M 100 146 L 100 216" stroke="#1a1614" stroke-width="1.4"/>
+      <path d="M 100 146 L 100 216" stroke="#f0b400" stroke-width=".8"/>
+      <!-- сегменты живота -->
+      <path d="M 50 178 Q 100 184 150 178" fill="none" stroke="#1a1614" stroke-width="1.2" opacity=".55"/>
+      <path d="M 48 196 Q 100 202 152 196" fill="none" stroke="#1a1614" stroke-width="1.2" opacity=".55"/>
+      <!-- наплечники полные -->
+      <ellipse cx="55" cy="150" rx="14" ry="10" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
+      <ellipse cx="145" cy="150" rx="14" ry="10" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
+      <line x1="50" y1="150" x2="60" y2="150" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <line x1="140" y1="150" x2="150" y2="150" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <!-- заклёпки -->
+      <circle cx="64" cy="156" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="136" cy="156" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="60" cy="200" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="140" cy="200" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+
+      <!-- ЩИТ (heater shield — треугольный сверху, плоский снизу) слева -->
+      <path d="M 32 158 L 60 158 L 60 198 C 60 210, 46 218, 46 218 C 46 218, 32 210, 32 198 Z"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- кайма щита -->
+      <path d="M 36 162 L 56 162 L 56 196 C 56 206, 46 213, 46 213 C 46 213, 36 206, 36 196 Z"
+            fill="none" stroke="#f0b400" stroke-width="1.6"/>
+      <!-- герб - буква Г -->
+      <path d="M 41 178 L 51 178 L 51 184" fill="none" stroke="#f0b400" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 41 178 L 41 200" fill="none" stroke="#f0b400" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- КРЫЛО-РУКА торчит из-под нагрудника справа, согнуто вверх -->
+      <!-- латный рукав -->
+      <path d="M 145 152 C 158 156, 168 160, 172 154 C 174 138, 173 122, 170 110 C 167 102, 162 100, 158 105 C 155 116, 150 130, 145 152 Z"
+            fill="#9aa5ab" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- блик на латном рукаве -->
+      <path d="M 162 112 L 167 145" stroke="#d8dce0" stroke-width="2" opacity=".7"/>
+      <!-- сегменты лат рукава -->
+      <line x1="150" y1="132" x2="170" y2="128" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <line x1="152" y1="142" x2="171" y2="138" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <!-- кисть-перья: пучок перьев из конца рукава, обхватывающий рукоять -->
+      <path d="M 159 102 C 156 96, 158 90, 165 88 C 172 90, 174 96, 172 102 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- отдельные перья пальцами -->
+      <path d="M 161 100 L 159 92" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <path d="M 166 99 L 166 90" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <path d="M 170 100 L 172 92" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+
+      <!-- РУКОЯТЬ (grip) — обмотанная коричневой кожей, в кисти крыла -->
+      <line x1="160" y1="98" x2="167" y2="84" stroke="#4a423d" stroke-width="4" stroke-linecap="round"/>
+      <!-- обмотка-перевязь рукояти -->
+      <line x1="161" y1="95" x2="166" y2="92" stroke="#f0b400" stroke-width="1" opacity=".7"/>
+      <line x1="163" y1="91" x2="167" y2="88" stroke="#f0b400" stroke-width="1" opacity=".7"/>
+
+      <!-- ПОМОЛ (pommel) — золотой шар внизу рукояти -->
+      <circle cx="159" cy="100" r="3.5" fill="#f0b400" stroke="#1a1614" stroke-width="1.2"/>
+
+      <!-- КРЕСТОВИНА (guard) — поперечная над рукоятью -->
+      <line x1="155" y1="80" x2="178" y2="74" stroke="#2f4434" stroke-width="5" stroke-linecap="round"/>
+      <line x1="155" y1="80" x2="178" y2="74" stroke="#f0b400" stroke-width="1.4"/>
+      <!-- декор по концам крестовины -->
+      <circle cx="156" cy="80" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="177" cy="74" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+
+      <!-- ЛЕЗВИЕ МЕЧА — поднято вверх от крестовины, диагонально -->
+      <path d="M 167 78 L 190 4 L 195 9 L 173 82 Z"
+            fill="#d8dce0" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- центральный жёлоб (fuller) -->
+      <line x1="170" y1="76" x2="192" y2="8" stroke="#1a1614" stroke-width=".7" opacity=".5"/>
+      <!-- блик на лезвии -->
+      <line x1="168" y1="78" x2="190" y2="10" stroke="#fbf8ee" stroke-width="1.5" opacity=".8"/>
+
+      <!-- шея -->
+      <path d="M 72 142 C 52 116, 52 78, 76 58" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- КОЛЬЧУГА на шее -->
+      <path d="M 72 142 C 60 124, 60 92, 76 78"
+            fill="url(#chain6)" stroke="#5e6c74" stroke-width="1.4" stroke-linejoin="round"/>
+
+      <!-- голова -->
+      <circle cx="80" cy="56" r="18" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+
+      <!-- ВЕЛИКИЙ ШЛЕМ с плюмажем -->
+      <path d="M 60 34 L 100 34 L 104 60 L 56 60 Z"
+            fill="#9aa5ab" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- блик -->
+      <path d="M 64 38 L 66 56" stroke="#d8dce0" stroke-width="2.5" opacity=".7"/>
+      <!-- T-образная прорезь для глаз -->
+      <rect x="62" y="44" width="38" height="3" fill="#1a1614"/>
+      <line x1="80" y1="47" x2="80" y2="56" stroke="#1a1614" stroke-width="2"/>
+      <!-- декоративная горизонтальная полоса -->
+      <line x1="56" y1="50" x2="104" y2="50" stroke="#f0b400" stroke-width="1.2" opacity=".6"/>
+      <!-- ПЛЮМАЖ — три пера разной длины над шлемом -->
+      <path d="M 70 34 C 68 18, 64 6, 56 0 C 60 12, 62 22, 66 34"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 78 34 C 78 16, 80 4, 78 -4 C 84 8, 86 22, 84 34"
+            fill="#a05a3c" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 90 34 C 92 18, 96 6, 102 2 C 100 14, 96 24, 96 34"
+            fill="#f0b400" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- штрихи на перьях -->
+      <line x1="60" y1="14" x2="64" y2="20" stroke="#1a1614" stroke-width=".8" opacity=".6"/>
+      <line x1="80" y1="8" x2="82" y2="20" stroke="#1a1614" stroke-width=".8" opacity=".6"/>
+      <line x1="98" y1="14" x2="94" y2="22" stroke="#1a1614" stroke-width=".8" opacity=".6"/>
+      <!-- основание плюмажа -->
+      <rect x="70" y="32" width="26" height="5" fill="#f0b400" stroke="#1a1614" stroke-width="1.2"/>
+      <!-- глаз сверкает в T-прорези -->
+      <circle cx="86" cy="46" r="1.5" fill="#f0b400"/>
+
+      <!-- клюв -->
+      <path d="M 60 62 L 42 64 L 60 70 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+
+      <!-- ноги в полных поножах -->
+      <rect x="82" y="216" width="8" height="14" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
+      <rect x="110" y="216" width="8" height="14" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
+      <!-- блики на поножах -->
+      <line x1="84" y1="218" x2="84" y2="228" stroke="#d8dce0" stroke-width="1.5"/>
+      <line x1="112" y1="218" x2="112" y2="228" stroke="#d8dce0" stroke-width="1.5"/>
+      <!-- ступни -->
+      <path d="M 76 232 L 96 232" stroke="#1a1614" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 104 232 L 124 232" stroke="#1a1614" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>`
+  },
+];
+
+function findMascotStage(pts){
+  for (let i = MASCOTS.length - 1; i >= 0; i--){
+    if (pts >= MASCOTS[i].threshold) return i;
+  }
+  return 0;
+}
+
+function getMascotProgress(pts){
+  const idx = findMascotStage(pts);
+  const cur = MASCOTS[idx];
+  const next = MASCOTS[idx + 1];
+  if (!next) return { idx, cur, next: null, progress: 1, untilNext: 0 };
+  const progress = (pts - cur.threshold) / (next.threshold - cur.threshold);
+  return { idx, cur, next, progress: Math.min(1, Math.max(0, progress)), untilNext: next.threshold - pts };
+}
