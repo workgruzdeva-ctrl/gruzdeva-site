@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Маскот-эволюция · Группа СДВГ</title>
+<style>
+  :root{
+    --ink:#1a1614; --soft:#4a423d; --muted:#857c75;
+    --bg:#f7f2e7; --paper:#fbf8ee;
+    --accent:#f0b400; --accent-soft:#f4ebd0; --accent-deep:#7a5b00;
+    --sage:#6f8a6a; --sage-deep:#2f4434; --sage-soft:#cfd9c2; --mint-soft:#d9e2cd;
+    --line:#e1dcd1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:32px 24px 64px;
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.55;
+  }
+  .wrap{max-width:1100px; margin:0 auto}
+  h1{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:36px; font-weight:600; letter-spacing:-.02em; margin:0 0 8px;
+  }
+  .sub{color:var(--soft); font-size:15px; margin:0 0 36px; max-width:680px}
+
+  /* GRID of stages */
+  .stages{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
+    gap:18px; margin-bottom:48px;
+  }
+  .stage{
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:18px; padding:20px 18px 22px;
+    text-align:center;
+  }
+  .stage .holder{
+    width:140px; height:160px; margin:0 auto 14px;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .stage .holder svg{
+    max-width:100%; max-height:100%; display:block;
+  }
+  .stage .tier{
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    font-weight:700; color:var(--sage-deep);
+  }
+  .stage .name{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:18px; font-weight:600; margin:2px 0 6px;
+    letter-spacing:-.01em;
+  }
+  .stage .pts{
+    font-size:13px; color:var(--muted);
+  }
+  .stage .pts strong{color:var(--accent-deep); font-weight:700}
+
+  /* INTERACTIVE PROGRESS */
+  .demo{
+    background:var(--paper); border:1.5px solid var(--ink);
+    border-radius:20px; padding:36px 32px;
+    margin-bottom:28px;
+  }
+  .demo-grid{
+    display:grid; grid-template-columns:240px 1fr; gap:36px; align-items:center;
+  }
+  .demo-mascot{
+    width:220px; height:240px;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .demo-info h2{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:26px; font-weight:600; margin:0 0 6px; letter-spacing:-.015em;
+  }
+  .demo-info .stage-label{
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    font-weight:700; color:var(--sage-deep); margin-bottom:6px;
+  }
+  .demo-info .demo-pts{
+    font-size:14px; color:var(--soft); margin-bottom:14px;
+  }
+  .bar{
+    height:14px; border-radius:100px;
+    background:var(--mint-soft);
+    border:1.5px solid var(--ink);
+    position:relative; overflow:hidden;
+    margin-bottom:10px;
+  }
+  .bar-fill{
+    height:100%; background:var(--accent);
+    transition:width .4s cubic-bezier(.2,.7,.2,1);
+    border-right:1.5px solid var(--ink);
+  }
+  .bar-meta{
+    font-size:12px; color:var(--muted); display:flex; justify-content:space-between;
+  }
+  input[type=range]{
+    width:100%; accent-color:var(--accent-deep); margin-top:16px;
+  }
+
+  @media (max-width:640px){
+    .demo-grid{grid-template-columns:1fr; gap:20px}
+    .demo-mascot{margin:0 auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Эволюция маскота</h1>
+  <p class="sub">Гусёныш растёт по мере того, как участник выполняет упражнения и приходит на встречи. Семь стадий — от яйца до боевого гуся. Подвинь ползунок ниже, чтобы посмотреть переход.</p>
+
+  <!-- INTERACTIVE -->
+  <div class="demo">
+    <div class="demo-grid">
+      <div class="demo-mascot" id="bigMascot"></div>
+      <div class="demo-info">
+        <div class="stage-label" id="stageLabel">Стадия</div>
+        <h2 id="stageName">…</h2>
+        <div class="demo-pts" id="ptsLabel">— баллов из 400</div>
+        <div class="bar"><div class="bar-fill" id="barFill" style="width:0%"></div></div>
+        <div class="bar-meta"><span>0</span><span>следующая стадия →</span><span id="nextThr">…</span></div>
+        <input type="range" id="ptsRange" min="0" max="450" value="0" step="5">
+      </div>
+    </div>
+  </div>
+
+  <h2 style="font-family:Charter,Georgia,serif; font-size:22px; margin:32px 0 14px">Все семь стадий</h2>
+  <div class="stages" id="stagesGrid"></div>
+</div>
+
+<script>
+// ============ MASCOT SVGs ============
+// Все SVG в едином viewBox 200x240, нижний край = земля, иллюстративный line-art
+
+const MASCOTS = [
+  {
+    tier: 0, threshold: 0, name: "Яйцо",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <!-- травинки -->
+      <path d="M 30 220 C 35 200, 38 195, 36 180" fill="none" stroke="#6f8a6a" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 40 222 C 44 210, 46 204, 50 200" fill="none" stroke="#6f8a6a" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 160 222 C 158 210, 162 200, 168 190" fill="none" stroke="#6f8a6a" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 175 222 C 175 212, 178 206, 182 198" fill="none" stroke="#6f8a6a" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- земля -->
+      <ellipse cx="100" cy="222" rx="60" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- яйцо -->
+      <ellipse cx="100" cy="170" rx="40" ry="52" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- крапинки -->
+      <circle cx="88" cy="150" r="2" fill="#7a5b00" opacity=".4"/>
+      <circle cx="115" cy="165" r="1.6" fill="#7a5b00" opacity=".4"/>
+      <circle cx="92" cy="185" r="2.2" fill="#7a5b00" opacity=".35"/>
+      <circle cx="108" cy="195" r="1.4" fill="#7a5b00" opacity=".4"/>
+    </svg>`
+  },
+  {
+    tier: 1, threshold: 30, name: "Птенец",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <!-- осколки скорлупы -->
+      <path d="M 50 220 C 45 215, 48 208, 55 207 C 62 206, 66 212, 64 218 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4"/>
+      <path d="M 150 220 C 145 215, 148 208, 155 207 C 162 206, 166 212, 164 218 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4"/>
+      <ellipse cx="100" cy="222" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- пушистое тельце-шар -->
+      <circle cx="100" cy="180" r="38" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- пушок-волоски сверху -->
+      <path d="M 88 145 L 86 138" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 100 142 L 100 134" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 112 145 L 114 138" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- большие глаза -->
+      <circle cx="88" cy="170" r="4" fill="#1a1614"/>
+      <circle cx="89.5" cy="168" r="1.2" fill="#fbf8ee"/>
+      <circle cx="112" cy="170" r="4" fill="#1a1614"/>
+      <circle cx="113.5" cy="168" r="1.2" fill="#fbf8ee"/>
+      <!-- мини-клюв -->
+      <path d="M 96 184 L 90 188 L 96 192 L 104 192 L 110 188 L 104 184 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- щёки-румянец -->
+      <ellipse cx="80" cy="186" rx="6" ry="3" fill="#f0b400" opacity=".25"/>
+      <ellipse cx="120" cy="186" rx="6" ry="3" fill="#f0b400" opacity=".25"/>
+      <!-- ножки маленькие -->
+      <line x1="92" y1="216" x2="91" y2="222" stroke="#f0b400" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="108" y1="216" x2="109" y2="222" stroke="#f0b400" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 2, threshold: 80, name: "Гусёнок",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="225" rx="50" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- тельце овальное -->
+      <ellipse cx="100" cy="180" rx="38" ry="32" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- голова отдельная, чуть наклонена -->
+      <circle cx="100" cy="130" r="22" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- шейка короткая -->
+      <path d="M 90 150 C 88 154, 90 156, 95 156 L 105 156 C 110 156, 112 154, 110 150" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- пушок на голове -->
+      <path d="M 96 110 L 95 104" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M 104 110 L 105 104" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- глаза -->
+      <circle cx="92" cy="128" r="3" fill="#1a1614"/>
+      <circle cx="93" cy="127" r="1" fill="#fbf8ee"/>
+      <circle cx="108" cy="128" r="3" fill="#1a1614"/>
+      <circle cx="109" cy="127" r="1" fill="#fbf8ee"/>
+      <!-- клюв -->
+      <path d="M 92 138 L 86 142 L 92 146 L 108 146 L 114 142 L 108 138 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- крылышки маленькие -->
+      <path d="M 70 178 C 66 188, 70 200, 80 198" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4"/>
+      <path d="M 130 178 C 134 188, 130 200, 120 198" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.4"/>
+      <!-- ножки -->
+      <line x1="90" y1="210" x2="88" y2="222" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="110" y1="210" x2="112" y2="222" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="83" y1="222" x2="93" y2="222" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="107" y1="222" x2="117" y2="222" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 3, threshold: 150, name: "Подросток",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="225" rx="50" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- тело -->
+      <ellipse cx="100" cy="180" rx="42" ry="36" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- крыло -->
+      <path d="M 75 175 C 95 167, 130 175, 142 188 C 130 198, 95 196, 75 188 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 85 180 Q 105 178, 130 186" fill="none" stroke="#1a1614" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <!-- шея вытягивается -->
+      <path d="M 68 162 C 50 140, 50 110, 70 92" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова -->
+      <circle cx="74" cy="90" r="15" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- клюв -->
+      <path d="M 60 89 L 44 92 L 60 97 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- глаз -->
+      <circle cx="78" cy="87" r="2" fill="#1a1614"/>
+      <circle cx="78.5" cy="86.5" r=".7" fill="#fbf8ee"/>
+      <!-- ножки -->
+      <path d="M 90 214 C 88 220, 86 226, 86 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 110 214 C 112 220, 114 226, 114 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="80" y1="232" x2="92" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="108" y1="232" x2="120" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 4, threshold: 230, name: "Молодой гусь",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="225" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
+      <!-- тело крупное -->
+      <ellipse cx="105" cy="170" rx="50" ry="40" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- крыло -->
+      <path d="M 80 162 C 105 152, 145 162, 158 178 C 145 188, 105 186, 80 178 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 90 168 Q 115 166, 145 175" fill="none" stroke="#1a1614" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+      <!-- шея длинная -->
+      <path d="M 72 144 C 50 116, 52 78, 76 56" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова -->
+      <circle cx="80" cy="54" r="17" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- клюв вытянутый -->
+      <path d="M 64 52 L 44 54 L 64 60 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- глаз -->
+      <circle cx="84" cy="50" r="2.2" fill="#1a1614"/>
+      <circle cx="84.5" cy="49.5" r=".7" fill="#fbf8ee"/>
+      <!-- ноги -->
+      <path d="M 92 208 C 90 216, 88 222, 88 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 118 208 C 120 216, 122 222, 122 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="82" y1="232" x2="94" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="116" y1="232" x2="128" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 5, threshold: 310, name: "Гусь-страж",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="225" rx="58" ry="3" fill="#2f4434" opacity=".2"/>
+      <!-- тело -->
+      <ellipse cx="105" cy="170" rx="52" ry="42" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- нагрудник -->
+      <path d="M 65 154 L 145 154 L 152 180 L 145 198 L 105 210 L 65 198 L 58 180 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- заклёпки на нагруднике -->
+      <circle cx="75" cy="170" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="105" cy="170" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="135" cy="170" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="90" cy="190" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="120" cy="190" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <!-- крыло слегка торчит -->
+      <path d="M 145 158 C 158 168, 162 184, 156 198" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6"/>
+      <!-- шея -->
+      <path d="M 76 142 C 56 116, 56 80, 80 60" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова -->
+      <circle cx="84" cy="58" r="18" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- шлем -->
+      <path d="M 67 56 C 65 36, 84 28, 102 36 C 105 46, 104 56, 102 60 L 67 58 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- гребень -->
+      <path d="M 82 30 L 92 22 L 98 32" fill="#f0b400" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <!-- забрало щель -->
+      <line x1="68" y1="54" x2="100" y2="54" stroke="#1a1614" stroke-width="1.6"/>
+      <!-- клюв -->
+      <path d="M 68 58 L 50 60 L 68 66 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- глаз через щель -->
+      <circle cx="86" cy="48" r="1.8" fill="#f0b400"/>
+      <!-- ноги -->
+      <path d="M 92 210 C 90 218, 88 224, 88 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 118 210 C 120 218, 122 224, 122 232" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="82" y1="232" x2="94" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="116" y1="232" x2="128" y2="232" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    tier: 6, threshold: 400, name: "Боевой гусь",
+    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="226" rx="65" ry="3" fill="#2f4434" opacity=".22"/>
+      <!-- плащ -->
+      <path d="M 38 160 C 50 200, 80 230, 105 230 C 130 230, 160 200, 172 160 L 152 152 L 105 158 L 58 152 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- тело -->
+      <ellipse cx="105" cy="166" rx="50" ry="40" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- полный нагрудник -->
+      <path d="M 60 148 L 150 148 L 158 178 L 152 200 L 132 214 L 105 216 L 78 214 L 58 200 L 52 178 Z" fill="#2f4434" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- ребра нагрудника -->
+      <line x1="80" y1="160" x2="80" y2="208" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <line x1="105" y1="156" x2="105" y2="214" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <line x1="130" y1="160" x2="130" y2="208" stroke="#1a1614" stroke-width="1" opacity=".5"/>
+      <!-- заклёпки -->
+      <circle cx="68" cy="160" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="142" cy="160" r="2.2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="68" cy="200" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="142" cy="200" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <circle cx="105" cy="200" r="2.4" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
+      <!-- щит слева -->
+      <path d="M 40 168 L 56 162 L 60 200 L 50 212 L 38 200 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <line x1="42" y1="180" x2="58" y2="180" stroke="#f0b400" stroke-width="1.5"/>
+      <text x="49" y="200" font-family="Charter, Georgia, serif" font-size="14" font-weight="700" fill="#f0b400" text-anchor="middle">Г</text>
+      <!-- меч справа -->
+      <line x1="158" y1="195" x2="190" y2="115" stroke="#857c75" stroke-width="4" stroke-linecap="round"/>
+      <line x1="158" y1="195" x2="190" y2="115" stroke="#fbf8ee" stroke-width="1.5"/>
+      <path d="M 150 198 L 168 188" stroke="#2f4434" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="170" cy="186" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
+      <!-- шея -->
+      <path d="M 78 142 C 58 116, 58 80, 82 58" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- голова -->
+      <circle cx="86" cy="56" r="18" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8"/>
+      <!-- полный шлем с гребнем -->
+      <path d="M 66 54 C 64 32, 88 22, 108 32 C 112 44, 110 56, 106 62 L 66 58 Z" fill="#2f4434" stroke="#1a1614" stroke-width="2" stroke-linejoin="round"/>
+      <!-- гребень-плюмаж -->
+      <path d="M 80 32 C 78 18, 86 8, 94 6 C 102 14, 100 24, 96 32" fill="#a05a3c" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 86 12 C 90 14, 94 16, 96 22" fill="none" stroke="#f0b400" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- забрало -->
+      <line x1="66" y1="52" x2="106" y2="52" stroke="#1a1614" stroke-width="2"/>
+      <line x1="74" y1="48" x2="74" y2="54" stroke="#f0b400" stroke-width="2"/>
+      <line x1="84" y1="48" x2="84" y2="54" stroke="#f0b400" stroke-width="2"/>
+      <line x1="94" y1="48" x2="94" y2="54" stroke="#f0b400" stroke-width="2"/>
+      <!-- клюв -->
+      <path d="M 68 56 L 48 58 L 68 64 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" stroke-linejoin="round"/>
+      <!-- ноги в латах -->
+      <rect x="86" y="214" width="8" height="14" fill="#2f4434" stroke="#1a1614" stroke-width="1.4"/>
+      <rect x="114" y="214" width="8" height="14" fill="#2f4434" stroke="#1a1614" stroke-width="1.4"/>
+      <line x1="82" y1="230" x2="98" y2="230" stroke="#1a1614" stroke-width="2" stroke-linecap="round"/>
+      <line x1="110" y1="230" x2="126" y2="230" stroke="#1a1614" stroke-width="2" stroke-linecap="round"/>
+    </svg>`
+  },
+];
+
+// Render grid
+const grid = document.getElementById('stagesGrid');
+MASCOTS.forEach(m => {
+  const card = document.createElement('div');
+  card.className = 'stage';
+  const next = MASCOTS[m.tier + 1];
+  const range = next ? `${m.threshold}–${next.threshold - 1}` : `${m.threshold}+`;
+  card.innerHTML = `
+    <div class="holder">${m.svg}</div>
+    <div class="tier">Стадия ${m.tier}</div>
+    <div class="name">${m.name}</div>
+    <div class="pts"><strong>${range}</strong> баллов</div>
+  `;
+  grid.appendChild(card);
+});
+
+// Interactive
+const range = document.getElementById('ptsRange');
+const bigMascot = document.getElementById('bigMascot');
+const stageLabel = document.getElementById('stageLabel');
+const stageName = document.getElementById('stageName');
+const ptsLabel = document.getElementById('ptsLabel');
+const barFill = document.getElementById('barFill');
+const nextThr = document.getElementById('nextThr');
+
+function findStage(pts){
+  for (let i = MASCOTS.length - 1; i >= 0; i--){
+    if (pts >= MASCOTS[i].threshold) return i;
+  }
+  return 0;
+}
+
+function update(pts){
+  const idx = findStage(pts);
+  const m = MASCOTS[idx];
+  const next = MASCOTS[idx + 1];
+  bigMascot.innerHTML = m.svg;
+  stageLabel.textContent = `СТАДИЯ ${m.tier} · ${m.name.toUpperCase()}`;
+  stageName.textContent = m.name;
+  ptsLabel.textContent = `${pts} баллов из 400`;
+  if (next){
+    const progress = (pts - m.threshold) / (next.threshold - m.threshold);
+    barFill.style.width = Math.min(100, Math.max(0, progress * 100)) + '%';
+    nextThr.textContent = `${next.threshold} · ${next.name}`;
+  } else {
+    barFill.style.width = '100%';
+    nextThr.textContent = 'максимум!';
+  }
+}
+
+range.addEventListener('input', e => update(+e.target.value));
+update(0);
+</script>
+</body>
+</html>
