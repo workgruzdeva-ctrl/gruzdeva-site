@@ -835,19 +835,30 @@ function renderName(){
 }
 
 // ============ HELPERS ============
-function today(){ return new Date().toISOString().slice(0, 10); }
+// Все даты — в ЛОКАЛЬНОМ часовом поясе (без UTC-сдвига)
+function ymd(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function parseYmd(s){
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);  // локальная дата без UTC
+}
+function today(){ return ymd(new Date()); }
 
-// «Неделя эксперимента» — начинается в четверг. Возвращает YYYY-MM-DD четверга
+// «Неделя эксперимента» — начинается в четверг. Возвращает YYYY-MM-DD четверга (локально)
 function expWeekKey(date){
-  const d = new Date(date || new Date());
+  const d = date ? (typeof date === 'string' ? parseYmd(date) : new Date(date)) : new Date();
   d.setHours(0, 0, 0, 0);
   const day = d.getDay(); // 0=Вс, 4=Чт
   const daysBack = day >= 4 ? day - 4 : day + 3;
   d.setDate(d.getDate() - daysBack);
-  return d.toISOString().slice(0, 10);
+  return ymd(d);
 }
 function expWeekDays(weekKey){
-  const thu = new Date(weekKey);
+  const thu = parseYmd(weekKey);
   const names = ['ЧТ', 'ПТ', 'СБ', 'ВС', 'ПН', 'ВТ', 'СР'];
   const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   const out = [];
@@ -855,7 +866,7 @@ function expWeekDays(weekKey){
   for (let i = 0; i < 7; i++){
     const d = new Date(thu);
     d.setDate(thu.getDate() + i);
-    const key = d.toISOString().slice(0, 10);
+    const key = ymd(d);
     out.push({
       key,
       name: names[i],
@@ -1077,17 +1088,17 @@ document.getElementById('expStrategy').addEventListener('input', e => {
 
 document.getElementById('expPrev').addEventListener('click', () => {
   const wk = getViewedWeekKey();
-  const d = new Date(wk);
+  const d = parseYmd(wk);
   d.setDate(d.getDate() - 7);
-  state.experiment.viewWeek = expWeekKey(d);
+  state.experiment.viewWeek = ymd(d);
   saveState();
   renderExperiment();
 });
 document.getElementById('expNext').addEventListener('click', () => {
   const wk = getViewedWeekKey();
-  const d = new Date(wk);
+  const d = parseYmd(wk);
   d.setDate(d.getDate() + 7);
-  state.experiment.viewWeek = expWeekKey(d);
+  state.experiment.viewWeek = ymd(d);
   saveState();
   renderExperiment();
 });
@@ -1107,7 +1118,7 @@ function renderIfThen(){
   }
   state.ifthen.forEach(plan => {
     const t = today();
-    const doneToday = (plan.doneTimes || []).some(s => s.slice(0, 10) === t);
+    const doneToday = (plan.doneTimes || []).some(s => s === t || s.slice(0, 10) === t);
     const el = document.createElement('div');
     el.className = 'ifthen-item' + (doneToday ? ' done' : '');
     el.innerHTML = `
