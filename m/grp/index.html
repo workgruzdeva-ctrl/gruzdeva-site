@@ -149,49 +149,49 @@
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12'><path d='M2 8 C 18 2, 36 11, 58 6 S 100 3, 118 7' fill='none' stroke='%23f0b400' stroke-width='2.4' stroke-linecap='round'/></svg>");
   }
 
-  /* DAILIES */
-  .dailies{display:flex; flex-direction:column; gap:8px}
+  /* WEEKLY TASKS — жёлто-охровая палитра (групповая работа поярче) */
+  .dailies{display:flex; flex-direction:column; gap:10px}
   .daily{
-    background:var(--paper); border:1.5px solid var(--line);
+    background:var(--accent-soft); border:1.5px solid var(--accent);
     border-radius:14px;
-    padding:14px 16px;
+    padding:16px 18px;
     display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
     cursor:pointer;
     transition:all .2s var(--easing);
     user-select:none;
     -webkit-tap-highlight-color:transparent;
   }
-  .daily:hover{border-color:var(--ink); transform:translateY(-1px)}
+  .daily:hover{border-color:var(--accent-deep); transform:translateY(-1px); box-shadow:0 4px 12px -4px rgba(240,180,0,.35)}
   .daily.done{
-    background:var(--mint-soft); border-color:var(--sage);
+    background:var(--accent); border-color:var(--ink);
   }
   .daily-check{
-    width:28px; height:28px; border-radius:50%;
-    background:var(--paper); border:1.5px solid var(--ink);
+    width:30px; height:30px; border-radius:50%;
+    background:var(--paper); border:1.8px solid var(--ink);
     display:flex; align-items:center; justify-content:center;
     flex-shrink:0;
     transition:all .2s var(--easing);
-    font-size:18px; line-height:1;
+    font-size:18px; line-height:1; font-weight:700;
   }
   .daily.done .daily-check{
-    background:var(--sage-deep); border-color:var(--sage-deep); color:var(--accent);
+    background:var(--ink); border-color:var(--ink); color:var(--accent);
   }
   .daily-check::before{content:""; opacity:0}
   .daily.done .daily-check::before{content:"✓"; opacity:1}
   .daily-text{
-    font-size:14.5px; line-height:1.4; color:var(--ink);
+    font-size:15px; line-height:1.35; color:var(--ink); font-weight:600;
   }
-  .daily-text small{display:block; color:var(--muted); font-size:12px; margin-top:2px}
-  .daily.done .daily-text{color:var(--sage-deep)}
+  .daily-text small{display:block; color:var(--accent-deep); font-size:12px; margin-top:2px; font-weight:400}
+  .daily.done .daily-text{color:var(--ink)}
+  .daily.done .daily-text small{color:rgba(26,22,20,.7)}
   .daily-pts{
-    font-size:11px; letter-spacing:.05em; color:var(--accent-deep);
-    font-weight:700; background:var(--accent-soft);
-    padding:4px 10px; border-radius:100px;
-    border:1px solid var(--accent);
+    font-size:12px; letter-spacing:.04em; color:var(--paper);
+    font-weight:700; background:var(--ink);
+    padding:5px 12px; border-radius:100px;
     white-space:nowrap;
   }
   .daily.done .daily-pts{
-    background:var(--sage); color:var(--paper); border-color:var(--sage-deep);
+    background:var(--paper); color:var(--ink); border:1.2px solid var(--ink);
   }
 
   /* EXPERIMENT TRACKER */
@@ -376,6 +376,119 @@
   }
   .wb-link::after{content:" →"}
 
+  /* MASCOT CARD — clickable cue */
+  .mascot-card{
+    cursor:pointer;
+    transition:transform .2s var(--easing), box-shadow .2s;
+  }
+  .mascot-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px -8px rgba(47,68,52,.25);
+  }
+  .mascot-card::after{
+    content:"кликни на меня";
+    display:block; text-align:center;
+    margin-top:6px;
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:600;
+    opacity:.6; transition:opacity .2s;
+  }
+  .mascot-card:hover::after{opacity:1; color:var(--accent-deep)}
+
+  /* MASCOT MODAL */
+  .mascot-modal{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(26,22,20,.55);
+    display:none;
+    align-items:center; justify-content:center;
+    padding:24px;
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    animation:fadeIn .25s var(--easing);
+  }
+  .mascot-modal.open{display:flex}
+  @keyframes fadeIn{from{opacity:0} to{opacity:1}}
+
+  .mascot-modal-inner{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    border-radius:24px;
+    padding:32px 28px;
+    max-width:440px; width:100%;
+    position:relative;
+    animation:popIn .35s var(--easing);
+    box-shadow:0 20px 50px -10px rgba(0,0,0,.4);
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:scale(.85) translateY(20px)}
+    to{opacity:1; transform:scale(1) translateY(0)}
+  }
+
+  .mascot-close{
+    position:absolute; top:14px; right:14px;
+    width:36px; height:36px; border-radius:50%;
+    background:var(--milk); border:1.5px solid var(--ink);
+    cursor:pointer; font-size:18px; line-height:1; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .15s var(--easing);
+  }
+  .mascot-close:hover{transform:rotate(90deg)}
+
+  .mascot-big{
+    width:200px; height:240px; margin:0 auto 16px;
+    animation:gooseBob 2.4s ease-in-out infinite;
+  }
+  .mascot-big svg{display:block; width:100%; height:100%}
+  @keyframes gooseBob{
+    0%, 100%{transform:translateY(0) rotate(-2deg)}
+    50%{transform:translateY(-6px) rotate(2deg)}
+  }
+
+  /* Speech bubble */
+  .speech-bubble{
+    position:relative;
+    background:var(--accent-soft);
+    border:1.8px solid var(--ink);
+    border-radius:18px;
+    padding:18px 22px;
+    margin-bottom:8px;
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:17px; line-height:1.45;
+    color:var(--ink);
+    text-align:center;
+  }
+  /* «хвостик» к гусю */
+  .speech-bubble::before{
+    content:""; position:absolute;
+    top:-12px; left:50%; transform:translateX(-50%);
+    width:0; height:0;
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-bottom:12px solid var(--ink);
+  }
+  .speech-bubble::after{
+    content:""; position:absolute;
+    top:-9px; left:50%; transform:translateX(-50%);
+    width:0; height:0;
+    border-left:8px solid transparent;
+    border-right:8px solid transparent;
+    border-bottom:10px solid var(--accent-soft);
+  }
+
+  .mascot-modal-name{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:14px; font-weight:600; text-align:center;
+    color:var(--sage-deep);
+    margin-top:8px;
+  }
+  .mascot-modal-cta{
+    margin-top:14px; padding:10px 18px;
+    background:var(--ink); color:var(--paper); border:none;
+    border-radius:100px; font:inherit; font-size:13px; font-weight:600;
+    cursor:pointer; display:block; margin-left:auto; margin-right:auto;
+  }
+  .mascot-modal-cta:hover{transform:translateY(-1px)}
+
   /* TOAST (+points animation) */
   .toast{
     position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
@@ -548,6 +661,17 @@
 
 </div>
 
+<!-- Mascot modal -->
+<div class="mascot-modal" id="mascotModal" role="dialog" aria-modal="true" aria-label="Сообщение от маскота">
+  <div class="mascot-modal-inner">
+    <button class="mascot-close" id="mascotCloseBtn" aria-label="Закрыть">×</button>
+    <div class="speech-bubble" id="mascotMessage">…</div>
+    <div class="mascot-big" id="mascotBig"></div>
+    <div class="mascot-modal-name" id="mascotModalName">— ваш гусёнок</div>
+    <button class="mascot-modal-cta" id="mascotNextMsg">ещё одно сообщение →</button>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast">+0 баллов</div>
 
@@ -676,10 +800,9 @@ function showToast(delta, label){
 
 // ============ WEEKLY GROUP TASKS ============
 const WEEKLY_TASKS = [
-  { id: 'session',  text: 'Пришла на встречу группы',     sub: 'четверг — встреча потока',                       pts: 20 },
-  { id: 'workbook', text: 'Сделала рабочую тетрадь',      sub: 'воркбук недели — заполнила хотя бы частично',     pts: 15 },
-  { id: 'chat',     text: 'Написала в чат группы',        sub: 'вопрос, наблюдение или ответ другому участнику', pts: 5 },
-  { id: 'support',  text: 'Поддержала кого-то из группы', sub: 'комментарий, реакция, отклик в чате',             pts: 5 },
+  { id: 'session',  text: 'Пришла на встречу группы',         sub: 'четверг — встреча потока',                          pts: 20 },
+  { id: 'workbook', text: 'Сделала упражнение в тетради',     sub: 'воркбук недели — хотя бы одно упражнение',           pts: 15 },
+  { id: 'support',  text: 'Поддержала кого-то из группы',     sub: 'комментарий, отклик, реакция в чате',                pts: 10 },
 ];
 
 function renderWeekly(){
@@ -939,6 +1062,74 @@ document.getElementById('resetLink').addEventListener('click', e => {
     state = loadState();
     renderAll();
   }
+});
+
+// ============ MASCOT MODAL ============
+const MASCOT_MESSAGES = [
+  "Привет! Я так рад, что ты есть у меня. Как ты сегодня?",
+  "Знаешь что? Ты делаешь больше, чем тебе кажется.",
+  "У нас всё получится. По чуть-чуть.",
+  "Можно сегодня не идеально. Маленький шаг — тоже шаг.",
+  "Тяжёлый день? Ничего, мы и не такое переживали.",
+  "Спасибо, что не бросаешь. Я с тобой.",
+  "Срывы — часть пути. Возвращаемся, как умеем.",
+  "Не сравнивай себя с другими. Сравнивай с собой вчерашним.",
+  "Это не про силу воли. Это про инструменты и поддержку.",
+  "Если получилось сегодня одно дело — это уже победа.",
+  "Я расту, когда ты пробуешь. Даже когда не получается.",
+  "Ты пришёл сюда — значит, ты уже на пути.",
+  "Можно отдохнуть. Я подожду.",
+  "Помнишь, как было трудно начать? А ты начал.",
+  "Что-то одно сегодня. Не всё. Что-то одно.",
+  "Я тебя не сужу. Никогда.",
+  "Каждая попытка — данные для следующей. Не провал.",
+  "Дыши. Я здесь.",
+  "Если устал — это нормально. Усталость — не лень.",
+  "Когда мы дойдём до конца, ты будешь рыцарь в доспехах. А я твой гусь.",
+];
+
+const mascotModal = document.getElementById('mascotModal');
+const mascotMessage = document.getElementById('mascotMessage');
+const mascotBig = document.getElementById('mascotBig');
+const mascotModalName = document.getElementById('mascotModalName');
+
+function pickMessage(prev){
+  if (MASCOT_MESSAGES.length <= 1) return MASCOT_MESSAGES[0];
+  let msg = prev;
+  while (msg === prev){
+    msg = MASCOT_MESSAGES[Math.floor(Math.random() * MASCOT_MESSAGES.length)];
+  }
+  return msg;
+}
+let lastMessage = '';
+
+function openMascotModal(){
+  const info = getMascotProgress(state.points);
+  mascotBig.innerHTML = info.cur.svg;
+  mascotModalName.textContent = `— ${info.cur.name}`;
+  lastMessage = pickMessage(lastMessage);
+  mascotMessage.textContent = lastMessage;
+  mascotModal.classList.add('open');
+}
+function closeMascotModal(){
+  mascotModal.classList.remove('open');
+}
+
+document.querySelector('.mascot-card').addEventListener('click', openMascotModal);
+document.getElementById('mascotCloseBtn').addEventListener('click', closeMascotModal);
+mascotModal.addEventListener('click', e => {
+  if (e.target === mascotModal) closeMascotModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMascotModal();
+});
+document.getElementById('mascotNextMsg').addEventListener('click', () => {
+  lastMessage = pickMessage(lastMessage);
+  mascotMessage.textContent = lastMessage;
+  // лёгкая анимация смены сообщения
+  mascotMessage.style.animation = 'none';
+  void mascotMessage.offsetWidth;
+  mascotMessage.style.animation = 'popIn .25s var(--easing)';
 });
 
 // ============ INIT ============
