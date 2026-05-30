@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Синичка-скаут · эскизы</title>
+<title>Синичка · эскизы</title>
 <style>
   :root{
     --ink:#1a1614; --soft:#4a423d; --muted:#857c75;
@@ -11,8 +11,9 @@
     --accent:#f0b400; --accent-soft:#f4ebd0; --accent-deep:#7a5b00;
     --sage:#6f8a6a; --sage-deep:#2f4434; --sage-soft:#cfd9c2; --mint-soft:#d9e2cd;
     --rust:#a05a3c; --line:#e1dcd1;
-    --wing:#7a8a92;  /* серо-голубоватый для крыльев синички */
-    --back:#9aa5ab;  /* спинка */
+    --wing:#c7dde6;   /* мятно-голубой для крылышка */
+    --beak:#f5a14d;   /* тёплый оранжевый клюв */
+    --cheek:#f5b4a8;  /* розовая щёчка */
   }
   *{box-sizing:border-box}
   body{
@@ -38,8 +39,8 @@
   }
   .stage.award{border-color:var(--accent); box-shadow:0 6px 0 0 var(--accent-soft)}
   .stage .holder{
-    width:140px; height:160px; margin:0 auto 14px;
-    display:flex; align-items:flex-end; justify-content:center;
+    width:160px; height:160px; margin:0 auto 14px;
+    display:flex; align-items:center; justify-content:center;
   }
   .stage .holder svg{max-width:100%; max-height:100%}
   .stage .day{
@@ -59,432 +60,410 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Синичка-скаут</h1>
-  <p class="sub">Маскот челленджа-воронки. Большая синица (Parus major): жёлтое брюшко, чёрная шапка, белые щёки, серо-голубые крылья. 10 стадий от яйца до выпускницы с медалью. Гусь остаётся за платной группой.</p>
+  <h1>Синичка · мультяшный стиль</h1>
+  <p class="sub">Пухлая, толстые контуры, минимум деталей. Те же 10 стадий: яйцо → выпускница со значками и медалью. Большая голова, маленькое мятное крылышко, оранжевый клюв-треугольник, одна розовая щёчка, простой большой глаз.</p>
 
   <div class="stages" id="grid"></div>
 </div>
 
 <script>
-const BADGE_COLORS = ['#f0b400', '#6f8a6a', '#a05a3c', '#2f4434', '#a8c0a0', '#7a5b00', '#cfd9c2', '#d9e2cd'];
+// Стандартный stroke: 3.5px ink, round join/cap
+const S = `stroke="#1a1614" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"`;
+const S2 = `stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"`;
 
-function badge(cx, cy, color){
-  return `<circle cx="${cx}" cy="${cy}" r="3.5" fill="${color}" stroke="#1a1614" stroke-width="1"/>`;
-}
-
-// Базовое «синичье оперение» — голова с шапкой и щёчками
-function titHead(cx, cy, r){
+// Базовое тело + голова + глаз + клюв + крылышко + щёчка + лапки
+function baseBird(opts = {}){
+  const { eyeY=110, beakY=125, hasWing=true, hasCheek=true, eyeStyle='open' } = opts;
   return `
-    <!-- голова основа (серо-голубоватая спинка цвет) -->
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-    <!-- чёрная шапка-капюшон сверху -->
-    <path d="M ${cx-r} ${cy-2} Q ${cx} ${cy-r-4} ${cx+r} ${cy-2} Q ${cx+r-2} ${cy+r/2-2} ${cx} ${cy+r/2} Q ${cx-r+2} ${cy+r/2-2} ${cx-r} ${cy-2} Z"
-          fill="#1a1614" stroke="#1a1614" stroke-width="1.2"/>
-    <!-- белые щёчки -->
-    <ellipse cx="${cx-r/2+2}" cy="${cy+1}" rx="${r/2-1}" ry="${r/2-2}" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
-    <ellipse cx="${cx+r/2-2}" cy="${cy+1}" rx="${r/2-1}" ry="${r/2-2}" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
+    <!-- тельце (овал внизу) -->
+    <ellipse cx="100" cy="135" rx="55" ry="48" fill="#fbf8ee" ${S}/>
+    <!-- крылышко мятное -->
+    ${hasWing ? `<path d="M 108 115 C 130 110, 150 125, 148 150 C 140 155, 118 152, 108 138 Z"
+              fill="#c7dde6" ${S2}/>` : ''}
+    <!-- хвостик-треугольник -->
+    <path d="M 152 132 L 168 128 L 165 138 Z" fill="#fbf8ee" ${S2}/>
+    <!-- глаз -->
+    ${eyeStyle === 'open'
+      ? `<circle cx="65" cy="${eyeY}" r="6" fill="#1a1614"/>`
+      : `<path d="M 59 ${eyeY} Q 65 ${eyeY+3} 71 ${eyeY}" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>`
+    }
+    <!-- клюв-треугольник -->
+    <path d="M 50 ${beakY} L 35 ${beakY+5} L 50 ${beakY+10} Z" fill="#f5a14d" ${S2}/>
+    <!-- розовая щёчка -->
+    ${hasCheek ? `<circle cx="78" cy="${beakY+2}" r="6" fill="#f5b4a8" opacity=".85"/>` : ''}
+    <!-- лапки -->
+    <line x1="86" y1="180" x2="86" y2="195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+    <line x1="114" y1="180" x2="114" y2="195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 80 195 L 92 195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 108 195 L 120 195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
   `;
 }
 
 const STAGES = [
-  // ====== 0: ЯЙЦО ВОРОБЬИНОЕ ======
+  // ====== 0: ЯЙЦО ======
   {
     day: 'СТАРТ', name: 'Яйцо', desc: 'Только заглянула — что-то скоро начнётся',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 40 218 C 60 210, 80 215, 100 212 C 120 215, 140 210, 160 218" fill="none" stroke="#a08660" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 50 224 C 70 218, 90 220, 100 218 C 130 220, 150 218, 160 222" fill="none" stroke="#a08660" stroke-width="2.5" stroke-linecap="round"/>
-      <ellipse cx="100" cy="218" rx="50" ry="3" fill="#2f4434" opacity=".18"/>
-      <ellipse cx="100" cy="180" rx="30" ry="38" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" stroke-linejoin="round"/>
-      <circle cx="92" cy="160" r="1.8" fill="#a05a3c" opacity=".7"/>
-      <circle cx="108" cy="170" r="1.5" fill="#a05a3c" opacity=".65"/>
-      <circle cx="86" cy="178" r="2" fill="#a05a3c" opacity=".6"/>
-      <circle cx="114" cy="185" r="1.6" fill="#a05a3c" opacity=".65"/>
-      <circle cx="96" cy="195" r="1.4" fill="#a05a3c" opacity=".7"/>
-      <circle cx="106" cy="200" r="1.8" fill="#a05a3c" opacity=".6"/>
-      <circle cx="90" cy="205" r="1.3" fill="#a05a3c" opacity=".7"/>
-      <circle cx="118" cy="172" r="1.2" fill="#a05a3c" opacity=".6"/>
-      <circle cx="88" cy="188" r="1.4" fill="#a05a3c" opacity=".65"/>
-      <circle cx="100" cy="183" r="1.2" fill="#a05a3c" opacity=".6"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="180" rx="55" ry="4" fill="#1a1614" opacity=".12"/>
+      <!-- крупное толстоконтурное яйцо -->
+      <ellipse cx="100" cy="110" rx="48" ry="62" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <!-- крупные крапинки -->
+      <circle cx="82" cy="80" r="3" fill="#1a1614" opacity=".5"/>
+      <circle cx="118" cy="95" r="2.5" fill="#1a1614" opacity=".5"/>
+      <circle cx="75" cy="115" r="3.5" fill="#1a1614" opacity=".5"/>
+      <circle cx="125" cy="125" r="2.5" fill="#1a1614" opacity=".5"/>
+      <circle cx="95" cy="145" r="3" fill="#1a1614" opacity=".5"/>
+      <circle cx="110" cy="155" r="2.5" fill="#1a1614" opacity=".5"/>
+      <circle cx="85" cy="100" r="2" fill="#1a1614" opacity=".5"/>
     </svg>`,
   },
-  // ====== 1: ВЫЛУПИЛСЯ ======
+  // ====== 1: ВЫЛУПИЛАСЬ ======
   {
-    day: 'ДЕНЬ 1', name: 'Вылупилась', desc: 'Голенькая, рот шире головы',
+    day: 'ДЕНЬ 1', name: 'Вылупилась', desc: 'Голова в скорлупе, ротик настежь',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="225" rx="48" ry="3" fill="#2f4434" opacity=".18"/>
-      <!-- скорлупа -->
-      <path d="M 60 195 C 58 218, 100 224, 140 195 L 132 200 L 124 194 L 115 200 L 106 196 L 96 200 L 86 194 L 76 200 L 68 196 Z"
-            fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
-      <circle cx="78" cy="208" r="1.4" fill="#a05a3c" opacity=".6"/>
-      <circle cx="100" cy="215" r="1.2" fill="#a05a3c" opacity=".6"/>
-      <circle cx="120" cy="208" r="1.4" fill="#a05a3c" opacity=".6"/>
-      <!-- голенький розовый -->
-      <ellipse cx="100" cy="175" rx="22" ry="18" fill="#e8c4a0" stroke="#1a1614" stroke-width="1.6"/>
-      <circle cx="100" cy="155" r="20" fill="#e8c4a0" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 92 138 L 90 130" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
-      <path d="M 100 134 L 100 124" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
-      <path d="M 108 138 L 110 130" stroke="#1a1614" stroke-width="1.4" stroke-linecap="round"/>
-      <path d="M 90 154 Q 93 156 96 154" fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M 104 154 Q 107 156 110 154" fill="none" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
-      <!-- огромный жёлтый клюв -->
-      <path d="M 88 166 L 100 178 L 112 166 L 100 170 Z" fill="#f0b400" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M 88 166 L 112 166" stroke="#1a1614" stroke-width="1"/>
-      <ellipse cx="84" cy="160" rx="4" ry="3" fill="#a05a3c" opacity=".3"/>
-      <ellipse cx="116" cy="160" rx="4" ry="3" fill="#a05a3c" opacity=".3"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="188" rx="60" ry="4" fill="#1a1614" opacity=".12"/>
+      <!-- скорлупа-чаша -->
+      <path d="M 50 130 C 48 175, 100 188, 150 130 L 138 142 L 124 128 L 110 142 L 96 128 L 82 142 L 68 128 Z"
+            fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5" stroke-linejoin="round"/>
+      <!-- голова торчит из скорлупы -->
+      <circle cx="100" cy="100" r="42" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <!-- зажмуренные глазки -->
+      <path d="M 78 100 Q 84 104 90 100" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 110 100 Q 116 104 122 100" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- ОГРОМНЫЙ открытый клюв -->
+      <path d="M 78 115 L 100 130 L 122 115 L 100 122 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="3"/>
+      <line x1="78" y1="115" x2="122" y2="115" stroke="#1a1614" stroke-width="2.5"/>
+      <!-- щёчки -->
+      <circle cx="68" cy="108" r="5" fill="#f5b4a8" opacity=".85"/>
+      <circle cx="132" cy="108" r="5" fill="#f5b4a8" opacity=".85"/>
+      <!-- пушинки на макушке -->
+      <line x1="88" y1="65" x2="86" y2="55" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="100" y1="60" x2="100" y2="50" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="112" y1="65" x2="114" y2="55" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 2: ПУШИСТИК — жёлтенький пух уже видно ======
+  // ====== 2: ПУШИСТИК ======
   {
-    day: 'ДЕНЬ 2', name: 'Пушистик', desc: 'Появился жёлтый пух — будущая синичка',
+    day: 'ДЕНЬ 2', name: 'Пушистик', desc: 'Стоит на лапках, ещё не оперилась',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="226" rx="45" ry="3" fill="#2f4434" opacity=".18"/>
-      <!-- тельце жёлтенькое (грудка просвечивает через пух) -->
-      <circle cx="100" cy="180" r="34" fill="#f0b400" stroke="#1a1614" stroke-width="1.6"/>
-      <!-- пушок -->
-      <g stroke="#1a1614" stroke-width="1" stroke-linecap="round" opacity=".55">
-        <path d="M 72 168 l 2 -3"/>
-        <path d="M 84 158 l 2 -3"/>
-        <path d="M 100 153 l 0 -4"/>
-        <path d="M 116 158 l 2 -3"/>
-        <path d="M 128 168 l 2 -3"/>
-        <path d="M 80 198 l 2 -3"/>
-        <path d="M 120 198 l 2 -3"/>
-      </g>
-      <!-- начало чёрной шапки (только пятнышко на макушке) -->
-      <path d="M 88 150 Q 100 142 112 150 Q 110 156 100 156 Q 90 156 88 150 Z" fill="#1a1614" opacity=".85"/>
-      <!-- хохолок -->
-      <path d="M 95 144 L 93 137" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M 100 142 L 100 133" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M 105 144 L 107 137" stroke="#1a1614" stroke-width="1.6" stroke-linecap="round"/>
-      <!-- глаза -->
-      <circle cx="89" cy="175" r="3.5" fill="#1a1614"/>
-      <circle cx="111" cy="175" r="3.5" fill="#1a1614"/>
-      <circle cx="90" cy="174" r="1.1" fill="#fbf8ee"/>
-      <circle cx="112" cy="174" r="1.1" fill="#fbf8ee"/>
-      <!-- белые щёчки начинают появляться -->
-      <ellipse cx="79" cy="183" rx="6" ry="4" fill="#fbf8ee" stroke="#1a1614" stroke-width=".8" opacity=".7"/>
-      <ellipse cx="121" cy="183" rx="6" ry="4" fill="#fbf8ee" stroke="#1a1614" stroke-width=".8" opacity=".7"/>
-      <!-- маленький чёрный клюв -->
-      <path d="M 94 188 L 100 196 L 106 188 L 100 185 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.2"/>
-      <!-- лапки тёмно-серые -->
-      <line x1="92" y1="212" x2="90" y2="222" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="108" y1="212" x2="110" y2="222" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="84" y1="222" x2="94" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
-      <line x1="106" y1="222" x2="116" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="190" rx="50" ry="4" fill="#1a1614" opacity=".12"/>
+      <!-- единое круглое тельце (голова+тело слитные) -->
+      <circle cx="100" cy="110" r="58" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <!-- пушинки на макушке (типа волосок и набок) -->
+      <path d="M 90 52 C 88 44, 92 38, 96 38" fill="none" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 100 50 L 100 38" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 110 52 C 112 44, 108 38, 104 38" fill="none" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <!-- глаз — большой простой -->
+      <circle cx="78" cy="105" r="7" fill="#1a1614"/>
+      <!-- клюв -->
+      <path d="M 60 120 L 45 125 L 60 132 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- розовая щёчка -->
+      <circle cx="90" cy="125" r="6" fill="#f5b4a8" opacity=".85"/>
+      <!-- крылышко -->
+      <path d="M 110 118 C 132 112, 152 130, 148 152 C 140 155, 118 152, 110 138 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- лапки -->
+      <line x1="86" y1="167" x2="86" y2="185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="114" y1="167" x2="114" y2="185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 80 185 L 92 185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 108 185 L 120 185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 3: СКАУТ-НОВИЧОК — уже видно характерный окрас синички ======
+  // ====== 3: СКАУТ-НОВИЧОК — синичный окрас + кепка + первый значок ======
   {
-    day: 'ДЕНЬ 3', name: 'Новичок', desc: '🎁 Полноценная синичка: шапка, щёки, галстук, кепка',
+    day: 'ДЕНЬ 3', name: 'Новичок', desc: '🎁 Появилась шапка, щёки, кепка скаута',
     award: true,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="226" rx="48" ry="3" fill="#2f4434" opacity=".18"/>
-      <!-- спинка (серо-голубая) -->
-      <ellipse cx="100" cy="170" rx="38" ry="34" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <!-- жёлтая грудка (БОЛЬШАЯ — главная фишка синички) -->
-      <ellipse cx="100" cy="180" rx="22" ry="24" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <!-- ЧЁРНЫЙ ГАЛСТУК по центру брюшка (характерный для большой синицы) -->
-      <path d="M 100 160 L 96 200 L 100 204 L 104 200 Z" fill="#1a1614"/>
-      <!-- крыло серо-голубое -->
-      <path d="M 78 162 C 82 175, 84 185, 76 192 C 70 184, 70 170, 78 162 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- маховые перья (полоска) -->
-      <path d="M 74 172 L 80 170 M 74 178 L 80 176" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <!-- хвост -->
-      <path d="M 132 172 L 148 175 L 144 182 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- голова с черной шапкой и белыми щёками -->
-      <circle cx="100" cy="135" r="20" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <!-- ЧЁРНАЯ ШАПКА -->
-      <path d="M 80 135 Q 100 116 120 135 Q 118 145 100 147 Q 82 145 80 135 Z" fill="#1a1614"/>
-      <!-- БЕЛЫЕ ЩЁКИ -->
-      <ellipse cx="89" cy="138" rx="6" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
-      <ellipse cx="111" cy="138" rx="6" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
-      <!-- глаза в щёках -->
-      <circle cx="89" cy="138" r="2.2" fill="#1a1614"/>
-      <circle cx="111" cy="138" r="2.2" fill="#1a1614"/>
-      <circle cx="89.5" cy="137.5" r=".7" fill="#fbf8ee"/>
-      <circle cx="111.5" cy="137.5" r=".7" fill="#fbf8ee"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="190" rx="55" ry="4" fill="#1a1614" opacity=".12"/>
+      <!-- тельце -->
+      <circle cx="100" cy="115" r="58" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <!-- жёлтое брюшко (полукруг внизу) -->
+      <path d="M 50 130 C 60 165, 140 165, 150 130 Q 100 175 50 130 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <!-- ЧЁРНЫЙ ГАЛСТУК (характерная полоса синички) -->
+      <path d="M 100 105 L 92 165 L 100 170 L 108 165 Z" fill="#1a1614"/>
+      <!-- ЧЁРНАЯ ШАПКА (характерная для синички) -->
+      <path d="M 55 80 Q 100 40 145 80 Q 145 95 100 100 Q 55 95 55 80 Z" fill="#1a1614"/>
       <!-- кепка скаута поверх шапки -->
-      <path d="M 80 120 Q 100 108 120 120 L 124 126 L 76 126 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 80 126 L 124 126 L 122 130 L 82 130 Z" fill="#1a1614"/>
-      <circle cx="100" cy="118" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <!-- маленький тёмный клюв синички -->
-      <path d="M 95 148 L 100 156 L 105 148 L 100 145 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- первый значок на жилетке (поверх жёлтой грудки) -->
-      ${badge(82, 178, '#6f8a6a')}
-      <!-- ноги -->
-      <line x1="92" y1="202" x2="90" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
-      <line x1="108" y1="202" x2="110" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
-      <line x1="84" y1="222" x2="94" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
-      <line x1="106" y1="222" x2="116" y2="222" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
+      <path d="M 60 70 Q 100 48 140 70 L 145 80 L 55 80 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="55" y="78" width="90" height="6" fill="#1a1614"/>
+      <circle cx="100" cy="64" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- глаз на шапке (внутри чёрного) -->
+      <circle cx="78" cy="98" r="6" fill="#fbf8ee"/>
+      <circle cx="78" cy="98" r="3" fill="#1a1614"/>
+      <!-- розовая щёчка -->
+      <circle cx="90" cy="118" r="6" fill="#f5b4a8" opacity=".85"/>
+      <!-- клюв -->
+      <path d="M 60 110 L 42 115 L 60 122 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- крылышко -->
+      <path d="M 110 115 C 132 112, 152 130, 148 152 C 140 155, 118 152, 110 138 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- значок на жилетке -->
+      <circle cx="78" cy="148" r="6" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <!-- лапки -->
+      <line x1="86" y1="167" x2="86" y2="185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="114" y1="167" x2="114" y2="185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 80 185 L 92 185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 108 185 L 120 185" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 4: ИССЛЕДОВАТЕЛЬ с биноклем, на одной ноге ======
+  // ====== 4: ИССЛЕДОВАТЕЛЬ С БИНОКЛЕМ ======
   {
-    day: 'ДЕНЬ 4', name: 'Исследователь', desc: 'С биноклем изучает мир, на одной ноге',
+    day: 'ДЕНЬ 4', name: 'Исследователь', desc: 'С биноклем, на одной ноге',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="226" rx="40" ry="3" fill="#2f4434" opacity=".18"/>
-      <ellipse cx="100" cy="172" rx="36" ry="32" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6" transform="rotate(-8 100 172)"/>
-      <ellipse cx="98" cy="180" rx="18" ry="20" fill="#f0b400" stroke="#1a1614" stroke-width="1.4" transform="rotate(-8 98 180)"/>
-      <path d="M 98 162 L 92 198 L 96 202 L 100 198 Z" fill="#1a1614" transform="rotate(-8 98 180)"/>
-      <path d="M 124 155 C 138 165, 142 180, 130 192 C 122 184, 118 168, 124 155 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 130 168 L 148 162 L 146 175 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- голова — повёрнута влево, ищет в бинокль -->
-      <circle cx="92" cy="130" r="20" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 72 130 Q 92 112 112 130 Q 110 140 92 142 Q 74 140 72 130 Z" fill="#1a1614"/>
-      <!-- щёки за биноклем -->
-      <ellipse cx="80" cy="132" rx="6" ry="5" fill="#fbf8ee" stroke="#1a1614" stroke-width=".8"/>
-      <ellipse cx="104" cy="132" rx="6" ry="5" fill="#fbf8ee" stroke="#1a1614" stroke-width=".8"/>
-      <!-- кепка скаута -->
-      <path d="M 72 115 Q 92 103 112 115 L 116 122 L 68 122 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 72 122 L 116 122 L 114 126 L 74 126 Z" fill="#1a1614"/>
-      <circle cx="92" cy="113" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <!-- БИНОКЛЬ -->
-      <ellipse cx="76" cy="132" rx="9" ry="6" fill="#2f4434" stroke="#1a1614" stroke-width="1.5"/>
-      <ellipse cx="100" cy="132" rx="9" ry="6" fill="#2f4434" stroke="#1a1614" stroke-width="1.5"/>
-      <line x1="85" y1="132" x2="91" y2="132" stroke="#1a1614" stroke-width="2"/>
-      <circle cx="76" cy="132" r="3" fill="#1a1614"/>
-      <circle cx="100" cy="132" r="3" fill="#1a1614"/>
-      <circle cx="76.5" cy="131" r="1" fill="#fbf8ee"/>
-      <circle cx="100.5" cy="131" r="1" fill="#fbf8ee"/>
-      <path d="M 88 144 L 92 152 L 96 144 L 92 141 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      ${badge(82, 178, '#6f8a6a')}
-      ${badge(86, 192, '#a05a3c')}
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="190" rx="45" ry="4" fill="#1a1614" opacity=".12"/>
+      <circle cx="100" cy="115" r="58" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 50 130 C 60 165, 140 165, 150 130 Q 100 175 50 130 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 105 L 92 165 L 100 170 L 108 165 Z" fill="#1a1614"/>
+      <path d="M 55 80 Q 100 40 145 80 Q 145 95 100 100 Q 55 95 55 80 Z" fill="#1a1614"/>
+      <path d="M 60 70 Q 100 48 140 70 L 145 80 L 55 80 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="55" y="78" width="90" height="6" fill="#1a1614"/>
+      <circle cx="100" cy="64" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- БИНОКЛЬ перед глазами — два больших овала + перемычка -->
+      <circle cx="75" cy="100" r="12" fill="#2f4434" stroke="#1a1614" stroke-width="3"/>
+      <circle cx="100" cy="100" r="12" fill="#2f4434" stroke="#1a1614" stroke-width="3"/>
+      <line x1="87" y1="100" x2="88" y2="100" stroke="#1a1614" stroke-width="4"/>
+      <circle cx="75" cy="100" r="5" fill="#1a1614"/>
+      <circle cx="100" cy="100" r="5" fill="#1a1614"/>
+      <circle cx="76" cy="98" r="1.5" fill="#fbf8ee"/>
+      <circle cx="101" cy="98" r="1.5" fill="#fbf8ee"/>
+      <circle cx="90" cy="125" r="5" fill="#f5b4a8" opacity=".75"/>
+      <path d="M 55 120 L 38 124 L 55 130 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <path d="M 110 115 C 132 112, 152 130, 148 152 C 140 155, 118 152, 110 138 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- 2 значка -->
+      <circle cx="74" cy="145" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="160" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
       <!-- одна нога опорная, вторая подогнута -->
-      <line x1="96" y1="204" x2="94" y2="226" stroke="#4a423d" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="88" y1="226" x2="100" y2="226" stroke="#4a423d" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M 108 200 C 112 206, 110 212, 104 214" fill="none" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
+      <line x1="100" y1="167" x2="100" y2="195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 94 195 L 106 195" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 116 167 C 120 175, 116 182, 110 182" fill="none" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 5: СЛЕДОПЫТ с картой ======
+  // ====== 5: СЛЕДОПЫТ С КАРТОЙ ======
   {
     day: 'ДЕНЬ 5', name: 'Следопыт', desc: 'Развернула карту, изучает маршрут',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="226" rx="55" ry="3" fill="#2f4434" opacity=".18"/>
-      <line x1="82" y1="200" x2="76" y2="226" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="118" y1="200" x2="124" y2="226" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="68" y1="226" x2="84" y2="226" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="116" y1="226" x2="132" y2="226" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <ellipse cx="100" cy="170" rx="38" ry="32" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <ellipse cx="100" cy="178" rx="20" ry="22" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 100 160 L 96 196 L 100 200 L 104 196 Z" fill="#1a1614"/>
-      <path d="M 132 168 L 150 165 L 146 175 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <circle cx="100" cy="135" r="20" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 80 135 Q 100 116 120 135 Q 118 145 100 147 Q 82 145 80 135 Z" fill="#1a1614"/>
-      <ellipse cx="89" cy="138" rx="6" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
-      <ellipse cx="111" cy="138" rx="6" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 80 122 Q 100 110 120 122 L 124 128 L 76 128 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 80 128 L 124 128 L 122 132 L 82 132 Z" fill="#1a1614"/>
-      <circle cx="100" cy="120" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <!-- глаза смотрят вниз на карту -->
-      <path d="M 86 140 Q 89 142 92 140" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M 108 140 Q 111 142 114 140" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M 95 148 L 100 156 L 105 148 L 100 145 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- КАРТА -->
-      <path d="M 56 175 L 144 175 L 152 195 L 48 195 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M 64 185 Q 80 180, 96 188 Q 110 192, 130 184" fill="none" stroke="#a05a3c" stroke-width="1.5" stroke-dasharray="2 3" stroke-linecap="round"/>
-      <circle cx="64" cy="185" r="2" fill="#f0b400" stroke="#1a1614" stroke-width=".8"/>
-      <circle cx="130" cy="184" r="2.5" fill="#a05a3c" stroke="#1a1614" stroke-width=".8"/>
-      <circle cx="80" cy="190" r="1" fill="#6f8a6a"/>
-      <circle cx="110" cy="186" r="1" fill="#6f8a6a"/>
-      <line x1="80" y1="175" x2="78" y2="195" stroke="#1a1614" stroke-width=".6" opacity=".4"/>
-      <line x1="120" y1="175" x2="122" y2="195" stroke="#1a1614" stroke-width=".6" opacity=".4"/>
-      <!-- компас -->
-      <circle cx="156" cy="178" r="7" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.2"/>
-      <line x1="156" y1="172" x2="156" y2="184" stroke="#1a1614" stroke-width=".6"/>
-      <path d="M 156 172 L 158 178 L 156 174 L 154 178 Z" fill="#a05a3c"/>
-      ${badge(82, 170, '#6f8a6a')}
-      ${badge(82, 184, '#a05a3c')}
-      ${badge(118, 175, '#2f4434')}
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="190" rx="55" ry="4" fill="#1a1614" opacity=".12"/>
+      <circle cx="100" cy="105" r="56" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 52 120 C 60 150, 140 150, 148 120 Q 100 160 52 120 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 95 L 92 150 L 100 155 L 108 150 Z" fill="#1a1614"/>
+      <path d="M 55 70 Q 100 30 145 70 Q 145 85 100 90 Q 55 85 55 70 Z" fill="#1a1614"/>
+      <path d="M 60 60 Q 100 38 140 60 L 145 70 L 55 70 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="55" y="68" width="90" height="6" fill="#1a1614"/>
+      <circle cx="100" cy="54" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- глаз смотрит вниз на карту -->
+      <path d="M 72 95 Q 78 100 84 95" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="92" cy="110" r="5" fill="#f5b4a8" opacity=".75"/>
+      <path d="M 60 100 L 42 105 L 60 110 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- КАРТА перед птичкой -->
+      <path d="M 30 165 L 170 165 L 178 195 L 22 195 Z" fill="#fbf8ee" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 40 178 Q 70 175, 100 182 Q 130 188, 160 180" fill="none" stroke="#a05a3c" stroke-width="2.5" stroke-dasharray="3 4" stroke-linecap="round"/>
+      <circle cx="40" cy="178" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <circle cx="160" cy="180" r="3.5" fill="#a05a3c" stroke="#1a1614" stroke-width="1.5"/>
+      <line x1="60" y1="165" x2="58" y2="195" stroke="#1a1614" stroke-width="1.2" opacity=".4"/>
+      <line x1="140" y1="165" x2="142" y2="195" stroke="#1a1614" stroke-width="1.2" opacity=".4"/>
+      <!-- 3 значка -->
+      <circle cx="74" cy="130" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="142" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="122" cy="142" r="5" fill="#2f4434" stroke="#1a1614" stroke-width="2"/>
+      <!-- крылышко -->
+      <path d="M 110 105 C 132 102, 152 120, 148 142 C 140 145, 118 142, 110 128 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
     </svg>`,
   },
-  // ====== 6: МАСТЕР — крупная, в очках, с дневником ======
+  // ====== 6: МАСТЕР В ОЧКАХ ======
   {
     day: 'ДЕНЬ 6', name: 'Мастер', desc: '🎁 Большие очки, дневник, серьёзный вид',
     award: true,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="228" rx="50" ry="3" fill="#2f4434" opacity=".2"/>
-      <ellipse cx="100" cy="165" rx="46" ry="42" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <ellipse cx="100" cy="175" rx="28" ry="30" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 100 150 L 96 200 L 100 204 L 104 200 Z" fill="#1a1614"/>
-      <path d="M 70 152 C 72 175, 76 192, 68 205 C 58 192, 56 168, 70 152 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.4"/>
-      <!-- ДНЕВНИК -->
-      <rect x="124" y="170" width="22" height="28" rx="1.5" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <rect x="127" y="173" width="16" height="22" rx="0.5" fill="#fbf8ee"/>
-      <line x1="129" y1="178" x2="141" y2="178" stroke="#1a1614" stroke-width=".6"/>
-      <line x1="129" y1="183" x2="141" y2="183" stroke="#1a1614" stroke-width=".6"/>
-      <line x1="129" y1="188" x2="141" y2="188" stroke="#1a1614" stroke-width=".6"/>
-      <circle cx="135" cy="195" r="1.5" fill="#a05a3c"/>
-      <path d="M 132 168 L 148 165 L 144 175 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <circle cx="100" cy="125" r="22" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 125 Q 100 106 122 125 Q 120 137 100 139 Q 80 137 78 125 Z" fill="#1a1614"/>
-      <!-- БОЛЬШИЕ ОЧКИ поверх щёк -->
-      <ellipse cx="89" cy="128" rx="9" ry="7" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" opacity=".9"/>
-      <ellipse cx="111" cy="128" rx="9" ry="7" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" opacity=".9"/>
-      <line x1="98" y1="128" x2="102" y2="128" stroke="#1a1614" stroke-width="2"/>
-      <path d="M 80 126 L 76 124" stroke="#1a1614" stroke-width="1.5"/>
-      <path d="M 120 126 L 124 124" stroke="#1a1614" stroke-width="1.5"/>
-      <circle cx="89" cy="128" r="2" fill="#1a1614"/>
-      <circle cx="111" cy="128" r="2" fill="#1a1614"/>
-      <circle cx="89.5" cy="127" r=".7" fill="#fbf8ee"/>
-      <circle cx="111.5" cy="127" r=".7" fill="#fbf8ee"/>
-      <path d="M 78 112 Q 100 100 122 112 L 126 118 L 74 118 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 118 L 126 118 L 124 122 L 76 122 Z" fill="#1a1614"/>
-      <circle cx="100" cy="110" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 95 142 L 100 150 L 105 142 L 100 139 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      ${badge(80, 162, '#6f8a6a')}
-      ${badge(76, 178, '#a05a3c')}
-      ${badge(82, 192, '#2f4434')}
-      ${badge(118, 175, '#a8c0a0')}
-      <line x1="92" y1="207" x2="90" y2="224" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="108" y1="207" x2="110" y2="224" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="82" y1="224" x2="96" y2="224" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="104" y1="224" x2="118" y2="224" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="192" rx="60" ry="4" fill="#1a1614" opacity=".15"/>
+      <!-- большое тело -->
+      <circle cx="100" cy="115" r="62" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 45 130 C 55 170, 145 170, 155 130 Q 100 180 45 130 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 100 L 92 170 L 100 175 L 108 170 Z" fill="#1a1614"/>
+      <path d="M 50 78 Q 100 35 150 78 Q 150 95 100 100 Q 50 95 50 78 Z" fill="#1a1614"/>
+      <path d="M 56 68 Q 100 44 144 68 L 150 78 L 50 78 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="50" y="76" width="100" height="6" fill="#1a1614"/>
+      <circle cx="100" cy="60" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- ОГРОМНЫЕ КРУГЛЫЕ ОЧКИ — главная фишка мастера -->
+      <circle cx="76" cy="105" r="16" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <circle cx="110" cy="105" r="16" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <line x1="92" y1="105" x2="94" y2="105" stroke="#1a1614" stroke-width="3.5"/>
+      <line x1="60" y1="103" x2="56" y2="100" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="126" y1="103" x2="130" y2="100" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="76" cy="105" r="5" fill="#1a1614"/>
+      <circle cx="110" cy="105" r="5" fill="#1a1614"/>
+      <circle cx="77" cy="103" r="1.5" fill="#fbf8ee"/>
+      <circle cx="111" cy="103" r="1.5" fill="#fbf8ee"/>
+      <path d="M 55 125 L 38 130 L 55 135 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- крылышко с ДНЕВНИКОМ -->
+      <path d="M 115 115 C 137 112, 157 130, 153 152 C 145 155, 123 152, 115 138 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <rect x="135" y="125" width="20" height="26" rx="2" fill="#a05a3c" stroke="#1a1614" stroke-width="2.5"/>
+      <rect x="138" y="128" width="14" height="20" rx="1" fill="#fbf8ee"/>
+      <line x1="141" y1="134" x2="149" y2="134" stroke="#1a1614" stroke-width="1.2"/>
+      <line x1="141" y1="140" x2="149" y2="140" stroke="#1a1614" stroke-width="1.2"/>
+      <line x1="141" y1="146" x2="146" y2="146" stroke="#1a1614" stroke-width="1.2"/>
+      <!-- 4 значка -->
+      <circle cx="76" cy="142" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="156" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="92" cy="165" r="5" fill="#2f4434" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="108" cy="165" r="5" fill="#a8c0a0" stroke="#1a1614" stroke-width="2"/>
+      <!-- лапки -->
+      <line x1="86" y1="172" x2="86" y2="188" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="114" y1="172" x2="114" y2="188" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 80 188 L 92 188" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 108 188 L 120 188" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 7: ЭКСПЕРТ на пеньке с указкой ======
+  // ====== 7: ЭКСПЕРТ НА ПЕНЬКЕ С УКАЗКОЙ ======
   {
-    day: 'ДЕНЬ 7', name: 'Эксперт', desc: 'Стоит на пеньке с указкой — учит других',
+    day: 'ДЕНЬ 7', name: 'Эксперт', desc: 'Стоит на пеньке с указкой',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="228" rx="45" ry="3" fill="#2f4434" opacity=".2"/>
-      <rect x="76" y="200" width="48" height="24" rx="2" fill="#a08660" stroke="#1a1614" stroke-width="1.5"/>
-      <path d="M 80 207 Q 100 205 120 207" fill="none" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <path d="M 82 212 Q 100 210 118 212" fill="none" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <path d="M 84 217 Q 100 215 116 217" fill="none" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <ellipse cx="100" cy="200" rx="24" ry="3" fill="#7a5b00" opacity=".3"/>
-      <ellipse cx="100" cy="155" rx="38" ry="38" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <ellipse cx="100" cy="165" rx="22" ry="26" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 100 140 L 96 190 L 100 194 L 104 190 Z" fill="#1a1614"/>
-      <path d="M 132 142 L 168 80 L 172 84 L 138 148 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="170" cy="82" r="3.5" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 125 130 C 140 130, 145 138, 140 150 C 132 148, 128 142, 125 130 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 72 145 C 65 165, 70 185, 76 195 C 60 188, 58 170, 72 145 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 128 165 L 144 162 L 140 170 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <circle cx="100" cy="115" r="22" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 115 Q 100 96 122 115 Q 120 127 100 129 Q 80 127 78 115 Z" fill="#1a1614"/>
-      <ellipse cx="89" cy="118" rx="9" ry="7" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" opacity=".9"/>
-      <ellipse cx="111" cy="118" rx="9" ry="7" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.8" opacity=".9"/>
-      <line x1="98" y1="118" x2="102" y2="118" stroke="#1a1614" stroke-width="2"/>
-      <circle cx="89" cy="118" r="2" fill="#1a1614"/>
-      <circle cx="111" cy="118" r="2" fill="#1a1614"/>
-      <path d="M 78 102 Q 100 90 122 102 L 126 108 L 74 108 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 108 L 126 108 L 124 112 L 76 112 Z" fill="#1a1614"/>
-      <path d="M 115 96 C 122 88, 128 86, 132 88 C 128 94, 122 100, 118 102" fill="#f0b400" stroke="#1a1614" stroke-width="1.2"/>
-      <circle cx="100" cy="100" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 95 132 L 100 140 L 105 132 L 100 129 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      ${badge(80, 152, '#6f8a6a')}
-      ${badge(76, 168, '#a05a3c')}
-      ${badge(82, 184, '#2f4434')}
-      ${badge(118, 165, '#a8c0a0')}
-      ${badge(120, 180, '#7a5b00')}
-      <line x1="92" y1="195" x2="92" y2="202" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="108" y1="195" x2="108" y2="202" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="195" rx="40" ry="4" fill="#1a1614" opacity=".15"/>
+      <!-- ПЕНЁК -->
+      <rect x="76" y="175" width="48" height="20" rx="3" fill="#a08660" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 80 184 Q 100 182 120 184" fill="none" stroke="#1a1614" stroke-width="1.5" opacity=".5"/>
+      <path d="M 82 190 Q 100 188 118 190" fill="none" stroke="#1a1614" stroke-width="1.5" opacity=".5"/>
+      <ellipse cx="100" cy="175" rx="24" ry="4" fill="#7a5b00" opacity=".3"/>
+      <!-- тельце -->
+      <circle cx="100" cy="105" r="55" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 50 120 C 58 152, 142 152, 150 120 Q 100 162 50 120 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 92 L 92 152 L 100 156 L 108 152 Z" fill="#1a1614"/>
+      <path d="M 52 70 Q 100 28 148 70 Q 148 85 100 90 Q 52 85 52 70 Z" fill="#1a1614"/>
+      <path d="M 58 58 Q 100 38 142 58 L 148 70 L 52 70 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="52" y="68" width="96" height="6" fill="#1a1614"/>
+      <!-- перо в кепке -->
+      <path d="M 130 48 C 140 38, 150 36, 156 38 C 152 46, 142 54, 134 56" fill="#f0b400" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="100" cy="50" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- очки -->
+      <circle cx="76" cy="100" r="12" fill="#fbf8ee" stroke="#1a1614" stroke-width="3"/>
+      <circle cx="106" cy="100" r="12" fill="#fbf8ee" stroke="#1a1614" stroke-width="3"/>
+      <line x1="88" y1="100" x2="94" y2="100" stroke="#1a1614" stroke-width="3"/>
+      <circle cx="76" cy="100" r="4" fill="#1a1614"/>
+      <circle cx="106" cy="100" r="4" fill="#1a1614"/>
+      <path d="M 55 115 L 38 120 L 55 125 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- крылышко с УКАЗКОЙ -->
+      <path d="M 115 115 C 137 112, 157 130, 153 150 C 145 153, 123 150, 115 136 Z"
+            fill="#c7dde6" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- УКАЗКА от крыла вверх -->
+      <line x1="148" y1="118" x2="190" y2="50" stroke="#a05a3c" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="190" cy="50" r="5" fill="#f0b400" stroke="#1a1614" stroke-width="2"/>
+      <!-- 5 значков -->
+      <circle cx="74" cy="138" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="152" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="92" cy="160" r="5" fill="#2f4434" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="108" cy="160" r="5" fill="#a8c0a0" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="122" cy="152" r="5" fill="#7a5b00" stroke="#1a1614" stroke-width="2"/>
+      <!-- лапки на пне -->
+      <line x1="90" y1="165" x2="90" y2="175" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="110" y1="165" x2="110" y2="175" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
   // ====== 8: НАСТАВНИК В ПОЛЁТЕ ======
   {
-    day: 'ДЕНЬ 8', name: 'Наставник', desc: 'Оторвалась от земли — летит, крылья расправлены',
+    day: 'ДЕНЬ 8', name: 'Наставник', desc: 'Оторвалась от земли — крылья распахнуты',
     award: false,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="228" rx="35" ry="3" fill="#2f4434" opacity=".12"/>
-      <path d="M 60 200 L 55 215" stroke="#857c75" stroke-width="1.6" stroke-linecap="round" opacity=".5"/>
-      <path d="M 140 200 L 145 215" stroke="#857c75" stroke-width="1.6" stroke-linecap="round" opacity=".5"/>
-      <path d="M 50 188 L 42 198" stroke="#857c75" stroke-width="1.4" stroke-linecap="round" opacity=".4"/>
-      <path d="M 150 188 L 158 198" stroke="#857c75" stroke-width="1.4" stroke-linecap="round" opacity=".4"/>
-      <!-- ШИРОКО РАСКРЫТЫЕ КРЫЛЬЯ — серо-голубые -->
-      <path d="M 70 145 C 40 140, 20 155, 30 180 C 50 178, 70 168, 78 158 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 130 145 C 160 140, 180 155, 170 180 C 150 178, 130 168, 122 158 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.6"/>
-      <!-- белые полоски на крыльях характерные для синицы -->
-      <path d="M 38 168 L 50 165 M 38 175 L 50 172" stroke="#fbf8ee" stroke-width="1.2" opacity=".8"/>
-      <path d="M 162 168 L 150 165 M 162 175 L 150 172" stroke="#fbf8ee" stroke-width="1.2" opacity=".8"/>
-      <path d="M 32 168 L 42 168 M 32 176 L 42 176" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <path d="M 168 168 L 158 168 M 168 176 L 158 176" stroke="#1a1614" stroke-width=".8" opacity=".5"/>
-      <ellipse cx="100" cy="155" rx="36" ry="32" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <ellipse cx="100" cy="165" rx="22" ry="24" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 100 140 L 96 188 L 100 192 L 104 188 Z" fill="#1a1614"/>
-      <path d="M 100 184 L 102 220 L 96 220 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <path d="M 96 220 L 92 226 M 102 220 L 106 226" stroke="#7a8a92" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="100" cy="115" r="22" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 115 Q 100 96 122 115 Q 120 127 100 129 Q 80 127 78 115 Z" fill="#1a1614"/>
-      <ellipse cx="89" cy="118" rx="8" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.7" opacity=".9"/>
-      <ellipse cx="111" cy="118" rx="8" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.7" opacity=".9"/>
-      <line x1="98" y1="118" x2="102" y2="118" stroke="#1a1614" stroke-width="2"/>
-      <circle cx="89" cy="118" r="2" fill="#1a1614"/>
-      <circle cx="111" cy="118" r="2" fill="#1a1614"/>
-      <path d="M 78 102 Q 100 90 122 102 L 126 108 L 74 108 Z" fill="#2f4434" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 108 L 126 108 L 124 112 L 76 112 Z" fill="#1a1614"/>
-      <circle cx="100" cy="100" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 95 132 L 100 140 L 105 132 L 100 129 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      ${badge(82, 152, '#6f8a6a')}
-      ${badge(78, 165, '#a05a3c')}
-      ${badge(82, 178, '#2f4434')}
-      ${badge(118, 165, '#a8c0a0')}
-      ${badge(120, 178, '#7a5b00')}
-      ${badge(106, 185, '#cfd9c2')}
-      <path d="M 88 188 L 86 196" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
-      <path d="M 112 188 L 114 196" stroke="#4a423d" stroke-width="2" stroke-linecap="round"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="195" rx="30" ry="3" fill="#1a1614" opacity=".08"/>
+      <!-- линии ветра -->
+      <path d="M 30 160 L 22 168" stroke="#857c75" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <path d="M 170 160 L 178 168" stroke="#857c75" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <path d="M 25 145 L 18 150" stroke="#857c75" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+      <path d="M 175 145 L 182 150" stroke="#857c75" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+      <!-- ШИРОКИЕ РАСПАХНУТЫЕ КРЫЛЬЯ -->
+      <path d="M 60 105 C 30 100, 8 115, 18 145 C 38 145, 60 130, 70 118 Z" fill="#c7dde6" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 140 105 C 170 100, 192 115, 182 145 C 162 145, 140 130, 130 118 Z" fill="#c7dde6" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <!-- белые полоски на крыльях -->
+      <path d="M 22 128 L 38 124 M 22 138 L 38 134" stroke="#fbf8ee" stroke-width="2" opacity=".8"/>
+      <path d="M 178 128 L 162 124 M 178 138 L 162 134" stroke="#fbf8ee" stroke-width="2" opacity=".8"/>
+      <!-- тельце -->
+      <circle cx="100" cy="105" r="48" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 56 118 C 62 145, 138 145, 144 118 Q 100 155 56 118 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 92 L 92 148 L 100 152 L 108 148 Z" fill="#1a1614"/>
+      <path d="M 56 72 Q 100 36 144 72 Q 144 88 100 92 Q 56 88 56 72 Z" fill="#1a1614"/>
+      <path d="M 62 62 Q 100 42 138 62 L 144 72 L 56 72 Z" fill="#2f4434" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="56" y="70" width="88" height="6" fill="#1a1614"/>
+      <circle cx="100" cy="54" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <!-- очки -->
+      <circle cx="78" cy="98" r="11" fill="#fbf8ee" stroke="#1a1614" stroke-width="2.8"/>
+      <circle cx="106" cy="98" r="11" fill="#fbf8ee" stroke="#1a1614" stroke-width="2.8"/>
+      <line x1="89" y1="98" x2="95" y2="98" stroke="#1a1614" stroke-width="2.8"/>
+      <circle cx="78" cy="98" r="3.5" fill="#1a1614"/>
+      <circle cx="106" cy="98" r="3.5" fill="#1a1614"/>
+      <path d="M 55 110 L 38 115 L 55 120 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- хвост -->
+      <path d="M 100 150 L 96 178 L 100 182 L 104 178 Z" fill="#c7dde6" stroke="#1a1614" stroke-width="2.5"/>
+      <!-- 6 значков -->
+      <circle cx="74" cy="130" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="142" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="92" cy="150" r="5" fill="#2f4434" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="108" cy="150" r="5" fill="#a8c0a0" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="122" cy="142" r="5" fill="#7a5b00" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="126" cy="130" r="5" fill="#cfd9c2" stroke="#1a1614" stroke-width="2"/>
+      <!-- лапки поджаты -->
+      <path d="M 88 150 L 86 165" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 112 150 L 114 165" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
-  // ====== 9: ВЫПУСКНИЦА в полёте с медалью на солнце ======
+  // ====== 9: ВЫПУСКНИЦА С МЕДАЛЬЮ ======
   {
-    day: 'ДЕНЬ 9', name: 'Выпускница', desc: '🎁 В свободном полёте, плащ, шапка-mortarboard, медаль',
+    day: 'ДЕНЬ 9', name: 'Выпускница', desc: '🎁 Шапка-бакалавр, плащ, золотая медаль',
     award: true,
-    svg: `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="100" cy="100" r="60" fill="#f4ebd0" opacity=".5"/>
-      <circle cx="100" cy="100" r="44" fill="none" stroke="#f0b400" stroke-width="1.4" stroke-dasharray="3 4" opacity=".6"/>
-      <g stroke="#f0b400" stroke-width="2" stroke-linecap="round" opacity=".7">
-        <line x1="100" y1="30" x2="100" y2="40"/>
-        <line x1="40" y1="100" x2="50" y2="100"/>
-        <line x1="160" y1="100" x2="150" y2="100"/>
-        <line x1="58" y1="58" x2="64" y2="64"/>
-        <line x1="142" y1="58" x2="136" y2="64"/>
-        <line x1="58" y1="142" x2="64" y2="136"/>
-        <line x1="142" y1="142" x2="136" y2="136"/>
+    svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- солнечный нимб за спиной -->
+      <circle cx="100" cy="100" r="68" fill="#f4ebd0" opacity=".6"/>
+      <g stroke="#f0b400" stroke-width="2.5" stroke-linecap="round" opacity=".7">
+        <line x1="100" y1="20" x2="100" y2="30"/>
+        <line x1="30" y1="100" x2="40" y2="100"/>
+        <line x1="170" y1="100" x2="160" y2="100"/>
+        <line x1="50" y1="50" x2="56" y2="56"/>
+        <line x1="150" y1="50" x2="144" y2="56"/>
       </g>
-      <path d="M 70 130 C 50 165, 40 200, 50 225 C 60 215, 75 195, 80 165 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M 130 130 C 150 165, 160 200, 150 225 C 140 215, 125 195, 120 165 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M 70 130 C 38 122, 18 138, 28 168 C 50 168, 72 152, 80 144 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M 130 130 C 162 122, 182 138, 172 168 C 150 168, 128 152, 120 144 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M 38 158 L 50 155 M 38 164 L 50 161" stroke="#fbf8ee" stroke-width="1.2" opacity=".8"/>
-      <path d="M 162 158 L 150 155 M 162 164 L 150 161" stroke="#fbf8ee" stroke-width="1.2" opacity=".8"/>
-      <ellipse cx="100" cy="150" rx="36" ry="32" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <ellipse cx="100" cy="160" rx="22" ry="24" fill="#f0b400" stroke="#1a1614" stroke-width="1.4"/>
-      <path d="M 100 135 L 96 184 L 100 188 L 104 184 Z" fill="#1a1614"/>
-      <path d="M 132 172 L 148 175 L 144 182 Z" fill="#7a8a92" stroke="#1a1614" stroke-width="1.3"/>
-      <circle cx="100" cy="108" r="22" fill="#9aa5ab" stroke="#1a1614" stroke-width="1.6"/>
-      <path d="M 78 108 Q 100 90 122 108 Q 120 120 100 122 Q 80 120 78 108 Z" fill="#1a1614"/>
-      <ellipse cx="89" cy="111" rx="8" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.7" opacity=".9"/>
-      <ellipse cx="111" cy="111" rx="8" ry="6" fill="#fbf8ee" stroke="#1a1614" stroke-width="1.7" opacity=".9"/>
-      <line x1="98" y1="111" x2="102" y2="111" stroke="#1a1614" stroke-width="2"/>
-      <path d="M 85 112 Q 89 109 93 112" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M 107 112 Q 111 109 115 112" fill="none" stroke="#1a1614" stroke-width="1.8" stroke-linecap="round"/>
-      <!-- ВЫПУСКНАЯ ШАПКА -->
-      <rect x="74" y="84" width="52" height="6" fill="#1a1614" stroke="#1a1614" stroke-width="1.5"/>
-      <path d="M 80 90 Q 100 78 120 90" fill="#1a1614" stroke="#1a1614" stroke-width="1.5"/>
-      <line x1="126" y1="84" x2="138" y2="98" stroke="#f0b400" stroke-width="2"/>
-      <circle cx="138" cy="98" r="3" fill="#f0b400" stroke="#1a1614" stroke-width="1"/>
-      <path d="M 137 100 L 135 106 M 138 101 L 139 107 M 140 100 L 141 106" stroke="#f0b400" stroke-width=".8"/>
-      <path d="M 95 124 L 100 132 L 105 124 L 100 121 Z" fill="#2f2820" stroke="#1a1614" stroke-width="1.3"/>
-      <!-- МЕДАЛЬ -->
-      <path d="M 88 132 L 86 147 L 94 150 L 100 147 L 106 150 L 114 147 L 112 132 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="1.3"/>
-      <circle cx="100" cy="157" r="14" fill="#f0b400" stroke="#1a1614" stroke-width="2"/>
-      <circle cx="100" cy="157" r="10" fill="none" stroke="#1a1614" stroke-width="1.2"/>
-      <text x="100" y="163" font-family="Charter, Georgia, serif" font-size="16" font-weight="700" fill="#1a1614" text-anchor="middle">★</text>
-      ${badge(74, 152, '#6f8a6a')}
-      ${badge(72, 168, '#a05a3c')}
-      ${badge(78, 182, '#2f4434')}
-      ${badge(122, 168, '#a8c0a0')}
-      ${badge(126, 152, '#7a5b00')}
-      ${badge(122, 182, '#cfd9c2')}
-      <line x1="90" y1="178" x2="86" y2="220" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="110" y1="178" x2="114" y2="220" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="80" y1="220" x2="92" y2="220" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="108" y1="220" x2="120" y2="220" stroke="#4a423d" stroke-width="2.4" stroke-linecap="round"/>
+      <!-- плащ -->
+      <path d="M 56 110 C 38 145, 30 180, 42 195 C 56 188, 70 165, 76 135 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 144 110 C 162 145, 170 180, 158 195 C 144 188, 130 165, 124 135 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <!-- крылья -->
+      <path d="M 60 105 C 30 100, 12 115, 22 145 C 38 145, 60 130, 70 118 Z" fill="#c7dde6" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 140 105 C 170 100, 188 115, 178 145 C 162 145, 140 130, 130 118 Z" fill="#c7dde6" stroke="#1a1614" stroke-width="3" stroke-linejoin="round"/>
+      <!-- тельце -->
+      <circle cx="100" cy="105" r="48" fill="#fbf8ee" stroke="#1a1614" stroke-width="3.5"/>
+      <path d="M 56 118 C 62 145, 138 145, 144 118 Q 100 155 56 118 Z" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <path d="M 100 92 L 92 148 L 100 152 L 108 148 Z" fill="#1a1614"/>
+      <path d="M 56 72 Q 100 36 144 72 Q 144 88 100 92 Q 56 88 56 72 Z" fill="#1a1614"/>
+      <!-- ВЫПУСКНАЯ ШАПКА (mortarboard) -->
+      <rect x="48" y="48" width="104" height="8" fill="#1a1614" stroke="#1a1614" stroke-width="2"/>
+      <path d="M 58 56 Q 100 38 142 56" fill="#1a1614" stroke="#1a1614" stroke-width="2"/>
+      <!-- кисточка -->
+      <line x1="142" y1="48" x2="160" y2="68" stroke="#f0b400" stroke-width="3"/>
+      <circle cx="160" cy="68" r="4" fill="#f0b400" stroke="#1a1614" stroke-width="1.5"/>
+      <path d="M 159 71 L 156 78 M 161 71 L 162 78 M 162 72 L 165 78" stroke="#f0b400" stroke-width="1.2"/>
+      <!-- глазки счастливые прищур -->
+      <path d="M 70 100 Q 78 96 86 100" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 100 100 Q 108 96 116 100" fill="none" stroke="#1a1614" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M 55 110 L 38 115 L 55 120 Z" fill="#f5a14d" stroke="#1a1614" stroke-width="2.8" stroke-linejoin="round"/>
+      <!-- розовые щёчки -->
+      <circle cx="68" cy="116" r="4" fill="#f5b4a8" opacity=".85"/>
+      <circle cx="132" cy="116" r="4" fill="#f5b4a8" opacity=".85"/>
+      <!-- БОЛЬШАЯ МЕДАЛЬ НА ЛЕНТЕ -->
+      <path d="M 86 95 L 84 108 L 92 112 L 100 108 L 108 112 L 116 108 L 114 95 Z" fill="#a05a3c" stroke="#1a1614" stroke-width="2.5"/>
+      <circle cx="100" cy="125" r="14" fill="#f0b400" stroke="#1a1614" stroke-width="3"/>
+      <circle cx="100" cy="125" r="10" fill="none" stroke="#1a1614" stroke-width="1.5"/>
+      <text x="100" y="131" font-family="Charter, Georgia, serif" font-size="14" font-weight="700" fill="#1a1614" text-anchor="middle">★</text>
+      <!-- значки вокруг -->
+      <circle cx="74" cy="138" r="5" fill="#6f8a6a" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="78" cy="150" r="5" fill="#a05a3c" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="122" cy="138" r="5" fill="#2f4434" stroke="#1a1614" stroke-width="2"/>
+      <circle cx="126" cy="150" r="5" fill="#a8c0a0" stroke="#1a1614" stroke-width="2"/>
+      <!-- лапки -->
+      <line x1="88" y1="152" x2="86" y2="170" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
+      <line x1="112" y1="152" x2="114" y2="170" stroke="#1a1614" stroke-width="3" stroke-linecap="round"/>
     </svg>`,
   },
 ];
