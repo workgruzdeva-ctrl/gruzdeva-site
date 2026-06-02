@@ -18,7 +18,22 @@
     border-radius: 28px; position: relative; user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color .12s ease;
+    overflow: hidden;
   }
+  /* Половины экрана — кликабельная зона для тача */
+  .fl-half {
+    position: absolute; top: 0; bottom: 0; width: 50%;
+    z-index: 2; cursor: pointer;
+  }
+  .fl-half.left  { left: 0; }
+  .fl-half.right { right: 0; }
+  .fl-half-label {
+    position: absolute; bottom: 14px; font-size: 36px; font-weight: 700;
+    color: rgba(255,255,255,0.18); pointer-events: none;
+  }
+  .fl-half.left  .fl-half-label { left: 28px; }
+  .fl-half.right .fl-half-label { right: 28px; }
+  #fl-stage.idle .fl-half { display: none; }
   #fl-stage.idle { background: var(--bg-2); color: var(--ink); }
   #fl-stage.fb-correct { background: #5E6B4A; }
   #fl-stage.fb-error   { background: #B84C32; }
@@ -88,9 +103,10 @@
       <h3>Как это работает</h3>
       <ul>
         <li>На экране — 5 стрелок в ряд, типа <b>← ← <span style="color:var(--coral)">←</span> ← ←</b>.</li>
-        <li>Реагируй только на <b>центральную</b> стрелку: жми «←» или «→».</li>
-        <li>Иногда боковые смотрят в другую сторону — игнорируй их.</li>
-        <li>30 стрелок, ~20 секунд. Чем быстрее — тем лучше, но не в ущерб точности.</li>
+        <li>Реагируй только на <b>центральную</b> стрелку.</li>
+        <li>На <b>телефоне</b>: тапай в левую или правую половину экрана.</li>
+        <li>На <b>компе</b>: жми стрелки <b>←</b> и <b>→</b> на клавиатуре.</li>
+        <li>30 стрелок, ~30 секунд. Чем быстрее — тем лучше, но не в ущерб точности.</li>
       </ul>
       <p style="margin-top:8px"><b>Разница в скорости</b> между «все одинаковые» и «боковые мешают» — это сила твоего фильтра.</p>
     </div>
@@ -213,13 +229,18 @@ function renderStim(){
   stage.innerHTML = `
     <div class="fl-progress">${trial+1} / ${TOTAL}</div>
     <div class="fl-arrows">${arrowsHTML(stimDir, stimType)}</div>
-    <div class="fl-controls">
-      <button class="fl-btn" id="btn-L">←</button>
-      <button class="fl-btn" id="btn-R">→</button>
-    </div>
+    <div class="fl-hint" style="position:absolute; bottom:14px; left:0; right:0; text-align:center; color:rgba(255,255,255,0.5)">тапни в левую или правую половину</div>
+    <div class="fl-half left"  id="half-L"><span class="fl-half-label">←</span></div>
+    <div class="fl-half right" id="half-R"><span class="fl-half-label">→</span></div>
   `;
-  document.getElementById('btn-L').addEventListener('click', (e)=>{ e.stopPropagation(); respond('L'); });
-  document.getElementById('btn-R').addEventListener('click', (e)=>{ e.stopPropagation(); respond('R'); });
+  const respondL = (e)=>{ e.preventDefault(); e.stopPropagation(); respond('L'); };
+  const respondR = (e)=>{ e.preventDefault(); e.stopPropagation(); respond('R'); };
+  const hL = document.getElementById('half-L');
+  const hR = document.getElementById('half-R');
+  hL.addEventListener('click', respondL);
+  hR.addEventListener('click', respondR);
+  hL.addEventListener('touchstart', respondL, { passive: false });
+  hR.addEventListener('touchstart', respondR, { passive: false });
 }
 
 function renderBlank(){

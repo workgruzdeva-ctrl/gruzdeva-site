@@ -259,7 +259,9 @@ function renderStim(letter, idx, canMatch){
   `;
   if(canMatch){
     const btn = document.getElementById('match-btn');
-    btn.addEventListener('click', (e)=>{ e.stopPropagation(); onMatchPress(); });
+    const handler = (e)=>{ e.preventDefault(); e.stopPropagation(); onMatchPress(); };
+    btn.addEventListener('click', handler);
+    btn.addEventListener('touchstart', handler, { passive: false });
   }
 }
 
