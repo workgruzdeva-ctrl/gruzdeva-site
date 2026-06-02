@@ -33,6 +33,38 @@
     outline: none; border-color: var(--coral);
   }
 
+  /* meme picker — сетка с эмодзи */
+  .meme-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  @media (max-width: 500px) { .meme-grid { grid-template-columns: repeat(3, 1fr); } }
+  .meme-card {
+    background: var(--bg); border: 2px solid var(--line); border-radius: 14px;
+    padding: 10px 6px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all .12s ease;
+    text-align: center;
+  }
+  .meme-card:hover { border-color: var(--coral); transform: translateY(-1px); }
+  .meme-card.selected {
+    border-color: var(--coral); background: #f4e0d4;
+  }
+  .meme-card .meme-emoji {
+    font-size: 36px; line-height: 1;
+  }
+  .meme-card .meme-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-2);
+    line-height: 1.2;
+  }
+  .meme-card.selected .meme-label { color: var(--coral); }
+
+  /* meme в compare */
+  .meme-display {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .meme-display .meme-emoji { font-size: 40px; }
+  .meme-display .meme-label { font-size: 12px; font-weight: 600; }
+
   .link-box {
     background: var(--bg-2); border: 2px dashed var(--line); border-radius: 16px;
     padding: 18px; margin: 16px 0;
@@ -289,10 +321,10 @@
    ============================================================ */
 
 const QUESTIONS = [
-  'Каким мультиком я была в детстве?',
-  'Каким животным я была/была бы?',
-  'Каким мемом я была бы сейчас?',
-  'Каким погодным явлением я была в детстве?',
+  { id:'cartoon', text:'Каким мультиком я была в детстве?',     type:'text', placeholder:'одно-два слова, что первое пришло…' },
+  { id:'animal',  text:'Каким животным я была/была бы?',         type:'text', placeholder:'одно-два слова' },
+  { id:'meme',    text:'Каким мемом я была бы сейчас?',          type:'meme' },
+  { id:'weather', text:'Каким погодным явлением я была в детстве?', type:'text', placeholder:'одно-два слова' },
 ];
 const QUESTIONS_THIRD = [
   (name) => `Каким мультиком была ${name} в детстве?`,
@@ -300,6 +332,23 @@ const QUESTIONS_THIRD = [
   (name) => `Каким мемом была бы ${name}?`,
   (name) => `Каким погодным явлением была ${name} в детстве?`,
 ];
+
+const MEMES = [
+  { id:'doge',     emoji:'🐶', label:'Doge\nmuch wow' },
+  { id:'pepe',     emoji:'🐸', label:'Пепе\nгрустный' },
+  { id:'cat',      emoji:'🐱', label:'Кот\nустал' },
+  { id:'crying',   emoji:'🥲', label:'Слеза\nя в порядке' },
+  { id:'clown',    emoji:'🤡', label:'Клоун\nа думала справлюсь' },
+  { id:'skull',    emoji:'💀', label:'Skull\nмне конец' },
+  { id:'cool',     emoji:'😎', label:'Cool guy\nя держусь' },
+  { id:'upside',   emoji:'🙃', label:'Перевёрнутый\nвсё хорошо' },
+  { id:'shrug',    emoji:'🤷', label:'Шраг\nну как-то' },
+  { id:'thinking', emoji:'🤔', label:'Думаю\nнадо подумать' },
+  { id:'fire',     emoji:'🔥', label:'Огонь\nвсё горит'},
+  { id:'sparkles', emoji:'✨', label:'Блестяшки\nя справляюсь'},
+];
+
+function memeById(id){ return MEMES.find(m => m.id === id); }
 
 function enc(obj){
   return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
@@ -325,26 +374,61 @@ function buildLink(extra){
   return u.toString();
 }
 
+/* ---------- общая отрисовка вопроса ---------- */
+function renderQuestionBlock(idx, text, type, placeholder){
+  const el = document.createElement('div');
+  el.className = 'q-block';
+  el.dataset.i = idx;
+  el.dataset.type = type;
+  if(type === 'meme'){
+    const cards = MEMES.map(m => `
+      <div class="meme-card" data-meme="${m.id}">
+        <div class="meme-emoji">${m.emoji}</div>
+        <div class="meme-label">${m.label.replace('\n','<br>')}</div>
+      </div>`).join('');
+    el.innerHTML = `
+      <div class="q-label">вопрос ${idx+1} из 4</div>
+      <div class="q-text">${text}</div>
+      <div class="meme-grid">${cards}</div>
+    `;
+    el.querySelectorAll('.meme-card').forEach(card => {
+      card.addEventListener('click', () => {
+        el.querySelectorAll('.meme-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        el.dataset.value = card.dataset.meme;
+      });
+    });
+  } else {
+    el.innerHTML = `
+      <div class="q-label">вопрос ${idx+1} из 4</div>
+      <div class="q-text">${text}</div>
+      <input type="text" maxlength="80" placeholder="${placeholder || 'одно-два слова'}" autocomplete="off">
+    `;
+  }
+  return el;
+}
+
+function readAnswers(wrap){
+  const blocks = wrap.querySelectorAll('.q-block');
+  return Array.from(blocks).map(b => {
+    if(b.dataset.type === 'meme') return b.dataset.value || '';
+    const inp = b.querySelector('input');
+    return inp ? inp.value.trim() : '';
+  });
+}
+
 /* ---------- MODE SELF — я отвечаю и создаю ссылку ---------- */
 function initSelf(){
   document.getElementById('mode-self').hidden = false;
   const wrap = document.getElementById('q-self');
   QUESTIONS.forEach((q, i) => {
-    const el = document.createElement('div');
-    el.className = 'q-block';
-    el.innerHTML = `
-      <div class="q-label">вопрос ${i+1} из 4</div>
-      <div class="q-text">${q}</div>
-      <input type="text" data-i="${i}" maxlength="80" placeholder="одно-два слова, что первое пришло…" autocomplete="off">
-    `;
-    wrap.appendChild(el);
+    wrap.appendChild(renderQuestionBlock(i, q.text, q.type, q.placeholder));
   });
 
   document.getElementById('generate-link').addEventListener('click', () => {
-    const inputs = wrap.querySelectorAll('input');
-    const answers = Array.from(inputs).map(i => i.value.trim());
+    const answers = readAnswers(wrap);
     if(answers.filter(a => a).length < 4){
-      alert('Заполни все 4 вопроса — даже коротко.');
+      alert('Заполни все 4 вопроса — даже коротко (включая выбор мема).');
       return;
     }
     const name = Challenge.getName();
@@ -418,21 +502,14 @@ function initClose(params){
 
   const wrap = document.getElementById('q-close');
   QUESTIONS_THIRD.forEach((qFn, i) => {
-    const el = document.createElement('div');
-    el.className = 'q-block';
-    el.innerHTML = `
-      <div class="q-label">вопрос ${i+1} из 4</div>
-      <div class="q-text">${qFn(params.name)}</div>
-      <input type="text" data-i="${i}" maxlength="80" placeholder="одно-два слова" autocomplete="off">
-    `;
-    wrap.appendChild(el);
+    const orig = QUESTIONS[i];
+    wrap.appendChild(renderQuestionBlock(i, qFn(params.name), orig.type, orig.placeholder));
   });
 
   document.getElementById('finish-close').addEventListener('click', () => {
-    const inputs = wrap.querySelectorAll('input');
-    const answers = Array.from(inputs).map(i => i.value.trim());
+    const answers = readAnswers(wrap);
     if(answers.filter(a => a).length < 4){
-      alert('Заполни, пожалуйста, все 4 — даже коротко.');
+      alert('Заполни, пожалуйста, все 4 — даже коротко (включая выбор мема).');
       return;
     }
     const themEncoded = enc(answers);
@@ -466,19 +543,34 @@ function initCompare(params){
   const them = dec(params.them) || [];
 
   const list = document.getElementById('compare-list');
+
+  function renderCell(value, type){
+    if(type === 'meme'){
+      const m = memeById(value);
+      if(!m) return '<span style="color:var(--muted)">—</span>';
+      return `
+        <div class="meme-display">
+          <div class="meme-emoji">${m.emoji}</div>
+          <div class="meme-label">${m.label.replace('\n','<br>')}</div>
+        </div>
+      `;
+    }
+    return value || '<span style="color:var(--muted)">—</span>';
+  }
+
   QUESTIONS.forEach((q, i) => {
     const row = document.createElement('div');
     row.className = 'compare-row';
     row.innerHTML = `
-      <div class="cr-q">${q}</div>
+      <div class="cr-q">${q.text}</div>
       <div class="cr-answers">
         <div class="cr-cell cr-me">
           <div class="cell-label">я сама</div>
-          <div class="cell-value">${me[i] || '—'}</div>
+          <div class="cell-value">${renderCell(me[i], q.type)}</div>
         </div>
         <div class="cr-cell cr-them">
           <div class="cell-label">близкий</div>
-          <div class="cell-value">${them[i] || '—'}</div>
+          <div class="cell-value">${renderCell(them[i], q.type)}</div>
         </div>
       </div>
     `;
