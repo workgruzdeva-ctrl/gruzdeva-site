@@ -252,6 +252,7 @@ function handleTap(){
     // фальстарт
     clearTimeout(waitTimer);
     falseStarts++;
+    ShareUtils.beep(false);
     phase = 'falsestart';
     render('falsestart');
     setTimeout(()=>{ startTrial(); }, 1200);
@@ -262,6 +263,10 @@ function handleTap(){
     const isLapse = rt > LAPSE_THRESHOLD;
     rts.push(rt);
     if(isLapse) lapses++;
+
+    // звук: короткий beep для нормальной реакции, тише — для лапса
+    if(isLapse) ShareUtils.beepLapse();
+    else ShareUtils.beep(true);
 
     phase = 'feedback';
     render('feedback', { rt, isLapse });

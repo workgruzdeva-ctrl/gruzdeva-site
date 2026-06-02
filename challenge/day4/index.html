@@ -277,6 +277,7 @@ function flash(correct){
   stage.classList.remove('flash-correct','flash-error');
   void stage.offsetWidth;
   stage.classList.add(correct ? 'flash-correct' : 'flash-error');
+  if(window.ShareUtils) ShareUtils.beep(correct);
   setTimeout(()=> stage.classList.remove('flash-correct','flash-error'), 280);
 }
 

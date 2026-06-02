@@ -266,8 +266,45 @@ window.ShareUtils = (function(){
     }, 'image/png');
   }
 
+  /* === Web Audio beep — единый для всех мини-игр === */
+  let audioCtx = null;
+  function ensureAudio(){
+    if(!audioCtx){
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch(e){ audioCtx = null; }
+    }
+    return audioCtx;
+  }
+  function tone(freq, dur, type, delay, vol){
+    const ac = ensureAudio();
+    if(!ac) return;
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = type || 'sine';
+    o.frequency.value = freq;
+    o.connect(g); g.connect(ac.destination);
+    const t0 = ac.currentTime + (delay || 0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.20, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.start(t0); o.stop(t0 + dur + 0.04);
+  }
+  function beep(correct){
+    if(correct){
+      tone(660, 0.10, 'sine', 0,    0.20);
+      tone(880, 0.14, 'sine', 0.05, 0.18);
+    } else {
+      tone(180, 0.22, 'sawtooth', 0, 0.18);
+    }
+  }
+  function beepLapse(){
+    // нейтральный «тик» — для PVT-лапса (длинный RT)
+    tone(440, 0.08, 'square', 0, 0.10);
+  }
+
   return {
     drawFitText, drawCrownedBird, roundRect,
     buildShareCanvas, downloadCanvas,
+    beep, beepLapse, ensureAudio,
   };
 })();
