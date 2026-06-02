@@ -10,15 +10,66 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../day.css">
 <style>
-  .crown-hero { text-align: center; padding: 24px 0 8px; }
-  .crown-emoji {
-    font-size: 80px; line-height: 1;
-    animation: float-king 4s ease-in-out infinite;
-    display: inline-block;
+  .crown-hero { text-align: center; padding: 24px 0 8px; position: relative; }
+
+  .victory-shout {
+    font-family: 'Fraunces', serif; font-weight: 600; font-style: italic;
+    font-size: 32px; color: var(--coral);
+    margin: 0 0 14px;
+    animation: shout-pop .8s cubic-bezier(.34,1.56,.64,1) both;
   }
-  @keyframes float-king {
-    0%,100% { transform: translateY(0) rotate(-2deg); }
-    50% { transform: translateY(-10px) rotate(2deg); }
+  @keyframes shout-pop {
+    0% { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(4deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .queen-bird {
+    width: 260px; height: 260px; margin: 0 auto;
+    animation: queen-bounce 1.6s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+  .queen-bird img {
+    width: 100%; height: 100%; object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+  }
+  @keyframes queen-bounce {
+    0%, 100% { transform: translateY(0) rotate(-2deg) scale(1); }
+    25% { transform: translateY(-22px) rotate(3deg) scale(1.04); }
+    50% { transform: translateY(0) rotate(-3deg) scale(1); }
+    75% { transform: translateY(-12px) rotate(2deg) scale(1.02); }
+  }
+
+  /* Конфетти-эмодзи */
+  .confetti-layer {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 1000;
+    overflow: hidden;
+  }
+  .confetti {
+    position: absolute; top: -50px;
+    font-size: 32px;
+    animation: confetti-fall linear forwards;
+    will-change: transform, opacity;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Аура вокруг птички */
+  .queen-aura {
+    position: absolute; left: 50%; top: 130px; transform: translateX(-50%);
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(245,196,0,0.25) 0%, transparent 65%);
+    pointer-events: none;
+    animation: aura-pulse 3s ease-in-out infinite;
+    z-index: -1;
+  }
+  @keyframes aura-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+    50% { transform: translateX(-50%) scale(1.18); opacity: 1; }
   }
 
   .bingo-grid {
@@ -152,8 +203,12 @@
 <main class="wrap">
 
   <header class="day-head crown-hero">
-    <div class="crown-emoji">👑</div>
-    <div class="eyebrow"><span class="d"></span>день 9 из 9 · финал</div>
+    <div class="queen-aura"></div>
+    <div class="victory-shout" id="victory-shout">ПОБЕДА! УРА! 9 дней за плечами!!! УИИИ!!!</div>
+    <div class="queen-bird">
+      <img src="../../m/grp/birds/09_koroleva_stai.png" alt="Королева стаи">
+    </div>
+    <div class="eyebrow" style="margin-top:8px"><span class="d"></span>день 9 из 9 · финал</div>
     <h1 id="hero-title">Бинго! <em id="hero-name"></em></h1>
     <p class="lead" id="hero-lead">Вот карта всего, что ты собрала за 9 дней. Это твой портрет — без оценок и сравнений.</p>
   </header>
@@ -161,8 +216,11 @@
   <section class="bingo-grid" id="bingo-grid"></section>
 
   <div class="valya-msg" id="valya-msg">
-    Ты дошла до конца. Это правда не каждый делает.<br><br>
-    Если что-то из увиденного тебя зацепило — приходи в группу. Там мы со всем этим работаем — не через стыд и силу воли, а через наблюдение и маленькие практики.
+    Сейчас у тебя есть первые результаты. Важно: тесты из мини-челленджа — это не диагноз и не доказательство, что с тобой «что-то не так». На них может влиять усталость, недосып, стресс, настроение и просто неудачный день.<br><br>
+    Но если стало видно, что сложности повторяются и внимание фокусировать сложно — это может быть поводом присмотреться. Возможно, здесь правда есть СДВГ или похожие трудности с исполнительными навыками.<br><br>
+    И с этим можно работать. Через наблюдение, маленькие практики, понятные шаги и поддержку людей, которые проходят похожий путь.<br><br>
+    Если тебе хочется пройти диагностику, разобраться в своём СДВГ или пойти дальше в группу — я буду очень рада тебя видеть. Надеюсь, нам будет так же интересно, тепло и местами смешно, как эти 9 дней.<br><br>
+    И ещё: у меня есть для тебя подарок — <b>скидка 20%</b> на участие в одной из ежемесячных групп тренинга навыков при СДВГ. Скидкой можно воспользоваться до конца года.
   </div>
 
   <div class="promo-card">
@@ -200,6 +258,9 @@
   <div class="btn-row">
     <button class="btn btn-ghost" id="next-btn">К птичке</button>
   </div>
+
+  <!-- Confetti layer -->
+  <div class="confetti-layer" id="confetti-layer"></div>
 
   <footer class="foot">
     <div class="foot-in">
@@ -475,6 +536,65 @@ document.getElementById('share-image').addEventListener('click', () => {
 });
 
 document.getElementById('next-btn').addEventListener('click', () => Challenge.goHome());
+
+/* ---------- 🎉 CONFETTI ---------- */
+const CONFETTI_EMOJI = ['🎉','🎊','👑','✨','🌟','🐣','🪶','💛','🧡','🪄'];
+function launchConfetti(count){
+  const layer = document.getElementById('confetti-layer');
+  if(!layer) return;
+  for(let i = 0; i < count; i++){
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = CONFETTI_EMOJI[Math.floor(Math.random()*CONFETTI_EMOJI.length)];
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.fontSize = (24 + Math.random()*22) + 'px';
+    const duration = 3 + Math.random()*3;
+    const delay = Math.random()*1.5;
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay = delay + 's';
+    el.style.opacity = '0';
+    setTimeout(() => { el.style.opacity = '1'; }, delay*1000);
+    layer.appendChild(el);
+    setTimeout(() => { el.remove(); }, (duration+delay)*1000 + 500);
+  }
+}
+
+// Запускаем салют при загрузке, потом каждые ~6 секунд (2 повтора)
+setTimeout(() => launchConfetti(40), 100);
+setTimeout(() => launchConfetti(30), 6000);
+
+/* Звуковой фанфар */
+function playFanfare(){
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [
+      { f: 523, t: 0    }, // C5
+      { f: 659, t: 0.12 }, // E5
+      { f: 784, t: 0.24 }, // G5
+      { f: 1047, t: 0.42, d: 0.5 }, // C6 (длинная)
+    ];
+    notes.forEach(n => {
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.type = 'sine'; o.frequency.value = n.f;
+      o.connect(g); g.connect(ac.destination);
+      const t0 = ac.currentTime + n.t;
+      const dur = n.d || 0.18;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.start(t0); o.stop(t0 + dur + 0.05);
+    });
+  } catch(e){}
+}
+// Браузеры требуют user gesture для аудио — звук на первый клик/тап
+let fanfarePlayed = false;
+document.addEventListener('click', () => {
+  if(!fanfarePlayed){ fanfarePlayed = true; playFanfare(); }
+}, { once: false });
+document.addEventListener('touchstart', () => {
+  if(!fanfarePlayed){ fanfarePlayed = true; playFanfare(); }
+}, { once: false });
 </script>
 </body>
 </html>
