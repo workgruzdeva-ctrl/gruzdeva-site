@@ -295,6 +295,26 @@
     border-left: 6px solid var(--coral);
   }
   .current-card:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,0.06); }
+
+  /* locked state — день есть, но ещё рано */
+  .current-card.locked {
+    border-left-color: var(--muted);
+    background: #fafafa;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .current-card.locked .cc-label { color: var(--muted); }
+  .current-card.locked .cc-name { color: var(--ink-2); }
+  .current-card.locked .cc-cta {
+    background: var(--line); color: var(--ink-2); box-shadow: none;
+  }
+  .lock-timer {
+    margin-top: 12px; padding: 12px 16px;
+    background: var(--yellow-soft); border: 1px solid var(--yellow);
+    border-radius: 12px;
+    font-size: 14px; color: var(--ink); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
   .current-card .cc-label {
     font-weight: 700; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--coral); margin: 0 0 6px;
@@ -850,24 +870,45 @@ function renderHome(s){
   const doneDays   = DAYS.filter(d => s.days[d.n] && s.days[d.n].done);
   const remaining  = currentDay ? DAYS.filter(d => d.n > currentDay.n).length : 0;
 
+  // ?dev=1 — снять временной замок
+  const isDev = new URLSearchParams(window.location.search).get('dev') === '1';
+
+  // временной замок: следующий день открывается через 24 часа после предыдущего
+  const DAY_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  let lockUntil = 0;
+  if(currentDay && currentDay.n > 1 && !isDev){
+    const prevDay = s.days[currentDay.n - 1];
+    if(prevDay && prevDay.at){
+      lockUntil = prevDay.at + DAY_COOLDOWN_MS;
+    }
+  }
+  const isLocked = lockUntil > Date.now();
+
   // current day card
   const currentBox = document.getElementById('home-current');
   currentBox.innerHTML = '';
   if(currentDay){
     const a = document.createElement('a');
-    a.className = 'current-card';
-    a.href = currentDay.url;
+    a.className = 'current-card' + (isLocked ? ' locked' : '');
+    a.href = isLocked ? '#' : currentDay.url;
     a.innerHTML = `
       ${currentDay.gift ? `<span class="gift">🎁 ${currentDay.gift}</span>` : ''}
-      <div class="cc-label">${done === 0 ? 'Начни здесь' : 'Твой день сегодня'}</div>
+      <div class="cc-label">${isLocked ? 'Завтра откроется' : (done === 0 ? 'Начни здесь' : 'Твой день сегодня')}</div>
       <div class="cc-day">день ${currentDay.n} из 9</div>
       <div class="cc-name">${currentDay.name}</div>
       <div class="cc-desc">${currentDay.desc}</div>
-      <span class="cc-cta">Открыть
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="cc-cta">${isLocked ? 'Закрыто' : 'Открыть'}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">${isLocked
+          ? '<path d="M6 11V8a6 6 0 1112 0v3M5 11h14v10H5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+          : '<path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>
       </span>
+      ${isLocked ? `<div class="lock-timer" id="lock-timer">⏳ <span id="lock-countdown">…</span></div>` : ''}
     `;
     currentBox.appendChild(a);
+
+    if(isLocked){
+      startLockCountdown(lockUntil);
+    }
   } else {
     const f = document.createElement('div');
     f.className = 'finale-card';
@@ -933,6 +974,33 @@ function goHome(){
   }
 }
 
+/* ---------- countdown до открытия следующего дня ---------- */
+let lockTimerInt = null;
+function startLockCountdown(until){
+  if(lockTimerInt) clearInterval(lockTimerInt);
+  function tick(){
+    const ms = until - Date.now();
+    if(ms <= 0){
+      clearInterval(lockTimerInt);
+      // перерисуем home — следующий день должен открыться
+      const s = loadState();
+      if(s && s.name) renderHome(s);
+      return;
+    }
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const sec = Math.floor((ms % 60000) / 1000);
+    const el = document.getElementById('lock-countdown');
+    if(el){
+      if(h > 0)      el.textContent = `откроется через ${h} ч ${m} мин`;
+      else if(m > 0) el.textContent = `откроется через ${m} мин ${sec} сек`;
+      else           el.textContent = `откроется через ${sec} сек`;
+    }
+  }
+  tick();
+  lockTimerInt = setInterval(tick, 1000);
+}
+
 /* ---------- bubble over mascot — фразы про стаю ---------- */
 const BUBBLE_PHRASES = [
   'Пи-пи… я пока один. Но я ищу свою стаю.',
@@ -983,6 +1051,7 @@ function goLanding(){
   showView('view-landing');
   refreshResumeBanner();
   stopBubbleLoop();
+  if(lockTimerInt){ clearInterval(lockTimerInt); lockTimerInt = null; }
 }
 
 /* ---------- init & handlers ---------- */
