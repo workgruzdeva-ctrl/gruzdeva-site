@@ -14,6 +14,31 @@
     background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 28px;
     padding: 24px; margin: 16px 0;
     -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+    transition: background-color .15s ease, border-color .15s ease;
+  }
+  .wcst-stage.fb-correct { background: #DCE5CC; border-color: #5E6B4A; }
+  .wcst-stage.fb-error   { background: #F4D6CC; border-color: #B84C32; }
+  .wcst-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+    opacity: 0; transition: opacity .15s ease;
+    z-index: 4;
+  }
+  .wcst-overlay.show { opacity: 1; }
+  .wcst-overlay .icon {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 240px; line-height: 1;
+    text-align: center;
+    animation: pop-big .35s ease;
+  }
+  .wcst-overlay.correct .icon { color: #5E6B4A; }
+  .wcst-overlay.error   .icon { color: #B84C32; }
+  @keyframes pop-big {
+    0% { transform: scale(0.4); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
   }
   .wcst-progress {
     display: flex; justify-content: space-between; align-items: center;
@@ -117,6 +142,7 @@
       <div class="shapes" id="current-shapes"></div>
     </div>
     <div class="wcst-instr">правило тебе никто не назовёт — догадайся по реакции</div>
+    <div class="wcst-overlay" id="fb-overlay"><div class="icon" id="fb-icon">✓</div></div>
   </section>
 
   <section id="result" hidden>
@@ -290,34 +316,52 @@ function correctAnchorIdx(card, rule){
   if(rule === 'number') return ANCHORS.findIndex(a => a.number === card.number);
 }
 
+function showFeedback(correct){
+  const stage = document.getElementById('game');
+  const overlay = document.getElementById('fb-overlay');
+  const icon = document.getElementById('fb-icon');
+  stage.classList.remove('fb-correct','fb-error');
+  overlay.classList.remove('correct','error','show');
+  void stage.offsetWidth;
+  if(correct){
+    stage.classList.add('fb-correct');
+    overlay.classList.add('correct','show');
+    icon.textContent = '✓';
+  } else {
+    stage.classList.add('fb-error');
+    overlay.classList.add('error','show');
+    icon.textContent = '×';
+  }
+  setTimeout(()=>{
+    stage.classList.remove('fb-correct','fb-error');
+    overlay.classList.remove('show');
+  }, 650);
+}
+
 function onPick(idx, el){
   if(!current) return;
   const rule = RULES[ruleIdx];
   const right = correctAnchorIdx(current, rule);
+  const isCorrect = idx === right;
 
-  if(idx === right){
+  showFeedback(isCorrect);
+
+  if(isCorrect){
     totalCorrect++;
     streak++;
-    el.classList.add('flash-correct');
-    setTimeout(()=> el.classList.remove('flash-correct'), 250);
     if(streak >= STREAK_FOR_SWITCH){
-      // правило угадано — переключаем
       categoriesCompleted++;
       streak = 0;
       ruleIdx++;
       lastChangedAtTrial = trial+1;
       if(ruleIdx >= RULES.length){
-        // все 3 правила пройдены
-        setTimeout(finish, 400);
+        setTimeout(finish, 700);
         return;
       }
     }
   } else {
     totalErrors++;
     streak = 0;
-    el.classList.add('flash-error');
-    setTimeout(()=> el.classList.remove('flash-error'), 250);
-    // perseverative error: игрок ответил по предыдущему правилу
     if(ruleIdx > 0){
       const prevRule = RULES[ruleIdx-1];
       const prevRight = correctAnchorIdx(current, prevRule);
@@ -330,11 +374,11 @@ function onPick(idx, el){
   trial++;
   ruleHistoryByTrial.push(RULES[ruleIdx]);
   if(trial >= MAX_TRIALS){
-    setTimeout(finish, 400);
+    setTimeout(finish, 700);
     return;
   }
   current = generateCurrent();
-  setTimeout(renderCurrent, 300);
+  setTimeout(renderCurrent, 700);
 }
 
 function finish(){
