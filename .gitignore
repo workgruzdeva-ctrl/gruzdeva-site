@@ -7,3 +7,4 @@ templates/
 
 # QR codes for slides (assets, not website files)
 qr_*.png
+workbooks/

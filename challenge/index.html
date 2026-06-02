@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Стаей идти веселее — тестовая версия групповой работы</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="description" content="Мини-челлендж перед групповым тренингом по СДВГ. 9 коротких заданий, мини-игры, без логина и email."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #F4EEE2;
+    --bg-2: #FBF7EE;
+    --ink: #2A2620;
+    --ink-2: #4F4A41;
+    --muted: #8C8A77;
+    --coral: #D9694A;
+    --coral-2: #E5805F;
+    --green: #7E8C66;
+    --green-deep: #5E6B4A;
+    --yellow: #F5C400;
+    --yellow-soft: #FFE27A;
+    --line: #E6DECE;
+    --maxw: 1200px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: 'Fraunces','Georgia',serif; }
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 40px; }
+
+  /* views switching */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 78px; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
+  .brand .d { width: 13px; height: 13px; border-radius: 50%; background: var(--yellow); display: inline-block; }
+  .nav-link {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-weight: 600; font-size: 16px; color: var(--ink-2);
+    text-decoration: none; padding: 10px 18px; border-radius: 999px;
+    border: 1.5px solid var(--ink); background: transparent;
+    transition: background .18s, color .18s; cursor: pointer;
+  }
+  .nav-link:hover { background: var(--ink); color: var(--bg); }
+  .nav-link svg { width: 16px; height: 16px; }
+  .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 60px 0 80px; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center;
+  }
+  .pills { display: flex; flex-wrap: wrap; gap: 12px; }
+  .pill {
+    padding: 9px 18px; border-radius: 999px; white-space: nowrap;
+    background: var(--bg-2); border: 1.5px solid var(--line);
+    font-weight: 600; font-size: 15px; color: var(--ink-2);
+  }
+  h1.title {
+    margin: 30px 0 0; font-weight: 600;
+    font-size: 86px; line-height: 0.98; letter-spacing: -0.03em; color: var(--ink);
+    text-wrap: balance;
+  }
+  h1.title em { font-style: italic; font-weight: 500; color: var(--coral); }
+  .subtitle {
+    margin: 20px 0 0; font-style: italic; font-weight: 500;
+    font-size: 28px; line-height: 1.1; letter-spacing: -0.01em; color: var(--muted);
+  }
+  .hero-body { margin: 32px 0 0; max-width: 560px; }
+  .hero-body p { margin: 0 0 16px; font-size: 19px; line-height: 1.55; color: var(--ink-2); }
+  .hero-body p:last-child { margin-bottom: 0; }
+  .hero-body strong { font-weight: 700; color: var(--ink); }
+
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 32px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    border-radius: 999px; padding: 18px 28px; border: 1.5px solid transparent;
+    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 17px;
+    letter-spacing: -0.01em; cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .btn-primary { background: var(--coral); color: #fff; box-shadow: 0 12px 26px rgba(217,105,74,0.28); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(217,105,74,0.34); }
+  .btn-yellow {
+    background: var(--yellow); color: var(--ink);
+    box-shadow: 0 12px 26px rgba(245,196,0,0.30);
+  }
+  .btn-yellow:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(245,196,0,0.40); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .btn-ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn svg { width: 18px; height: 18px; }
+  .cta-note { font-size: 15px; font-weight: 500; color: var(--muted); }
+
+  /* ---------- mascot ---------- */
+  .mascot-stage { position: relative; display: flex; justify-content: center; align-items: center; }
+  .mascot-stage svg { width: 100%; max-width: 440px; height: auto; overflow: visible; }
+  @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-14px) rotate(1deg); } }
+  .mascot-float { animation: floaty 5s ease-in-out infinite; transform-origin: center bottom; }
+  @keyframes twinkle { 0%,100% { opacity: .35; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
+  .spark { animation: twinkle 3s ease-in-out infinite; transform-origin: center; }
+  .spark.b { animation-delay: 1.1s; }
+  .spark.c { animation-delay: 2s; }
+
+  /* mascot for home view (smaller, also floating) */
+  .home-mascot {
+    width: 280px; height: 280px; margin: 0 auto;
+    animation: floaty 5s ease-in-out infinite; transform-origin: center bottom;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .home-mascot img { width: 100%; height: 100%; object-fit: contain; image-rendering:-webkit-optimize-contrast; }
+  .home-mascot svg { width: 90%; height: 90%; }
+
+  /* ---------- generic section ---------- */
+  section { position: relative; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 12px; white-space: nowrap;
+    font-weight: 700; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--green-deep);
+  }
+  .eyebrow .d { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); display: inline-block; }
+  h2.head {
+    margin: 16px 0 0; font-weight: 600;
+    font-size: 52px; line-height: 1.03; letter-spacing: -0.028em; color: var(--ink);
+    text-wrap: balance;
+  }
+  h2.head em { font-style: italic; font-weight: 500; color: var(--coral); }
+  .lede { margin: 18px 0 0; max-width: 680px; font-size: 20px; line-height: 1.5; color: var(--ink-2); }
+
+  /* ---------- "что внутри" cards ---------- */
+  .inside { padding: 30px 0 40px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .card {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 28px;
+    padding: 34px 30px 32px; display: flex; flex-direction: column;
+  }
+  .card .ico {
+    width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center;
+    background: var(--yellow-soft); margin-bottom: 22px;
+  }
+  .card .ico svg { width: 30px; height: 30px; }
+  .card h3 { margin: 0; font-family:'Fraunces',serif; font-weight: 600; font-size: 26px; line-height: 1.06; letter-spacing: -0.02em; }
+  .card p { margin: 12px 0 0; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+
+  /* ---------- "как устроено" ---------- */
+  .how { padding: 70px 0; }
+  .how-inner { background: var(--green-deep); border-radius: 36px; padding: 60px 56px; position: relative; overflow: hidden; color: #fff; }
+  .how-inner .eyebrow { color: var(--yellow-soft); }
+  .how-inner .eyebrow .d { background: var(--yellow); }
+  .how-inner h2.head { color: #fff; }
+  .how-inner h2.head em { color: var(--yellow-soft); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 48px; position: relative; z-index: 2; }
+  .step .n {
+    font-family:'Fraunces',serif; font-weight: 600; font-size: 26px;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center; color: var(--green-deep); background: var(--yellow);
+    margin-bottom: 20px;
+  }
+  .step h3 { margin: 0; font-family:'Fraunces',serif; font-weight: 500; font-size: 24px; line-height: 1.08; letter-spacing: -0.02em; color: #fff; }
+  .step p { margin: 10px 0 0; font-size: 17px; line-height: 1.5; color: rgba(255,255,255,0.82); }
+  .flock-mini { position: absolute; right: 50px; top: 36px; display: flex; align-items: flex-end; gap: 12px; opacity: 0.95; z-index: 1; }
+
+  /* ---------- bridge ---------- */
+  .bridge { padding: 30px 0 80px; }
+  .bridge-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 36px; align-items: center;
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 34px;
+    padding: 48px 52px;
+  }
+  .bridge-card h2 { margin: 14px 0 0; font-family:'Fraunces',serif; font-weight: 600; font-size: 40px; line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; }
+  .bridge-card h2 em { font-style: italic; font-weight: 500; color: var(--coral); }
+  .bridge-card p { margin: 16px 0 0; max-width: 600px; font-size: 18px; line-height: 1.5; color: var(--ink-2); }
+  .bridge-cta { display: flex; flex-direction: column; gap: 12px; align-items: stretch; min-width: 260px; }
+  .bridge-meta { display: inline-flex; align-items: center; gap: 12px; font-weight: 600; font-size: 17px; color: var(--ink-2); justify-content: center; white-space: nowrap; }
+  .bridge-meta .sep { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); display: inline-block; }
+
+  /* ---------- final CTA ---------- */
+  .final { padding: 0 0 90px; }
+  .final-card {
+    text-align: center; background: var(--ink); color: #fff; border-radius: 36px;
+    padding: 70px 56px 64px; position: relative; overflow: hidden;
+  }
+  .final-card .eyebrow { color: var(--yellow-soft); justify-content: center; }
+  .final-card .eyebrow .d { background: var(--yellow); }
+  .final-card h2 { margin: 18px 0 0; font-family:'Fraunces',serif; font-weight: 600; font-size: 60px; line-height: 1.0; letter-spacing: -0.03em; }
+  .final-card h2 em { font-style: italic; font-weight: 500; color: var(--yellow-soft); }
+  .final-card p { margin: 20px auto 0; max-width: 540px; font-size: 19px; line-height: 1.5; color: rgba(255,255,255,0.82); }
+  .final-card .cta-row { justify-content: center; margin-top: 32px; }
+  .final-card .cta-note { color: rgba(255,255,255,0.6); }
+
+  /* ---------- resume banner ---------- */
+  .resume-banner {
+    background: var(--yellow-soft); border: 1.5px solid var(--yellow);
+    border-radius: 18px; padding: 16px 22px; margin: 20px 0;
+    display: none; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap; font-size: 15px; color: var(--ink);
+  }
+  .resume-banner.show { display: flex; }
+  .resume-banner b { font-family:'Fraunces',serif; }
+  .resume-banner button {
+    background: var(--ink); color: #fff; border: none;
+    padding: 9px 16px; border-radius: 999px; font: inherit; font-weight: 700;
+    cursor: pointer; font-size: 14px;
+  }
+
+  /* ---------- registration ---------- */
+  .reg-section { padding: 0 0 40px; }
+  .reg {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 28px;
+    padding: 36px 40px; max-width: 720px;
+  }
+  .reg h3 { margin: 0; font-family:'Fraunces',serif; font-weight: 600; font-size: 30px; letter-spacing: -0.02em; }
+  .reg .sub { margin: 10px 0 22px; font-size: 17px; color: var(--ink-2); }
+  .reg-form { display: flex; gap: 12px; flex-wrap: wrap; }
+  .reg-form input {
+    flex: 1; min-width: 220px;
+    font: inherit; font-size: 17px; padding: 16px 20px;
+    border: 1.5px solid var(--line); border-radius: 999px;
+    background: var(--bg); color: var(--ink);
+  }
+  .reg-form input:focus { outline: none; border-color: var(--coral); }
+  .reg-note { margin: 18px 0 0; font-size: 14px; color: var(--muted); }
+  .reg-note a { color: var(--coral); font-weight: 600; }
+
+  /* ---------- footer ---------- */
+  .foot { border-top: 1px solid var(--line); }
+  .foot-in { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 96px; flex-wrap: wrap; padding: 24px 0; }
+  .foot .brand { font-size: 17px; }
+  .foot-links { display: flex; gap: 26px; flex-wrap: wrap; }
+  .foot-links a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 15px; }
+  .foot-links a:hover { color: var(--ink); }
+  .foot-legal { font-size: 13px; color: var(--muted); width: 100%; padding-top: 8px; border-top: 1px dashed var(--line); margin-top: 8px; }
+
+  /* ---------- HOME VIEW (personal) ---------- */
+  .home-hero { padding: 50px 0 30px; text-align: center; }
+  .home-hello {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 18px; color: var(--muted); margin: 0 0 16px;
+  }
+  .home-stage-name {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 36px; letter-spacing: -0.02em; margin: 16px 0 8px;
+  }
+  .home-stage-desc {
+    font-family:'Fraunces',serif; font-style: italic;
+    font-size: 17px; color: var(--ink-2); max-width: 440px; margin: 0 auto;
+  }
+  .progress-block {
+    margin: 28px auto 0; max-width: 480px;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--ink-2); font-size: 15px; font-weight: 600;
+  }
+  .progress-bar { flex: 1; height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--coral); border-radius: 99px; transition: width .4s ease; }
+
+  .home-toolbar {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 14px 22px; margin: 30px 0; font-size: 14px; color: var(--ink-2);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px; flex-wrap: wrap;
+  }
+  .home-toolbar .you { font-family:'Fraunces',serif; color: var(--ink); font-weight: 700; }
+  .home-toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .tg-pill {
+    background: var(--yellow); color: var(--ink); padding: 8px 16px;
+    border-radius: 999px; font-weight: 700; font-size: 13px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .reset-btn {
+    background: transparent; border: 1.5px solid var(--line); color: var(--muted);
+    padding: 7px 14px; border-radius: 999px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+
+  /* current day card */
+  .current-card {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 28px;
+    padding: 36px 36px 32px; text-decoration: none; color: var(--ink);
+    display: block; position: relative; margin: 30px 0;
+    transition: transform .15s ease, box-shadow .15s ease;
+    border-left: 6px solid var(--coral);
+  }
+  .current-card:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,0.06); }
+  .current-card .cc-label {
+    font-weight: 700; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--coral); margin: 0 0 6px;
+  }
+  .current-card .cc-day { font-family:'Fraunces',serif; font-style: italic; font-size: 14px; color: var(--muted); margin: 0 0 4px; }
+  .current-card .cc-name { font-family:'Fraunces',serif; font-size: 32px; font-weight: 600; margin: 0 0 10px; line-height: 1.1; letter-spacing: -0.02em; }
+  .current-card .cc-desc { font-size: 17px; color: var(--ink-2); margin: 0 0 22px; line-height: 1.5; }
+  .current-card .cc-cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--coral); color: #fff; padding: 14px 24px; border-radius: 999px;
+    font-weight: 700; font-size: 16px;
+    box-shadow: 0 8px 18px rgba(217,105,74,0.25);
+  }
+  .current-card .gift {
+    position: absolute; top: 24px; right: 24px;
+    font-size: 13px; background: var(--yellow); color: var(--ink);
+    padding: 6px 14px; border-radius: 99px; font-weight: 700;
+  }
+
+  /* done list */
+  .done-title {
+    font-family:'Fraunces',serif; font-style: italic;
+    font-size: 14px; color: var(--muted); text-transform: none;
+    margin: 30px 0 12px; text-align: center;
+  }
+  .done-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 16px;
+  }
+  .done-card {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 14px 18px; font-size: 14px; color: var(--ink-2);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .done-card .check {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--green-deep); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .done-card .dn { font-family:'Fraunces',serif; color: var(--ink); font-weight: 600; }
+
+  /* future hint */
+  .future-line {
+    text-align: center; font-size: 14px; color: var(--muted);
+    font-style: italic; padding: 20px 0 8px;
+  }
+  .future-dots { display: flex; justify-content: center; gap: 7px; margin-top: 10px; }
+  .future-dots span {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--line);
+  }
+
+  /* finale card (all 9 done) */
+  .finale-card {
+    background: var(--ink); color: #fff; border-radius: 28px;
+    padding: 40px 36px; text-align: center; margin: 30px 0;
+  }
+  .finale-card h2 { font-family:'Fraunces',serif; font-size: 32px; margin: 0 0 12px; }
+  .finale-card p { color: rgba(255,255,255,0.78); margin: 0 0 22px; }
+  .finale-card a {
+    display: inline-block; background: var(--yellow); color: var(--ink);
+    padding: 14px 26px; border-radius: 999px; text-decoration: none; font-weight: 700;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1000px) {
+    h1.title { font-size: 60px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+    .mascot-stage { order: -1; }
+    .mascot-stage svg { max-width: 300px; }
+    .cards, .steps { grid-template-columns: 1fr; }
+    h2.head { font-size: 38px; }
+    .how-inner { padding: 42px 28px; }
+    .bridge-card { grid-template-columns: 1fr; padding: 34px 28px; }
+    .flock-mini { display: none; }
+    .final-card { padding: 50px 28px; }
+    .final-card h2 { font-size: 38px; }
+    .done-grid { grid-template-columns: 1fr 1fr; }
+    .current-card { padding: 28px; }
+    .current-card .cc-name { font-size: 26px; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 22px; }
+    h1.title { font-size: 46px; }
+    .subtitle { font-size: 22px; }
+    .reg { padding: 26px 24px; }
+    .home-toolbar { flex-direction: column; align-items: flex-start; }
+    .nav-in { height: 64px; }
+    .nav-link { font-size: 14px; padding: 8px 14px; }
+    .home-mascot { width: 220px; height: 220px; }
+    .home-stage-name { font-size: 28px; }
+    .done-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== LANDING VIEW ============== -->
+<div id="view-landing" class="view">
+
+  <div class="nav">
+    <div class="wrap nav-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div class="nav-actions">
+        <a class="nav-link" href="../group.html">К основному тренингу</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <div class="pills">
+            <span class="pill">9 заданий</span>
+            <span class="pill">бесплатно</span>
+            <span class="pill">в браузере</span>
+          </div>
+
+          <h1 class="title serif">Стаей идти <em>веселее</em></h1>
+          <div class="subtitle serif">тестовая версия групповой работы</div>
+
+          <div class="hero-body">
+            <p>Ни одного «составь план» и «возьми тетрадь». Только короткие мини-игры на внимание, память и исполнительные навыки — чтобы потыкать мозг палочкой и посмотреть, что он делает в ответ.</p>
+            <p><strong>5–10 минут в день.</strong> Без логина. Без email. Просто заходишь и делаешь.</p>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#start">Открыть первое задание
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-yellow" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">Зайти в чат стаи
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div style="margin-top:14px"><span class="cta-note">Можно бросить в любой момент</span></div>
+        </div>
+
+        <!-- Mascot -->
+        <div class="mascot-stage">
+          <svg viewBox="0 0 460 460" role="img" aria-label="Гусёнок-королева">
+            <g class="spark" fill="var(--yellow)">
+              <path d="M404 150 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8 z"/>
+            </g>
+            <g class="spark b" fill="var(--yellow)">
+              <path d="M420 250 l6 15 15 6 -15 6 -6 15 -6 -15 -15 -6 15 -6 z"/>
+            </g>
+            <g class="spark c" fill="var(--coral-2)">
+              <path d="M70 120 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5 z"/>
+            </g>
+
+            <g class="mascot-float">
+              <ellipse cx="232" cy="418" rx="92" ry="16" fill="rgba(94,107,74,0.16)"/>
+
+              <path d="M300 210 C 360 220, 392 270, 372 326 C 360 360, 326 372, 300 360 C 322 320, 320 268, 296 232 Z"
+                    fill="var(--green)" stroke="var(--green-deep)" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M312 250 C 338 262, 352 290, 348 318" fill="none" stroke="var(--green-deep)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+
+              <path d="M232 120 C 312 120, 348 196, 348 268 C 348 338, 300 384, 232 384 C 164 384, 116 338, 116 268 C 116 196, 152 120, 232 120 Z"
+                    fill="#fff" stroke="var(--ink)" stroke-width="4.5" stroke-linejoin="round"/>
+
+              <path d="M204 380 L 200 416" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M260 380 L 264 416" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M184 418 L 200 416 L 216 420" fill="none" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M248 420 L 264 416 L 280 418" fill="none" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <path d="M196 244 q 14 14 28 0" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+              <path d="M252 244 q 14 14 28 0" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="188" cy="272" rx="13" ry="8" fill="#F6C6B4" opacity="0.7"/>
+              <ellipse cx="288" cy="272" rx="13" ry="8" fill="#F6C6B4" opacity="0.7"/>
+
+              <path d="M222 268 L 254 268 L 238 286 Z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>
+
+              <path d="M138 286 C 120 300, 120 326, 140 336 C 150 318, 150 300, 150 290 Z"
+                    fill="#fff" stroke="var(--ink)" stroke-width="4.5" stroke-linejoin="round"/>
+
+              <path d="M178 132 L 196 100 L 216 124 L 232 92 L 248 124 L 268 100 L 286 132 Z"
+                    fill="var(--yellow)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M178 132 L 286 132" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="232" cy="112" r="4.5" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/>
+
+              <path d="M132 320 L 86 196" stroke="var(--yellow)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M78 150 l11 26 28 4 -21 19 5 28 -25 -14 -25 14 5 -28 -21 -19 28 -4 z"
+                    transform="translate(2 6)"
+                    fill="var(--yellow)" stroke="var(--ink)" stroke-width="3.5" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGISTRATION -->
+    <section class="reg-section" id="start">
+      <div class="wrap">
+
+        <!-- Resume banner (shown if user already registered) -->
+        <div id="resume-banner" class="resume-banner">
+          <span>У тебя уже есть прогресс, <b id="resume-name">—</b>. Вернёмся к птичке?</span>
+          <button id="resume-btn">Вернуться →</button>
+        </div>
+
+        <div class="reg">
+          <h3>Как тебя называть?</h3>
+          <p class="sub">Имя нужно только чтобы птичка обращалась к тебе. Никаких email, паролей и регистраций — прогресс сохраняется только в твоём браузере.</p>
+          <form id="reg-form" class="reg-form">
+            <input id="reg-name" type="text" placeholder="Например, Аня" maxlength="40" autocomplete="off" required>
+            <button class="btn btn-primary" type="submit">Начать челлендж
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </form>
+          <p class="reg-note">Параллельно — заходи в общий чат стаи в Telegram. Там я отвечаю на вопросы и подсматриваю как ты там 👀<br>
+            <a href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">→ перейти в чат</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЧТО ВНУТРИ -->
+    <section class="inside">
+      <div class="wrap">
+        <div class="eyebrow"><span class="d"></span>что внутри</div>
+        <h2 class="head">Никаких тетрадей.<br><em>Только короткие заходы.</em></h2>
+        <p class="lede">Девять маленьких заданий, которые не требуют силы воли на старте. Открыл — поиграл — закрыл.</p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="ico">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2A2620" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#2A2620"/></svg>
+            </div>
+            <h3>Мини-игры на внимание и память</h3>
+            <p>Короткие интерактивы вместо упражнений «на дисциплину». Пара мелких заданий — и хватит на сегодня.</p>
+          </div>
+          <div class="card">
+            <div class="ico">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2A2620" stroke-width="2"/><path d="M12 7.5V12l3 2" stroke="#2A2620" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>5–10 минут в день</h3>
+            <p>Без логина и без email. Просто заходишь в браузере и делаешь — никаких аккаунтов и установок.</p>
+          </div>
+          <div class="card">
+            <div class="ico">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 12c2.5-5 6-7.5 9-7.5S18.5 7 21 12c-2.5 5-6 7.5-9 7.5S5.5 17 3 12Z" stroke="#2A2620" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.6" fill="#2A2620"/></svg>
+            </div>
+            <h3>Видно свой СДВГ-мозг</h3>
+            <p>Сама замечаешь, где он тормозит, залипает и тянется к каждой второй кнопке. Без оценок и «правильно/нет».</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЗАЧЕМ -->
+    <section class="inside" style="padding:60px 0 30px">
+      <div class="wrap">
+        <div class="eyebrow"><span class="d"></span>зачем</div>
+        <h2 class="head">Чтобы познакомиться<br><em>без неловкого «расскажите о себе».</em></h2>
+        <p class="lede">Здесь можно немного поиграть, потыкать в интересное, посмеяться над тем, как мозг внезапно уходит в кусты, и увидеть: как ты начинаешь задачи, где зависаешь, что забываешь, на что залипаешь и как вообще тебе работается в таком формате.</p>
+        <p class="lede" style="margin-top:14px">А ещё — понять, комфортно ли тебе со мной, с группой и с идеей заниматься исполнительными навыками не через стыд и героизм, а через наблюдение, поддержку и маленькие практики.</p>
+      </div>
+    </section>
+
+    <!-- КАК УСТРОЕНО -->
+    <section class="how">
+      <div class="wrap">
+        <div class="how-inner">
+          <div class="eyebrow"><span class="d"></span>как устроено</div>
+          <h2 class="head">Сначала играешь.<br><em>Потом решаешь.</em></h2>
+
+          <div class="steps">
+            <div class="step">
+              <div class="n">1</div>
+              <h3>Заходишь и играешь</h3>
+              <p>Открываешь задания в браузере. 5–10 минут — и можно закрыть. Без подготовки и настроя.</p>
+            </div>
+            <div class="step">
+              <div class="n">2</div>
+              <h3>Видишь свой паттерн</h3>
+              <p>Замечаешь, где мозг тормозит, залипает и уходит в сторону. Это и есть главное наблюдение.</p>
+            </div>
+            <div class="step">
+              <div class="n">3</div>
+              <h3>Решаешь, что дальше</h3>
+              <p>Хочешь с этим что-то делать — идёшь в группу. Не хочешь — уже узнала о себе чуть больше.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRIDGE -->
+    <section class="bridge" id="bridge">
+      <div class="wrap">
+        <div class="bridge-card">
+          <div>
+            <div class="eyebrow"><span class="d"></span>а дальше</div>
+            <h2>Это пред-ступень к <em>основной группе</em></h2>
+            <p>Тестовая версия нужна, чтобы ты без обязательств почувствовала формат и увидела свой СДВГ-мозг в действии. А групповая работа — это уже про то, чтобы со всем этим что-то делать вместе со стаей.</p>
+          </div>
+          <div class="bridge-cta">
+            <a class="btn btn-ghost" href="../group.html" style="justify-content:center;">Узнать про группу</a>
+            <div class="bridge-meta"><span>6 встреч</span><span class="sep"></span><span>онлайн</span><span class="sep"></span><span>240 €</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final">
+      <div class="wrap">
+        <div class="final-card">
+          <div class="eyebrow"><span class="d"></span>можно прямо сейчас</div>
+          <h2>Просто заходишь<br>и <em>делаешь</em></h2>
+          <p>Без логина, без email, без обязательств. А мне очень приятно, что ты заглянула — если понравится играть, поделись с другом, пожалуйста.</p>
+          <div class="cta-row">
+            <a class="btn btn-yellow" href="#start">Открыть первое задание
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <span class="cta-note">9 заданий · 5–10 минут в день</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="foot">
+      <div class="wrap foot-in">
+        <span class="brand"><span class="d"></span>Валя Груздева</span>
+        <div class="foot-links">
+          <a href="../group.html">Основной тренинг</a>
+          <a href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">Telegram-чат</a>
+          <a href="../index.html">Главный сайт</a>
+        </div>
+        <div class="foot-legal">Валентина Груздева · ADHD-CCSP · ИНН 772608526147 · <a href="mailto:work.gruzdeva@gmail.com" style="color:var(--muted)">work.gruzdeva@gmail.com</a></div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+
+<!-- ============== HOME (PERSONAL) VIEW ============== -->
+<div id="view-home" class="view">
+
+  <div class="nav">
+    <div class="wrap nav-in">
+      <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+      <div class="nav-actions">
+        <a class="nav-link" href="#" id="back-landing">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Назад
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HOME HERO -->
+    <section class="home-hero">
+      <div class="wrap">
+        <p class="home-hello" id="greeting">Привет, незнакомка</p>
+        <div class="home-mascot" id="home-mascot"></div>
+        <div class="home-stage-name" id="stage-name">Яйцо</div>
+        <div class="home-stage-desc" id="stage-desc">Только заглянула — что-то скоро начнётся</div>
+        <div class="progress-block">
+          <span id="prog-text">0 из 9</span>
+          <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <div class="home-toolbar">
+        <div>
+          <span class="you" id="who-name">—</span> · прогресс сохраняется в этом браузере
+        </div>
+        <div class="home-toolbar-right">
+          <a class="tg-pill" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">
+            ✈︎ чат стаи
+          </a>
+          <button class="reset-btn" id="reset-btn">сбросить</button>
+        </div>
+      </div>
+
+      <!-- current day card -->
+      <section id="home-current"></section>
+      <!-- done compact list -->
+      <section id="home-done"></section>
+      <!-- future hint -->
+      <section id="home-future"></section>
+
+    </div>
+
+    <footer class="foot" style="margin-top:60px">
+      <div class="wrap foot-in">
+        <span class="brand"><span class="d"></span>Валя Груздева</span>
+        <div class="foot-links">
+          <a href="../group.html">Основной тренинг</a>
+          <a href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">Telegram-чат</a>
+          <a href="../index.html">Главный сайт</a>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   CHALLENGE · single-page lander + personal home
+   ============================================================ */
+
+const LS_KEY = 'gruzdeva_challenge_v1';
+
+const EGG_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" style="width:100%;height:100%">
+  <path d="M 120 22 C 175 22 205 110 205 175 C 205 230 170 262 120 262
+           C 70 262 35 230 35 175 C 35 110 65 22 120 22 Z"
+        fill="none" stroke="#2A2620" stroke-width="4" stroke-linejoin="round"/>
+</svg>`;
+
+const BIRDS = [
+  { file: null,                           name: 'Яйцо',                desc: 'Только заглянула — что-то скоро начнётся' },
+  { file: '02_treshchinka.png',           name: 'Трещинка',            desc: 'Уже слышно: внутри кто-то собирается выйти' },
+  { file: '03_vylupilas.png',             name: 'Вылупилась',          desc: 'Появилась. Пока не поняла, куда именно' },
+  { file: '04_ya_v_puti.png',             name: 'Я в пути',            desc: 'Стою на лапках и делаю вид, что так и было задумано' },
+  { file: '05_osmatrivaetsya.png',        name: 'Осматривается',       desc: 'Начинаю понимать, где я и куда дальше' },
+  { file: '06_sobiraet_instrumenty.png',  name: 'Собирает инструменты', desc: 'Нашла пару штуковин, которые и правда помогают' },
+  { file: '07_probuet_krylya.png',        name: 'Пробует крылья',      desc: 'Пока не полёт, но уже очень подозрительно' },
+  { file: '08_letit.png',                 name: 'Летит',               desc: 'Оторвалась от земли. Немного сама в шоке' },
+  { file: '09_koroleva_stai.png',         name: 'Королева стаи',       desc: 'Не стала идеальной. Просто теперь у неё есть крылья, корона и план' },
+];
+
+const DAYS = [
+  { n:1, name:'PVT',                 desc:'Тест бдительности — жми на точку, когда она появится. Замер скорости реакции.',  url:'day1/index.html' },
+  { n:2, name:'Go / No-Go',          desc:'Реакция на «можно» и торможение на «нельзя». Проверка импульсивности.',           url:'day2/index.html' },
+  { n:3, name:'Покажи рабочий стол', desc:'Селфи твоего desktop как есть. Без прибрать. Это уже инсайт.',                    url:'day3/index.html' },
+  { n:4, name:'N-back',              desc:'Игра на рабочую память. 2 минуты ада, который многое объяснит.',                  url:'day4/index.html' },
+  { n:5, name:'Сторис-рекомендация', desc:'Поделись одной вещью, которая тебя реально вывозит. Виральная часть.',            url:'day5/index.html' },
+  { n:6, name:'Висконсин',           desc:'Сортировка карточек. Покажет как ты переключаешься между правилами.',             url:'day6/index.html' },
+  { n:7, name:'Опрос близкому',      desc:'Отправь ссылку другу. 4 вопроса о тебе. Сравним с твоими ответами.',              url:'day7/index.html' },
+  { n:8, name:'Flanker',             desc:'Стрелочки, которые мешают. Замер избирательного внимания.',                       url:'day8/index.html' },
+  { n:9, name:'Бинго и финал',       desc:'Карта твоих результатов + скидка на групповой тренинг.', url:'day9/index.html', gift:'−20% на группу' },
+];
+
+/* ---------- state ---------- */
+function loadState(){
+  try{ const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function saveState(s){ localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+function newState(name){ return { name, startedAt: Date.now(), days: {} }; }
+function doneCount(s){
+  if(!s || !s.days) return 0;
+  return Object.values(s.days).filter(d=>d && d.done).length;
+}
+
+/* ---------- view switch ---------- */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0});
+}
+
+/* ---------- render home ---------- */
+function renderHome(s){
+  document.querySelectorAll('#view-home .done-title').forEach(el=>el.remove());
+
+  document.getElementById('who-name').textContent = s.name;
+  document.getElementById('greeting').textContent = `Привет, ${s.name}`;
+
+  const done = doneCount(s);
+  const stageIdx = Math.min(done, 8);
+  const stage = BIRDS[stageIdx];
+
+  const mascotEl = document.getElementById('home-mascot');
+  if(stage.file === null){
+    mascotEl.innerHTML = EGG_SVG;
+  } else {
+    mascotEl.innerHTML = `<img src="../m/grp/birds/${stage.file}" alt="${stage.name}">`;
+  }
+  document.getElementById('stage-name').textContent = stage.name;
+  document.getElementById('stage-desc').textContent = stage.desc;
+
+  document.getElementById('prog-text').textContent = `${done} из 9`;
+  document.getElementById('prog-fill').style.width = `${(done/9)*100}%`;
+
+  // find next undone day
+  const currentDay = DAYS.find(d => !(s.days[d.n] && s.days[d.n].done));
+  const doneDays   = DAYS.filter(d => s.days[d.n] && s.days[d.n].done);
+  const remaining  = currentDay ? DAYS.filter(d => d.n > currentDay.n).length : 0;
+
+  // current day card
+  const currentBox = document.getElementById('home-current');
+  currentBox.innerHTML = '';
+  if(currentDay){
+    const a = document.createElement('a');
+    a.className = 'current-card';
+    a.href = currentDay.url;
+    a.innerHTML = `
+      ${currentDay.gift ? `<span class="gift">🎁 ${currentDay.gift}</span>` : ''}
+      <div class="cc-label">${done === 0 ? 'Начни здесь' : 'Твой день сегодня'}</div>
+      <div class="cc-day">день ${currentDay.n} из 9</div>
+      <div class="cc-name">${currentDay.name}</div>
+      <div class="cc-desc">${currentDay.desc}</div>
+      <span class="cc-cta">Открыть
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    `;
+    currentBox.appendChild(a);
+  } else {
+    const f = document.createElement('div');
+    f.className = 'finale-card';
+    f.innerHTML = `
+      <h2>Все 9 пройдено 👑</h2>
+      <p>Птичка получила корону. Открой день 9, чтобы собрать бинго и забрать промокод.</p>
+      <a href="day9/index.html">К финальному экрану →</a>
+    `;
+    currentBox.appendChild(f);
+  }
+
+  // done list
+  const doneBox = document.getElementById('home-done');
+  doneBox.innerHTML = '';
+  if(doneDays.length > 0){
+    const title = document.createElement('div');
+    title.className = 'done-title';
+    title.textContent = 'уже сделано';
+    doneBox.parentNode.insertBefore(title, doneBox);
+    const grid = document.createElement('div');
+    grid.className = 'done-grid';
+    doneDays.forEach(d=>{
+      const c = document.createElement('div');
+      c.className = 'done-card';
+      c.innerHTML = `<div class="check">✓</div><div><span class="dn">день ${d.n}</span> · ${d.name}</div>`;
+      grid.appendChild(c);
+    });
+    doneBox.appendChild(grid);
+  }
+
+  // future hint
+  const futureBox = document.getElementById('home-future');
+  futureBox.innerHTML = '';
+  if(currentDay && remaining > 0){
+    const line = document.createElement('div');
+    line.className = 'future-line';
+    line.innerHTML = `
+      впереди ещё ${remaining} ${remaining === 1 ? 'день' : (remaining < 5 ? 'дня' : 'дней')} — откроются по мере прохождения
+      <div class="future-dots">${Array(remaining).fill('<span></span>').join('')}</div>
+    `;
+    futureBox.appendChild(line);
+  }
+}
+
+/* ---------- view helpers ---------- */
+function refreshResumeBanner(){
+  const state = loadState();
+  const banner = document.getElementById('resume-banner');
+  if(state && state.name){
+    document.getElementById('resume-name').textContent = state.name;
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+function goHome(){
+  const state = loadState();
+  if(state && state.name){
+    showView('view-home');
+    renderHome(state);
+  }
+}
+
+function goLanding(){
+  showView('view-landing');
+  refreshResumeBanner();
+}
+
+/* ---------- init & handlers ---------- */
+function init(){
+  const state = loadState();
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('landing') === '1'){ goLanding(); return; }
+  if(state && state.name){
+    showView('view-home');
+    renderHome(state);
+  } else {
+    goLanding();
+  }
+}
+
+document.getElementById('reg-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value.trim();
+  if(!name) return;
+  const s = newState(name);
+  saveState(s);
+  showView('view-home');
+  renderHome(s);
+});
+
+document.getElementById('resume-btn').addEventListener('click', goHome);
+
+document.getElementById('back-landing').addEventListener('click', (e)=>{
+  e.preventDefault();
+  goLanding();
+});
+
+document.getElementById('reset-btn').addEventListener('click', ()=>{
+  if(confirm('Сбросить весь прогресс? Это нельзя отменить.')){
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+});
+
+init();
+</script>
+</body>
+</html>

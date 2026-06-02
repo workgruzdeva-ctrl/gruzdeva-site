@@ -723,7 +723,7 @@
   <!-- ============ MAIN ============ -->
   <main class="main">
     <h1>Зона участника</h1>
-    <p class="lead">Здесь живут воркбуки, трекеры и ваш гусёнок. Чем больше делаете — тем больше он растёт.</p>
+    <p class="lead">Здесь живут воркбуки, трекеры и ваш гусёнок. Закрываете все 3 задачи недели — гусёнок переходит на следующую стадию.</p>
 
     <!-- ============ WEEKLY GROUP TASKS ============ -->
     <h2 id="weekly">Групповая работа</h2>
@@ -763,40 +763,22 @@
     </div>
 
     <!-- ============ WORKBOOKS ============ -->
-    <h2 id="workbooks">Воркбуки</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Рабочие тетради по неделям. Открываются в новой вкладке.</p>
+    <h2 id="workbooks">Рабочие тетради</h2>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Все 6 воркбуков лежат в одной папке на Google Drive. Откройте, скачайте нужный — и заполняйте.</p>
 
-    <div class="wb-grid">
-      <a class="wb-card" href="#" data-wb="1">
-        <div class="wb-num">НЕДЕЛЯ 1</div>
-        <div class="wb-title">Что такое исполнительные навыки</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
-      <a class="wb-card" href="#" data-wb="2">
-        <div class="wb-num">НЕДЕЛЯ 2</div>
-        <div class="wb-title">Когда силы вас оставляют</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
-      <a class="wb-card" href="#" data-wb="3">
-        <div class="wb-num">НЕДЕЛЯ 3</div>
-        <div class="wb-title">Защита от стыда провала</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
-      <a class="wb-card" href="#" data-wb="4">
-        <div class="wb-num">НЕДЕЛЯ 4</div>
-        <div class="wb-title">Эмоции и RSD</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
-      <a class="wb-card" href="#" data-wb="5">
-        <div class="wb-num">НЕДЕЛЯ 5</div>
-        <div class="wb-title">Как подойти к задаче</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
-      <a class="wb-card" href="#" data-wb="6">
-        <div class="wb-num">НЕДЕЛЯ 6</div>
-        <div class="wb-title">Прокрастинация и сборка</div>
-        <div class="wb-link">Открыть PDF</div>
-      </a>
+    <a href="https://drive.google.com/drive/folders/1Lhx2Ig59wMuHfIsJuqmsjyNcARkzz32i?usp=sharing"
+       target="_blank" rel="noopener"
+       style="display:flex; align-items:center; gap:16px; padding:22px 26px; margin:18px 0 12px;
+              background:var(--accent); color:#fff; border-radius:16px; text-decoration:none;
+              font-weight:700; font-size:16px; box-shadow:0 10px 22px rgba(217,105,74,0.28);
+              transition:transform .15s ease;">
+      <span style="font-size:28px">📓</span>
+      <span style="flex:1; line-height:1.3">
+        Открыть рабочие тетради
+        <span style="display:block; font-size:13px; font-weight:500; opacity:.85; margin-top:2px">Google Drive · все 6 недель в одной папке</span>
+      </span>
+      <span style="font-size:20px">→</span>
+    </a>
     </div>
     <p style="font-size:12px; color:var(--muted); margin-top:10px">↑ Ссылки на воркбуки подставляются после того, как ведущая загружает их на Drive. Пока — placeholder.</p>
 
@@ -879,6 +861,8 @@ const DEFAULT_STATE = {
   currentWeek: 1,
   // weekly group tasks — отмеченные на этой неделе (сброс в чт)
   weekly: { weekKey: '', items: {} },
+  // полностью выполненные недели (все 3 weekly task'а) — определяют стадию маскота
+  completedWeeks: [],
   // experiment — { weeks: { "YYYY-MM-DD" (thu): { strategy, days: { "YYYY-MM-DD": { tried, mood, note } } } } }
   experiment: { weeks: {}, viewWeek: null },
   // if-then plans
@@ -988,31 +972,98 @@ function ensureFreshWeek(){
   }
 }
 
+// ============ STAGE LOGIC ============
+// Новая логика: стадия = количество ПОЛНОСТЬЮ выполненных недель.
+// Баллы остаются — но они только для геймификации, не определяют стадию.
+
+// Миграция: если у пользователя есть points, но completedWeeks пуст — переносим
+// стадию по старым порогам, чтобы не откатывать прогресс.
+(function migrateCompletedWeeks(){
+  if (!Array.isArray(state.completedWeeks)) state.completedWeeks = [];
+  if (state.completedWeeks.length === 0 && state.points >= 80){
+    const OLD_THRESHOLDS = [0, 80, 160, 240, 320, 400, 480];
+    let stage = 0;
+    for (let i = OLD_THRESHOLDS.length - 1; i >= 0; i--){
+      if (state.points >= OLD_THRESHOLDS[i]){ stage = i; break; }
+    }
+    for (let i = 0; i < stage; i++){
+      state.completedWeeks.push(`migrated-${i}`);
+    }
+    saveState();
+  }
+})();
+
+function isWeekFullyDone(){
+  return WEEKLY_TASKS.every(t => state.weekly.items?.[t.id]);
+}
+
+// Считает текущую стадию по completedWeeks.length, ограничена кол-вом MASCOTS
+function currentStageIdx(){
+  return Math.min(state.completedWeeks.length, MASCOTS.length - 1);
+}
+
+// Подменяем функции из mascot.js — теперь стадия из completedWeeks, а progress — доля задач недели
+function findMascotStage(){ return currentStageIdx(); }
+function getMascotProgress(){
+  const idx = currentStageIdx();
+  const cur = MASCOTS[idx];
+  const next = MASCOTS[idx + 1];
+  const doneTasks = WEEKLY_TASKS.filter(t => state.weekly.items?.[t.id]).length;
+  const progress = doneTasks / WEEKLY_TASKS.length;
+  return {
+    idx, cur, next: next || null,
+    progress,
+    untilNext: WEEKLY_TASKS.length - doneTasks,
+    doneTasks, totalTasks: WEEKLY_TASKS.length,
+  };
+}
+
+// Обновляет completedWeeks после клика на любую weekly task
+function updateCompletedWeeks(){
+  ensureFreshWeek();
+  const wk = state.weekly.weekKey;
+  const idx = state.completedWeeks.indexOf(wk);
+  const beforeStage = currentStageIdx();
+  if (isWeekFullyDone()){
+    if (idx < 0){
+      state.completedWeeks.push(wk);
+      saveState();
+      const afterStage = currentStageIdx();
+      if (afterStage > beforeStage && afterStage < MASCOTS.length){
+        setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[afterStage].name}!`), 1500);
+      }
+    }
+  } else {
+    if (idx >= 0){
+      state.completedWeeks.splice(idx, 1);
+      saveState();
+    }
+  }
+}
+
 // ============ POINTS / MASCOT RENDER ============
 function addPoints(delta, label = ''){
-  const before = state.points;
   state.points += delta;
   if (state.points < 0) state.points = 0;
   saveState();
   renderMascot();
   showToast(delta, label);
-  // Проверка перехода на новую стадию
-  const beforeIdx = findMascotStage(before);
-  const nowIdx = findMascotStage(state.points);
-  if (nowIdx > beforeIdx){
-    setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[nowIdx].name}!`), 1500);
-  }
 }
 
 function renderMascot(){
-  const info = getMascotProgress(state.points);
+  const info = getMascotProgress();
   document.getElementById('mascotSvg').innerHTML = info.cur.svg;
   document.getElementById('mascotTier').textContent = `СТАДИЯ ${info.cur.tier}`;
   document.getElementById('mascotName').textContent = info.cur.name;
   document.getElementById('mascotPts').textContent = state.points;
   document.getElementById('mascotBar').style.width = (info.progress * 100) + '%';
   if (info.next){
-    document.getElementById('mascotNext').textContent = `${info.untilNext} баллов до «${info.next.name}»`;
+    if (info.untilNext === 0){
+      document.getElementById('mascotNext').textContent = `неделя готова — отметь все 3 задачи`;
+    } else {
+      document.getElementById('mascotNext').textContent =
+        `${info.untilNext} из ${info.totalTasks} задач до «${info.next.name}»`;
+    }
   } else {
     document.getElementById('mascotNext').textContent = 'максимум! 🛡️';
   }
@@ -1062,7 +1113,8 @@ function renderWeekly(){
         state.weekly.items[d.id] = true;
         addPoints(d.pts, d.text);
       }
-      saveState();
+      updateCompletedWeeks();
+      renderMascot();
       renderWeekly();
     });
     c.appendChild(el);
@@ -1340,7 +1392,7 @@ function pickMessage(prev){
 let lastMessage = '';
 
 function openMascotModal(){
-  const info = getMascotProgress(state.points);
+  const info = getMascotProgress();
   mascotBig.innerHTML = info.cur.svg;
   mascotModalName.textContent = `— ${info.cur.name}`;
   lastMessage = pickMessage(lastMessage);
@@ -1397,7 +1449,7 @@ function buildReport(){
   const weeklyDone = WEEKLY_TASKS.filter(t => state.weekly.items?.[t.id]);
   const weeklyOpen = WEEKLY_TASKS.filter(t => !state.weekly.items?.[t.id]);
 
-  const info = getMascotProgress(state.points);
+  const info = getMascotProgress();
   const supportMsg = MASCOT_MESSAGES[Math.floor(Math.random() * MASCOT_MESSAGES.length)];
 
   const name = state.name || 'Участник';
@@ -1441,10 +1493,16 @@ function buildReport(){
     lines.push('');
   }
 
-  // Прогресс маскота
-  lines.push(`🐣 Прогресс: ${state.points} баллов · стадия «${info.cur.name}»`);
+  // Прогресс маскота — теперь по завершённым неделям
+  const weeksDone = state.completedWeeks?.length || 0;
+  lines.push(`🐣 Прогресс: ${weeksDone} из 6 недель · стадия «${info.cur.name}»`);
+  lines.push(`   ${state.points} баллов накоплено`);
   if (info.next){
-    lines.push(`   до «${info.next.name}» — ${info.untilNext} баллов`);
+    if (info.untilNext === 0){
+      lines.push(`   → следующая стадия открывается, когда все 3 задачи недели сделаны`);
+    } else {
+      lines.push(`   до «${info.next.name}» — ещё ${info.untilNext} из ${info.totalTasks} задач этой недели`);
+    }
   } else {
     lines.push(`   🛡️ Дошла до максимума!`);
   }

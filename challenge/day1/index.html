@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>День 1 · PVT — тест бдительности</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../day.css">
+<style>
+  /* PVT-specific */
+  #pvt-stage {
+    width: 100%; height: 100%; min-height: 420px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 18px; cursor: pointer;
+    position: relative;
+    border-radius: 28px;
+    transition: background .15s ease;
+  }
+  #pvt-stage.dark {
+    background: var(--ink); color: var(--bg);
+  }
+  .pvt-progress {
+    position: absolute; top: 16px; left: 20px;
+    font-size: 13px; color: var(--muted); font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  #pvt-stage.dark .pvt-progress { color: rgba(255,255,255,0.5); }
+  .pvt-msg {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 22px; text-align: center; padding: 0 24px;
+    max-width: 480px;
+  }
+  .pvt-hint {
+    font-family: 'Manrope', sans-serif; font-style: normal; font-weight: 500;
+    font-size: 14px; color: var(--muted); text-align: center;
+    max-width: 360px; margin-top: -8px;
+  }
+  #pvt-stage.dark .pvt-hint { color: rgba(255,255,255,0.6); }
+  .pvt-dot {
+    width: 42px; height: 42px; border-radius: 50%; background: var(--coral);
+    box-shadow: 0 0 36px var(--coral), 0 0 8px rgba(217,105,74,0.4);
+  }
+  .pvt-counter {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 72px; font-variant-numeric: tabular-nums;
+    color: var(--yellow); line-height: 1;
+  }
+  .pvt-counter-label {
+    font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 0;
+  }
+  .pvt-fs {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 26px; color: var(--coral-2);
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+    <a class="nav-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      К птичке
+    </a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 1 из 9</div>
+    <h1>PVT — <em>тест бдительности</em></h1>
+    <p class="lead">Самый простой и самый честный тест мозга. Жди появления точки и нажимай как можно быстрее. Покажет твой настоящий уровень внимания прямо сейчас.</p>
+  </header>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="panel">
+      <h3>Как это работает</h3>
+      <ul>
+        <li>В <b>чёрном поле</b> в случайный момент появится оранжевая точка.</li>
+        <li>Жми <b>пробел</b> или тапни как можно быстрее.</li>
+        <li>Точка появляется <b>15 раз</b> с интервалом 2–6 секунд.</li>
+        <li>Нажал до того, как появилась точка — <b>фальстарт</b>.</li>
+        <li>Задержался дольше 500мс — <b>лапс</b> (внимание провалилось).</li>
+      </ul>
+      <p style="margin-top:8px">Всего ~3 минуты. Никаких подвохов. Просто скорость реакции.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-big" id="start-btn">
+        Начать тест
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="game-area" hidden>
+    <div id="pvt-stage"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden>
+    <div class="result-panel">
+      <h2>Готово!</h2>
+      <p class="sub">Вот как твой мозг работал прямо сейчас:</p>
+      <div class="result-stats">
+        <div class="result-stat"><span class="v" id="r-avg">—</span><span class="l">средний RT, мс</span></div>
+        <div class="result-stat"><span class="v" id="r-best">—</span><span class="l">лучший RT, мс</span></div>
+        <div class="result-stat"><span class="v" id="r-lapses">—</span><span class="l">лапсы</span></div>
+        <div class="result-stat"><span class="v" id="r-false">—</span><span class="l">фальстарты</span></div>
+      </div>
+      <p class="comment" id="r-comment"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Что это значит</h3>
+      <p><b>Средний RT</b> — типичная скорость реакции. У выспавшегося человека обычно 250–350мс. У уставшего — может уходить за 400мс.</p>
+      <p><b>Лапсы</b> — моменты, когда мозг «провалился». Чем их больше, тем сильнее усталость и нестабильность внимания. Нормальный показатель — и его можно тренировать.</p>
+      <p><b>Фальстарты</b> — реакция до сигнала. Не дождалась — нажала. Знакомо?</p>
+    </div>
+
+    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
+      <h3>Поделиться результатом</h3>
+      <p style="margin-bottom:14px">Можно отправить свой результат в чат стаи или сохранить картинку для сторис — пусть птичка летит дальше.</p>
+      <div class="btn-row" style="justify-content:flex-start; margin:0">
+        <button class="btn btn-primary" id="share-chat">
+          В чат стаи ✈︎
+        </button>
+        <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">
+          Сохранить картинку
+        </button>
+      </div>
+      <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="retry-btn">Пройти ещё раз</button>
+      <button class="btn btn-primary" id="next-btn">
+        К птичке
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div><a href="../index.html">все дни</a> · <a href="../../index.html">главный сайт</a></div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="../challenge.js"></script>
+<script>
+/* ============================================================
+   PVT — Psychomotor Vigilance Test
+   15 раундов, ISI 2–6с, замер RT в мс
+   ============================================================ */
+
+const TRIALS = 15;
+const ISI_MIN = 2000;
+const ISI_MAX = 6000;
+const LAPSE_THRESHOLD = 500;
+
+let trial = 0;
+let rts = [];
+let lapses = 0;
+let falseStarts = 0;
+let phase = 'ready'; // ready | waiting | armed | feedback | done
+let armedAt = 0;
+let waitTimer = null;
+
+const intro   = document.getElementById('intro');
+const gameEl  = document.getElementById('game');
+const resultEl= document.getElementById('result');
+const stage   = document.getElementById('pvt-stage');
+
+function progressLabel(){
+  return `<div class="pvt-progress">${Math.min(trial, TRIALS)} / ${TRIALS}</div>`;
+}
+
+function render(state, payload){
+  if(state === 'ready'){
+    stage.classList.remove('dark');
+    stage.innerHTML = `
+      ${progressLabel()}
+      <div class="pvt-msg">Готов? Тапни или жми пробел, чтобы начать.</div>
+      <div class="pvt-hint">Когда увидишь оранжевую точку — реагируй мгновенно.</div>
+    `;
+  }
+  else if(state === 'waiting'){
+    stage.classList.add('dark');
+    stage.innerHTML = `
+      ${progressLabel()}
+      <div class="pvt-msg">Жди…</div>
+    `;
+  }
+  else if(state === 'armed'){
+    stage.classList.add('dark');
+    stage.innerHTML = `
+      ${progressLabel()}
+      <div class="pvt-dot"></div>
+    `;
+  }
+  else if(state === 'feedback'){
+    const { rt, isLapse } = payload;
+    stage.classList.add('dark');
+    stage.innerHTML = `
+      ${progressLabel()}
+      <div class="pvt-counter">${Math.round(rt)}</div>
+      <div class="pvt-hint" style="color:rgba(255,255,255,0.7)">${isLapse ? 'мс · лапс' : 'мс'}</div>
+    `;
+  }
+  else if(state === 'falsestart'){
+    stage.classList.add('dark');
+    stage.innerHTML = `
+      ${progressLabel()}
+      <div class="pvt-fs">Фальстарт. Не торопись.</div>
+    `;
+  }
+}
+
+function startTrial(){
+  phase = 'waiting';
+  render('waiting');
+  const isi = ISI_MIN + Math.random() * (ISI_MAX - ISI_MIN);
+  waitTimer = setTimeout(arm, isi);
+}
+
+function arm(){
+  phase = 'armed';
+  armedAt = performance.now();
+  render('armed');
+}
+
+function handleTap(){
+  if(phase === 'ready'){
+    // первый тап — старт первого раунда
+    trial = 0; rts = []; lapses = 0; falseStarts = 0;
+    startTrial();
+    return;
+  }
+  if(phase === 'waiting'){
+    // фальстарт
+    clearTimeout(waitTimer);
+    falseStarts++;
+    phase = 'falsestart';
+    render('falsestart');
+    setTimeout(()=>{ startTrial(); }, 1200);
+    return;
+  }
+  if(phase === 'armed'){
+    const rt = performance.now() - armedAt;
+    const isLapse = rt > LAPSE_THRESHOLD;
+    rts.push(rt);
+    if(isLapse) lapses++;
+
+    phase = 'feedback';
+    render('feedback', { rt, isLapse });
+
+    trial++;
+    if(trial >= TRIALS){
+      setTimeout(finish, 1100);
+    } else {
+      setTimeout(startTrial, 1100);
+    }
+    return;
+  }
+  // в feedback и falsestart — игнорируем
+}
+
+function finish(){
+  phase = 'done';
+  const sorted = rts.slice().sort((a,b)=>a-b);
+  const nonLapses = rts.filter(r => r <= LAPSE_THRESHOLD);
+  const avg = nonLapses.length ? Math.round(nonLapses.reduce((s,x)=>s+x,0) / nonLapses.length) : 0;
+  const best = sorted.length ? Math.round(sorted[0]) : 0;
+
+  document.getElementById('r-avg').textContent = avg || '—';
+  document.getElementById('r-best').textContent = best || '—';
+  document.getElementById('r-lapses').textContent = lapses;
+  document.getElementById('r-false').textContent = falseStarts;
+
+  // commentary — без диагнозов, только описание паттерна
+  let comment;
+  if(avg && avg < 300 && lapses <= 1){
+    comment = 'Реакция быстрая и стабильная. Сегодня мозг в форме — пользуйся, пока даёт.';
+  } else if(avg && avg < 380 && lapses <= 3){
+    comment = 'Внимание держится, но провалы есть — пару раз мозг словил себя на отвлечении. Главное, что заметила.';
+  } else if(avg && avg < 480){
+    comment = 'Реакция замедленная, внимание скачет. Возможно, устала или давно не отдыхала — не повод себя ругать.';
+  } else {
+    comment = 'Внимание сейчас почти не держится. Если так бывает часто — это уже не лень, а реальный паттерн. Запомни ощущение.';
+  }
+  if(falseStarts >= 3){
+    comment += ' А ещё много фальстартов — импульсивный режим. Сложно было дождаться сигнала?';
+  }
+  document.getElementById('r-comment').textContent = comment;
+
+  // save
+  Challenge.markDone(1, {
+    type:'pvt',
+    avg: avg || 0, best, lapses, falseStarts,
+    n: rts.length,
+    rts: rts.map(r=>Math.round(r))
+  });
+
+  intro.hidden = true;
+  gameEl.hidden = true;
+  resultEl.hidden = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- start / retry / next ---------- */
+document.getElementById('start-btn').addEventListener('click', ()=>{
+  intro.hidden = true;
+  gameEl.hidden = false;
+  resultEl.hidden = true;
+  phase = 'ready';
+  render('ready');
+});
+
+document.getElementById('retry-btn').addEventListener('click', ()=>{
+  resultEl.hidden = true;
+  gameEl.hidden = false;
+  intro.hidden = true;
+  trial = 0; rts = []; lapses = 0; falseStarts = 0;
+  phase = 'ready';
+  render('ready');
+});
+
+document.getElementById('next-btn').addEventListener('click', ()=>{
+  Challenge.goHome();
+});
+
+/* ---------- SHARE ---------- */
+function getResultsForShare(){
+  const avg = document.getElementById('r-avg').textContent;
+  const best = document.getElementById('r-best').textContent;
+  const lapses = document.getElementById('r-lapses').textContent;
+  const fs = document.getElementById('r-false').textContent;
+  const name = Challenge.getName();
+  return { name, avg, best, lapses, fs };
+}
+
+function showHint(text){
+  const el = document.getElementById('share-hint');
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent = ''; }, 4000);
+}
+
+/* Share to chat — copy text to clipboard + open Telegram */
+document.getElementById('share-chat').addEventListener('click', async ()=>{
+  const r = getResultsForShare();
+  const text =
+`🐣 Стаей идти веселее · день 1 · PVT
+${r.name}
+
+🟠 Средний RT: ${r.avg}мс
+⚡️ Лучший: ${r.best}мс
+💤 Лапсы: ${r.lapses}
+🐇 Фальстарты: ${r.fs}
+
+challenge.gruzdeva.ru`;
+
+  try{
+    await navigator.clipboard.writeText(text);
+    showHint('Результат скопирован — открываю чат стаи…');
+    setTimeout(()=>{
+      window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    }, 600);
+  }catch(e){
+    // fallback — просто открываем чат
+    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    showHint('Не вышло скопировать автоматически — допиши результат от руки.');
+  }
+});
+
+/* Share as image — generate PNG via canvas, download */
+document.getElementById('share-image').addEventListener('click', ()=>{
+  const r = getResultsForShare();
+
+  // Stories format 1080×1920
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // background gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#F4EEE2');
+  grad.addColorStop(1, '#FBF7EE');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+
+  // dark band on top
+  ctx.fillStyle = '#2A2620';
+  ctx.fillRect(0,0,W,260);
+
+  // yellow dot in band
+  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
+  ctx.fillStyle = '#F5C400'; ctx.fill();
+
+  // brand
+  ctx.fillStyle = '#FBF7EE';
+  ctx.font = '700 36px "Manrope", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Валя Груздева', 120, 152);
+
+  // header tag
+  ctx.fillStyle = '#5E6B4A';
+  ctx.font = '700 28px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('• ДЕНЬ 1 · PVT', W/2, 360);
+
+  // title
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 96px "Fraunces", "Georgia", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Тест бдительности', W/2, 480);
+
+  // subtitle
+  ctx.fillStyle = '#D9694A';
+  ctx.font = 'italic 500 56px "Fraunces", "Georgia", serif';
+  ctx.fillText(`Птичка ${r.name} прошла`, W/2, 580);
+
+  // stats card
+  const cardY = 700, cardH = 720;
+  ctx.fillStyle = '#FBF7EE';
+  roundRect(ctx, 80, cardY, W-160, cardH, 40);
+  ctx.fill();
+  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+  roundRect(ctx, 80, cardY, W-160, cardH, 40);
+  ctx.stroke();
+
+  // stats — 2x2 grid
+  const stats = [
+    { v: r.avg, l: 'средний RT, мс' },
+    { v: r.best, l: 'лучший RT, мс' },
+    { v: r.lapses, l: 'лапсы' },
+    { v: r.fs, l: 'фальстарты' },
+  ];
+  const cols = 2, rows = 2;
+  const cellW = (W - 160) / cols;
+  const cellH = cardH / rows;
+  stats.forEach((s,i)=>{
+    const cx = 80 + cellW * (i % cols) + cellW / 2;
+    const cy = cardY + cellH * Math.floor(i / cols) + cellH / 2;
+    ctx.fillStyle = '#D9694A';
+    ctx.font = '600 140px "Fraunces", "Georgia", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(s.v), cx, cy + 20);
+    ctx.fillStyle = '#8C8A77';
+    ctx.font = '700 28px "Manrope", sans-serif';
+    ctx.fillText(s.l.toUpperCase(), cx, cy + 100);
+  });
+
+  // bottom slogan
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 64px "Fraunces", "Georgia", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Стаей идти веселее', W/2, 1640);
+
+  ctx.fillStyle = '#8C8A77';
+  ctx.font = '500 32px "Manrope", sans-serif';
+  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1700);
+
+  // bird emoji 🐣 placeholder — simple egg shape
+  ctx.fillStyle = '#F5C400';
+  ctx.beginPath();
+  ctx.ellipse(W/2, 1780, 60, 75, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = '#2A2620'; ctx.lineWidth = 5;
+  ctx.stroke();
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  // download
+  canvas.toBlob((blob)=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pvt-${r.name}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showHint('Картинка сохранена — можно постить в сторис.');
+  }, 'image/png');
+});
+
+/* ---------- input ---------- */
+stage.addEventListener('click', handleTap);
+stage.addEventListener('touchstart', (e)=>{ e.preventDefault(); handleTap(); }, { passive: false });
+document.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space' && !gameEl.hidden){
+    e.preventDefault();
+    handleTap();
+  }
+});
+
+/* require registered user */
+Challenge.requireRegistration();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" width="240" height="280">
+  <!-- Чистое яйцо в стиле её илл: тонкий чёрный контур, прозрачный фон -->
+  <path d="M 120 22
+           C 175 22  205 110  205 175
+           C 205 230  170 262  120 262
+           C 70 262   35 230   35 175
+           C 35 110   65 22    120 22 Z"
+        fill="none" stroke="#1a1614" stroke-width="4" stroke-linejoin="round"/>
+</svg>
