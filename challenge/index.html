@@ -873,13 +873,15 @@ function renderHome(s){
   // ?dev=1 — снять временной замок
   const isDev = new URLSearchParams(window.location.search).get('dev') === '1';
 
-  // временной замок: следующий день открывается через 24 часа после предыдущего
-  const DAY_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  // временной замок: следующий день открывается на следующий КАЛЕНДАРНЫЙ день
+  // (в 00:00 локального времени)
   let lockUntil = 0;
   if(currentDay && currentDay.n > 1 && !isDev){
     const prevDay = s.days[currentDay.n - 1];
     if(prevDay && prevDay.at){
-      lockUntil = prevDay.at + DAY_COOLDOWN_MS;
+      const prev = new Date(prevDay.at);
+      const nextMidnight = new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 1, 0, 0, 0, 0);
+      lockUntil = nextMidnight.getTime();
     }
   }
   const isLocked = lockUntil > Date.now();
@@ -992,7 +994,7 @@ function startLockCountdown(until){
     const sec = Math.floor((ms % 60000) / 1000);
     const el = document.getElementById('lock-countdown');
     if(el){
-      if(h > 0)      el.textContent = `откроется через ${h} ч ${m} мин`;
+      if(h >= 1)     el.textContent = `откроется завтра · через ${h} ч ${m} мин`;
       else if(m > 0) el.textContent = `откроется через ${m} мин ${sec} сек`;
       else           el.textContent = `откроется через ${sec} сек`;
     }
