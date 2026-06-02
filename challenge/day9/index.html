@@ -211,6 +211,7 @@
 </main>
 
 <script src="../challenge.js"></script>
+<script src="../share-utils.js"></script>
 <script>
 Challenge.requireRegistration();
 
@@ -381,32 +382,31 @@ document.getElementById('share-image').addEventListener('click', () => {
   grad.addColorStop(0,'#F4EEE2'); grad.addColorStop(1,'#FBF7EE');
   ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
 
-  // top dark band
+  // top dark band + бренд
   ctx.fillStyle = '#2A2620'; ctx.fillRect(0,0,W,200);
   ctx.beginPath(); ctx.arc(60,100,16,0,Math.PI*2); ctx.fillStyle = '#F5C400'; ctx.fill();
   ctx.fillStyle = '#FBF7EE';
   ctx.font = '700 30px "Manrope", sans-serif'; ctx.textAlign = 'left';
   ctx.fillText('Валя Груздева', 90, 112);
 
-  // crown emoji as text
-  ctx.font = '120px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('👑', W/2, 360);
+  // КОРОНОВАННАЯ ПТИЧКА — нарисованная векторно (а не emoji, у emoji вариативная отрисовка)
+  ShareUtils.drawCrownedBird(ctx, W/2, 360, 95);
 
   // title
   ctx.fillStyle = '#5E6B4A';
   ctx.font = '700 28px "Manrope", sans-serif';
-  ctx.fillText('• БИНГО · ФИНАЛ', W/2, 410);
+  ctx.textAlign = 'center';
+  ctx.fillText('• БИНГО · ФИНАЛ', W/2, 550);
 
-  ctx.fillStyle = '#2A2620';
-  ctx.font = '600 92px "Fraunces", "Georgia", serif';
-  ctx.fillText(name, W/2, 530);
+  ShareUtils.drawFitText(ctx, name, W/2, 640, W - 160,
+    '600 92px "Fraunces", "Georgia", serif', '#2A2620', 'center');
   ctx.fillStyle = '#D9694A';
   ctx.font = 'italic 500 44px "Fraunces", "Georgia", serif';
-  ctx.fillText('прошла мини-челлендж', W/2, 600);
+  ctx.textAlign = 'center';
+  ctx.fillText('прошла мини-челлендж', W/2, 710);
 
   // bingo grid — 4 cols x 2 rows
-  const gridTop = 670, gridBottom = 1500;
+  const gridTop = 780, gridBottom = 1530;
   const gridH = gridBottom - gridTop;
   const cellW = (W - 120) / 4;
   const cellH = gridH / 2;
@@ -420,40 +420,38 @@ document.getElementById('share-image').addEventListener('click', () => {
 
     if(info){
       ctx.fillStyle = '#f0ead9';
-      roundRect(ctx, x, y, w, h, 22); ctx.fill();
+      ShareUtils.roundRect(ctx, x, y, w, h, 22); ctx.fill();
       ctx.strokeStyle = '#5E6B4A'; ctx.lineWidth = 3;
-      roundRect(ctx, x, y, w, h, 22); ctx.stroke();
+      ShareUtils.roundRect(ctx, x, y, w, h, 22); ctx.stroke();
     } else {
       ctx.fillStyle = '#fafafa';
-      roundRect(ctx, x, y, w, h, 22); ctx.fill();
+      ShareUtils.roundRect(ctx, x, y, w, h, 22); ctx.fill();
       ctx.setLineDash([8, 6]); ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
-      roundRect(ctx, x, y, w, h, 22); ctx.stroke();
+      ShareUtils.roundRect(ctx, x, y, w, h, 22); ctx.stroke();
       ctx.setLineDash([]);
     }
 
     // day label
     ctx.fillStyle = '#8C8A77';
-    ctx.font = 'italic 26px "Fraunces", "Georgia", serif';
+    ctx.font = 'italic 24px "Fraunces", "Georgia", serif';
     ctx.textAlign = 'left';
-    ctx.fillText(`день ${d.n}`, x + 18, y + 38);
+    ctx.fillText(`день ${d.n}`, x + 16, y + 34);
 
-    // name
-    ctx.fillStyle = '#2A2620';
-    ctx.font = '600 30px "Fraunces", "Georgia", serif';
-    ctx.fillText(d.name, x + 18, y + 78);
+    // name — авто-уменьшение
+    ShareUtils.drawFitText(ctx, d.name, x + 16, y + 70, w - 32,
+      '600 26px "Fraunces", "Georgia", serif', '#2A2620', 'left');
 
-    // value
+    // value — auto-fit чтобы не вылезало
     if(info){
-      ctx.fillStyle = '#D9694A';
-      ctx.font = '600 64px "Fraunces", "Georgia", serif';
-      ctx.fillText(info.value, x + 18, y + h - 60);
-      ctx.fillStyle = '#8C8A77';
-      ctx.font = '700 20px "Manrope", sans-serif';
-      ctx.fillText(info.sub, x + 18, y + h - 24);
+      ShareUtils.drawFitText(ctx, info.value, x + w/2, y + h - 56, w - 30,
+        '600 56px "Fraunces", "Georgia", serif', '#D9694A', 'center');
+      ShareUtils.drawFitText(ctx, info.sub, x + w/2, y + h - 22, w - 30,
+        '700 18px "Manrope", sans-serif', '#8C8A77', 'center');
     } else {
       ctx.fillStyle = '#8C8A77';
-      ctx.font = 'italic 24px "Fraunces", "Georgia", serif';
-      ctx.fillText('пропустила', x + 18, y + h - 28);
+      ctx.font = 'italic 22px "Fraunces", "Georgia", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('пропустила', x + w/2, y + h - 28);
     }
   });
 
@@ -461,17 +459,10 @@ document.getElementById('share-image').addEventListener('click', () => {
   ctx.fillStyle = '#2A2620';
   ctx.font = '600 56px "Fraunces", "Georgia", serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Стаей идти веселее', W/2, 1620);
+  ctx.fillText('Стаей идти веселее', W/2, 1640);
   ctx.fillStyle = '#8C8A77';
   ctx.font = '500 30px "Manrope", sans-serif';
-  ctx.fillText('challenge · попробуй сама · @dr_gruzdeva', W/2, 1680);
-
-  function roundRect(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r);
-    ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r);
-    ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
-  }
+  ctx.fillText('challenge · @dr_gruzdeva', W/2, 1700);
 
   c.toBlob((blob)=>{
     const url = URL.createObjectURL(blob);

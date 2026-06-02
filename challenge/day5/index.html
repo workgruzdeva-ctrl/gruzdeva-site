@@ -164,6 +164,7 @@
 </main>
 
 <script src="../challenge.js"></script>
+<script src="../share-utils.js"></script>
 <script>
 Challenge.requireRegistration();
 
@@ -268,47 +269,8 @@ function drawStory(){
   ctx.fillText('мини-челлендж перед', w/2, h*0.46);
   ctx.fillText('групповым тренингом по СДВГ', w/2, h*0.50);
 
-  // птичка - простой SVG-подобный рисунок
-  const cx = w/2, cy = h*0.66, r = 70;
-  // тень
-  ctx.fillStyle = 'rgba(94,107,74,0.18)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy+r+12, r*0.7, 8, 0, 0, Math.PI*2);
-  ctx.fill();
-  // тело-овал
-  ctx.fillStyle = '#fff';
-  ctx.strokeStyle = '#2A2620'; ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy, r, r*1.05, 0, 0, Math.PI*2);
-  ctx.fill(); ctx.stroke();
-  // глазки
-  ctx.fillStyle = '#2A2620';
-  ctx.beginPath(); ctx.arc(cx-22, cy-8, 3.5, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(cx+22, cy-8, 3.5, 0, Math.PI*2); ctx.fill();
-  // клювик
-  ctx.fillStyle = '#F5C400';
-  ctx.beginPath();
-  ctx.moveTo(cx-8, cy+6);
-  ctx.lineTo(cx+8, cy+6);
-  ctx.lineTo(cx, cy+16);
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  // лапки
-  ctx.strokeStyle = '#F5C400'; ctx.lineWidth = 4; ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(cx-18, cy+r+2); ctx.lineTo(cx-18, cy+r+18); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx+18, cy+r+2); ctx.lineTo(cx+18, cy+r+18); ctx.stroke();
-  // корона
-  ctx.fillStyle = '#F5C400'; ctx.strokeStyle = '#2A2620'; ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(cx-30, cy-r);
-  ctx.lineTo(cx-20, cy-r-18);
-  ctx.lineTo(cx-10, cy-r-6);
-  ctx.lineTo(cx, cy-r-24);
-  ctx.lineTo(cx+10, cy-r-6);
-  ctx.lineTo(cx+20, cy-r-18);
-  ctx.lineTo(cx+30, cy-r);
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
+  // единая королева-птичка
+  ShareUtils.drawCrownedBird(ctx, w/2, h*0.66, 65);
 
   // CTA внизу
   ctx.fillStyle = '#D9694A';
@@ -355,46 +317,8 @@ function drawStoryFullRes(targetCtx, tw, th){
   targetCtx.fillText('мини-челлендж перед', tw/2, th*0.46);
   targetCtx.fillText('групповым тренингом по СДВГ', tw/2, th*0.50);
 
-  // птичка
-  const cx = tw/2, cy = th*0.66, r = 140;
-  targetCtx.fillStyle = 'rgba(94,107,74,0.18)';
-  targetCtx.beginPath();
-  targetCtx.ellipse(cx, cy+r+24, r*0.7, 16, 0, 0, Math.PI*2);
-  targetCtx.fill();
-
-  targetCtx.fillStyle = '#fff';
-  targetCtx.strokeStyle = '#2A2620'; targetCtx.lineWidth = 6;
-  targetCtx.beginPath();
-  targetCtx.ellipse(cx, cy, r, r*1.05, 0, 0, Math.PI*2);
-  targetCtx.fill(); targetCtx.stroke();
-
-  targetCtx.fillStyle = '#2A2620';
-  targetCtx.beginPath(); targetCtx.arc(cx-44, cy-16, 7, 0, Math.PI*2); targetCtx.fill();
-  targetCtx.beginPath(); targetCtx.arc(cx+44, cy-16, 7, 0, Math.PI*2); targetCtx.fill();
-
-  targetCtx.fillStyle = '#F5C400';
-  targetCtx.beginPath();
-  targetCtx.moveTo(cx-16, cy+12);
-  targetCtx.lineTo(cx+16, cy+12);
-  targetCtx.lineTo(cx, cy+32);
-  targetCtx.closePath();
-  targetCtx.fill(); targetCtx.stroke();
-
-  targetCtx.strokeStyle = '#F5C400'; targetCtx.lineWidth = 8; targetCtx.lineCap = 'round';
-  targetCtx.beginPath(); targetCtx.moveTo(cx-36, cy+r+4); targetCtx.lineTo(cx-36, cy+r+36); targetCtx.stroke();
-  targetCtx.beginPath(); targetCtx.moveTo(cx+36, cy+r+4); targetCtx.lineTo(cx+36, cy+r+36); targetCtx.stroke();
-
-  targetCtx.fillStyle = '#F5C400'; targetCtx.strokeStyle = '#2A2620'; targetCtx.lineWidth = 5;
-  targetCtx.beginPath();
-  targetCtx.moveTo(cx-60, cy-r);
-  targetCtx.lineTo(cx-40, cy-r-36);
-  targetCtx.lineTo(cx-20, cy-r-12);
-  targetCtx.lineTo(cx, cy-r-48);
-  targetCtx.lineTo(cx+20, cy-r-12);
-  targetCtx.lineTo(cx+40, cy-r-36);
-  targetCtx.lineTo(cx+60, cy-r);
-  targetCtx.closePath();
-  targetCtx.fill(); targetCtx.stroke();
+  // единая королева-птичка в HD
+  ShareUtils.drawCrownedBird(targetCtx, tw/2, th*0.66, 130);
 
   targetCtx.fillStyle = '#D9694A';
   targetCtx.font = '700 44px "Manrope", sans-serif';

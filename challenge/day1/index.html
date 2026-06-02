@@ -158,6 +158,7 @@
 </main>
 
 <script src="../challenge.js"></script>
+<script src="../share-utils.js"></script>
 <script>
 /* ============================================================
    PVT — Psychomotor Vigilance Test
@@ -383,125 +384,23 @@ challenge.gruzdeva.ru`;
   }
 });
 
-/* Share as image — generate PNG via canvas, download */
+/* Share as image — единый билдер из share-utils.js */
 document.getElementById('share-image').addEventListener('click', ()=>{
   const r = getResultsForShare();
-
-  // Stories format 1080×1920
-  const W = 1080, H = 1920;
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  // background gradient
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, '#F4EEE2');
-  grad.addColorStop(1, '#FBF7EE');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
-
-  // dark band on top
-  ctx.fillStyle = '#2A2620';
-  ctx.fillRect(0,0,W,260);
-
-  // yellow dot in band
-  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
-  ctx.fillStyle = '#F5C400'; ctx.fill();
-
-  // brand
-  ctx.fillStyle = '#FBF7EE';
-  ctx.font = '700 36px "Manrope", sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Валя Груздева', 120, 152);
-
-  // header tag
-  ctx.fillStyle = '#5E6B4A';
-  ctx.font = '700 28px "Manrope", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('• ДЕНЬ 1 · PVT', W/2, 360);
-
-  // title
-  ctx.fillStyle = '#2A2620';
-  ctx.font = '600 96px "Fraunces", "Georgia", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Тест бдительности', W/2, 480);
-
-  // subtitle
-  ctx.fillStyle = '#D9694A';
-  ctx.font = 'italic 500 56px "Fraunces", "Georgia", serif';
-  ctx.fillText(`Птичка ${r.name} прошла`, W/2, 580);
-
-  // stats card
-  const cardY = 700, cardH = 720;
-  ctx.fillStyle = '#FBF7EE';
-  roundRect(ctx, 80, cardY, W-160, cardH, 40);
-  ctx.fill();
-  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
-  roundRect(ctx, 80, cardY, W-160, cardH, 40);
-  ctx.stroke();
-
-  // stats — 2x2 grid
-  const stats = [
-    { v: r.avg, l: 'средний RT, мс' },
-    { v: r.best, l: 'лучший RT, мс' },
-    { v: r.lapses, l: 'лапсы' },
-    { v: r.fs, l: 'фальстарты' },
-  ];
-  const cols = 2, rows = 2;
-  const cellW = (W - 160) / cols;
-  const cellH = cardH / rows;
-  stats.forEach((s,i)=>{
-    const cx = 80 + cellW * (i % cols) + cellW / 2;
-    const cy = cardY + cellH * Math.floor(i / cols) + cellH / 2;
-    ctx.fillStyle = '#D9694A';
-    ctx.font = '600 140px "Fraunces", "Georgia", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(String(s.v), cx, cy + 20);
-    ctx.fillStyle = '#8C8A77';
-    ctx.font = '700 28px "Manrope", sans-serif';
-    ctx.fillText(s.l.toUpperCase(), cx, cy + 100);
+  const canvas = ShareUtils.buildShareCanvas({
+    dayLabel: 'День 1 · PVT',
+    title: 'Тест бдительности',
+    subtitle: `${r.name} проверила реакцию`,
+    userName: r.name,
+    stats: [
+      { v: r.avg + 'мс', l: 'средний RT' },
+      { v: r.best + 'мс', l: 'лучший RT' },
+      { v: r.lapses,    l: 'лапсы' },
+      { v: r.fs,        l: 'фальстарты' },
+    ],
   });
-
-  // bottom slogan
-  ctx.fillStyle = '#2A2620';
-  ctx.font = '600 64px "Fraunces", "Georgia", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Стаей идти веселее', W/2, 1640);
-
-  ctx.fillStyle = '#8C8A77';
-  ctx.font = '500 32px "Manrope", sans-serif';
-  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1700);
-
-  // bird emoji 🐣 placeholder — simple egg shape
-  ctx.fillStyle = '#F5C400';
-  ctx.beginPath();
-  ctx.ellipse(W/2, 1780, 60, 75, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.strokeStyle = '#2A2620'; ctx.lineWidth = 5;
-  ctx.stroke();
-
-  function roundRect(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y);
-    ctx.arcTo(x+w,y,x+w,y+h,r);
-    ctx.arcTo(x+w,y+h,x,y+h,r);
-    ctx.arcTo(x,y+h,x,y,r);
-    ctx.arcTo(x,y,x+w,y,r);
-    ctx.closePath();
-  }
-
-  // download
-  canvas.toBlob((blob)=>{
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pvt-${r.name}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showHint('Картинка сохранена — можно постить в сторис.');
-  }, 'image/png');
+  ShareUtils.downloadCanvas(canvas, `pvt-${r.name}.png`);
+  showHint('Картинка сохранена — можно постить в сторис.');
 });
 
 /* ---------- input ---------- */

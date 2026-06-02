@@ -168,6 +168,7 @@
 </main>
 
 <script src="../challenge.js"></script>
+<script src="../share-utils.js"></script>
 <script>
 /* ============================================================
    Go / No-Go — реакция на Go (зелёные) и торможение на No-Go (красные)
@@ -410,93 +411,20 @@ ${r.name}
 
 document.getElementById('share-image').addEventListener('click', ()=>{
   const r = getResultsForShare();
-  const W = 1080, H = 1920;
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, '#F4EEE2');
-  grad.addColorStop(1, '#FBF7EE');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
-
-  ctx.fillStyle = '#2A2620';
-  ctx.fillRect(0,0,W,260);
-  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
-  ctx.fillStyle = '#F5C400'; ctx.fill();
-  ctx.fillStyle = '#FBF7EE';
-  ctx.font = '700 36px "Manrope", sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Валя Груздева', 120, 152);
-
-  ctx.fillStyle = '#5E6B4A';
-  ctx.font = '700 28px "Manrope", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('• ДЕНЬ 2 · GO / NO-GO', W/2, 360);
-
-  ctx.fillStyle = '#2A2620';
-  ctx.font = '600 80px "Fraunces", "Georgia", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Реакция и торможение', W/2, 480);
-
-  ctx.fillStyle = '#D9694A';
-  ctx.font = 'italic 500 50px "Fraunces", "Georgia", serif';
-  ctx.fillText(`${r.name} проверила тормоз`, W/2, 570);
-
-  const cardY = 690, cardH = 740;
-  ctx.fillStyle = '#FBF7EE';
-  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.fill();
-  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
-  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.stroke();
-
-  const stats = [
-    { v: r.hitRate + '%', l: 'точность «жми»' },
-    { v: r.rt, l: 'средний RT, мс' },
-    { v: r.fa, l: 'ошибочно жала' },
-    { v: r.miss, l: 'пропустила «жми»' },
-  ];
-  const cellW = (W - 160) / 2;
-  const cellH = cardH / 2;
-  stats.forEach((s,i)=>{
-    const cx = 80 + cellW * (i%2) + cellW/2;
-    const cy = cardY + cellH * Math.floor(i/2) + cellH/2;
-    ctx.fillStyle = '#D9694A';
-    ctx.font = '600 120px "Fraunces", "Georgia", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(String(s.v), cx, cy+20);
-    ctx.fillStyle = '#8C8A77';
-    ctx.font = '700 26px "Manrope", sans-serif';
-    ctx.fillText(s.l.toUpperCase(), cx, cy+90);
+  const canvas = ShareUtils.buildShareCanvas({
+    dayLabel: 'День 2 · Go/No-Go',
+    title: 'Реакция и тормоз',
+    subtitle: `${r.name} проверила тормоз`,
+    userName: r.name,
+    stats: [
+      { v: r.hitRate + '%', l: 'точность «жми»' },
+      { v: r.rt + 'мс',     l: 'средний RT' },
+      { v: r.fa,            l: 'ошибочно жала' },
+      { v: r.miss,          l: 'пропустила «жми»' },
+    ],
   });
-
-  ctx.fillStyle = '#2A2620';
-  ctx.font = '600 64px "Fraunces", "Georgia", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Стаей идти веселее', W/2, 1660);
-  ctx.fillStyle = '#8C8A77';
-  ctx.font = '500 32px "Manrope", sans-serif';
-  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1720);
-
-  function roundRect(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y);
-    ctx.arcTo(x+w,y,x+w,y+h,r);
-    ctx.arcTo(x+w,y+h,x,y+h,r);
-    ctx.arcTo(x,y+h,x,y,r);
-    ctx.arcTo(x,y,x+w,y,r);
-    ctx.closePath();
-  }
-
-  canvas.toBlob((blob)=>{
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `go-nogo-${r.name}.png`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showHint('Картинка сохранена — можно постить в сторис.');
-  }, 'image/png');
+  ShareUtils.downloadCanvas(canvas, `go-nogo-${r.name}.png`);
+  showHint('Картинка сохранена — можно постить в сторис.');
 });
 
 /* require registered user */
