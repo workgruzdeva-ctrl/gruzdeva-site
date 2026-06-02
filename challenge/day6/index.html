@@ -68,7 +68,12 @@
     border-radius: 18px; padding: 24px;
     text-align: center;
     margin-bottom: 8px;
+    transition: background-color .15s ease, color .15s ease;
   }
+  .wcst-current.fb-correct { background: #5E6B4A; color: #fff; }
+  .wcst-current.fb-error   { background: #B84C32; color: #fff; }
+  .wcst-current.fb-correct .label,
+  .wcst-current.fb-error .label { color: rgba(255,255,255,0.85); }
   .wcst-current .label {
     font-family:'Fraunces',serif; font-style:italic;
     font-size: 14px; color: rgba(255,255,255,0.55);
@@ -316,26 +321,62 @@ function correctAnchorIdx(card, rule){
   if(rule === 'number') return ANCHORS.findIndex(a => a.number === card.number);
 }
 
+/* Web Audio — короткий beep с разной нотой */
+let audioCtx = null;
+function playBeep(correct){
+  try {
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // правильно — мажорный «динь» (E5 + G5), неправильно — низкий «бук» (E3)
+    if(correct){
+      playTone(660, 0.12, 'sine', 0);
+      playTone(880, 0.18, 'sine', 0.06);
+    } else {
+      playTone(180, 0.30, 'sawtooth', 0);
+    }
+  } catch(e){ /* silent */ }
+}
+function playTone(freq, dur, type='sine', delay=0){
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  o.connect(g); g.connect(audioCtx.destination);
+  const t0 = audioCtx.currentTime + delay;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.start(t0);
+  o.stop(t0 + dur + 0.02);
+}
+
 function showFeedback(correct){
   const stage = document.getElementById('game');
+  const cur   = document.getElementById('current');
   const overlay = document.getElementById('fb-overlay');
   const icon = document.getElementById('fb-icon');
+
   stage.classList.remove('fb-correct','fb-error');
+  cur.classList.remove('fb-correct','fb-error');
   overlay.classList.remove('correct','error','show');
   void stage.offsetWidth;
+
   if(correct){
     stage.classList.add('fb-correct');
+    cur.classList.add('fb-correct');
     overlay.classList.add('correct','show');
     icon.textContent = '✓';
   } else {
     stage.classList.add('fb-error');
+    cur.classList.add('fb-error');
     overlay.classList.add('error','show');
     icon.textContent = '×';
   }
+  playBeep(correct);
+
   setTimeout(()=>{
     stage.classList.remove('fb-correct','fb-error');
+    cur.classList.remove('fb-correct','fb-error');
     overlay.classList.remove('show');
-  }, 650);
+  }, 750);
 }
 
 function onPick(idx, el){
