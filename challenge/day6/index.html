@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>День 6 · Висконсин</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../day.css">
+<style>
+  .wcst-stage {
+    background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 28px;
+    padding: 24px; margin: 16px 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wcst-progress {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; font-size: 13px; color: var(--muted); font-weight: 600;
+  }
+  .wcst-anchors {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 28px;
+  }
+  .anchor {
+    background: #fff; border: 2px solid var(--line); border-radius: 16px;
+    padding: 14px 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 110px; cursor: pointer;
+    transition: all .12s ease;
+  }
+  .anchor:hover { border-color: var(--coral); transform: translateY(-1px); }
+  .anchor:active { transform: translateY(0); }
+  .anchor.flash-correct { background: #DCE5CC; border-color: #5E6B4A; animation: pop .25s ease; }
+  .anchor.flash-error { background: #F4D6CC; border-color: #B84C32; animation: pop .25s ease; }
+  @keyframes pop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+  .anchor-num { font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--ink-2); margin-bottom: 6px; }
+  .anchor-shapes { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; align-items: center; min-height: 50px; }
+
+  .wcst-current {
+    background: var(--ink); color: var(--bg);
+    border-radius: 18px; padding: 24px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .wcst-current .label {
+    font-family:'Fraunces',serif; font-style:italic;
+    font-size: 14px; color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+  .wcst-current .shapes { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; min-height: 80px; }
+  .wcst-instr { text-align: center; font-size: 13px; color: var(--muted); margin-top: 8px; font-style: italic; }
+
+  .wcst-streak {
+    display: inline-block; background: var(--yellow-soft);
+    color: var(--ink); padding: 4px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 700;
+  }
+  .wcst-streak.hot { background: var(--yellow); }
+
+  /* shape components */
+  .shape { display:inline-block; }
+  /* sizes adjust to anchor (smaller) vs current (bigger) */
+  .anchor .shape { width: 18px; height: 18px; }
+  .wcst-current .shape { width: 30px; height: 30px; }
+  .shape svg { display:block; width:100%; height:100%; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+    <a class="nav-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      К птичке
+    </a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 6 из 9</div>
+    <h1>Висконсин — <em>переключение</em></h1>
+    <p class="lead">Сортируй карточки. Правило не озвучено — догадайся сама. А потом оно тихо поменяется. Проверяет, как быстро мозг ловит, что прежнее уже не работает.</p>
+  </header>
+
+  <section id="intro">
+    <div class="panel">
+      <h3>Как это работает</h3>
+      <ul>
+        <li>Сверху — 4 «ячейки» с разным количеством, цветом и формой фигур.</li>
+        <li>Снизу — текущая карточка. Положи её в одну из 4 ячеек.</li>
+        <li>Тебе скажут «правильно» или «неправильно». По какому правилу — догадывайся: по цвету, форме или числу.</li>
+        <li>Когда поймаешь правило и наберёшь несколько правильных подряд — оно <b>тихо поменяется</b>. Без предупреждения.</li>
+        <li>Всего 3 правила и до 36 карточек.</li>
+      </ul>
+      <p style="margin-top:8px">Цель — отловить смену правила и переключиться. Это и есть гибкость мышления.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-big" id="start-btn">Начать
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section id="game" class="wcst-stage" hidden>
+    <div class="wcst-progress">
+      <span id="trial-info">карточка 1 из 36</span>
+      <span class="wcst-streak" id="streak-pill">0 правильных подряд</span>
+    </div>
+    <div class="wcst-anchors" id="anchors"></div>
+    <div class="wcst-current" id="current">
+      <div class="label">положи эту карточку в одну из ячеек выше</div>
+      <div class="shapes" id="current-shapes"></div>
+    </div>
+    <div class="wcst-instr">правило тебе никто не назовёт — догадайся по реакции</div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="result-panel">
+      <h2>Готово!</h2>
+      <p class="sub">Вот как твой мозг переключал правила:</p>
+      <div class="result-stats">
+        <div class="result-stat"><span class="v" id="r-cats">—</span><span class="l">правил угадала</span></div>
+        <div class="result-stat"><span class="v" id="r-pers">—</span><span class="l">«залипания»<br>на старом правиле</span></div>
+        <div class="result-stat"><span class="v" id="r-acc">—</span><span class="l">точность, %</span></div>
+        <div class="result-stat"><span class="v" id="r-trials">—</span><span class="l">сыграно карточек</span></div>
+      </div>
+      <p class="comment" id="r-comment"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Что это значит</h3>
+      <p><b>Правил угадала</b> — сколько раз ты успела перестроиться (всего их 3: по цвету, форме, числу). Когда правило менялось, мозг должен был отловить и подстроиться.</p>
+      <p><b>Залипания</b> — когда правило уже поменялось, а ты продолжала играть по старому. Это и есть «перекоммитментная инерция»: мозг знал ответ, и не хотел его отпускать. Очень частая история при СДВГ-перегрузе.</p>
+      <p><b>Точность</b> — общий процент правильных ответов за всё время.</p>
+    </div>
+
+    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
+      <h3>Поделиться</h3>
+      <p style="margin-bottom:14px">В чат стаи или в сторис.</p>
+      <div class="btn-row" style="justify-content:flex-start; margin:0">
+        <button class="btn btn-primary" id="share-chat">В чат стаи ✈︎</button>
+        <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">Сохранить картинку</button>
+      </div>
+      <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="retry-btn">Пройти ещё раз</button>
+      <button class="btn btn-primary" id="next-btn">К птичке
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div><a href="../index.html">все дни</a> · <a href="../../index.html">главный сайт</a></div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="../challenge.js"></script>
+<script>
+/* ============================================================
+   Wisconsin Card Sorting Test (упрощённый)
+   3 правила: цвет → форма → число; смена правила после 6 подряд правильных.
+   До 36 карточек или пока все 3 правила не угаданы.
+   ============================================================ */
+
+const COLORS = [
+  { id: 'red',    hex: '#D9694A' },
+  { id: 'green',  hex: '#5E6B4A' },
+  { id: 'blue',   hex: '#3C5A7A' },
+  { id: 'yellow', hex: '#C9A04A' },
+];
+const SHAPES = ['circle','square','triangle','star'];
+const NUMBERS = [1,2,3,4];
+
+const ANCHORS = [
+  { color: COLORS[0], shape: 'circle',   number: 1 },
+  { color: COLORS[1], shape: 'square',   number: 2 },
+  { color: COLORS[2], shape: 'triangle', number: 3 },
+  { color: COLORS[3], shape: 'star',     number: 4 },
+];
+
+const RULES = ['color','shape','number'];
+const STREAK_FOR_SWITCH = 6;
+const MAX_TRIALS = 36;
+
+let trial = 0;
+let ruleIdx = 0;
+let streak = 0;
+let current = null;
+let totalCorrect = 0;
+let totalErrors = 0;
+let perseverativeErrors = 0;
+let categoriesCompleted = 0;
+let ruleHistoryByTrial = []; // запомним смены правил
+let lastChangedAtTrial = 0;
+
+const introEl = document.getElementById('intro');
+const gameEl  = document.getElementById('game');
+const resultEl= document.getElementById('result');
+const anchorsEl = document.getElementById('anchors');
+const currentEl = document.getElementById('current-shapes');
+const trialInfo = document.getElementById('trial-info');
+const streakPill = document.getElementById('streak-pill');
+
+function shapeSVG(shape, hex){
+  if(shape === 'circle'){
+    return `<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="${hex}"/></svg>`;
+  }
+  if(shape === 'square'){
+    return `<svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="3" fill="${hex}"/></svg>`;
+  }
+  if(shape === 'triangle'){
+    return `<svg viewBox="0 0 32 32"><path d="M16 4 L29 28 L3 28 Z" fill="${hex}"/></svg>`;
+  }
+  if(shape === 'star'){
+    return `<svg viewBox="0 0 32 32"><path d="M16 3 l3.5 9 9.5 0.5 -7.5 6 2.5 9.5 -8 -5.5 -8 5.5 2.5 -9.5 -7.5 -6 9.5 -0.5 z" fill="${hex}"/></svg>`;
+  }
+  return '';
+}
+
+function renderShapeRow(card, big){
+  const items = [];
+  for(let i = 0; i < card.number; i++){
+    items.push(`<span class="shape">${shapeSVG(card.shape, card.color.hex)}</span>`);
+  }
+  return items.join('');
+}
+
+function renderAnchors(){
+  anchorsEl.innerHTML = '';
+  ANCHORS.forEach((a, i) => {
+    const el = document.createElement('div');
+    el.className = 'anchor';
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="anchor-num">${a.number}</div>
+      <div class="anchor-shapes">${renderShapeRow(a)}</div>
+    `;
+    el.addEventListener('click', () => onPick(i, el));
+    anchorsEl.appendChild(el);
+  });
+}
+
+function pickRand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function generateCurrent(){
+  // Карточка должна давать разные «правильные» ответы для 3 правил.
+  // Если для текущей карты по правилу color и rule shape выходит один и тот же anchor —
+  // мы не можем понять, какое правило игрок угадал. Поэтому генерируем такие карты,
+  // у которых color/shape/number указывают на разные anchor.
+  let c, s, n;
+  let attempts = 0;
+  while(true){
+    attempts++;
+    if(attempts > 100) break;
+    c = pickRand(COLORS);
+    s = pickRand(SHAPES);
+    n = pickRand(NUMBERS);
+    const aByColor = ANCHORS.findIndex(a => a.color.id === c.id);
+    const aByShape = ANCHORS.findIndex(a => a.shape === s);
+    const aByNumber = ANCHORS.findIndex(a => a.number === n);
+    if(aByColor !== aByShape && aByColor !== aByNumber && aByShape !== aByNumber){
+      return { color: c, shape: s, number: n };
+    }
+  }
+  return { color: c, shape: s, number: n };
+}
+
+function renderCurrent(){
+  currentEl.innerHTML = renderShapeRow(current);
+  trialInfo.textContent = `карточка ${trial+1} из ${MAX_TRIALS}`;
+  streakPill.textContent = `${streak} правильных подряд`;
+  streakPill.classList.toggle('hot', streak >= 3);
+}
+
+function correctAnchorIdx(card, rule){
+  if(rule === 'color')  return ANCHORS.findIndex(a => a.color.id === card.color.id);
+  if(rule === 'shape')  return ANCHORS.findIndex(a => a.shape === card.shape);
+  if(rule === 'number') return ANCHORS.findIndex(a => a.number === card.number);
+}
+
+function onPick(idx, el){
+  if(!current) return;
+  const rule = RULES[ruleIdx];
+  const right = correctAnchorIdx(current, rule);
+
+  if(idx === right){
+    totalCorrect++;
+    streak++;
+    el.classList.add('flash-correct');
+    setTimeout(()=> el.classList.remove('flash-correct'), 250);
+    if(streak >= STREAK_FOR_SWITCH){
+      // правило угадано — переключаем
+      categoriesCompleted++;
+      streak = 0;
+      ruleIdx++;
+      lastChangedAtTrial = trial+1;
+      if(ruleIdx >= RULES.length){
+        // все 3 правила пройдены
+        setTimeout(finish, 400);
+        return;
+      }
+    }
+  } else {
+    totalErrors++;
+    streak = 0;
+    el.classList.add('flash-error');
+    setTimeout(()=> el.classList.remove('flash-error'), 250);
+    // perseverative error: игрок ответил по предыдущему правилу
+    if(ruleIdx > 0){
+      const prevRule = RULES[ruleIdx-1];
+      const prevRight = correctAnchorIdx(current, prevRule);
+      if(idx === prevRight && trial - lastChangedAtTrial <= 8){
+        perseverativeErrors++;
+      }
+    }
+  }
+
+  trial++;
+  ruleHistoryByTrial.push(RULES[ruleIdx]);
+  if(trial >= MAX_TRIALS){
+    setTimeout(finish, 400);
+    return;
+  }
+  current = generateCurrent();
+  setTimeout(renderCurrent, 300);
+}
+
+function finish(){
+  const acc = trial > 0 ? Math.round((totalCorrect/trial)*100) : 0;
+  document.getElementById('r-cats').textContent = categoriesCompleted + '/3';
+  document.getElementById('r-pers').textContent = perseverativeErrors;
+  document.getElementById('r-acc').textContent = acc;
+  document.getElementById('r-trials').textContent = trial;
+
+  let comment;
+  if(categoriesCompleted >= 3){
+    comment = 'Все три правила угадала и переключилась — это сильное переключение мышления. Молодец.';
+  } else if(categoriesCompleted === 2 && perseverativeErrors <= 3){
+    comment = 'Два правила поймала. После каждой смены ты успевала перестроиться — это хорошо.';
+  } else if(categoriesCompleted >= 1 && perseverativeErrors >= 4){
+    comment = 'Правило ты ловила, но когда оно менялось — мозг «залипал» на старом. Та самая инерция переключения, которую СДВГ-мозг знает изнутри.';
+  } else if(categoriesCompleted >= 1){
+    comment = 'Одно-два правила нашла, но смена давалась тяжело. Это нормально — переключение это самая дорогая функция.';
+  } else {
+    comment = 'Правило сложно ухватилось — а смена ещё сложнее. Запомни ощущение «я знаю как надо, но почему-то так не получается».';
+  }
+  document.getElementById('r-comment').textContent = comment;
+
+  Challenge.markDone(6, {
+    type:'wcst',
+    categoriesCompleted, totalCorrect,
+    totalErrors, perseverativeErrors,
+    trials: trial, accuracy: acc,
+  });
+
+  introEl.hidden = true;
+  gameEl.hidden = true;
+  resultEl.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- handlers ---------- */
+document.getElementById('start-btn').addEventListener('click', () => {
+  trial = 0; ruleIdx = 0; streak = 0;
+  totalCorrect = 0; totalErrors = 0; perseverativeErrors = 0;
+  categoriesCompleted = 0; ruleHistoryByTrial = []; lastChangedAtTrial = 0;
+  current = generateCurrent();
+  introEl.hidden = true;
+  resultEl.hidden = true;
+  gameEl.hidden = false;
+  renderAnchors();
+  renderCurrent();
+});
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  document.getElementById('start-btn').click();
+});
+
+document.getElementById('next-btn').addEventListener('click', () => Challenge.goHome());
+
+/* ---------- share ---------- */
+function showHint(text){
+  const el = document.getElementById('share-hint');
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent=''; }, 4000);
+}
+
+document.getElementById('share-chat').addEventListener('click', async () => {
+  const name = Challenge.getName();
+  const cats = document.getElementById('r-cats').textContent;
+  const pers = document.getElementById('r-pers').textContent;
+  const acc = document.getElementById('r-acc').textContent;
+  const text =
+`🐣 Стаей идти веселее · день 6 · Висконсин
+${name}
+
+🔄 Правил угадала: ${cats}
+🪨 Залипаний на старом: ${pers}
+🎯 Точность: ${acc}%`;
+  try{
+    await navigator.clipboard.writeText(text);
+    showHint('Скопировано — открываю чат…');
+    setTimeout(()=> window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank'), 600);
+  }catch(e){
+    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    showHint('Не вышло скопировать — допиши от руки.');
+  }
+});
+
+document.getElementById('share-image').addEventListener('click', () => {
+  const name = Challenge.getName();
+  const cats = document.getElementById('r-cats').textContent;
+  const pers = document.getElementById('r-pers').textContent;
+  const acc = document.getElementById('r-acc').textContent;
+  const trials = document.getElementById('r-trials').textContent;
+
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#F4EEE2'); grad.addColorStop(1,'#FBF7EE');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#2A2620'; ctx.fillRect(0,0,W,260);
+  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
+  ctx.fillStyle = '#F5C400'; ctx.fill();
+  ctx.fillStyle = '#FBF7EE';
+  ctx.font = '700 36px "Manrope", sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Валя Груздева', 120, 152);
+
+  ctx.fillStyle = '#5E6B4A';
+  ctx.font = '700 28px "Manrope", sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('• ДЕНЬ 6 · ВИСКОНСИН', W/2, 360);
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 92px "Fraunces", "Georgia", serif';
+  ctx.fillText('Переключение', W/2, 490);
+
+  ctx.fillStyle = '#D9694A';
+  ctx.font = 'italic 500 50px "Fraunces", "Georgia", serif';
+  ctx.fillText(`${name} ловила смену правил`, W/2, 580);
+
+  const cardY = 700, cardH = 740;
+  ctx.fillStyle = '#FBF7EE';
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.fill();
+  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.stroke();
+
+  const stats = [
+    { v: cats, l: 'правил угадала' },
+    { v: pers, l: 'залипаний на старом' },
+    { v: acc + '%', l: 'точность' },
+    { v: trials, l: 'карточек' },
+  ];
+  const cellW = (W-160)/2, cellH = cardH/2;
+  stats.forEach((s,i)=>{
+    const cx = 80 + cellW*(i%2) + cellW/2;
+    const cy = cardY + cellH*Math.floor(i/2) + cellH/2;
+    ctx.fillStyle = '#D9694A';
+    ctx.font = '600 120px "Fraunces", "Georgia", serif'; ctx.textAlign = 'center';
+    ctx.fillText(String(s.v), cx, cy+20);
+    ctx.fillStyle = '#8C8A77';
+    ctx.font = '700 26px "Manrope", sans-serif';
+    ctx.fillText(s.l.toUpperCase(), cx, cy+90);
+  });
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 64px "Fraunces", "Georgia", serif';
+  ctx.fillText('Стаей идти веселее', W/2, 1660);
+  ctx.fillStyle = '#8C8A77';
+  ctx.font = '500 32px "Manrope", sans-serif';
+  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1720);
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  }
+
+  canvas.toBlob((blob)=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `wisconsin-${name}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showHint('Картинка сохранена.');
+  }, 'image/png');
+});
+
+Challenge.requireRegistration();
+</script>
+</body>
+</html>

@@ -346,6 +346,60 @@
     width: 9px; height: 9px; border-radius: 50%; background: var(--line);
   }
 
+  /* speech bubble over mascot */
+  .home-mascot-wrap {
+    position: relative; display: flex; flex-direction: column; align-items: center;
+  }
+  .bubble {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%) translateY(-12px);
+    max-width: 280px; min-width: 220px;
+    background: #fff; border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 14px 18px;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: 16px; line-height: 1.35; color: var(--ink);
+    text-align: center;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+    z-index: 5;
+  }
+  .bubble.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  .bubble::after {
+    content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    width: 18px; height: 18px; background: #fff;
+    border-right: 1.5px solid var(--line); border-bottom: 1.5px solid var(--line);
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  /* pulsing FAB → group */
+  .group-fab {
+    position: fixed; right: 22px; bottom: 22px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--coral); color: #fff;
+    padding: 14px 22px 14px 18px; border-radius: 999px;
+    text-decoration: none; font-weight: 700; font-size: 15px;
+    box-shadow: 0 12px 28px rgba(217,105,74,0.35);
+    animation: fab-pulse 2.4s ease-in-out infinite;
+  }
+  .group-fab::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: 0 0 0 0 rgba(217,105,74,0.55);
+    animation: fab-ring 2.4s ease-out infinite;
+  }
+  .group-fab span.ico { font-size: 18px; }
+  @keyframes fab-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+  @keyframes fab-ring {
+    0% { box-shadow: 0 0 0 0 rgba(217,105,74,0.5); }
+    70% { box-shadow: 0 0 0 22px rgba(217,105,74,0); }
+    100% { box-shadow: 0 0 0 0 rgba(217,105,74,0); }
+  }
+  @media (max-width: 600px) {
+    .group-fab { right: 14px; bottom: 14px; font-size: 13px; padding: 12px 16px; }
+  }
+
   /* finale card (all 9 done) */
   .finale-card {
     background: var(--ink); color: #fff; border-radius: 28px;
@@ -656,7 +710,10 @@
     <section class="home-hero">
       <div class="wrap">
         <p class="home-hello" id="greeting">Привет, незнакомка</p>
-        <div class="home-mascot" id="home-mascot"></div>
+        <div class="home-mascot-wrap">
+          <div class="bubble" id="mascot-bubble"></div>
+          <div class="home-mascot" id="home-mascot"></div>
+        </div>
         <div class="home-stage-name" id="stage-name">Яйцо</div>
         <div class="home-stage-desc" id="stage-desc">Только заглянула — что-то скоро начнётся</div>
         <div class="progress-block">
@@ -703,6 +760,12 @@
   </main>
 </div>
 
+<!-- Floating CTA → group (pulsing) -->
+<a class="group-fab" id="group-fab" href="../group.html">
+  <span class="ico">🪶</span>
+  <span>К группе</span>
+</a>
+
 <script>
 /* ============================================================
    CHALLENGE · single-page lander + personal home
@@ -734,7 +797,7 @@ const DAYS = [
   { n:3, name:'Покажи рабочий стол', desc:'Сфотографируй стол как есть. Не надо красиво — при СДВГ вещи живут там, где их видно.', url:'day3/index.html' },
   { n:4, name:'N-back',              desc:'Помни, что было 2 шага назад. Та самая нагрузка, на которой СДВГ-мозг плывёт.',  url:'day4/index.html' },
   { n:5, name:'Сторис-рекомендация', desc:'Расскажи в сторис про челлендж или про Валечку. Готовые тексты и картинка прилагаются.', url:'day5/index.html' },
-  { n:6, name:'Висконсин',           desc:'Сортировка карточек. Покажет как ты переключаешься между правилами.',             url:'day6/index.html' },
+  { n:6, name:'Висконсин',           desc:'Сортируй карточки по неизвестному правилу. И поймай момент, когда оно поменялось.', url:'day6/index.html' },
   { n:7, name:'Опрос близкому',      desc:'Отправь ссылку другу. 4 вопроса о тебе. Сравним с твоими ответами.',              url:'day7/index.html' },
   { n:8, name:'Flanker',             desc:'Стрелочки, которые мешают. Замер избирательного внимания.',                       url:'day8/index.html' },
   { n:9, name:'Бинго и финал',       desc:'Карта твоих результатов + скидка на групповой тренинг.', url:'day9/index.html', gift:'−20% на группу' },
@@ -866,12 +929,60 @@ function goHome(){
   if(state && state.name){
     showView('view-home');
     renderHome(state);
+    startBubbleLoop();
   }
+}
+
+/* ---------- bubble over mascot — фразы про стаю ---------- */
+const BUBBLE_PHRASES = [
+  'Пи-пи… я пока один. Но я ищу свою стаю.',
+  'Мне с тобой тепло. А ещё я хочу найти свою стаю.',
+  'Спасибо, что ты рядом. Может, скоро я найду своих.',
+  'Пи-пи… а вдруг где-то есть птенцы, которые тоже учатся?',
+  'Я пока маленький. Но со стаей я стану смелее.',
+  'Если рядом стая, даже маленький шаг становится легче.',
+  'Мне хорошо, что ты рядом. Но я всё равно скучаю по стае.',
+  'Я ещё только вылупился. Но я уже знаю: мне нужны свои.',
+  'Со своими можно пищать, пробовать и ошибаться.',
+  'Я найду стаю — и мы будем расти вместе.',
+  'Пи-пи… я не хочу быть один. Я хочу быть со своими.',
+];
+let bubbleTimer = null;
+let lastBubbleIdx = -1;
+
+function pickBubble(){
+  if(BUBBLE_PHRASES.length <= 1) return BUBBLE_PHRASES[0];
+  let i;
+  do { i = Math.floor(Math.random()*BUBBLE_PHRASES.length); }
+  while (i === lastBubbleIdx);
+  lastBubbleIdx = i;
+  return BUBBLE_PHRASES[i];
+}
+
+function showBubbleOnce(){
+  const el = document.getElementById('mascot-bubble');
+  if(!el) return;
+  el.textContent = pickBubble();
+  el.classList.add('show');
+  setTimeout(()=> el.classList.remove('show'), 6500);
+}
+
+function startBubbleLoop(){
+  if(bubbleTimer) clearInterval(bubbleTimer);
+  // первый раз — через 4 секунды после открытия зоны
+  setTimeout(showBubbleOnce, 4000);
+  // потом — каждые 22 секунды
+  bubbleTimer = setInterval(showBubbleOnce, 22000);
+}
+
+function stopBubbleLoop(){
+  if(bubbleTimer){ clearInterval(bubbleTimer); bubbleTimer = null; }
 }
 
 function goLanding(){
   showView('view-landing');
   refreshResumeBanner();
+  stopBubbleLoop();
 }
 
 /* ---------- init & handlers ---------- */
@@ -882,6 +993,7 @@ function init(){
   if(state && state.name){
     showView('view-home');
     renderHome(state);
+    startBubbleLoop();
   } else {
     goLanding();
   }
@@ -895,6 +1007,7 @@ document.getElementById('reg-form').addEventListener('submit', (e)=>{
   saveState(s);
   showView('view-home');
   renderHome(s);
+  startBubbleLoop();
 });
 
 document.getElementById('resume-btn').addEventListener('click', goHome);
