@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>День 4 · N-back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../day.css">
+<style>
+  #nb-stage {
+    width: 100%; min-height: 500px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 22px;
+    background: var(--ink); color: var(--bg);
+    border-radius: 28px; position: relative; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background .12s ease;
+  }
+  #nb-stage.idle { background: var(--bg-2); color: var(--ink); }
+  #nb-stage.flash-correct { background: #5E6B4A; }
+  #nb-stage.flash-error { background: #B84C32; }
+
+  .nb-progress {
+    position: absolute; top: 16px; left: 20px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; color: rgba(255,255,255,0.55);
+  }
+  #nb-stage.idle .nb-progress { color: var(--muted); }
+
+  .nb-letter {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 180px; line-height: 1;
+    color: var(--bg);
+  }
+  #nb-stage.idle .nb-letter,
+  #nb-stage.flash-correct .nb-letter,
+  #nb-stage.flash-error .nb-letter { color: #fff; }
+
+  .nb-msg {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 24px; text-align: center; padding: 0 24px; max-width: 480px;
+  }
+  .nb-hint {
+    font-family: 'Manrope', sans-serif; font-weight: 500;
+    font-size: 14px; color: var(--muted); text-align: center;
+    max-width: 380px;
+  }
+  #nb-stage:not(.idle) .nb-hint { color: rgba(255,255,255,0.6); }
+
+  .nb-actions {
+    position: absolute; bottom: 20px; left: 0; right: 0;
+    display: flex; justify-content: center;
+  }
+  .nb-match-btn {
+    background: var(--yellow); color: var(--ink); border: none;
+    padding: 16px 36px; border-radius: 999px;
+    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 16px;
+    cursor: pointer; box-shadow: 0 10px 22px rgba(245,196,0,0.28);
+    letter-spacing: 0.02em;
+    transition: transform .12s ease;
+  }
+  .nb-match-btn:hover { transform: translateY(-2px); }
+  .nb-match-btn:active { transform: translateY(0); }
+  .nb-match-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+  .nb-counter {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 14px; color: rgba(255,255,255,0.65);
+    margin-top: -8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+    <a class="nav-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      К птичке
+    </a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 4 из 9</div>
+    <h1>N-back — <em>рабочая память</em></h1>
+    <p class="lead">Игра, в которой надо одновременно смотреть на букву <i>и</i> помнить, что было пару шагов назад. Та самая нагрузка на рабочую память, на которой СДВГ-мозг чаще всего ломается.</p>
+  </header>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="panel">
+      <h3>Как это работает</h3>
+      <ul>
+        <li>На экране будут появляться буквы — по одной, по очереди.</li>
+        <li>Если буква <b>совпадает с той, что была 2 шага назад</b> — жми кнопку «Совпадение!».</li>
+        <li>Если не совпадает — ничего не делай, жди следующую.</li>
+        <li>Первые две буквы — без действий, просто запоминаешь.</li>
+        <li>Каждая буква показывается ~700мс, потом исчезает на ~1700мс.</li>
+      </ul>
+      <p style="margin-top:8px"><b>Пример:</b> A — D — A → совпадение, жми. <br>
+        H — K — M — K → совпадение, жми (M vs M — нет, K vs K — да).</p>
+      <p style="margin-top:6px">Всего ~1,5 минуты. Будет сложно — это нормально.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-big" id="start-btn">
+        Начать тест
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="game-area" hidden style="padding:0; background:transparent; border:none; min-height:0">
+    <div id="nb-stage" class="idle"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden>
+    <div class="result-panel">
+      <h2>Готово!</h2>
+      <p class="sub">Вот что показала твоя рабочая память:</p>
+      <div class="result-stats">
+        <div class="result-stat"><span class="v" id="r-acc">—</span><span class="l">точность, %</span></div>
+        <div class="result-stat"><span class="v" id="r-hits">—</span><span class="l">поймано совпадений</span></div>
+        <div class="result-stat"><span class="v" id="r-miss">—</span><span class="l">пропустила</span></div>
+        <div class="result-stat"><span class="v" id="r-fa">—</span><span class="l">ошибочно жала</span></div>
+      </div>
+      <p class="comment" id="r-comment"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Что это значит</h3>
+      <p><b>Точность</b> — общий счёт правильных решений (поймала совпадение / правильно проигнорировала несовпадение).</p>
+      <p><b>Пропустила</b> — было совпадение, ты не среагировала. Часто значит, что в этот момент не удерживала в голове предыдущие буквы.</p>
+      <p><b>Ошибочно жала</b> — нажала, когда совпадения не было. Это либо «показалось», либо рабочая память сбилась и предложила тебе ложный «знакомый» вариант.</p>
+    </div>
+
+    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
+      <h3>Поделиться результатом</h3>
+      <p style="margin-bottom:14px">Можно отправить в чат стаи или сохранить картинку для сторис.</p>
+      <div class="btn-row" style="justify-content:flex-start; margin:0">
+        <button class="btn btn-primary" id="share-chat">В чат стаи ✈︎</button>
+        <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">Сохранить картинку</button>
+      </div>
+      <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="retry-btn">Пройти ещё раз</button>
+      <button class="btn btn-primary" id="next-btn">
+        К птичке
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div><a href="../index.html">все дни</a> · <a href="../../index.html">главный сайт</a></div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="../challenge.js"></script>
+<script>
+/* ============================================================
+   2-back — рабочая память
+   30 trials, ~33% matches, стимул 700мс, ISI 1700мс
+   ============================================================ */
+
+const N = 2;
+const TOTAL_TRIALS = 30;
+const TARGET_MATCH_RATIO = 0.33;
+const LETTERS = ['A','B','C','D','E','F','G','H','K','L','M','N','P','R','T','V'];
+const STIM_MS = 700;
+const ISI_MS = 1700;
+
+let stimuli = [];
+let trial = 0;
+let hits = 0;
+let misses = 0;
+let falseAlarms = 0;
+let correctRejs = 0;
+let rtList = [];
+let responded = false;
+let stimStartTime = 0;
+let phase = 'idle';
+let stimTimer = null, isiTimer = null;
+
+const intro    = document.getElementById('intro');
+const gameEl   = document.getElementById('game');
+const resultEl = document.getElementById('result');
+const stage    = document.getElementById('nb-stage');
+
+function generateStimuli(){
+  // около 33% совпадений (с 2-back). Первые 2 — рандомные, без match.
+  const arr = [];
+  arr.push(rand(LETTERS));
+  arr.push(rand(LETTERS));
+  for(let i = 2; i < TOTAL_TRIALS; i++){
+    const isMatch = Math.random() < TARGET_MATCH_RATIO;
+    if(isMatch){
+      arr.push(arr[i-N]);
+    } else {
+      let l;
+      do { l = rand(LETTERS); } while (l === arr[i-N]);
+      arr.push(l);
+    }
+  }
+  return arr;
+}
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function renderIdle(){
+  stage.className = 'idle';
+  stage.innerHTML = `
+    <div class="nb-progress">0 / ${TOTAL_TRIALS}</div>
+    <div class="nb-msg">Готова? Тапни, чтобы начать.</div>
+    <div class="nb-hint">Жми «Совпадение!», когда буква совпала с той, что была 2 шага назад.</div>
+  `;
+}
+
+function renderStim(letter, idx, canMatch){
+  stage.className = '';
+  stage.innerHTML = `
+    <div class="nb-progress">${idx+1} / ${TOTAL_TRIALS}</div>
+    <div class="nb-letter">${letter}</div>
+    <div class="nb-counter">${canMatch ? 'жми, если совпадает с 2 назад' : 'просто запомни — это ещё разогрев'}</div>
+    <div class="nb-actions">
+      <button class="nb-match-btn" id="match-btn" ${canMatch ? '' : 'disabled'}>Совпадение!</button>
+    </div>
+  `;
+  if(canMatch){
+    const btn = document.getElementById('match-btn');
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); onMatchPress(); });
+  }
+}
+
+function renderBlank(idx){
+  stage.innerHTML = `
+    <div class="nb-progress">${idx} / ${TOTAL_TRIALS}</div>
+    <div class="nb-counter" style="color:rgba(255,255,255,0.5)">⋯</div>
+  `;
+}
+
+function flash(correct){
+  stage.classList.remove('flash-correct','flash-error');
+  void stage.offsetWidth;
+  stage.classList.add(correct ? 'flash-correct' : 'flash-error');
+  setTimeout(()=> stage.classList.remove('flash-correct','flash-error'), 280);
+}
+
+function startTrial(){
+  if(trial >= TOTAL_TRIALS){
+    finish();
+    return;
+  }
+  phase = 'stim';
+  responded = false;
+  stimStartTime = performance.now();
+  const canMatch = trial >= N;
+  renderStim(stimuli[trial], trial, canMatch);
+  stimTimer = setTimeout(()=>{
+    handleStimEnd();
+  }, STIM_MS);
+}
+
+function handleStimEnd(){
+  // если ничего не нажала — это либо miss (был match) либо correct rejection
+  const isTarget = (trial >= N) && (stimuli[trial] === stimuli[trial-N]);
+  if(!responded){
+    if(isTarget) misses++;
+    else if(trial >= N) correctRejs++;
+  }
+  phase = 'isi';
+  renderBlank(trial+1);
+  isiTimer = setTimeout(()=>{
+    trial++;
+    startTrial();
+  }, ISI_MS);
+}
+
+function onMatchPress(){
+  if(phase !== 'stim' || responded) return;
+  responded = true;
+  const rt = performance.now() - stimStartTime;
+  const isTarget = (trial >= N) && (stimuli[trial] === stimuli[trial-N]);
+  if(isTarget){
+    hits++;
+    rtList.push(rt);
+    flash(true);
+  } else {
+    falseAlarms++;
+    flash(false);
+  }
+  // не ждём конца стимула — переходим к ISI чуть быстрее
+  clearTimeout(stimTimer);
+  phase = 'isi';
+  setTimeout(()=>{
+    renderBlank(trial+1);
+    isiTimer = setTimeout(()=>{
+      trial++;
+      startTrial();
+    }, Math.max(800, ISI_MS - 400));
+  }, 280);
+}
+
+function handleTap(){
+  if(phase === 'idle'){
+    trial = 0; hits = 0; misses = 0; falseAlarms = 0; correctRejs = 0; rtList = [];
+    stimuli = generateStimuli();
+    startTrial();
+    return;
+  }
+  // во время стимула — клик в зону тоже считается как «Совпадение!»
+  if(phase === 'stim') onMatchPress();
+}
+
+function finish(){
+  phase = 'done';
+  clearTimeout(stimTimer); clearTimeout(isiTimer);
+
+  const targetCount = stimuli.slice(N).filter((s,i) => s === stimuli[i]).length;
+  const nonTargetCount = TOTAL_TRIALS - N - targetCount;
+  const correct = hits + correctRejs;
+  const total = TOTAL_TRIALS - N;
+  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  document.getElementById('r-acc').textContent = accuracy;
+  document.getElementById('r-hits').textContent = `${hits}/${targetCount}`;
+  document.getElementById('r-miss').textContent = misses;
+  document.getElementById('r-fa').textContent = falseAlarms;
+
+  let comment;
+  if(accuracy >= 90 && falseAlarms <= 2){
+    comment = 'Рабочая память сегодня держит как сейф. Это редко — пользуйся, пока даёт.';
+  } else if(accuracy >= 75){
+    comment = 'Память справляется, но не без потерь. Заметила, как буквы будто стираются, как только появляется следующая?';
+  } else if(accuracy >= 60){
+    comment = 'Память постоянно сбоит — то «забыла», то «показалось». Это и есть та самая нагрузка, на которой СДВГ-мозг плывёт.';
+  } else {
+    comment = 'Рабочая память сейчас почти не держит. Это не «ты тупишь» — это объективно перегруженная функция, её можно разгрузить (об этом — в группе).';
+  }
+  if(falseAlarms >= 5){
+    comment += ' Много ложных «совпадение!» — мозг подсовывал знакомое вместо точного.';
+  }
+  document.getElementById('r-comment').textContent = comment;
+
+  Challenge.markDone(4, {
+    type:'nback',
+    n: N,
+    accuracy, hits, misses, falseAlarms, correctRejections: correctRejs,
+    targetCount, nonTargetCount,
+    avgRT: rtList.length ? Math.round(rtList.reduce((s,x)=>s+x,0)/rtList.length) : null,
+  });
+
+  intro.hidden = true;
+  gameEl.hidden = true;
+  resultEl.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', ()=>{
+  intro.hidden = true;
+  gameEl.hidden = false;
+  resultEl.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('retry-btn').addEventListener('click', ()=>{
+  resultEl.hidden = true;
+  gameEl.hidden = false;
+  intro.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('next-btn').addEventListener('click', ()=> Challenge.goHome());
+
+stage.addEventListener('click', handleTap);
+stage.addEventListener('touchstart', (e)=>{ e.preventDefault(); handleTap(); }, { passive: false });
+document.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space' && !gameEl.hidden){
+    e.preventDefault();
+    handleTap();
+  }
+});
+
+/* ---------- SHARE ---------- */
+function getResultsForShare(){
+  return {
+    name: Challenge.getName(),
+    acc:   document.getElementById('r-acc').textContent,
+    hits:  document.getElementById('r-hits').textContent,
+    miss:  document.getElementById('r-miss').textContent,
+    fa:    document.getElementById('r-fa').textContent,
+  };
+}
+function showHint(text){
+  const el = document.getElementById('share-hint');
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent=''; }, 4000);
+}
+document.getElementById('share-chat').addEventListener('click', async ()=>{
+  const r = getResultsForShare();
+  const text =
+`🐣 Стаей идти веселее · день 4 · N-back (2)
+${r.name}
+
+🧠 Точность: ${r.acc}%
+🎯 Поймала совпадений: ${r.hits}
+💤 Пропустила: ${r.miss}
+🐇 Ошибочно жала: ${r.fa}`;
+  try{
+    await navigator.clipboard.writeText(text);
+    showHint('Скопировано — открываю чат…');
+    setTimeout(()=> window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank'), 600);
+  }catch(e){
+    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    showHint('Не вышло скопировать — допиши от руки.');
+  }
+});
+
+document.getElementById('share-image').addEventListener('click', ()=>{
+  const r = getResultsForShare();
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#F4EEE2'); grad.addColorStop(1, '#FBF7EE');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#2A2620'; ctx.fillRect(0,0,W,260);
+  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
+  ctx.fillStyle = '#F5C400'; ctx.fill();
+  ctx.fillStyle = '#FBF7EE';
+  ctx.font = '700 36px "Manrope", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Валя Груздева', 120, 152);
+
+  ctx.fillStyle = '#5E6B4A';
+  ctx.font = '700 28px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('• ДЕНЬ 4 · N-BACK', W/2, 360);
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 92px "Fraunces", "Georgia", serif';
+  ctx.fillText('Рабочая память', W/2, 490);
+
+  ctx.fillStyle = '#D9694A';
+  ctx.font = 'italic 500 50px "Fraunces", "Georgia", serif';
+  ctx.fillText(`${r.name} держала буквы в голове`, W/2, 580);
+
+  const cardY = 700, cardH = 740;
+  ctx.fillStyle = '#FBF7EE';
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.fill();
+  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.stroke();
+
+  const stats = [
+    { v: r.acc + '%', l: 'точность' },
+    { v: r.hits, l: 'поймала совпадений' },
+    { v: r.miss, l: 'пропустила' },
+    { v: r.fa, l: 'ошибочно жала' },
+  ];
+  const cellW = (W-160)/2, cellH = cardH/2;
+  stats.forEach((s,i)=>{
+    const cx = 80 + cellW*(i%2) + cellW/2;
+    const cy = cardY + cellH*Math.floor(i/2) + cellH/2;
+    ctx.fillStyle = '#D9694A';
+    ctx.font = '600 120px "Fraunces", "Georgia", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(s.v), cx, cy+20);
+    ctx.fillStyle = '#8C8A77';
+    ctx.font = '700 26px "Manrope", sans-serif';
+    ctx.fillText(s.l.toUpperCase(), cx, cy+90);
+  });
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 64px "Fraunces", "Georgia", serif';
+  ctx.fillText('Стаей идти веселее', W/2, 1660);
+  ctx.fillStyle = '#8C8A77';
+  ctx.font = '500 32px "Manrope", sans-serif';
+  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1720);
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  canvas.toBlob((blob)=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nback-${r.name}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showHint('Картинка сохранена — можно постить в сторис.');
+  }, 'image/png');
+});
+
+Challenge.requireRegistration();
+</script>
+</body>
+</html>
