@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>День 2 · Go / No-Go</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../day.css">
+<style>
+  #gng-stage {
+    width: 100%; height: 100%; min-height: 460px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 18px; cursor: pointer;
+    position: relative; border-radius: 28px;
+    background: var(--ink); color: var(--bg);
+    transition: background .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #gng-stage.flash-correct { background: #5E6B4A; }
+  #gng-stage.flash-error { background: #B84C32; }
+  #gng-stage.idle { background: var(--bg-2); color: var(--ink); }
+
+  .gng-progress {
+    position: absolute; top: 16px; left: 20px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; color: rgba(255,255,255,0.5);
+  }
+  #gng-stage.idle .gng-progress { color: var(--muted); }
+
+  .gng-stim {
+    width: 180px; height: 180px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 96px;
+    transition: transform .08s ease;
+  }
+  .gng-stim.go { background: #5E6B4A; color: #fff; }
+  .gng-stim.nogo { background: #B84C32; color: #fff; }
+
+  .gng-msg {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 26px; text-align: center; padding: 0 24px;
+    max-width: 480px;
+  }
+  .gng-hint {
+    font-family: 'Manrope', sans-serif; font-weight: 500;
+    font-size: 14px; color: var(--muted); text-align: center;
+    max-width: 380px;
+  }
+  #gng-stage:not(.idle) .gng-hint { color: rgba(255,255,255,0.6); }
+
+  .gng-legend {
+    display: flex; gap: 28px; justify-content: center; margin: 18px 0 6px;
+  }
+  .gng-legend .item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--ink-2);
+  }
+  .gng-legend .circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px;
+  }
+  .gng-legend .circle.go { background: #5E6B4A; }
+  .gng-legend .circle.nogo { background: #B84C32; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+    <a class="nav-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      К птичке
+    </a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 2 из 9</div>
+    <h1>Go / No-Go — <em>реакция и торможение</em></h1>
+    <p class="lead">Классический тест на импульсивность. Жми, когда видишь зелёный круг. И <i>не жми</i>, когда видишь красный. Звучит просто — попробуй.</p>
+  </header>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="panel">
+      <h3>Как это работает</h3>
+      <div class="gng-legend">
+        <div class="item"><div class="circle go">+</div><span>Зелёный круг — <b>жми</b></span></div>
+        <div class="item"><div class="circle nogo">×</div><span>Красный — <b>не жми</b></span></div>
+      </div>
+      <ul>
+        <li>На экране быстро мелькают круги, около <b>40 за тест</b>.</li>
+        <li>Большинство — зелёные. Их нужно отлавливать <b>как можно быстрее</b>.</li>
+        <li>Иногда появляется красный. На красном — нужно <b>удержать руку</b>.</li>
+        <li>Каждый круг показывается ~700мс, потом исчезает.</li>
+      </ul>
+      <p style="margin-top:8px">Всего ~1,5 минуты. Сложно — но в этом и смысл.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-big" id="start-btn">
+        Начать тест
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="game-area" hidden>
+    <div id="gng-stage" class="idle"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden>
+    <div class="result-panel">
+      <h2>Готово!</h2>
+      <p class="sub">Вот как ты управляла своими импульсами:</p>
+      <div class="result-stats">
+        <div class="result-stat"><span class="v" id="r-hits">—</span><span class="l">точность на «жми», %</span></div>
+        <div class="result-stat"><span class="v" id="r-rt">—</span><span class="l">средний RT, мс</span></div>
+        <div class="result-stat"><span class="v" id="r-fa">—</span><span class="l">ошибочно жала</span></div>
+        <div class="result-stat"><span class="v" id="r-miss">—</span><span class="l">пропустила «жми»</span></div>
+      </div>
+      <p class="comment" id="r-comment"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Что это значит</h3>
+      <p><b>Точность на «жми»</b> — насколько надёжно ты реагировала на зелёные. Низкий процент — рассеянность, не успевает регистрировать стимул.</p>
+      <p><b>Ошибочно жала</b> — главный маркёр. Это нажатия на красный круг: импульс «вижу — реагирую» сработал быстрее, чем «стоп». Чем больше таких — тем хуже работает тормоз.</p>
+      <p><b>Пропустила «жми»</b> — обратная ошибка: внимание отвалилось, и зелёный круг не отловила.</p>
+    </div>
+
+    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
+      <h3>Поделиться результатом</h3>
+      <p style="margin-bottom:14px">Можно отправить свой результат в чат стаи или сохранить картинку для сторис.</p>
+      <div class="btn-row" style="justify-content:flex-start; margin:0">
+        <button class="btn btn-primary" id="share-chat">В чат стаи ✈︎</button>
+        <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">Сохранить картинку</button>
+      </div>
+      <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="retry-btn">Пройти ещё раз</button>
+      <button class="btn btn-primary" id="next-btn">
+        К птичке
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div><a href="../index.html">все дни</a> · <a href="../../index.html">главный сайт</a></div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="../challenge.js"></script>
+<script>
+/* ============================================================
+   Go / No-Go — реакция на Go (зелёные) и торможение на No-Go (красные)
+   40 trials, 75% Go / 25% No-Go, стимул ~700мс, ISI 500мс
+   ============================================================ */
+
+const TOTAL_TRIALS = 40;
+const NO_GO_RATIO = 0.25;
+const STIM_MS = 700;
+const ISI_MS = 500;
+
+let trials = [];
+let trial = 0;
+let goRTs = [];
+let hits = 0;       // correctly clicked on Go
+let misses = 0;     // failed to click on Go
+let falseAlarms = 0;// clicked on No-Go
+let correctRejs = 0;// correctly held on No-Go
+let stimStartTime = 0;
+let stimType = null;
+let responded = false;
+let stimTimer = null;
+let isiTimer = null;
+let phase = 'idle';
+
+const intro    = document.getElementById('intro');
+const gameEl   = document.getElementById('game');
+const resultEl = document.getElementById('result');
+const stage    = document.getElementById('gng-stage');
+
+function buildTrials(){
+  const noGoCount = Math.round(TOTAL_TRIALS * NO_GO_RATIO);
+  const goCount = TOTAL_TRIALS - noGoCount;
+  trials = [];
+  for(let i=0;i<goCount;i++) trials.push('go');
+  for(let i=0;i<noGoCount;i++) trials.push('nogo');
+  // shuffle but не давать 2+ noGo подряд
+  for(let i=trials.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [trials[i], trials[j]] = [trials[j], trials[i]];
+  }
+  // first 2 always go (warm up)
+  let firstGoIdx = trials.indexOf('go');
+  if(firstGoIdx > 0){
+    [trials[0], trials[firstGoIdx]] = [trials[firstGoIdx], trials[0]];
+  }
+}
+
+function renderIdle(){
+  stage.className = 'idle';
+  stage.innerHTML = `
+    <div class="gng-progress">${Math.min(trial, TOTAL_TRIALS)} / ${TOTAL_TRIALS}</div>
+    <div class="gng-msg">Готова? Тапни, чтобы начать.</div>
+    <div class="gng-hint">Зелёный — жми. Красный — не жми. На красный руку держи.</div>
+  `;
+}
+function renderStim(type){
+  stage.className = '';
+  stage.innerHTML = `
+    <div class="gng-progress">${trial+1} / ${TOTAL_TRIALS}</div>
+    <div class="gng-stim ${type}">${type === 'go' ? '+' : '×'}</div>
+  `;
+}
+function renderBlank(){
+  stage.className = '';
+  stage.innerHTML = `<div class="gng-progress">${trial} / ${TOTAL_TRIALS}</div>`;
+}
+function flashFeedback(correct){
+  stage.classList.remove('flash-correct','flash-error');
+  void stage.offsetWidth; // restart animation
+  stage.classList.add(correct ? 'flash-correct' : 'flash-error');
+  setTimeout(()=> stage.classList.remove('flash-correct','flash-error'), 250);
+}
+
+function startTrial(){
+  if(trial >= TOTAL_TRIALS){
+    finish();
+    return;
+  }
+  phase = 'stim';
+  stimType = trials[trial];
+  stimStartTime = performance.now();
+  responded = false;
+  renderStim(stimType);
+
+  stimTimer = setTimeout(() => {
+    // stimulus expired
+    if(!responded){
+      if(stimType === 'go') misses++;
+      else correctRejs++;
+    }
+    phase = 'isi';
+    renderBlank();
+    isiTimer = setTimeout(() => {
+      trial++;
+      startTrial();
+    }, ISI_MS);
+  }, STIM_MS);
+}
+
+function handleTap(){
+  if(phase === 'idle'){
+    trial = 0; goRTs = []; hits = 0; misses = 0; falseAlarms = 0; correctRejs = 0;
+    buildTrials();
+    startTrial();
+    return;
+  }
+  if(phase === 'stim' && !responded){
+    responded = true;
+    const rt = performance.now() - stimStartTime;
+    if(stimType === 'go'){
+      hits++; goRTs.push(rt);
+      flashFeedback(true);
+    } else {
+      falseAlarms++;
+      flashFeedback(false);
+    }
+    // переход к ISI чуть раньше после реакции — но даём небольшой задержку для feedback
+    clearTimeout(stimTimer);
+    phase = 'isi';
+    setTimeout(() => {
+      renderBlank();
+      isiTimer = setTimeout(() => {
+        trial++;
+        startTrial();
+      }, Math.max(150, ISI_MS - 250));
+    }, 250);
+  }
+  // если в ISI — игнорим
+}
+
+function finish(){
+  phase = 'done';
+  clearTimeout(stimTimer); clearTimeout(isiTimer);
+
+  const goCount = trials.filter(t => t === 'go').length;
+  const noGoCount = trials.filter(t => t === 'nogo').length;
+  const hitRate = Math.round((hits / goCount) * 100);
+  const avgRT = goRTs.length ? Math.round(goRTs.reduce((s,x)=>s+x,0) / goRTs.length) : 0;
+
+  document.getElementById('r-hits').textContent = hitRate;
+  document.getElementById('r-rt').textContent = avgRT || '—';
+  document.getElementById('r-fa').textContent = falseAlarms;
+  document.getElementById('r-miss').textContent = misses;
+
+  // commentary — без диагнозов
+  let comment;
+  if(falseAlarms <= 1 && hitRate >= 90){
+    comment = 'Отличный баланс — и быстро жмёшь на «можно», и тормозишь на «стоп». Сегодня контроль импульсов работает хорошо.';
+  } else if(falseAlarms <= 3){
+    comment = 'Несколько ошибок на «стоп» — но в целом тормоз срабатывает. Знакомое ощущение «упс, рука сама нажала»?';
+  } else if(falseAlarms <= 6){
+    comment = 'Много нажатий на красный — импульс «вижу — реагирую» сильнее, чем «подумай». Это видимый паттерн.';
+  } else {
+    comment = 'Тормоз почти не срабатывал — рука улетала вперёд мозга. Запомни ощущение, это и есть то, с чем работаем в группе.';
+  }
+  if(misses >= 5){
+    comment += ' А ещё много пропусков «жми» — внимание уходило в сторону между стимулами.';
+  }
+  document.getElementById('r-comment').textContent = comment;
+
+  Challenge.markDone(2, {
+    type: 'gng',
+    hitRate, avgRT, falseAlarms, misses,
+    goCount, noGoCount,
+    correctRejections: correctRejs,
+  });
+
+  intro.hidden = true;
+  gameEl.hidden = true;
+  resultEl.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- handlers ---------- */
+document.getElementById('start-btn').addEventListener('click', ()=>{
+  intro.hidden = true;
+  gameEl.hidden = false;
+  resultEl.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('retry-btn').addEventListener('click', ()=>{
+  resultEl.hidden = true;
+  gameEl.hidden = false;
+  intro.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('next-btn').addEventListener('click', ()=>{
+  Challenge.goHome();
+});
+
+stage.addEventListener('click', handleTap);
+stage.addEventListener('touchstart', (e)=>{ e.preventDefault(); handleTap(); }, { passive: false });
+document.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space' && !gameEl.hidden){
+    e.preventDefault();
+    handleTap();
+  }
+});
+
+/* ---------- SHARE ---------- */
+function getResultsForShare(){
+  return {
+    name: Challenge.getName(),
+    hitRate: document.getElementById('r-hits').textContent,
+    rt: document.getElementById('r-rt').textContent,
+    fa: document.getElementById('r-fa').textContent,
+    miss: document.getElementById('r-miss').textContent,
+  };
+}
+function showHint(text){
+  const el = document.getElementById('share-hint');
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent = ''; }, 4000);
+}
+
+document.getElementById('share-chat').addEventListener('click', async ()=>{
+  const r = getResultsForShare();
+  const text =
+`🐣 Стаей идти веселее · день 2 · Go/No-Go
+${r.name}
+
+🟢 Точность «жми»: ${r.hitRate}%
+⚡️ Средний RT: ${r.rt}мс
+🔴 Ошибочно жала: ${r.fa}
+💤 Пропустила «жми»: ${r.miss}`;
+  try{
+    await navigator.clipboard.writeText(text);
+    showHint('Результат скопирован — открываю чат стаи…');
+    setTimeout(()=> window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank'), 600);
+  }catch(e){
+    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    showHint('Не вышло скопировать автоматически — допиши от руки.');
+  }
+});
+
+document.getElementById('share-image').addEventListener('click', ()=>{
+  const r = getResultsForShare();
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#F4EEE2');
+  grad.addColorStop(1, '#FBF7EE');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#2A2620';
+  ctx.fillRect(0,0,W,260);
+  ctx.beginPath(); ctx.arc(80,140,18,0,Math.PI*2);
+  ctx.fillStyle = '#F5C400'; ctx.fill();
+  ctx.fillStyle = '#FBF7EE';
+  ctx.font = '700 36px "Manrope", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Валя Груздева', 120, 152);
+
+  ctx.fillStyle = '#5E6B4A';
+  ctx.font = '700 28px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('• ДЕНЬ 2 · GO / NO-GO', W/2, 360);
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 80px "Fraunces", "Georgia", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Реакция и торможение', W/2, 480);
+
+  ctx.fillStyle = '#D9694A';
+  ctx.font = 'italic 500 50px "Fraunces", "Georgia", serif';
+  ctx.fillText(`${r.name} проверила тормоз`, W/2, 570);
+
+  const cardY = 690, cardH = 740;
+  ctx.fillStyle = '#FBF7EE';
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.fill();
+  ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+  roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.stroke();
+
+  const stats = [
+    { v: r.hitRate + '%', l: 'точность «жми»' },
+    { v: r.rt, l: 'средний RT, мс' },
+    { v: r.fa, l: 'ошибочно жала' },
+    { v: r.miss, l: 'пропустила «жми»' },
+  ];
+  const cellW = (W - 160) / 2;
+  const cellH = cardH / 2;
+  stats.forEach((s,i)=>{
+    const cx = 80 + cellW * (i%2) + cellW/2;
+    const cy = cardY + cellH * Math.floor(i/2) + cellH/2;
+    ctx.fillStyle = '#D9694A';
+    ctx.font = '600 120px "Fraunces", "Georgia", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(s.v), cx, cy+20);
+    ctx.fillStyle = '#8C8A77';
+    ctx.font = '700 26px "Manrope", sans-serif';
+    ctx.fillText(s.l.toUpperCase(), cx, cy+90);
+  });
+
+  ctx.fillStyle = '#2A2620';
+  ctx.font = '600 64px "Fraunces", "Georgia", serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Стаей идти веселее', W/2, 1660);
+  ctx.fillStyle = '#8C8A77';
+  ctx.font = '500 32px "Manrope", sans-serif';
+  ctx.fillText('challenge.gruzdeva · попробуй сама', W/2, 1720);
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  canvas.toBlob((blob)=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `go-nogo-${r.name}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showHint('Картинка сохранена — можно постить в сторис.');
+  }, 'image/png');
+});
+
+/* require registered user */
+Challenge.requireRegistration();
+</script>
+</body>
+</html>
