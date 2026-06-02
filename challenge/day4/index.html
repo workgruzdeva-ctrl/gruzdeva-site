@@ -99,14 +99,14 @@
       <h3>Как это работает</h3>
       <ul>
         <li>На экране будут появляться буквы — по одной, по очереди.</li>
-        <li>Если буква <b>совпадает с той, что была 2 шага назад</b> — жми кнопку «Совпадение!».</li>
+        <li><b>Раунд 1 (полегче):</b> жми «Совпадение!», когда буква совпадает с той, что была <b>1 шаг назад</b>.</li>
+        <li><b>Раунд 2 (посложнее):</b> жми, когда совпадает с тем, что было <b>2 шага назад</b>.</li>
         <li>Если не совпадает — ничего не делай, жди следующую.</li>
-        <li>Первые две буквы — без действий, просто запоминаешь.</li>
-        <li>Каждая буква показывается ~700мс, потом исчезает на ~1700мс.</li>
+        <li>Каждая буква показывается ~700мс, потом пауза ~1700мс.</li>
       </ul>
-      <p style="margin-top:8px"><b>Пример:</b> A — D — A → совпадение, жми. <br>
-        H — K — M — K → совпадение, жми (M vs M — нет, K vs K — да).</p>
-      <p style="margin-top:6px">Всего ~1,5 минуты. Будет сложно — это нормально.</p>
+      <p style="margin-top:8px"><b>Пример 1-back:</b> A — A → жми (вторая = первой).<br>
+         <b>Пример 2-back:</b> H — K — H → жми (третья = первой через одну).</p>
+      <p style="margin-top:6px">Всего ~2 минуты. Будет сложно — это нормально.</p>
     </div>
 
     <div class="btn-row">
@@ -128,10 +128,10 @@
       <h2>Готово!</h2>
       <p class="sub">Вот что показала твоя рабочая память:</p>
       <div class="result-stats">
-        <div class="result-stat"><span class="v" id="r-acc">—</span><span class="l">точность, %</span></div>
-        <div class="result-stat"><span class="v" id="r-hits">—</span><span class="l">поймано совпадений</span></div>
-        <div class="result-stat"><span class="v" id="r-miss">—</span><span class="l">пропустила</span></div>
-        <div class="result-stat"><span class="v" id="r-fa">—</span><span class="l">ошибочно жала</span></div>
+        <div class="result-stat"><span class="v" id="r-acc1">—</span><span class="l">1-back точность, %</span></div>
+        <div class="result-stat"><span class="v" id="r-acc2">—</span><span class="l">2-back точность, %</span></div>
+        <div class="result-stat"><span class="v" id="r-miss">—</span><span class="l">всего пропустила</span></div>
+        <div class="result-stat"><span class="v" id="r-fa">—</span><span class="l">всего ошибок «нажала зря»</span></div>
       </div>
       <p class="comment" id="r-comment"></p>
     </div>
@@ -174,24 +174,25 @@
 <script src="../challenge.js"></script>
 <script>
 /* ============================================================
-   2-back — рабочая память
-   30 trials, ~33% matches, стимул 700мс, ISI 1700мс
+   N-back — рабочая память, ДВА БЛОКА
+   Блок 1: 1-back, 15 trials
+   Блок 2: 2-back, 15 trials
+   Стимул 700мс, ISI 1700мс
    ============================================================ */
 
-const N = 2;
-const TOTAL_TRIALS = 30;
+const TRIALS_PER_BLOCK = 15;
 const TARGET_MATCH_RATIO = 0.33;
 const LETTERS = ['A','B','C','D','E','F','G','H','K','L','M','N','P','R','T','V'];
 const STIM_MS = 700;
 const ISI_MS = 1700;
 
+let currentN = 1;       // 1 → потом 2
+let currentBlock = 1;   // 1 → потом 2
 let stimuli = [];
 let trial = 0;
-let hits = 0;
-let misses = 0;
-let falseAlarms = 0;
-let correctRejs = 0;
-let rtList = [];
+let block1Stats = { hits:0, misses:0, falseAlarms:0, correctRejs:0, rtList:[], targets:0 };
+let block2Stats = { hits:0, misses:0, falseAlarms:0, correctRejs:0, rtList:[], targets:0 };
+let stats = block1Stats;
 let responded = false;
 let stimStartTime = 0;
 let phase = 'idle';
@@ -202,40 +203,56 @@ const gameEl   = document.getElementById('game');
 const resultEl = document.getElementById('result');
 const stage    = document.getElementById('nb-stage');
 
-function generateStimuli(){
-  // около 33% совпадений (с 2-back). Первые 2 — рандомные, без match.
+function generateStimuli(n){
+  // ~33% совпадений с n-back. Первые n — рандомные без шанса match.
   const arr = [];
-  arr.push(rand(LETTERS));
-  arr.push(rand(LETTERS));
-  for(let i = 2; i < TOTAL_TRIALS; i++){
+  for(let i = 0; i < n; i++) arr.push(rand(LETTERS));
+  let targets = 0;
+  for(let i = n; i < TRIALS_PER_BLOCK; i++){
     const isMatch = Math.random() < TARGET_MATCH_RATIO;
     if(isMatch){
-      arr.push(arr[i-N]);
+      arr.push(arr[i-n]);
+      targets++;
     } else {
       let l;
-      do { l = rand(LETTERS); } while (l === arr[i-N]);
+      do { l = rand(LETTERS); } while (l === arr[i-n]);
       arr.push(l);
     }
   }
-  return arr;
+  return { arr, targets };
 }
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 function renderIdle(){
   stage.className = 'idle';
   stage.innerHTML = `
-    <div class="nb-progress">0 / ${TOTAL_TRIALS}</div>
+    <div class="nb-progress">блок 1 · 1-back</div>
     <div class="nb-msg">Готова? Тапни, чтобы начать.</div>
-    <div class="nb-hint">Жми «Совпадение!», когда буква совпала с той, что была 2 шага назад.</div>
+    <div class="nb-hint">Сначала простой 1-back: жми, когда буква совпадает с предыдущей.</div>
   `;
+}
+
+function renderInterlude(){
+  stage.className = 'idle';
+  stage.innerHTML = `
+    <div class="nb-msg">Молодец! 1-back пройден.</div>
+    <div class="nb-hint">Теперь сложнее — <b>2-back</b>: жми, когда буква совпадает с той, что была <b>2 шага назад</b>.<br><br>Пример: H — K — H → жми (третья = первой через одну).</div>
+    <div class="nb-actions" style="position:static; margin-top:8px">
+      <button class="nb-match-btn" id="continue-btn">Дальше →</button>
+    </div>
+  `;
+  document.getElementById('continue-btn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    startBlock(2);
+  });
 }
 
 function renderStim(letter, idx, canMatch){
   stage.className = '';
   stage.innerHTML = `
-    <div class="nb-progress">${idx+1} / ${TOTAL_TRIALS}</div>
+    <div class="nb-progress">блок ${currentBlock} · ${currentN}-back · ${idx+1} / ${TRIALS_PER_BLOCK}</div>
     <div class="nb-letter">${letter}</div>
-    <div class="nb-counter">${canMatch ? 'жми, если совпадает с 2 назад' : 'просто запомни — это ещё разогрев'}</div>
+    <div class="nb-counter">${canMatch ? `жми, если совпадает с ${currentN === 1 ? 'предыдущей' : '2 назад'}` : 'просто запомни — это разогрев'}</div>
     <div class="nb-actions">
       <button class="nb-match-btn" id="match-btn" ${canMatch ? '' : 'disabled'}>Совпадение!</button>
     </div>
@@ -248,7 +265,7 @@ function renderStim(letter, idx, canMatch){
 
 function renderBlank(idx){
   stage.innerHTML = `
-    <div class="nb-progress">${idx} / ${TOTAL_TRIALS}</div>
+    <div class="nb-progress">блок ${currentBlock} · ${currentN}-back · ${idx} / ${TRIALS_PER_BLOCK}</div>
     <div class="nb-counter" style="color:rgba(255,255,255,0.5)">⋯</div>
   `;
 }
@@ -260,15 +277,32 @@ function flash(correct){
   setTimeout(()=> stage.classList.remove('flash-correct','flash-error'), 280);
 }
 
+function startBlock(blockNum){
+  currentBlock = blockNum;
+  currentN = blockNum;
+  stats = (blockNum === 1) ? block1Stats : block2Stats;
+  const gen = generateStimuli(currentN);
+  stimuli = gen.arr;
+  stats.targets = gen.targets;
+  trial = 0;
+  startTrial();
+}
+
 function startTrial(){
-  if(trial >= TOTAL_TRIALS){
-    finish();
+  if(trial >= TRIALS_PER_BLOCK){
+    if(currentBlock === 1){
+      // показать экран-переход к 2-back
+      phase = 'interlude';
+      renderInterlude();
+    } else {
+      finish();
+    }
     return;
   }
   phase = 'stim';
   responded = false;
   stimStartTime = performance.now();
-  const canMatch = trial >= N;
+  const canMatch = trial >= currentN;
   renderStim(stimuli[trial], trial, canMatch);
   stimTimer = setTimeout(()=>{
     handleStimEnd();
@@ -276,11 +310,10 @@ function startTrial(){
 }
 
 function handleStimEnd(){
-  // если ничего не нажала — это либо miss (был match) либо correct rejection
-  const isTarget = (trial >= N) && (stimuli[trial] === stimuli[trial-N]);
+  const isTarget = (trial >= currentN) && (stimuli[trial] === stimuli[trial-currentN]);
   if(!responded){
-    if(isTarget) misses++;
-    else if(trial >= N) correctRejs++;
+    if(isTarget) stats.misses++;
+    else if(trial >= currentN) stats.correctRejs++;
   }
   phase = 'isi';
   renderBlank(trial+1);
@@ -294,16 +327,15 @@ function onMatchPress(){
   if(phase !== 'stim' || responded) return;
   responded = true;
   const rt = performance.now() - stimStartTime;
-  const isTarget = (trial >= N) && (stimuli[trial] === stimuli[trial-N]);
+  const isTarget = (trial >= currentN) && (stimuli[trial] === stimuli[trial-currentN]);
   if(isTarget){
-    hits++;
-    rtList.push(rt);
+    stats.hits++;
+    stats.rtList.push(rt);
     flash(true);
   } else {
-    falseAlarms++;
+    stats.falseAlarms++;
     flash(false);
   }
-  // не ждём конца стимула — переходим к ISI чуть быстрее
   clearTimeout(stimTimer);
   phase = 'isi';
   setTimeout(()=>{
@@ -317,51 +349,58 @@ function onMatchPress(){
 
 function handleTap(){
   if(phase === 'idle'){
-    trial = 0; hits = 0; misses = 0; falseAlarms = 0; correctRejs = 0; rtList = [];
-    stimuli = generateStimuli();
-    startTrial();
+    block1Stats = { hits:0, misses:0, falseAlarms:0, correctRejs:0, rtList:[], targets:0 };
+    block2Stats = { hits:0, misses:0, falseAlarms:0, correctRejs:0, rtList:[], targets:0 };
+    startBlock(1);
     return;
   }
-  // во время стимула — клик в зону тоже считается как «Совпадение!»
   if(phase === 'stim') onMatchPress();
+  // interlude — клик игнорим, нужна явная кнопка «Дальше»
+}
+
+function blockAccuracy(s, n){
+  const total = TRIALS_PER_BLOCK - n;
+  if(total <= 0) return 0;
+  return Math.round(((s.hits + s.correctRejs) / total) * 100);
 }
 
 function finish(){
   phase = 'done';
   clearTimeout(stimTimer); clearTimeout(isiTimer);
 
-  const targetCount = stimuli.slice(N).filter((s,i) => s === stimuli[i]).length;
-  const nonTargetCount = TOTAL_TRIALS - N - targetCount;
-  const correct = hits + correctRejs;
-  const total = TOTAL_TRIALS - N;
-  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const acc1 = blockAccuracy(block1Stats, 1);
+  const acc2 = blockAccuracy(block2Stats, 2);
+  const totalMiss = block1Stats.misses + block2Stats.misses;
+  const totalFA = block1Stats.falseAlarms + block2Stats.falseAlarms;
 
-  document.getElementById('r-acc').textContent = accuracy;
-  document.getElementById('r-hits').textContent = `${hits}/${targetCount}`;
-  document.getElementById('r-miss').textContent = misses;
-  document.getElementById('r-fa').textContent = falseAlarms;
+  document.getElementById('r-acc1').textContent = acc1;
+  document.getElementById('r-acc2').textContent = acc2;
+  document.getElementById('r-miss').textContent = totalMiss;
+  document.getElementById('r-fa').textContent = totalFA;
 
+  // комментарий — сравниваем 2 блока
   let comment;
-  if(accuracy >= 90 && falseAlarms <= 2){
-    comment = 'Рабочая память сегодня держит как сейф. Это редко — пользуйся, пока даёт.';
-  } else if(accuracy >= 75){
-    comment = 'Память справляется, но не без потерь. Заметила, как буквы будто стираются, как только появляется следующая?';
-  } else if(accuracy >= 60){
-    comment = 'Память постоянно сбоит — то «забыла», то «показалось». Это и есть та самая нагрузка, на которой СДВГ-мозг плывёт.';
+  const drop = acc1 - acc2;
+  if(acc1 >= 85 && acc2 >= 75){
+    comment = 'Рабочая память сегодня держит хорошо — даже на сложном уровне. Это редко, пользуйся пока даёт.';
+  } else if(acc1 >= 75 && drop >= 25){
+    comment = '1-back ты прошла легко, а на 2-back точность ушла. Это и есть «потолок» — где удерживание становится тяжёлым.';
+  } else if(acc2 >= 65){
+    comment = 'Память работала ровно: на простом блоке хорошо, на сложном — нормально для первого раза.';
+  } else if(acc1 >= 60){
+    comment = '1-back был ок, на 2-back почти перестало работать — буквы будто стираются, как только появляется следующая. Знакомо?';
   } else {
-    comment = 'Рабочая память сейчас почти не держит. Это не «ты тупишь» — это объективно перегруженная функция, её можно разгрузить (об этом — в группе).';
+    comment = 'Память сегодня плывёт уже на простом уровне. Это не «ты тупишь» — это объективно перегруженная функция. Её можно разгрузить (об этом — в группе).';
   }
-  if(falseAlarms >= 5){
+  if(totalFA >= 5){
     comment += ' Много ложных «совпадение!» — мозг подсовывал знакомое вместо точного.';
   }
   document.getElementById('r-comment').textContent = comment;
 
   Challenge.markDone(4, {
     type:'nback',
-    n: N,
-    accuracy, hits, misses, falseAlarms, correctRejections: correctRejs,
-    targetCount, nonTargetCount,
-    avgRT: rtList.length ? Math.round(rtList.reduce((s,x)=>s+x,0)/rtList.length) : null,
+    block1: { n:1, ...block1Stats, accuracy: acc1, avgRT: block1Stats.rtList.length ? Math.round(block1Stats.rtList.reduce((s,x)=>s+x,0)/block1Stats.rtList.length) : null },
+    block2: { n:2, ...block2Stats, accuracy: acc2, avgRT: block2Stats.rtList.length ? Math.round(block2Stats.rtList.reduce((s,x)=>s+x,0)/block2Stats.rtList.length) : null },
   });
 
   intro.hidden = true;
@@ -401,8 +440,8 @@ document.addEventListener('keydown', (e)=>{
 function getResultsForShare(){
   return {
     name: Challenge.getName(),
-    acc:   document.getElementById('r-acc').textContent,
-    hits:  document.getElementById('r-hits').textContent,
+    acc1:  document.getElementById('r-acc1').textContent,
+    acc2:  document.getElementById('r-acc2').textContent,
     miss:  document.getElementById('r-miss').textContent,
     fa:    document.getElementById('r-fa').textContent,
   };
@@ -415,11 +454,11 @@ function showHint(text){
 document.getElementById('share-chat').addEventListener('click', async ()=>{
   const r = getResultsForShare();
   const text =
-`🐣 Стаей идти веселее · день 4 · N-back (2)
+`🐣 Стаей идти веселее · день 4 · N-back
 ${r.name}
 
-🧠 Точность: ${r.acc}%
-🎯 Поймала совпадений: ${r.hits}
+🧠 1-back точность: ${r.acc1}%
+🧩 2-back точность: ${r.acc2}%
 💤 Пропустила: ${r.miss}
 🐇 Ошибочно жала: ${r.fa}`;
   try{
@@ -471,8 +510,8 @@ document.getElementById('share-image').addEventListener('click', ()=>{
   roundRect(ctx, 80, cardY, W-160, cardH, 40); ctx.stroke();
 
   const stats = [
-    { v: r.acc + '%', l: 'точность' },
-    { v: r.hits, l: 'поймала совпадений' },
+    { v: r.acc1 + '%', l: '1-back точность' },
+    { v: r.acc2 + '%', l: '2-back точность' },
     { v: r.miss, l: 'пропустила' },
     { v: r.fa, l: 'ошибочно жала' },
   ];
