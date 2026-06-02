@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>День 3 · Покажи рабочий стол</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../day.css">
+<style>
+  .steps-list {
+    list-style: none; padding: 0; margin: 18px 0 0;
+    counter-reset: step;
+  }
+  .steps-list li {
+    counter-increment: step;
+    padding: 14px 16px 14px 64px;
+    position: relative;
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
+    margin-bottom: 10px;
+    font-size: 16px; line-height: 1.5; color: var(--ink-2);
+  }
+  .steps-list li::before {
+    content: counter(step);
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--yellow); color: var(--ink);
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps-list li b { color: var(--ink); }
+
+  .selfreport {
+    background: var(--bg-2); border: 2px dashed var(--line); border-radius: 20px;
+    padding: 28px; margin: 24px 0 12px; text-align: center;
+    transition: all .15s ease;
+  }
+  .selfreport.done {
+    background: #f0ead9;
+    border-style: solid;
+    border-color: var(--green-deep);
+  }
+  .selfreport .ico {
+    font-size: 40px; margin-bottom: 8px;
+  }
+  .selfreport h3 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; margin: 4px 0 6px;
+  }
+  .selfreport p {
+    font-size: 15px; color: var(--ink-2); margin: 0 0 18px;
+  }
+
+  .tg-cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: #29A1E0; color: #fff;
+    padding: 16px 26px; border-radius: 999px;
+    font-weight: 700; font-size: 16px; text-decoration: none;
+    box-shadow: 0 10px 22px rgba(41,161,224,0.28);
+    transition: transform .15s ease;
+  }
+  .tg-cta:hover { transform: translateY(-2px); }
+
+  .check-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--coral); color: #fff; border: none;
+    padding: 14px 22px; border-radius: 999px;
+    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: transform .15s ease;
+  }
+  .check-btn:hover { transform: translateY(-2px); }
+  .check-btn.done {
+    background: var(--green-deep); cursor: default;
+  }
+  .check-btn.done:hover { transform: none; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="d"></span>Стаей идти веселее</span>
+    <a class="nav-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      К птичке
+    </a>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 3 из 9</div>
+    <h1>Покажи <em>рабочий стол</em></h1>
+    <p class="lead">Подойди и сфотографируй свой стол прямо сейчас. Не надо делать красиво. При СДВГ вещи часто живут там, где их видно. Не видно — не существует.</p>
+  </header>
+
+  <div class="panel">
+    <h3>Как делаем</h3>
+    <ol class="steps-list">
+      <li><b>Сфотографируй свой стол</b> прямо сейчас, как есть. Если не один — выбирай тот, где ты больше всего проводишь время.</li>
+      <li><b>Не убирай</b>, не двигай чашки, не прячь провода. Это и есть данные о тебе.</li>
+      <li><b>Открой чат стаи</b> и выложи фотку туда. Можно подписать одной строкой или без подписи.</li>
+      <li><b>Вернись сюда</b> и отметь, что сделала — птичка вырастет.</li>
+    </ol>
+  </div>
+
+  <div class="selfreport" id="selfreport">
+    <div class="ico" id="report-ico">📸</div>
+    <h3 id="report-title">Готова поделиться?</h3>
+    <p id="report-desc">Сначала сфоткай стол, потом открой чат и брось туда фото. Потом — галочка ниже.</p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center">
+      <a class="tg-cta" id="open-chat" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Открыть чат стаи
+      </a>
+      <button class="check-btn" id="mark-done">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Выложила — отметить
+      </button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Что это даёт</h3>
+    <p>Это не «оценка беспорядка». Это инвентаризация: что лежит у тебя в зоне видимости и почему именно это. У человека с СДВГ стол часто рассказывает больше, чем дневник: куда тянется внимание, что ты постоянно теряешь, какие задачи «застряли» в материальной форме.</p>
+    <p>Если хочешь — в группе мы потом разбираем эти фото. Без оценок, только наблюдения.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="next-btn" disabled style="opacity:.5">
+      Сначала отметь, что выложила
+    </button>
+  </div>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <span class="brand"><span class="d"></span>Валя Груздева</span>
+      <div><a href="../index.html">все дни</a> · <a href="../../index.html">главный сайт</a></div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="../challenge.js"></script>
+<script>
+/* require registered user */
+Challenge.requireRegistration();
+
+const selfreport = document.getElementById('selfreport');
+const markBtn    = document.getElementById('mark-done');
+const nextBtn    = document.getElementById('next-btn');
+const reportIco  = document.getElementById('report-ico');
+const reportTitle= document.getElementById('report-title');
+const reportDesc = document.getElementById('report-desc');
+
+// Если уже отмечено — показать состояние done
+function applyDoneState(){
+  selfreport.classList.add('done');
+  reportIco.textContent = '✓';
+  reportTitle.textContent = 'Спасибо, что показала.';
+  reportDesc.textContent = 'Птичка засчитала. В чате я обязательно посмотрю — без оценок, без советов «приберись».';
+  markBtn.classList.add('done');
+  markBtn.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Отмечено
+  `;
+  markBtn.disabled = true;
+  nextBtn.disabled = false;
+  nextBtn.style.opacity = '1';
+  nextBtn.innerHTML = `
+    К птичке
+    <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  `;
+}
+
+if(Challenge.isDone(3)){
+  applyDoneState();
+}
+
+markBtn.addEventListener('click', ()=>{
+  if(Challenge.isDone(3)) return;
+  Challenge.markDone(3, { type: 'desk-photo', sharedToChat: true });
+  applyDoneState();
+});
+
+nextBtn.addEventListener('click', ()=>{
+  if(!Challenge.isDone(3)) return;
+  Challenge.goHome();
+});
+</script>
+</body>
+</html>
