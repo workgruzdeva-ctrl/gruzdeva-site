@@ -47,7 +47,16 @@ window.Challenge = {
     window.location.href = '../index.html';
   },
   // If user lands on a day without registering — send them to landing.
+  // Exception: ?dev=1 в URL отключает редирект и подставляет dev-имя.
   requireRegistration(){
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('dev') === '1'){
+      const s = this.getState();
+      if(!s || !s.name){
+        this.saveState({ name: 'Тест', startedAt: Date.now(), days: {} });
+      }
+      return true;
+    }
     const s = this.getState();
     if(!s || !s.name){
       window.location.href = '../index.html';
