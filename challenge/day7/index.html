@@ -67,11 +67,11 @@
 
   /* цветной swatch вместо эмодзи */
   .color-swatch {
-    width: 48px; height: 48px; border-radius: 12px;
+    width: 70px; height: 70px; border-radius: 14px;
     border: 2px solid rgba(0,0,0,0.08);
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   }
-  .meme-display .color-swatch { width: 56px; height: 56px; }
+  .meme-display .color-swatch { width: 80px; height: 80px; border-radius: 16px; }
 
   .link-box {
     background: var(--bg-2); border: 2px dashed var(--line); border-radius: 16px;
@@ -393,7 +393,6 @@ function renderQuestionBlock(idx, text, type, placeholder){
     const cards = COLORS.map(c => `
       <div class="meme-card" data-meme="${c.id}">
         <div class="color-swatch" style="background:${c.hex}"></div>
-        <div class="meme-label">${c.label.replace('\n','<br>')}</div>
       </div>`).join('');
     el.innerHTML = `
       <div class="q-label">вопрос ${idx+1} из 4</div>
@@ -560,7 +559,6 @@ function initCompare(params){
       return `
         <div class="meme-display">
           <div class="color-swatch" style="background:${c.hex}"></div>
-          <div class="meme-label">${c.label.replace('\n','<br>')}</div>
         </div>
       `;
     }
