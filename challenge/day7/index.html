@@ -329,16 +329,16 @@
    ============================================================ */
 
 const QUESTIONS = [
-  { id:'character', text:'Каким персонажем из мультика или кино была бы я в своём детстве?', type:'text', placeholder:'одно-два слова, что первое пришло…' },
-  { id:'animal',    text:'Каким животным была бы я в своём детстве?',                        type:'text', placeholder:'одно-два слова' },
-  { id:'color',     text:'Каким цветом была бы я в своём детстве?',                          type:'color' },
-  { id:'weather',   text:'Каким погодным явлением была бы я в своём детстве?',               type:'text', placeholder:'одно-два слова' },
+  { id:'character', text:'Если бы в детстве я была персонажем из мультика или кино, каким?', type:'text', placeholder:'одно-два слова, что первое пришло…' },
+  { id:'animal',    text:'Если бы в детстве я была животным, каким?',                        type:'text', placeholder:'одно-два слова' },
+  { id:'color',     text:'Если бы в детстве я была цветом, каким?',                          type:'color' },
+  { id:'weather',   text:'Если бы в детстве я была погодным явлением, каким?',               type:'text', placeholder:'одно-два слова' },
 ];
 const QUESTIONS_THIRD = [
-  (name) => `Каким персонажем из мультика или кино была бы ${name} в своём детстве?`,
-  (name) => `Каким животным была бы ${name} в своём детстве?`,
-  (name) => `Каким цветом была бы ${name} в своём детстве?`,
-  (name) => `Каким погодным явлением была бы ${name} в своём детстве?`,
+  (name) => `Если бы в детстве ${name} была персонажем из мультика или кино, каким?`,
+  (name) => `Если бы в детстве ${name} была животным, каким?`,
+  (name) => `Если бы в детстве ${name} была цветом, каким?`,
+  (name) => `Если бы в детстве ${name} была погодным явлением, каким?`,
 ];
 
 /* Палитра цветов с настроениями */
@@ -504,9 +504,9 @@ function initSelf(){
 function initClose(params){
   document.getElementById('mode-close').hidden = false;
   document.getElementById('day-header').querySelector('.lead').textContent =
-    `${params.name} проходит мини-челлендж «Стаей идти веселее» и хочет узнать, как её помнят те, кто рядом. Ответь на 4 коротких вопроса — это займёт минуту.`;
+    `${params.name} проходит мини-челлендж «Стаей идти веселее» и хочет, чтобы ты рассказал, какой она была в детстве — через ассоциации. Ответь на 4 коротких вопроса.`;
   document.getElementById('close-greeting').textContent = `Привет! Это про ${params.name}.`;
-  document.getElementById('close-intro').textContent = `${params.name} проходит мини-челлендж по СДВГ и хочет узнать, как её помнят те, кто рядом. Ответь на 4 коротких вопроса — это займёт минуту.`;
+  document.getElementById('close-intro').textContent = `Расскажи, какой ${params.name} была в детстве — через ассоциации. 4 коротких вопроса, это займёт минуту.`;
 
   const wrap = document.getElementById('q-close');
   QUESTIONS_THIRD.forEach((qFn, i) => {
