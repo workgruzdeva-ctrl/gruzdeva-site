@@ -33,7 +33,7 @@
     outline: none; border-color: var(--coral);
   }
 
-  /* meme picker — сетка с эмодзи */
+  /* meme picker — сетка с эмодзи (общая для пиктограмм-выбора) */
   .meme-grid {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
   }
@@ -64,6 +64,14 @@
   }
   .meme-display .meme-emoji { font-size: 40px; }
   .meme-display .meme-label { font-size: 12px; font-weight: 600; }
+
+  /* цветной swatch вместо эмодзи */
+  .color-swatch {
+    width: 48px; height: 48px; border-radius: 12px;
+    border: 2px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+  .meme-display .color-swatch { width: 56px; height: 56px; }
 
   .link-box {
     background: var(--bg-2); border: 2px dashed var(--line); border-radius: 16px;
@@ -321,34 +329,35 @@
    ============================================================ */
 
 const QUESTIONS = [
-  { id:'cartoon', text:'Каким мультиком я была в детстве?',     type:'text', placeholder:'одно-два слова, что первое пришло…' },
-  { id:'animal',  text:'Каким животным я была/была бы?',         type:'text', placeholder:'одно-два слова' },
-  { id:'meme',    text:'Каким мемом я была бы сейчас?',          type:'meme' },
-  { id:'weather', text:'Каким погодным явлением я была в детстве?', type:'text', placeholder:'одно-два слова' },
+  { id:'cartoon', text:'Каким мультиком я была в детстве?',         type:'text',  placeholder:'одно-два слова, что первое пришло…' },
+  { id:'animal',  text:'Каким животным я была/была бы?',             type:'text',  placeholder:'одно-два слова' },
+  { id:'color',   text:'Какого я цвета сейчас?',                     type:'color' },
+  { id:'weather', text:'Каким погодным явлением я была в детстве?',  type:'text',  placeholder:'одно-два слова' },
 ];
 const QUESTIONS_THIRD = [
   (name) => `Каким мультиком была ${name} в детстве?`,
   (name) => `Каким животным была бы ${name}?`,
-  (name) => `Каким мемом была бы ${name}?`,
+  (name) => `Какого цвета ${name} сейчас?`,
   (name) => `Каким погодным явлением была ${name} в детстве?`,
 ];
 
-const MEMES = [
-  { id:'doge',     emoji:'🐶', label:'Doge\nmuch wow' },
-  { id:'pepe',     emoji:'🐸', label:'Пепе\nгрустный' },
-  { id:'cat',      emoji:'🐱', label:'Кот\nустал' },
-  { id:'crying',   emoji:'🥲', label:'Слеза\nя в порядке' },
-  { id:'clown',    emoji:'🤡', label:'Клоун\nа думала справлюсь' },
-  { id:'skull',    emoji:'💀', label:'Skull\nмне конец' },
-  { id:'cool',     emoji:'😎', label:'Cool guy\nя держусь' },
-  { id:'upside',   emoji:'🙃', label:'Перевёрнутый\nвсё хорошо' },
-  { id:'shrug',    emoji:'🤷', label:'Шраг\nну как-то' },
-  { id:'thinking', emoji:'🤔', label:'Думаю\nнадо подумать' },
-  { id:'fire',     emoji:'🔥', label:'Огонь\nвсё горит'},
-  { id:'sparkles', emoji:'✨', label:'Блестяшки\nя справляюсь'},
+/* Палитра цветов с настроениями */
+const COLORS = [
+  { id:'yellow',  hex:'#F5C400', label:'Жёлтый\nрадость' },
+  { id:'orange',  hex:'#E48030', label:'Оранжевый\nэнергия' },
+  { id:'red',     hex:'#C0573F', label:'Красный\nзлость' },
+  { id:'pink',    hex:'#F2A8B8', label:'Розовый\nнежность' },
+  { id:'purple',  hex:'#8E6CB0', label:'Фиолетовый\nмечта' },
+  { id:'blue',    hex:'#3C5A7A', label:'Синий\nспокой' },
+  { id:'sky',     hex:'#7FB3C9', label:'Голубой\nлёгкость' },
+  { id:'green',   hex:'#5E6B4A', label:'Зелёный\nбаланс' },
+  { id:'brown',   hex:'#8B6B4A', label:'Коричневый\nстабильность' },
+  { id:'gray',    hex:'#9A9690', label:'Серый\nтуман' },
+  { id:'black',   hex:'#1A1614', label:'Чёрный\nпусто' },
+  { id:'white',   hex:'#F4EEE2', label:'Белый\nясность' },
 ];
 
-function memeById(id){ return MEMES.find(m => m.id === id); }
+function memeById(id){ return COLORS.find(c => c.id === id); }
 
 function enc(obj){
   return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
@@ -380,11 +389,11 @@ function renderQuestionBlock(idx, text, type, placeholder){
   el.className = 'q-block';
   el.dataset.i = idx;
   el.dataset.type = type;
-  if(type === 'meme'){
-    const cards = MEMES.map(m => `
-      <div class="meme-card" data-meme="${m.id}">
-        <div class="meme-emoji">${m.emoji}</div>
-        <div class="meme-label">${m.label.replace('\n','<br>')}</div>
+  if(type === 'color'){
+    const cards = COLORS.map(c => `
+      <div class="meme-card" data-meme="${c.id}">
+        <div class="color-swatch" style="background:${c.hex}"></div>
+        <div class="meme-label">${c.label.replace('\n','<br>')}</div>
       </div>`).join('');
     el.innerHTML = `
       <div class="q-label">вопрос ${idx+1} из 4</div>
@@ -411,7 +420,7 @@ function renderQuestionBlock(idx, text, type, placeholder){
 function readAnswers(wrap){
   const blocks = wrap.querySelectorAll('.q-block');
   return Array.from(blocks).map(b => {
-    if(b.dataset.type === 'meme') return b.dataset.value || '';
+    if(b.dataset.type === 'color') return b.dataset.value || '';
     const inp = b.querySelector('input');
     return inp ? inp.value.trim() : '';
   });
@@ -428,7 +437,7 @@ function initSelf(){
   document.getElementById('generate-link').addEventListener('click', () => {
     const answers = readAnswers(wrap);
     if(answers.filter(a => a).length < 4){
-      alert('Заполни все 4 вопроса — даже коротко (включая выбор мема).');
+      alert('Заполни все 4 вопроса — даже коротко (включая выбор цвета).');
       return;
     }
     const name = Challenge.getName();
@@ -509,7 +518,7 @@ function initClose(params){
   document.getElementById('finish-close').addEventListener('click', () => {
     const answers = readAnswers(wrap);
     if(answers.filter(a => a).length < 4){
-      alert('Заполни, пожалуйста, все 4 — даже коротко (включая выбор мема).');
+      alert('Заполни, пожалуйста, все 4 — даже коротко (включая выбор цвета).');
       return;
     }
     const themEncoded = enc(answers);
@@ -545,13 +554,13 @@ function initCompare(params){
   const list = document.getElementById('compare-list');
 
   function renderCell(value, type){
-    if(type === 'meme'){
-      const m = memeById(value);
-      if(!m) return '<span style="color:var(--muted)">—</span>';
+    if(type === 'color'){
+      const c = memeById(value);
+      if(!c) return '<span style="color:var(--muted)">—</span>';
       return `
         <div class="meme-display">
-          <div class="meme-emoji">${m.emoji}</div>
-          <div class="meme-label">${m.label.replace('\n','<br>')}</div>
+          <div class="color-swatch" style="background:${c.hex}"></div>
+          <div class="meme-label">${c.label.replace('\n','<br>')}</div>
         </div>
       `;
     }
