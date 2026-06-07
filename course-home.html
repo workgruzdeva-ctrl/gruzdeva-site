@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Курс молодого птенца — личный кабинет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#FCF8F1;--card:#FFFFFF;--ink:#2A2722;--ink-2:#5E5950;--muted:#938C7F;
+    --coral:#F0765B;--coral-soft:#FCE7DF;--teal:#2E9C8E;--teal-soft:#DBF0EC;
+    --yellow:#FFC93C;--yellow-soft:#FFF1CC;--lilac:#8E7BD6;--lilac-soft:#EBE6FA;--line:#EFE8DC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+  .serif{font-family:'Fraunces',serif}
+  a{color:inherit}
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(252,248,241,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;gap:10px;padding:14px 24px;font-weight:800}
+  .topbar .d{width:12px;height:12px;border-radius:50%;background:var(--yellow)}
+  .topbar span{color:var(--coral)}
+
+  .hero{padding:48px 0 22px}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--coral)}
+  .eyebrow .dash{width:24px;height:2px;background:var(--coral);border-radius:2px}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(34px,6vw,52px);line-height:1.02;margin:14px 0 0}
+  .hero p{font-size:18px;color:var(--ink-2);margin-top:14px;max-width:520px}
+
+  .progress{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:16px}
+  .bar{flex:1;height:10px;background:var(--yellow-soft);border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--yellow);border-radius:999px;transition:width .4s}
+  .progress b{font-family:'Fraunces',serif;font-weight:600;font-size:18px;white-space:nowrap}
+
+  .lessons{display:grid;gap:14px;padding:14px 0 60px}
+  .lesson{display:flex;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px;text-decoration:none;transition:transform .16s,box-shadow .16s;box-shadow:0 8px 24px rgba(42,39,34,.04)}
+  .lesson:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(42,39,34,.08)}
+  .badge{width:54px;height:54px;flex:none;border-radius:16px;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:600;font-size:24px;color:#fff}
+  .b1{background:var(--coral)}.b2{background:var(--teal)}.b3{background:var(--lilac)}.b4{background:#E0A92E}.b5{background:var(--ink)}
+  .lesson .body{flex:1;min-width:0}
+  .lesson h3{font-family:'Fraunces',serif;font-weight:600;font-size:20px}
+  .lesson .meta{font-size:13px;color:var(--muted);margin-top:3px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .status{flex:none;font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px;color:var(--muted)}
+  .status .tick{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:13px;color:transparent}
+  .lesson.done .status{color:var(--teal)}
+  .lesson.done .status .tick{background:var(--teal);border-color:var(--teal);color:#fff}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 50px;text-align:center;color:var(--muted);font-size:14px}
+  footer a{color:var(--ink-2);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span class="d"></span>Курс молодого птенца <span>· be smart</span></div></div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dash"></span>Личный кабинет</div>
+    <h1 class="serif">С возвращением, птенец 🐣</h1>
+    <p>5 коротких шагов, чтобы разложить жизнь с СДВГ по полочкам: без героизма, стыда и попытки стать идеальным человеком к четвергу. Проходи в своём темпе — прогресс сохранится автоматически.</p>
+    <div class="progress">
+      <div class="bar"><i id="bar"></i></div>
+      <b id="ptext">0 из 5</b>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="lessons" id="lessons">
+    <a class="lesson" data-id="1" href="lesson-1.html">
+      <div class="badge b1">1</div>
+      <div class="body"><h3>Мультимодальный подход</h3><div class="meta">короткое видео · маленькое действие</div></div>
+      <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
+    </a>
+    <a class="lesson" data-id="2" href="lesson-2.html">
+      <div class="badge b2">2</div>
+      <div class="body"><h3>Медикаментозная поддержка</h3><div class="meta">короткое видео · маленькое действие</div></div>
+      <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
+    </a>
+    <a class="lesson" data-id="3" href="lesson-3.html">
+      <div class="badge b3">3</div>
+      <div class="body"><h3>Исполнительные навыки</h3><div class="meta">короткое видео · маленькое действие</div></div>
+      <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
+    </a>
+    <a class="lesson" data-id="4" href="lesson-4.html">
+      <div class="badge b4">4</div>
+      <div class="body"><h3>Коморбидные состояния</h3><div class="meta">короткое видео · маленькое действие</div></div>
+      <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
+    </a>
+    <a class="lesson" data-id="5" href="lesson-5.html">
+      <div class="badge b5">5</div>
+      <div class="body"><h3>Тренинг навыков</h3><div class="meta">короткое видео · маленькое действие</div></div>
+      <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
+    </a>
+  </div>
+</div>
+
+<footer><div class="wrap"><a href="https://t.me/dr_gruzdeva">Вопросы и помощь — в Telegram</a> · © Gruzdeva V. A.</div></footer>
+
+<script>
+  // прогресс хранится в браузере, без логина
+  function load(){ try{ return JSON.parse(localStorage.getItem('ptenec_progress')||'{}'); }catch(e){ return {}; } }
+  var done = load(), total = 5, count = 0;
+  document.querySelectorAll('.lesson').forEach(function(el){
+    var id = el.getAttribute('data-id');
+    if(done[id]){ el.classList.add('done'); el.querySelector('.lbl').textContent='Пройдено'; count++; }
+  });
+  document.getElementById('ptext').textContent = count + ' из ' + total;
+  document.getElementById('bar').style.width = (count/total*100) + '%';
+</script>
+
+</body>
+</html>

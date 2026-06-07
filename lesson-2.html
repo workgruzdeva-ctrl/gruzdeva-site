@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шаг 2. Медикаменты — Курс молодого птенца</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#FCF8F1;--card:#FFFFFF;--ink:#2A2722;--ink-2:#5E5950;--muted:#938C7F;
+    --coral:#F0765B;--coral-soft:#FCE7DF;--teal:#2E9C8E;--teal-soft:#DBF0EC;
+    --yellow:#FFC93C;--yellow-soft:#FFF1CC;--lilac:#8E7BD6;--lilac-soft:#EBE6FA;--line:#EFE8DC;
+    --step:var(--teal);--step-soft:var(--teal-soft); /* цвет этого шага */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
+  .serif{font-family:'Fraunces',serif}
+  a{color:inherit}
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(252,248,241,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+  .back{font-weight:700;font-size:15px;text-decoration:none;color:var(--ink-2);display:inline-flex;gap:8px;align-items:center}
+  .back:hover{color:var(--coral)}
+  .brand{font-weight:800}.brand .d{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--yellow);margin-right:7px;vertical-align:middle}
+
+  .head{padding:42px 0 8px}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--step)}
+  .eyebrow .dash{width:24px;height:2px;background:var(--step);border-radius:2px}
+  .head h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,5.4vw,46px);line-height:1.04;margin-top:14px}
+
+  /* video */
+  .video{margin:26px 0 8px;border-radius:22px;overflow:hidden;background:#000;aspect-ratio:16/9;position:relative}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video .ph{position:absolute;inset:0;display:grid;place-items:center;background:var(--step-soft);color:var(--step);text-align:center;font-weight:600;padding:20px}
+  .video .ph small{display:block;color:var(--ink-2);font-weight:500;margin-top:8px;font-size:13px}
+
+  section{padding:24px 0}
+  .lead{font-size:18px;color:var(--ink-2)}
+  h2.serif{font-family:'Fraunces',serif;font-weight:600;font-size:26px;margin-bottom:10px}
+
+  .action{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--step);border-radius:18px;padding:24px 26px;margin-top:8px}
+  .action .tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--step)}
+  .action h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:10px 0 6px}
+  .action p{font-size:17px;color:var(--ink-2)}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;font:inherit;font-weight:700;text-decoration:none;border-radius:999px;padding:15px 28px;font-size:16px;transition:transform .14s,box-shadow .14s}
+  .btn:active{transform:translateY(1px)}
+  .btn-done{background:var(--step);color:#fff}
+  .btn-done.is-done{background:var(--teal)}
+  .btn-done:hover{transform:translateY(-2px)}
+
+  .navrow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 0 60px;border-top:1px solid var(--line);margin-top:30px}
+  .navrow a{font-weight:700;text-decoration:none;color:var(--ink-2);display:inline-flex;gap:8px;align-items:center}
+  .navrow a:hover{color:var(--coral)}
+  .navrow a.disabled{opacity:.35;pointer-events:none}
+  .navrow .next{color:var(--coral)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 46px;text-align:center;color:var(--muted);font-size:14px}
+  footer a{color:var(--ink-2);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <a class="back" href="course-home.html">← Ко всем шагам</a>
+  <span class="brand"><span class="d"></span>be smart</span>
+</div></div>
+
+<div class="wrap">
+  <div class="head">
+    <div class="eyebrow"><span class="dash"></span>Шаг 2 из 5</div>
+    <h1 class="serif">Медикаментозная поддержка</h1>
+  </div>
+
+  <!-- ВИДЕО: вставь ссылку embed (YouTube/Vimeo/Kinescope) в src и удали блок .ph -->
+  <div class="video">
+    <!-- <iframe src="ССЫЛКА_НА_ВИДЕО" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+    <div class="ph">▶ Здесь будет видео урока<small>YouTube / Vimeo / Kinescope — вставить embed-ссылку в код</small></div>
+  </div>
+
+  <section>
+    <p class="lead">Лекарства при СДВГ — это не «волшебная таблетка» и не зло. Это один из инструментов, который у одних работает отлично, у других — никак, а у третьих помогает только в паре с навыками. В этом видео — что важно знать, к кому идти и какие мифы про лекарства мешают чаще всего. Я не назначаю, моя задача — объяснить и сориентировать.</p>
+  </section>
+
+  <section>
+    <div class="action">
+      <span class="tag">🐣 Действие на сегодня</span>
+      <h3>Найди одного специалиста</h3>
+      <p>Поищи сегодня в своём городе или онлайн психиатра, который работает с СДВГ у взрослых. Не для записи — просто чтобы знать, к кому идти. Сохрани контакт в заметках. Если уже есть свой специалист — отметь это и подумай, есть ли вопросы, которые давно хотела задать.</p>
+    </div>
+  </section>
+
+  <div style="text-align:center;padding:8px 0 4px">
+    <button class="btn btn-done" id="doneBtn" data-id="2">Отметить шаг пройденным ✓</button>
+  </div>
+
+  <div class="navrow">
+    <a class="prev" href="lesson-1.html">← Мультимодальный подход</a>
+    <a class="next" href="lesson-3.html">Следующий: исполнительные навыки →</a>
+  </div>
+</div>
+
+<footer><div class="wrap"><a href="https://t.me/dr_gruzdeva">Застряла или нужен пример? Напиши в Telegram</a> · © Gruzdeva V. A.</div></footer>
+
+<script>
+  function load(){ try{ return JSON.parse(localStorage.getItem('ptenec_progress')||'{}'); }catch(e){ return {}; } }
+  function save(o){ localStorage.setItem('ptenec_progress', JSON.stringify(o)); }
+  var btn = document.getElementById('doneBtn');
+  var id = btn.getAttribute('data-id');
+  var done = load();
+  function render(){
+    if(done[id]){ btn.classList.add('is-done'); btn.textContent='Пройдено ✓ (снять отметку)'; }
+    else { btn.classList.remove('is-done'); btn.textContent='Отметить шаг пройденным ✓'; }
+  }
+  btn.addEventListener('click', function(){ done[id] = !done[id]; save(done); render(); });
+  render();
+</script>
+
+</body>
+</html>
