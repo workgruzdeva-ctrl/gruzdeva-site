@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Курс молодого птенца — с чего начать при СДВГ | Валентина Груздева</title>
+<meta name="description" content="Вводный курс для тех, кто только узнал про СДВГ. 5 шагов, видео по 5–7 минут, в своём темпе.">
+<meta property="og:title" content="Курс молодого птенца — с чего начать при СДВГ">
+<meta property="og:description" content="Ты только узнала про СДВГ — и непонятно, за что хвататься. За вечер разложим всё по полочкам и выберем первый шаг.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FCF8F1;
+    --card:#FFFFFF;
+    --ink:#2A2722;
+    --ink-2:#5E5950;
+    --muted:#938C7F;
+    --coral:#F0765B;
+    --coral-soft:#FCE7DF;
+    --teal:#2E9C8E;
+    --teal-soft:#DBF0EC;
+    --yellow:#FFC93C;
+    --yellow-soft:#FFF1CC;
+    --lilac:#8E7BD6;
+    --lilac-soft:#EBE6FA;
+    --line:#EFE8DC;
+    --r:22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 36px}
+  section{padding:72px 0}
+  .serif{font-family:'Fraunces',serif}
+  h1,h2,h3{letter-spacing:-0.025em}
+  .eyebrow{display:inline-flex;align-items:center;gap:12px;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:var(--coral)}
+  .eyebrow .dash{width:26px;height:2px;background:var(--coral);border-radius:2px}
+  .eyebrow.teal{color:var(--teal)} .eyebrow.teal .dash{background:var(--teal)}
+  .eyebrow.lilac{color:var(--lilac)} .eyebrow.lilac .dash{background:var(--lilac)}
+  .muted{color:var(--ink-2)}
+  .squiggle{display:inline-block;color:var(--yellow)}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;font:inherit;font-weight:700;text-decoration:none;border-radius:999px;padding:16px 30px;font-size:17px;transition:transform .14s,box-shadow .14s;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn-coral{background:var(--coral);color:#fff}
+  .btn-coral:hover{box-shadow:0 12px 26px rgba(240,118,91,.32);transform:translateY(-2px)}
+  .btn-ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-sm{padding:10px 20px;font-size:15px}
+  .btn .a{font-size:18px;line-height:1}
+
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:40;background:rgba(252,248,241,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
+  .brand{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+  .brand .d{width:12px;height:12px;border-radius:50%;background:var(--yellow)}
+  .brand span{color:var(--coral)}
+
+  /* hero */
+  .hero{padding-top:54px;padding-bottom:48px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(44px,6.2vw,76px);line-height:1.0;margin:20px 0 0}
+  .hero h1 .hl{position:relative;white-space:nowrap}
+  .hero h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:6px;height:18px;background:var(--yellow);z-index:-1;border-radius:4px;transform:rotate(-1deg)}
+  .hero .lead{font-size:21px;color:var(--ink-2);max-width:520px;margin-top:24px;line-height:1.5}
+  .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+  .pill{border-radius:999px;padding:9px 17px;font-size:14px;font-weight:600}
+  .pill.c1{background:var(--coral-soft);color:#C24A30}
+  .pill.c2{background:var(--teal-soft);color:#1F6F64}
+  .pill.c3{background:var(--lilac-soft);color:#5A47A0}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;align-items:center}
+
+  /* hero art — soft blob + new chick */
+  .hero-art{position:relative;display:grid;place-items:center;aspect-ratio:1/1;padding:20px}
+  .blob{position:absolute;inset:0;z-index:1}
+  .hero-art svg.chick{position:relative;z-index:2;width:78%;height:auto;filter:drop-shadow(0 16px 24px rgba(240,118,91,.16))}
+  .float-star{position:absolute;z-index:3}
+  .float-star.s1{top:8%;right:14%}
+  .float-star.s2{bottom:14%;left:8%}
+  .float-star.s3{top:40%;left:2%}
+
+  /* problem band — soft coral, not heavy */
+  .band{background:var(--coral-soft)}
+  .band h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,4.2vw,46px);line-height:1.06;max-width:820px;color:var(--ink)}
+  .band p{font-size:20px;color:var(--ink-2);max-width:740px;margin-top:20px;line-height:1.5}
+
+  /* what is */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .two h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,4vw,46px);line-height:1.05;margin-top:16px}
+  .two p{font-size:19px;color:var(--ink-2);margin-top:20px;line-height:1.55}
+  .what-card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:34px;display:grid;gap:14px;box-shadow:0 16px 40px rgba(42,39,34,.05)}
+  .what-row{display:flex;align-items:center;gap:16px;font-size:18px;font-weight:600}
+  .what-row .ic{width:48px;height:48px;flex:none;border-radius:14px;display:grid;place-items:center}
+  .what-row .ic svg{width:24px;height:24px}
+  .ic.k1{background:var(--coral-soft);color:var(--coral)}
+  .ic.k2{background:var(--teal-soft);color:var(--teal)}
+  .ic.k3{background:var(--yellow-soft);color:#C9930B}
+  .ic.k4{background:var(--lilac-soft);color:var(--lilac)}
+
+  /* program */
+  .sec-head{text-align:center;max-width:700px;margin:0 auto 48px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,4.4vw,54px);line-height:1.03;margin-top:14px}
+  .sec-head p{font-size:19px;color:var(--ink-2);margin-top:16px}
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:30px 30px 32px;transition:transform .18s,box-shadow .18s;box-shadow:0 10px 30px rgba(42,39,34,.04)}
+  .step:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(42,39,34,.09)}
+  .step.full{grid-column:1 / -1;display:flex;align-items:center;gap:28px}
+  .step .badge{width:60px;height:60px;flex:none;border-radius:18px;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:600;font-size:28px;color:#fff}
+  .b1{background:var(--coral)} .b2{background:var(--teal)} .b3{background:var(--lilac)} .b4{background:#E0A92E} .b5{background:var(--ink)}
+  .step h3{font-family:'Fraunces',serif;font-weight:600;font-size:25px;margin-top:18px;letter-spacing:-.02em}
+  .step.full h3{margin-top:0}
+  .step p{font-size:17px;color:var(--ink-2);margin-top:9px}
+  .step .meta{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .step .meta .dot{width:6px;height:6px;border-radius:50%;background:var(--yellow)}
+
+  /* how */
+  .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .how-card{border-radius:22px;padding:32px 30px}
+  .how-card.h1{background:var(--coral-soft)} .how-card.h2{background:var(--teal-soft)} .how-card.h3{background:var(--lilac-soft)}
+  .how-card .num{font-family:'Fraunces',serif;font-weight:600;font-size:48px;line-height:0.8}
+  .how-card.h1 .num{color:var(--coral)} .how-card.h2 .num{color:var(--teal)} .how-card.h3 .num{color:var(--lilac)}
+  .how-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin-top:16px}
+  .how-card p{font-size:16px;color:var(--ink-2);margin-top:8px}
+
+  /* author */
+  .author-wrap{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:46px;display:grid;grid-template-columns:180px 1fr;gap:42px;align-items:center;box-shadow:0 16px 44px rgba(42,39,34,.05)}
+  .author-ph{width:180px;height:180px;border-radius:24px;background:var(--teal-soft);display:grid;place-items:center;color:var(--teal);font-size:14px;overflow:hidden}
+  .author-ph img{width:100%;height:100%;object-fit:cover}
+  .author-wrap h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,3.6vw,42px);line-height:1.02}
+  .author-wrap .role{font-size:19px;color:var(--ink-2);margin-top:14px;max-width:540px;line-height:1.5}
+  .creds{list-style:none;display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+  .creds li{border-radius:999px;padding:7px 15px;font-size:13px;font-weight:600}
+  .creds li:nth-child(1){background:var(--coral-soft);color:#C24A30}
+  .creds li:nth-child(2){background:var(--teal-soft);color:#1F6F64}
+  .creds li:nth-child(3){background:var(--lilac-soft);color:#5A47A0}
+  .creds li:nth-child(4){background:var(--yellow-soft);color:#B5850A}
+
+  /* price */
+  .price-wrap{background:linear-gradient(145deg,#FFE8B8,#FFD27A 55%,#FFC93C);border-radius:32px;padding:56px;text-align:center;position:relative;overflow:hidden}
+  .price-wrap .eyebrow{color:#A86A12}.price-wrap .eyebrow .dash{background:#A86A12}
+  .price-tag{font-family:'Fraunces',serif;font-weight:600;font-size:96px;line-height:0.9;margin-top:14px;color:var(--ink)}
+  .price-tag small{font-family:'Inter',sans-serif;font-size:18px;color:#8A6A1E;font-weight:600;display:block;margin-top:10px;letter-spacing:0}
+  .incl{list-style:none;max-width:460px;margin:30px auto 0;display:grid;gap:12px;text-align:left}
+  .incl li{padding-left:40px;position:relative;font-size:18px;font-weight:600;color:var(--ink)}
+  .incl li::before{content:"";position:absolute;left:0;top:2px;width:25px;height:25px;border-radius:50%;background:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12l4 4 10-10' stroke='%23FFC93C' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-size:17px;background-repeat:no-repeat;background-position:center}
+  .price-wrap .btn{margin-top:34px}
+  .price-wrap .btn-coral{background:var(--ink)}
+  .price-wrap .btn-coral:hover{box-shadow:0 12px 26px rgba(42,39,34,.28)}
+
+  /* bridge */
+  .bridge{background:var(--teal);color:#fff;border-radius:30px;padding:50px 52px;display:grid;grid-template-columns:1fr auto;gap:36px;align-items:center;position:relative;overflow:hidden}
+  .bridge .eyebrow{color:#A7E3D9}.bridge .eyebrow .dash{background:#A7E3D9}
+  .bridge h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,3.4vw,40px);line-height:1.04;margin-top:12px}
+  .bridge p{font-size:18px;color:rgba(255,255,255,.86);margin-top:14px;max-width:600px}
+  .bridge .btn-coral{background:#fff;color:var(--teal)}
+  .bridge .star{width:128px;flex:none}
+
+  /* faq */
+  .faq-head{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,4.2vw,50px);text-align:center;margin-bottom:40px}
+  details{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:0 26px;margin-bottom:11px;transition:border-color .18s}
+  details[open]{border-color:var(--coral)}
+  summary{cursor:pointer;list-style:none;padding:22px 0;font-weight:700;font-size:19px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--coral);font-weight:600;font-size:26px;font-family:'Fraunces',serif}
+  details[open] summary::after{content:"–"}
+  .ans{padding:0 0 22px;color:var(--ink-2);font-size:17px;line-height:1.55;max-width:800px}
+
+  footer{border-top:1px solid var(--line);padding:42px 0 56px;text-align:center;color:var(--muted)}
+  footer .links{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+  footer a{color:var(--ink-2);text-decoration:none;font-weight:600;font-size:16px}
+  footer a:hover{color:var(--coral)}
+  footer .cp{font-size:14px}
+
+  @media(max-width:860px){
+    .wrap{padding:0 22px}
+    section{padding:54px 0}
+    .hero-grid,.two,.author-wrap,.bridge{grid-template-columns:1fr;gap:30px}
+    .hero-art{max-width:340px;margin:0 auto}
+    .steps,.how{grid-template-columns:1fr}
+    .step.full{flex-direction:column;align-items:flex-start;gap:14px}
+    .author-ph{width:130px;height:130px}
+    .author-wrap{padding:30px;text-align:center;justify-items:center}.creds{justify-content:center}
+    .bridge{text-align:center;justify-items:center}.bridge .star{display:none}
+    .price-wrap{padding:40px 26px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="d"></span>Груздева <span>· be smart</span></div>
+    <a class="btn btn-coral btn-sm" data-buy href="#">Купить · €25 <span class="a">→</span></a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dash"></span>Вводный курс · СДВГ</div>
+        <h1 class="serif">Курс молодого <span class="hl">птенца</span></h1>
+        <p class="lead">Ты только узнала про СДВГ — и непонятно, за что хвататься. За вечер разложим всё по полочкам и выберем первый шаг.</p>
+        <div class="pills">
+          <span class="pill c1">5 шагов</span>
+          <span class="pill c2">видео по 5–7 минут</span>
+          <span class="pill c3">в своём темпе</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-coral" data-buy href="#">Купить за €25 <span class="a">→</span></a>
+          <a class="btn btn-ghost" href="#program">Что внутри</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <!-- soft layered blob -->
+        <svg class="blob" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path fill="#DBF0EC" d="M324 134c34 50 28 124-16 168s-128 56-186 26-86-104-66-164S160 8 220 20s70 64 104 114z"/>
+          <path fill="#FFF1CC" opacity=".85" d="M300 150c26 44 18 104-22 138s-110 44-156 16-66-92-44-142S160 56 208 70s66 36 92 80z"/>
+        </svg>
+        <!-- NEW CHICK -->
+        <svg class="chick" viewBox="0 0 300 320" aria-label="Птенец">
+          <ellipse cx="150" cy="298" rx="78" ry="13" fill="#2A2722" opacity=".08"/>
+          <!-- feet -->
+          <path d="M126 268 l-10 26 M126 268 l4 26 M126 268 l16 22" stroke="#F0765B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M178 268 l-14 24 M178 268 l0 27 M178 268 l14 24" stroke="#F0765B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- tail tuft -->
+          <path d="M232 168 q40 -10 44 -36 q-30 2 -48 22z" fill="#FFD879" stroke="#2A2722" stroke-width="4" stroke-linejoin="round"/>
+          <!-- body -->
+          <path d="M150 70 C223 70 258 130 258 188 C258 252 214 286 150 286 C86 286 42 252 42 188 C42 130 77 70 150 70 Z" fill="#FFD24A" stroke="#2A2722" stroke-width="5" stroke-linejoin="round"/>
+          <!-- belly highlight -->
+          <path d="M150 130 C195 130 214 168 214 200 C214 240 186 264 150 264 C114 264 86 240 86 200 C86 168 105 130 150 130 Z" fill="#FFE08A" opacity=".7"/>
+          <!-- head tuft -->
+          <path d="M150 70 C146 44 150 26 168 18 C158 34 162 52 158 72 Z" fill="#FFD24A" stroke="#2A2722" stroke-width="5" stroke-linejoin="round"/>
+          <!-- wing -->
+          <path d="M70 188 C50 200 50 232 74 244 C84 224 84 206 86 196 Z" fill="#FFC93C" stroke="#2A2722" stroke-width="4.5" stroke-linejoin="round"/>
+          <!-- cheeks -->
+          <ellipse cx="104" cy="206" rx="16" ry="10" fill="#F9A38B" opacity=".75"/>
+          <ellipse cx="196" cy="206" rx="16" ry="10" fill="#F9A38B" opacity=".75"/>
+          <!-- eyes -->
+          <circle cx="124" cy="178" r="11" fill="#2A2722"/>
+          <circle cx="176" cy="178" r="11" fill="#2A2722"/>
+          <circle cx="128" cy="174" r="3.6" fill="#fff"/>
+          <circle cx="180" cy="174" r="3.6" fill="#fff"/>
+          <!-- beak -->
+          <path d="M138 196 L162 196 L150 212 Z" fill="#F0765B" stroke="#2A2722" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+        <svg class="float-star s1" width="40" height="40" viewBox="0 0 40 40"><path d="M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#FFC93C" stroke="#2A2722" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        <svg class="float-star s2" width="30" height="30" viewBox="0 0 40 40"><path d="M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#F0765B" stroke="#2A2722" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        <svg class="float-star s3" width="22" height="22" viewBox="0 0 40 40"><path d="M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#8E7BD6" stroke="#2A2722" stroke-width="2.4" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="band">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dash"></span>Знакомо?</div>
+    <h2 class="serif" style="margin-top:18px">Диагноз или догадка есть. А&nbsp;дальше&nbsp;— каша.</h2>
+    <p>Таблетки или нет? Психолог, психиатр или коуч? Что из этого правда, а что миф из интернета? Голова кругом, информации много, а ясности ноль. Это нормально — и именно с этого места мы и начнём.</p>
+  </div>
+</section>
+
+<!-- WHAT IS -->
+<section>
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <div class="eyebrow teal"><span class="dash"></span>Что это за курс</div>
+        <h2 class="serif">База, которую я обычно объясняю на&nbsp;первой встрече.</h2>
+        <p>5 коротких видео по 5–7 минут. Можно смотреть с телефона, без «выделить целый вечер»: что такое СДВГ, какие есть варианты помощи и с чего начать именно тебе.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-row"><span class="ic k1"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="3" stroke="currentColor" stroke-width="2"/><path d="M10 9l5 2.5-5 2.5z" fill="currentColor"/></svg></span>5 видео по 5–7 минут</div>
+        <div class="what-row"><span class="ic k2"><svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="2"/></svg></span>5 страниц-действий «что сделать сегодня»</div>
+        <div class="what-row"><span class="ic k3"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4 7-9V6l-7-3-7 3v6c0 5 7 9 7 9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>Доступ остаётся навсегда</div>
+        <div class="what-row"><span class="ic k4"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="2.5" width="10" height="19" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/></svg></span>Смотришь с телефона в любом темпе</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow" style="justify-content:center"><span class="dash"></span>Программа</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="badge b1">1</div>
+        <h3>Мультимодальный подход</h3>
+        <p>Из чего складывается жизнь с СДВГ — чтобы перестать искать одну волшебную таблетку.</p>
+        <span class="meta"><span class="dot"></span>видео 5–7 мин</span>
+      </div>
+      <div class="step">
+        <div class="badge b2">2</div>
+        <h3>Лекарства</h3>
+        <p>Что важно знать, к кому идти и какие мифы мешают. Без назначений — я объясняю и ориентирую.</p>
+        <span class="meta"><span class="dot"></span>видео 5–7 мин</span>
+      </div>
+      <div class="step">
+        <div class="badge b3">3</div>
+        <h3>Исполнительные навыки</h3>
+        <p>Почему дело не в силе воли и что на самом деле «ломается» в СДВГ-мозге.</p>
+        <span class="meta"><span class="dot"></span>видео 5–7 мин</span>
+      </div>
+      <div class="step">
+        <div class="badge b4">4</div>
+        <h3>Коморбидности</h3>
+        <p>Почему «чистый» СДВГ — редкость, и при чём тут тревога, депрессия и сон.</p>
+        <span class="meta"><span class="dot"></span>видео 5–7 мин</span>
+      </div>
+      <div class="step full">
+        <div class="badge b5">5</div>
+        <div>
+          <h3>Тренинг навыков</h3>
+          <p>Что реально помогает и с чего начать на этой неделе — без героизма и бесконечных списков дел.</p>
+          <span class="meta"><span class="dot"></span>видео 5–7 мин · страница-действие</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow teal" style="justify-content:center"><span class="dash"></span>Как устроено</div>
+      <h2 class="serif">Три шага — и&nbsp;ты внутри</h2>
+    </div>
+    <div class="how">
+      <div class="how-card h1"><div class="num">1</div><h3>Оплачиваешь</h3><p>Картой (₽ или €) через Telegram — пара кликов, без регистраций.</p></div>
+      <div class="how-card h2"><div class="num">2</div><h3>Получаешь доступ</h3><p>Сразу после оплаты приходит ссылка на курс.</p></div>
+      <div class="how-card h3"><div class="num">3</div><h3>Смотришь в своём темпе</h3><p>Доступ остаётся навсегда. Без дедлайнов и без «успеть».</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section>
+  <div class="wrap">
+    <div class="author-wrap">
+      <div class="author-ph"><!-- <img src="valya.jpg" alt="Валентина Груздева"> -->фото</div>
+      <div>
+        <div class="eyebrow lilac"><span class="dash"></span>Кто ведёт</div>
+        <h2 class="serif" style="margin-top:12px">Валентина Груздева</h2>
+        <p class="role">Врач и нейрофизиолог. Перевожу с умного на полезный — чтобы ты понимала, куда и зачем идёшь.</p>
+        <ul class="creds">
+          <li>ADHD-CCSP</li>
+          <li>врач-нейрофизиолог</li>
+          <li>co-founder INCF</li>
+          <li>автор книги «Внимание и память»</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section>
+  <div class="wrap">
+    <div class="price-wrap">
+      <div class="eyebrow" style="justify-content:center"><span class="dash"></span>Стоимость</div>
+      <div class="price-tag">€25<small>разово · доступ навсегда</small></div>
+      <ul class="incl">
+        <li>5 видео-уроков по 5–7 минут</li>
+        <li>5 страниц-действий «что сделать сегодня»</li>
+        <li>доступ остаётся у тебя навсегда</li>
+        <li>можно смотреть с телефона в любом темпе</li>
+      </ul>
+      <a class="btn btn-coral" data-buy href="#">Купить за €25 <span class="a">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- BRIDGE -->
+<section>
+  <div class="wrap">
+    <div class="bridge">
+      <div>
+        <div class="eyebrow"><span class="dash"></span>А что дальше?</div>
+        <h2 class="serif">Хочется проходить это со&nbsp;стаей?</h2>
+        <p>Курс — это первый шаг. Дальше — групповой тренинг и клуб, где со своим СДВГ-мозгом разбираются вместе и не бросают на полпути.</p>
+        <a class="btn btn-coral" style="margin-top:24px" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/group.html">Узнать про группу <span class="a">→</span></a>
+      </div>
+      <svg class="star" viewBox="0 0 120 120" aria-hidden="true"><path d="M60 6l15 39 39 15-39 15-15 39-15-39L6 60l39-15z" fill="#FFC93C" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <h2 class="faq-head serif">Частые вопросы</h2>
+    <details><summary>Нужен ли уже поставленный диагноз?</summary><div class="ans">Нет. Курс подойдёт и если ты только подозреваешь у себя СДВГ — он как раз помогает понять, что делать дальше.</div></details>
+    <details><summary>Сколько длится курс?</summary><div class="ans">5 коротких уроков по 5–7 минут — можно пройти за вечер или растянуть на неделю. Как тебе удобно.</div></details>
+    <details><summary>Доступ навсегда?</summary><div class="ans">Да. Купила один раз — возвращаешься к урокам когда угодно.</div></details>
+    <details><summary>Как оплатить?</summary><div class="ans">Картой в рублях или евро через Telegram. Без сложных регистраций.</div></details>
+    <details><summary>Это заменяет психиатра?</summary><div class="ans">Нет. Я не назначаю лекарства — это к психиатру. Курс даёт карту первых шагов и объясняет, как всё устроено, чтобы ты понимала, куда и зачем идти.</div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://t.me/dr_gruzdeva">Telegram</a>
+      <a href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/index.html">Сайт</a>
+      <a href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/group.html">Группа</a>
+    </div>
+    <div class="cp">© Gruzdeva V.А. · be smart · work.gruzdeva@gmail.com</div>
+  </div>
+</footer>
+
+<script>
+  /* ↓↓↓ ВСТАВЬ СЮДА ССЫЛКУ ОПЛАТЫ TRIBUTE ↓↓↓ */
+  const TRIBUTE_LINK = "https://t.me/tribute/app?startapp=ВСТАВЬ_СВОЮ_ССЫЛКУ";
+  /* ↑↑↑ одна строка — и все кнопки «Купить» заработают ↑↑↑ */
+  document.querySelectorAll('[data-buy]').forEach(function(a){ a.href = TRIBUTE_LINK; });
+</script>
+
+</body>
+</html>
