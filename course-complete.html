@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Поздравляю! Курс молодого птенца — пройден</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#FCF8F1;--card:#FFFFFF;--ink:#2A2722;--ink-2:#5E5950;--muted:#938C7F;
+    --coral:#F0765B;--coral-soft:#FCE7DF;--teal:#2E9C8E;--teal-soft:#DBF0EC;
+    --yellow:#FFC93C;--yellow-soft:#FFF1CC;--lilac:#8E7BD6;--lilac-soft:#EBE6FA;--line:#EFE8DC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:780px;margin:0 auto;padding:0 24px}
+  .serif{font-family:'Fraunces',serif}
+  a{color:inherit}
+
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(252,248,241,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+  .back{font-weight:700;font-size:15px;text-decoration:none;color:var(--ink-2)}
+  .back:hover{color:var(--coral)}
+  .brand{font-weight:800}.brand .d{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--yellow);margin-right:7px;vertical-align:middle}
+
+  /* HERO */
+  .hero{padding:60px 0 40px;text-align:center;position:relative}
+  .victory{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:500;
+    font-size:clamp(26px,4vw,38px);color:var(--coral);
+    margin-bottom:14px;
+    animation:pop .8s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes pop {
+    0%{transform:scale(.5) rotate(-6deg);opacity:0}
+    60%{transform:scale(1.1) rotate(3deg);opacity:1}
+    100%{transform:scale(1) rotate(0);opacity:1}
+  }
+  .bird{
+    width:200px;height:200px;margin:0 auto;
+    animation:bounce 2s ease-in-out infinite;
+    transform-origin:center bottom;
+    position:relative;
+  }
+  .bird svg{width:100%;height:auto;display:block;
+    filter:drop-shadow(0 14px 22px rgba(240,118,91,.20))}
+  @keyframes bounce {
+    0%,100%{transform:translateY(0) rotate(-2deg)}
+    25%{transform:translateY(-16px) rotate(3deg)}
+    50%{transform:translateY(0) rotate(-3deg)}
+    75%{transform:translateY(-8px) rotate(2deg)}
+  }
+  .aura{
+    position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+    width:300px;height:300px;z-index:-1;
+    background:radial-gradient(circle,rgba(255,201,60,.32) 0%,transparent 60%);
+    animation:pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100%{transform:translateX(-50%) scale(1);opacity:.6}
+    50%{transform:translateX(-50%) scale(1.18);opacity:1}
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(38px,6.5vw,58px);line-height:1;
+    margin:24px 0 16px;
+  }
+  .hero h1 em{font-style:italic;color:var(--coral);font-weight:500}
+  .hero .lead{
+    font-size:19px;color:var(--ink-2);max-width:520px;margin:0 auto;line-height:1.55;
+  }
+
+  /* certificate */
+  .cert{
+    background:linear-gradient(145deg,#FFE8B8,#FFD27A 55%,#FFC93C);
+    border-radius:28px;padding:36px 30px;text-align:center;
+    margin:36px 0;position:relative;overflow:hidden;
+  }
+  .cert::before,.cert::after{
+    content:'';position:absolute;
+    width:64px;height:64px;border-radius:50%;
+    background:rgba(255,255,255,.25);
+  }
+  .cert::before{top:-20px;left:-20px}
+  .cert::after{bottom:-20px;right:-20px;width:48px;height:48px}
+  .cert .stamp{
+    font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;
+    color:#A86A12;margin-bottom:10px;position:relative;
+  }
+  .cert h2{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(26px,4.4vw,38px);line-height:1.1;
+    color:var(--ink);position:relative;
+  }
+  .cert p{
+    font-size:16px;color:#5E4514;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;
+    position:relative;
+  }
+
+  /* next steps */
+  section{padding:24px 0}
+  .sec-head{text-align:center;margin-bottom:24px}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+  .eyebrow .dash{width:24px;height:2px;background:var(--teal);border-radius:2px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,4vw,38px);line-height:1.08;margin-top:12px}
+  .sec-head p{font-size:17px;color:var(--ink-2);max-width:520px;margin:12px auto 0;line-height:1.5}
+
+  .next-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+  @media(max-width:640px){.next-grid{grid-template-columns:1fr}}
+  .next-card{
+    background:var(--card);border:1.5px solid var(--line);border-radius:22px;
+    padding:28px 26px;text-decoration:none;color:var(--ink);
+    display:block;transition:transform .16s,box-shadow .16s;
+    box-shadow:0 8px 24px rgba(42,39,34,.04);
+    position:relative;
+  }
+  .next-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(42,39,34,.08)}
+  .next-card .nc-emoji{font-size:32px;line-height:1;margin-bottom:8px}
+  .next-card .nc-tag{font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:6px}
+  .next-card.green .nc-tag{color:var(--teal)}
+  .next-card.lilac .nc-tag{color:var(--lilac)}
+  .next-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.15;margin-bottom:8px}
+  .next-card p{font-size:15px;color:var(--ink-2);line-height:1.5}
+  .next-card .nc-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:14px;font-weight:700;font-size:14px;color:var(--coral);
+  }
+  .next-card.green .nc-cta{color:var(--teal)}
+  .next-card.lilac .nc-cta{color:var(--lilac)}
+
+  /* valya msg */
+  .valya{
+    background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--coral);
+    border-radius:20px;padding:24px 28px;margin:24px 0;
+    font-family:'Fraunces',serif;font-style:italic;font-weight:500;
+    font-size:17px;line-height:1.55;color:var(--ink);
+  }
+  .valya::before{
+    content:'— Валя';display:block;font-size:12px;font-style:normal;font-weight:700;
+    letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;
+  }
+
+  .footnav{
+    border-top:1px solid var(--line);margin-top:30px;padding:24px 0 50px;
+    display:flex;justify-content:center;gap:24px;flex-wrap:wrap;
+  }
+  .footnav a{color:var(--ink-2);text-decoration:none;font-weight:600;font-size:15px}
+  .footnav a:hover{color:var(--coral)}
+
+  /* конфетти */
+  .confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:1000;overflow:hidden}
+  .confetti{position:absolute;top:-50px;font-size:32px;animation:fall linear forwards;will-change:transform,opacity}
+  @keyframes fall{
+    0%{transform:translateY(0) rotate(0);opacity:1}
+    90%{opacity:1}
+    100%{transform:translateY(120vh) rotate(720deg);opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="back" href="course-home.html">← Ко всем шагам</a>
+    <span class="brand"><span class="d"></span>be smart</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="aura"></div>
+    <div class="victory">ПОЗДРАВЛЯЮ! 🎉</div>
+    <div class="bird">
+      <svg viewBox="0 0 300 320" aria-label="Птенец-выпускник">
+        <ellipse cx="150" cy="298" rx="78" ry="13" fill="#2A2722" opacity=".08"/>
+        <path d="M126 268 l-10 26 M126 268 l4 26 M126 268 l16 22" stroke="#F0765B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M178 268 l-14 24 M178 268 l0 27 M178 268 l14 24" stroke="#F0765B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M232 168 q40 -10 44 -36 q-30 2 -48 22z" fill="#FFD879" stroke="#2A2722" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M150 70 C223 70 258 130 258 188 C258 252 214 286 150 286 C86 286 42 252 42 188 C42 130 77 70 150 70 Z" fill="#FFD24A" stroke="#2A2722" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M150 130 C195 130 214 168 214 200 C214 240 186 264 150 264 C114 264 86 240 86 200 C86 168 105 130 150 130 Z" fill="#FFE08A" opacity=".7"/>
+        <!-- шапочка выпускника -->
+        <rect x="106" y="46" width="88" height="10" rx="2" fill="#2A2722"/>
+        <polygon points="98,46 202,46 150,18" fill="#2A2722"/>
+        <line x1="150" y1="18" x2="218" y2="32" stroke="#FFC93C" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="220" cy="34" r="6" fill="#FFC93C" stroke="#2A2722" stroke-width="2"/>
+        <!-- крыло -->
+        <path d="M70 188 C50 200 50 232 74 244 C84 224 84 206 86 196 Z" fill="#FFC93C" stroke="#2A2722" stroke-width="4.5" stroke-linejoin="round"/>
+        <ellipse cx="104" cy="206" rx="16" ry="10" fill="#F9A38B" opacity=".75"/>
+        <ellipse cx="196" cy="206" rx="16" ry="10" fill="#F9A38B" opacity=".75"/>
+        <circle cx="124" cy="178" r="11" fill="#2A2722"/>
+        <circle cx="176" cy="178" r="11" fill="#2A2722"/>
+        <circle cx="128" cy="174" r="3.6" fill="#fff"/>
+        <circle cx="180" cy="174" r="3.6" fill="#fff"/>
+        <path d="M138 196 L162 196 L150 212 Z" fill="#F0765B" stroke="#2A2722" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1 class="serif">Молодой птенец <em>вырос</em></h1>
+    <p class="lead">Ты прошла все 5 шагов курса. Теперь у тебя есть карта: что такое СДВГ, какие есть инструменты, и с чего начать именно сейчас.</p>
+  </section>
+
+  <div class="cert">
+    <div class="stamp">🎓 Курс пройден</div>
+    <h2 class="serif">Спасибо, что дошла до конца.</h2>
+    <p>Это правда не каждый делает. Большинство застревает на «надо бы как-нибудь разобраться» — а ты разобралась.</p>
+  </div>
+
+  <div class="valya">
+    Ты теперь знаешь больше, чем 90% людей с СДВГ через год после диагноза. Это не преувеличение — большинство годами ходят по кругу из мифов и советов.<br><br>
+    Что дальше — решать тебе. Курс — это карта. Дальше можно идти одной. Можно — со стаей. Я открыта для обоих вариантов.
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow"><span class="dash"></span>А дальше</div>
+      <h2 class="serif">Можно идти со стаей</h2>
+      <p>Курс — это про понимание. Группа и клуб — про то, как это понимание переводить в реальные изменения, не в одиночку.</p>
+    </div>
+
+    <div class="next-grid">
+      <a class="next-card green" href="group.html">
+        <div class="nc-emoji">🪶</div>
+        <div class="nc-tag">Групповой тренинг</div>
+        <h3>Стаей идти веселее</h3>
+        <p>6 встреч по средам. Маленькая группа, тренинг исполнительных навыков, поддержка между встречами в чате.</p>
+        <span class="nc-cta">Узнать про группу →</span>
+      </a>
+
+      <a class="next-card lilac" href="https://t.me/dr_gruzdeva" target="_blank" rel="noopener">
+        <div class="nc-emoji">💬</div>
+        <div class="nc-tag">Клуб и чат</div>
+        <h3>Поговорить и спросить</h3>
+        <p>Если остались вопросы, неясности или просто хочется поделиться, что зацепило — пиши в Telegram. Я отвечаю.</p>
+        <span class="nc-cta">Написать в Telegram →</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="footnav">
+    <a href="course-home.html">← К урокам курса</a>
+    <a href="index.html">Главный сайт</a>
+    <a href="https://t.me/dr_gruzdeva">Telegram</a>
+  </div>
+
+</div>
+
+<!-- Конфетти -->
+<div class="confetti-layer" id="confetti-layer"></div>
+
+<script>
+  /* конфетти */
+  const EMOJI = ['🎉','🎊','🐣','✨','🌟','💛','🧡','🎓','🪶','💫'];
+  function launch(n){
+    const layer = document.getElementById('confetti-layer');
+    for(let i=0;i<n;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.textContent = EMOJI[Math.floor(Math.random()*EMOJI.length)];
+      el.style.left = (Math.random()*100)+'vw';
+      el.style.fontSize = (22+Math.random()*22)+'px';
+      const dur = 3+Math.random()*3;
+      const delay = Math.random()*1.5;
+      el.style.animationDuration = dur+'s';
+      el.style.animationDelay = delay+'s';
+      layer.appendChild(el);
+      setTimeout(()=>el.remove(),(dur+delay)*1000+500);
+    }
+  }
+  setTimeout(()=>launch(40),100);
+  setTimeout(()=>launch(30),5500);
+
+  /* фанфары на первый клик */
+  let played = false;
+  function fanfare(){
+    if(played) return; played = true;
+    try{
+      const ac = new (window.AudioContext||window.webkitAudioContext)();
+      [{f:523,t:0},{f:659,t:.12},{f:784,t:.24},{f:1047,t:.42,d:.5}].forEach(n=>{
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type='sine'; o.frequency.value=n.f;
+        o.connect(g); g.connect(ac.destination);
+        const t0 = ac.currentTime+n.t;
+        const dur = n.d||.18;
+        g.gain.setValueAtTime(.0001,t0);
+        g.gain.exponentialRampToValueAtTime(.18,t0+.015);
+        g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+        o.start(t0); o.stop(t0+dur+.05);
+      });
+    }catch(e){}
+  }
+  document.addEventListener('click', fanfare, {once:false});
+  document.addEventListener('touchstart', fanfare, {once:false, passive:true});
+</script>
+
+</body>
+</html>

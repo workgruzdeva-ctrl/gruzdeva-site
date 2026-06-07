@@ -96,6 +96,13 @@
       <div class="status"><span class="tick">✓</span><span class="lbl">Начать</span></div>
     </a>
   </div>
+
+  <!-- Выпускная плашка — показывается когда все 5 пройдено -->
+  <a id="graduation" href="course-complete.html" style="display:none;background:linear-gradient(145deg,#FFE8B8,#FFD27A 55%,#FFC93C);border-radius:24px;padding:30px;margin:0 0 40px;text-decoration:none;color:var(--ink);text-align:center;box-shadow:0 14px 32px rgba(255,201,60,.32);transition:transform .15s">
+    <div style="font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#A86A12;margin-bottom:8px">🎓 Курс пройден</div>
+    <div style="font-family:'Fraunces',serif;font-weight:600;font-size:26px;line-height:1.1;margin-bottom:6px">Молодой птенец вырос</div>
+    <div style="font-size:15px;color:#5E4514">Тапни — посмотри финал и что дальше →</div>
+  </a>
 </div>
 
 <footer><div class="wrap"><a href="https://t.me/dr_gruzdeva">Вопросы и помощь — в Telegram</a> · © Gruzdeva V. A.</div></footer>
@@ -110,6 +117,7 @@
   });
   document.getElementById('ptext').textContent = count + ' из ' + total;
   document.getElementById('bar').style.width = (count/total*100) + '%';
+  if(count >= total){ document.getElementById('graduation').style.display = 'block'; }
 </script>
 
 </body>
