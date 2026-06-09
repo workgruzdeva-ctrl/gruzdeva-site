@@ -844,7 +844,7 @@
 <!-- Toast -->
 <div class="toast" id="toast">+0 баллов</div>
 
-<script src="mascot.js?v=4"></script>
+<script src="mascot.js?v=5"></script>
 <script>
 // ============ USER ID + NAME из URL ============
 const urlParams = new URLSearchParams(location.search);
@@ -860,8 +860,10 @@ const DEFAULT_STATE = {
   currentWeek: 1,
   // weekly group tasks — отмеченные на этой неделе (сброс в чт)
   weekly: { weekKey: '', items: {} },
-  // полностью выполненные недели (все 3 weekly task'а) — определяют стадию маскота
+  // полностью выполненные недели (все 3 weekly task'а) — для отчёта
   completedWeeks: [],
+  // накопительный счётчик отмеченных weekly-task'ов (по weekKey:taskId) — определяет стадию маскота
+  taskAwardKeys: [],
   // experiment — { weeks: { "YYYY-MM-DD" (thu): { strategy, days: { "YYYY-MM-DD": { tried, mood, note } } } } }
   experiment: { weeks: {}, viewWeek: null },
   // if-then plans
@@ -975,20 +977,25 @@ function ensureFreshWeek(){
 // Новая логика: стадия = количество ПОЛНОСТЬЮ выполненных недель.
 // Баллы остаются — но они только для геймификации, не определяют стадию.
 
-// Миграция: если у пользователя есть points, но completedWeeks пуст — переносим
-// стадию по старым порогам, чтобы не откатывать прогресс.
-(function migrateCompletedWeeks(){
+// Миграция: если у пользователя есть points/completedWeeks, но нет taskAwardKeys —
+// проставим столько «виртуальных» наград, чтобы стадия не откатилась.
+(function migrateStageData(){
   if (!Array.isArray(state.completedWeeks)) state.completedWeeks = [];
-  if (state.completedWeeks.length === 0 && state.points >= 80){
+  if (!Array.isArray(state.taskAwardKeys))  state.taskAwardKeys  = [];
+
+  if (state.taskAwardKeys.length === 0){
+    // считаем эффективную старую стадию (по completedWeeks или по баллам)
     const OLD_THRESHOLDS = [0, 80, 160, 240, 320, 400, 480];
-    let stage = 0;
+    let stageByPoints = 0;
     for (let i = OLD_THRESHOLDS.length - 1; i >= 0; i--){
-      if (state.points >= OLD_THRESHOLDS[i]){ stage = i; break; }
+      if (state.points >= OLD_THRESHOLDS[i]){ stageByPoints = i; break; }
     }
-    for (let i = 0; i < stage; i++){
-      state.completedWeeks.push(`migrated-${i}`);
+    const stageByWeeks = state.completedWeeks.length;
+    const targetStage = Math.max(stageByPoints, stageByWeeks);
+    for (let i = 0; i < targetStage; i++){
+      state.taskAwardKeys.push(`migrated-${i}`);
     }
-    saveState();
+    if (targetStage > 0) saveState();
   }
 })();
 
@@ -996,47 +1003,66 @@ function isWeekFullyDone(){
   return WEEKLY_TASKS.every(t => state.weekly.items?.[t.id]);
 }
 
-// Считает текущую стадию по completedWeeks.length, ограничена кол-вом MASCOTS
+// Стадия маскота = количество накопительных task-awards (с потолком MASCOTS.length-1)
 function currentStageIdx(){
-  return Math.min(state.completedWeeks.length, MASCOTS.length - 1);
+  return Math.min(state.taskAwardKeys.length, MASCOTS.length - 1);
 }
 
-// Подменяем функции из mascot.js — теперь стадия из completedWeeks, а progress — доля задач недели
+// Подменяем функции из mascot.js — теперь стадия растёт за каждую отмеченную task,
+// progress — насколько мы близко к следующей стадии (1/1 — следующая task = новая стадия)
 function findMascotStage(){ return currentStageIdx(); }
 function getMascotProgress(){
   const idx = currentStageIdx();
   const cur = MASCOTS[idx];
   const next = MASCOTS[idx + 1];
-  const doneTasks = WEEKLY_TASKS.filter(t => state.weekly.items?.[t.id]).length;
-  const progress = doneTasks / WEEKLY_TASKS.length;
+  // Каждая task = +1 стадия → внутри одной стадии прогресс 0 или 1 (показываем "1 задача до...")
   return {
     idx, cur, next: next || null,
-    progress,
-    untilNext: WEEKLY_TASKS.length - doneTasks,
-    doneTasks, totalTasks: WEEKLY_TASKS.length,
+    progress: next ? 0 : 1,  // прогресс-бар можно скрывать или держать на 0 — фактически рост дискретный
+    untilNext: next ? 1 : 0,
+    doneTasks: 0, totalTasks: 1,
   };
 }
 
-// Обновляет completedWeeks после клика на любую weekly task
-function updateCompletedWeeks(){
+// Награждает task (увеличивает накопительный счётчик стадий) и обновляет completedWeeks для отчёта.
+// Вызывается ПОСЛЕ изменения state.weekly.items (отметки или снятия).
+function processTaskChange(taskId, isNowDone){
   ensureFreshWeek();
   const wk = state.weekly.weekKey;
-  const idx = state.completedWeeks.indexOf(wk);
-  const beforeStage = currentStageIdx();
-  if (isWeekFullyDone()){
-    if (idx < 0){
-      state.completedWeeks.push(wk);
+  const awardKey = `${wk}:${taskId}`;
+
+  if (isNowDone){
+    // если эта пара (неделя+task) ещё не давала награду — начисляем стадию
+    if (!state.taskAwardKeys.includes(awardKey)){
+      const beforeStage = currentStageIdx();
+      state.taskAwardKeys.push(awardKey);
       saveState();
       const afterStage = currentStageIdx();
       if (afterStage > beforeStage && afterStage < MASCOTS.length){
         setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[afterStage].name}!`), 1500);
       }
     }
+  }
+  // при снятии галочки — стадия не уменьшается (счётчик taskAwardKeys остаётся)
+
+  // completedWeeks (для еженедельного отчёта)
+  const idx = state.completedWeeks.indexOf(wk);
+  if (isWeekFullyDone()){
+    if (idx < 0){ state.completedWeeks.push(wk); saveState(); }
   } else {
-    if (idx >= 0){
-      state.completedWeeks.splice(idx, 1);
-      saveState();
-    }
+    if (idx >= 0){ state.completedWeeks.splice(idx, 1); saveState(); }
+  }
+}
+
+// Backwards-compat alias — старый код вызывает updateCompletedWeeks()
+function updateCompletedWeeks(){
+  ensureFreshWeek();
+  const wk = state.weekly.weekKey;
+  const idx = state.completedWeeks.indexOf(wk);
+  if (isWeekFullyDone()){
+    if (idx < 0){ state.completedWeeks.push(wk); saveState(); }
+  } else {
+    if (idx >= 0){ state.completedWeeks.splice(idx, 1); saveState(); }
   }
 }
 
@@ -1057,12 +1083,7 @@ function renderMascot(){
   document.getElementById('mascotPts').textContent = state.points;
   document.getElementById('mascotBar').style.width = (info.progress * 100) + '%';
   if (info.next){
-    if (info.untilNext === 0){
-      document.getElementById('mascotNext').textContent = `неделя готова — отметь все 3 задачи`;
-    } else {
-      document.getElementById('mascotNext').textContent =
-        `${info.untilNext} из ${info.totalTasks} задач до «${info.next.name}»`;
-    }
+    document.getElementById('mascotNext').textContent = `следующая задача — «${info.next.name}»`;
   } else {
     document.getElementById('mascotNext').textContent = 'максимум! 🛡️';
   }
@@ -1108,11 +1129,12 @@ function renderWeekly(){
       if (wasDone){
         delete state.weekly.items[d.id];
         addPoints(-d.pts, d.text + ' — отменено');
+        processTaskChange(d.id, false);
       } else {
         state.weekly.items[d.id] = true;
         addPoints(d.pts, d.text);
+        processTaskChange(d.id, true);
       }
-      updateCompletedWeeks();
       renderMascot();
       renderWeekly();
     });
