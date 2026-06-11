@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Личный кабинет — мини-задачи и птенец</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FCF8F1;--card:#FFFFFF;--ink:#2A2722;--ink-2:#5E5950;--muted:#938C7F;
+    --coral:#F0765B;--coral-soft:#FCE7DF;--teal:#2E9C8E;--teal-soft:#DBF0EC;
+    --yellow:#FFC93C;--yellow-soft:#FFF1CC;--lilac:#8E7BD6;--lilac-soft:#EBE6FA;
+    --line:#EFE8DC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  .serif{font-family:'Fraunces',serif}
+  a{color:inherit}
+
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(252,248,241,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+  .brand{font-weight:800;font-size:17px}
+  .brand .d{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--yellow);margin-right:7px;vertical-align:middle}
+  .print-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:9px 16px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none}
+  .print-btn:hover{background:#000}
+
+  /* ============ HERO с маскотом ============ */
+  .hero{padding:40px 0 16px}
+  .hero-grid{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center}
+  @media (max-width:680px){.hero-grid{grid-template-columns:1fr;text-align:center;gap:18px}}
+  .mascot-card{
+    background:var(--card);border:1px solid var(--line);border-radius:24px;
+    padding:22px 22px 18px;display:grid;place-items:center;cursor:pointer;
+    box-shadow:0 12px 28px rgba(42,39,34,.05);transition:transform .15s;
+    min-width:240px;
+  }
+  .mascot-card:hover{transform:translateY(-2px)}
+  .mascot-svg{width:140px;height:160px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center}
+  .mascot-svg svg{width:100%;height:100%}
+  .mascot-tier{font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .mascot-name{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin-top:2px}
+  .mascot-pts{font-size:14px;color:var(--ink-2);margin-top:4px}
+  .mascot-pts strong{font-family:'Fraunces',serif;font-weight:600;color:var(--coral);font-size:16px}
+  .bar{margin-top:10px;width:170px;height:8px;background:var(--yellow-soft);border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--yellow);border-radius:999px;transition:width .4s}
+  .mascot-next{font-size:11px;color:var(--muted);margin-top:5px;font-style:italic}
+
+  .hello h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(28px,5vw,42px);line-height:1.04}
+  .hello h1 em{font-style:italic;color:var(--coral)}
+  .hello .lead{font-size:16px;color:var(--ink-2);margin-top:10px;max-width:520px;line-height:1.5}
+
+  /* ============ Секции задач ============ */
+  .section-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px;flex-wrap:wrap}
+  .section-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:24px}
+  .section-head .meta{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+
+  .task{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:20px 22px;margin-bottom:14px;
+    transition:border-color .15s;
+  }
+  .task.big{border-left:5px solid var(--coral)}
+  .task.small{border-left:5px solid var(--teal)}
+  .task.done{border-color:var(--teal);background:#F4FBF8}
+
+  .task-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+  .task-title{font-family:'Fraunces',serif;font-weight:600;font-size:19px;flex:1;line-height:1.25}
+  .task-pts{font-size:12px;color:var(--coral);font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--coral-soft);padding:5px 12px;border-radius:999px;white-space:nowrap}
+  .task.small .task-pts{color:var(--teal);background:var(--teal-soft)}
+
+  .task-progress{margin-top:12px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
+  .task-progress .pbar{flex:1;height:6px;background:var(--line);border-radius:999px;overflow:hidden}
+  .task-progress .pfill{height:100%;background:var(--coral);border-radius:999px;transition:width .3s}
+  .task.small .task-progress .pfill{background:var(--teal)}
+
+  .task-steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px}
+  .task-step{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 12px;border-radius:12px;
+    cursor:pointer;transition:background .15s;font-size:15px;
+    border:1px dashed transparent;
+  }
+  .task-step:hover{background:var(--paper)}
+  .task-step.done{color:var(--muted);text-decoration:line-through;background:#FAF5E8}
+  .task-step .check{
+    width:22px;height:22px;flex:none;border-radius:7px;border:2px solid var(--line);
+    display:grid;place-items:center;color:transparent;font-size:13px;font-weight:700;
+  }
+  .task-step.done .check{background:var(--teal);border-color:var(--teal);color:#fff}
+  .task-step .check svg{width:14px;height:14px}
+
+  /* ============ Toast ============ */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:12px 22px;border-radius:99px;
+    font-weight:600;font-size:14px;
+    opacity:0;pointer-events:none;transition:all .25s;
+    z-index:100;box-shadow:0 12px 30px rgba(0,0,0,.18);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .pts{color:var(--yellow);font-family:'Fraunces',serif;font-weight:600;margin-right:6px}
+
+  /* ============ Mascot modal — поддерживающие сообщения ============ */
+  .mascot-modal{
+    position:fixed;inset:0;background:rgba(42,39,34,.4);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;z-index:200;padding:20px;
+  }
+  .mascot-modal.open{display:flex;animation:fadein .3s}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .mascot-modal-inner{
+    background:var(--card);border-radius:24px;padding:28px;max-width:420px;width:100%;
+    text-align:center;position:relative;
+  }
+  .mascot-modal-inner .close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1}
+  .mascot-big{width:160px;height:180px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+  .mascot-big svg{width:100%;height:100%}
+  .mascot-modal-name{font-family:'Fraunces',serif;font-size:16px;color:var(--coral);font-style:italic;margin-bottom:14px}
+  .mascot-message{font-family:'Fraunces',serif;font-size:18px;line-height:1.45;color:var(--ink);min-height:80px}
+  .mascot-next-msg{background:var(--coral);color:#fff;border:none;border-radius:99px;padding:10px 22px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;margin-top:18px}
+
+  /* ============ Footer ============ */
+  footer{border-top:1px solid var(--line);padding:36px 0 48px;text-align:center;color:var(--muted);font-size:13px;margin-top:48px}
+  footer a{color:var(--ink-2);text-decoration:none;font-weight:600}
+  footer .help{font-size:14px;margin-bottom:8px}
+
+  /* ============ Печать (PDF) ============ */
+  @media print {
+    body{background:#fff}
+    .topbar, .hero .mascot-card, .mascot-modal, .toast, .task-step .check, .task-pts, footer, .no-print{display:none !important}
+    .hero{padding:0;margin-bottom:14px}
+    .hero-grid{display:block}
+    .hello h1{font-size:24px}
+    .hello .lead{display:none}
+    .section-head{margin:18px 0 8px;page-break-after:avoid}
+    .section-head h2{font-size:18px}
+    .task{box-shadow:none;border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:8px;page-break-inside:avoid}
+    .task-title{font-size:15px}
+    .task-progress{display:none}
+    .task-steps{margin-top:8px}
+    .task-step{padding:4px 0;font-size:13px;cursor:default;background:none !important;text-decoration:none !important;color:var(--ink) !important}
+    .task-step::before{content:"☐ ";font-size:14px;margin-right:6px}
+    .task-step.done::before{content:"☑ "}
+    .task.big{border-left:3px solid #000}
+    .task.small{border-left:3px solid #888}
+    .wrap{max-width:none;padding:0 18mm}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand"><span class="d"></span>Мои задачи · <span style="color:var(--coral)">be smart</span></span>
+    <button class="print-btn" onclick="window.print()">📄 PDF / печать</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="mascot-card" id="mascotCard" title="Клик — птенец расскажет что-то хорошее">
+        <div class="mascot-svg" id="mascotSvg"></div>
+        <div class="mascot-tier" id="mascotTier">СТАДИЯ 0</div>
+        <div class="mascot-name" id="mascotName">Яйцо</div>
+        <div class="mascot-pts"><strong id="mascotPts">0</strong> баллов</div>
+        <div class="bar"><i id="mascotBar"></i></div>
+        <div class="mascot-next" id="mascotNext">до следующей стадии</div>
+      </div>
+      <div class="hello">
+        <h1 class="serif">Привет, <em id="helloName">друг</em>!</h1>
+        <p class="lead">Здесь живут твои задачи и твой птенец. Каждый сделанный шаг — птенец немного растёт. Доходить до конца не обязательно, главное двигаться.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <h2 class="serif">Большие дела</h2>
+    <span class="meta">шаги по 15 баллов</span>
+  </div>
+  <div id="bigTasks"></div>
+
+  <div class="section-head">
+    <h2 class="serif">Маленькие дела</h2>
+    <span class="meta">шаги по 5 баллов</span>
+  </div>
+  <div id="smallTasks"></div>
+
+  <footer>
+    <div class="help">Застряла или нужна поддержка? <a href="https://t.me/dr_gruzdeva">Напиши Вале в Telegram</a></div>
+    <div>© Gruzdeva V. A. · мини-кабинет</div>
+  </footer>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Mascot modal -->
+<div class="mascot-modal" id="mascotModal">
+  <div class="mascot-modal-inner">
+    <button class="close" id="mascotCloseBtn" aria-label="Закрыть">×</button>
+    <div class="mascot-big" id="mascotBig"></div>
+    <div class="mascot-modal-name" id="mascotModalName">— Птенец</div>
+    <div class="mascot-message" id="mascotMessage">Привет, я твой птенец.</div>
+    <button class="mascot-next-msg" id="mascotNextMsg">ещё одно ↺</button>
+  </div>
+</div>
+
+<script src="../grp/mascot.js?v=5"></script>
+<script>
+/* ============================================================
+   ЛИЧНЫЙ КАБИНЕТ — мини-задачи и птенец
+   Один пользователь, прогресс в localStorage
+   ============================================================ */
+
+const STORAGE_KEY = 'personal_v1';
+
+const TASKS = [
+  // ===== БОЛЬШИЕ =====
+  {
+    id: 'pmj', type:'big', title: 'Подача на ПМЖ',
+    steps: [
+      'Собрать список нужных документов',
+      'Перевести и заверить документы',
+      'Получить недостающие справки',
+      'Найти/собрать пакет для подачи',
+      'Записаться на подачу',
+      'Подать документы',
+      'Дождаться решения',
+    ],
+  },
+  {
+    id: 'sport', type:'big', title: 'Найти спорт и начать ходить',
+    steps: [
+      'Понять что хочется (зал, групповая, бассейн, бойцовка…)',
+      'Найти 2–3 секции рядом и посмотреть расписание',
+      'Сходить на пробное занятие',
+      'Купить минимально нужный инвентарь',
+      'Купить абонемент / оплатить',
+      'Сходить три раза подряд (тогда уже привычка)',
+    ],
+  },
+
+  // ===== МАЛЕНЬКИЕ =====
+  {
+    id: 'shelves', type:'small', title: 'Прибить полочки для котов',
+    steps: [
+      'Выбрать места на стенах',
+      'Купить полочки/крепления',
+      'Найти инструмент',
+      'Прибить',
+    ],
+  },
+  {
+    id: 'bills', type:'small', title: 'Оплатить счета',
+    steps: [
+      'Собрать все счета (письма, мейлы, телега)',
+      'Оплатить',
+      'Поставить календарные напоминания на следующие',
+    ],
+  },
+  {
+    id: 'laundry', type:'small', title: 'Запустить стирку (регулярно)',
+    steps: [
+      'Загрузить барабан',
+      'Закинуть таблетку/порошок',
+      'Включить программу',
+      'Развесить (не оставлять в машинке)',
+    ],
+  },
+  {
+    id: 'boiler', type:'small', title: 'Поменять бойлер',
+    steps: [
+      'Найти мастера или сервис',
+      'Получить смету',
+      'Купить новый бойлер',
+      'Договориться о дате',
+      'Провести замену',
+    ],
+  },
+  {
+    id: 'cat-net', type:'small', title: 'Достроить сетку для котов',
+    steps: [
+      'Замерить оставшуюся часть',
+      'Купить материал',
+      'Установить',
+    ],
+  },
+  {
+    id: 'pigeons', type:'small', title: 'Поставить штыри для голубей',
+    steps: [
+      'Замерить подоконники/балкон',
+      'Купить штыри',
+      'Установить',
+    ],
+  },
+];
+
+const POINTS_PER_BIG_STEP = 15;
+const POINTS_PER_SMALL_STEP = 5;
+
+const SUPPORT_MESSAGES = [
+  "Каждый сделанный шаг — это маленькая победа. Серьёзно.",
+  "Если получилось сегодня одно дело — это уже победа.",
+  "Не успела всё — это не провал. Это нормально.",
+  "Ты пришла сюда — значит, ты уже на пути.",
+  "Можно отдохнуть. Я подожду.",
+  "Помнишь, как было трудно начать? А ты начала.",
+  "Что-то одно сегодня. Не всё. Что-то одно.",
+  "Я тебя не сужу. Никогда.",
+  "Каждая попытка — данные. Не провал.",
+  "Дыши. Я здесь.",
+  "Если устала — это нормально. Усталость — не лень.",
+  "Когда мы дойдём до конца, ты будешь рыцарь в доспехах. А я твой птенец.",
+  "Маленький шаг сейчас — лучше идеального плана потом.",
+  "Никто кроме тебя не знает, как это тяжело. Но ты делаешь.",
+];
+
+/* ============ STATE ============ */
+function loadState(){
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch(e){ return {}; }
+}
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+let state = loadState();
+state.taskProgress = state.taskProgress || {};   // { taskId: [false,false,true,...] }
+state.taskAwardKeys = state.taskAwardKeys || []; // ['pmj:0','pmj:1',...] — для счётчика стадии
+state.points = state.points || 0;
+
+// URL ?n=Имя — прописываем имя
+const params = new URLSearchParams(window.location.search);
+const urlName = params.get('n');
+if (urlName && !state.name){ state.name = urlName; saveState(); }
+if (urlName) state.name = urlName; // если в URL изменили — обновим
+
+document.getElementById('helloName').textContent = state.name || 'друг';
+
+/* ============ STAGE LOGIC ============ */
+function currentStageIdx(){
+  return Math.min(state.taskAwardKeys.length, MASCOTS.length - 1);
+}
+function getMascotProgress(){
+  const idx = currentStageIdx();
+  const cur = MASCOTS[idx];
+  const next = MASCOTS[idx + 1];
+  return { idx, cur, next: next || null };
+}
+
+/* ============ RENDER MASCOT ============ */
+function renderMascot(){
+  const info = getMascotProgress();
+  document.getElementById('mascotSvg').innerHTML = info.cur.svg;
+  document.getElementById('mascotTier').textContent = `СТАДИЯ ${info.cur.tier}`;
+  document.getElementById('mascotName').textContent = info.cur.name;
+  document.getElementById('mascotPts').textContent = state.points;
+  if (info.next){
+    document.getElementById('mascotNext').textContent = `следующий шаг — «${info.next.name}»`;
+    document.getElementById('mascotBar').style.width = '40%';
+  } else {
+    document.getElementById('mascotNext').textContent = 'максимум! 🛡️';
+    document.getElementById('mascotBar').style.width = '100%';
+  }
+}
+
+/* ============ TOAST ============ */
+let toastT = null;
+function showToast(delta, label){
+  const t = document.getElementById('toast');
+  if (delta > 0) t.innerHTML = `<span class="pts">+${delta}</span>${label||'баллов'}`;
+  else if (delta < 0) t.innerHTML = `<span class="pts" style="color:#F0765B">${delta}</span>${label||'баллов'}`;
+  else t.textContent = label;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ============ TASKS RENDER ============ */
+function ptsForStep(task){ return task.type === 'big' ? POINTS_PER_BIG_STEP : POINTS_PER_SMALL_STEP; }
+
+function progressOf(task){
+  const arr = state.taskProgress[task.id] || [];
+  const done = arr.filter(x => x).length;
+  return { done, total: task.steps.length, pct: task.steps.length ? Math.round(done/task.steps.length*100) : 0 };
+}
+
+function renderTasks(){
+  const bigBox = document.getElementById('bigTasks');
+  const smallBox = document.getElementById('smallTasks');
+  bigBox.innerHTML = ''; smallBox.innerHTML = '';
+
+  TASKS.forEach(task => {
+    const p = progressOf(task);
+    const el = document.createElement('div');
+    el.className = `task ${task.type}` + (p.done === p.total && p.total>0 ? ' done' : '');
+    el.innerHTML = `
+      <div class="task-head">
+        <div class="task-title">${task.title}</div>
+        <div class="task-pts">${p.done}/${p.total} · +${ptsForStep(task)}/шаг</div>
+      </div>
+      <div class="task-progress">
+        <div class="pbar"><div class="pfill" style="width:${p.pct}%"></div></div>
+        <span>${p.pct}%</span>
+      </div>
+      <ul class="task-steps">
+        ${task.steps.map((s,i) => {
+          const isDone = (state.taskProgress[task.id]||[])[i];
+          return `
+            <li class="task-step ${isDone?'done':''}" data-task="${task.id}" data-step="${i}">
+              <span class="check">${isDone ? '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</span>
+              <span>${s}</span>
+            </li>`;
+        }).join('')}
+      </ul>
+    `;
+    el.querySelectorAll('.task-step').forEach(stepEl => {
+      stepEl.addEventListener('click', () => toggleStep(task.id, +stepEl.dataset.step));
+    });
+    (task.type === 'big' ? bigBox : smallBox).appendChild(el);
+  });
+}
+
+function toggleStep(taskId, idx){
+  const task = TASKS.find(t => t.id === taskId);
+  if (!task) return;
+  if (!state.taskProgress[taskId]) state.taskProgress[taskId] = new Array(task.steps.length).fill(false);
+  const wasDone = !!state.taskProgress[taskId][idx];
+  const pts = ptsForStep(task);
+  const awardKey = `${taskId}:${idx}`;
+
+  if (wasDone){
+    state.taskProgress[taskId][idx] = false;
+    state.points = Math.max(0, state.points - pts);
+    showToast(-pts, task.title + ' — шаг снят');
+    // стадию НЕ откатываем — taskAwardKeys остаётся
+  } else {
+    state.taskProgress[taskId][idx] = true;
+    state.points += pts;
+    showToast(pts, task.steps[idx]);
+    // награждаем стадию (если эта пара taskId:stepIdx ещё не давала бонус)
+    if (!state.taskAwardKeys.includes(awardKey)){
+      const beforeStage = currentStageIdx();
+      state.taskAwardKeys.push(awardKey);
+      const afterStage = currentStageIdx();
+      if (afterStage > beforeStage){
+        setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[afterStage].name}!`), 1200);
+      }
+    }
+  }
+  saveState();
+  renderMascot();
+  renderTasks();
+}
+
+/* ============ MASCOT MODAL ============ */
+const modal = document.getElementById('mascotModal');
+const modalMsg = document.getElementById('mascotMessage');
+const modalBig = document.getElementById('mascotBig');
+const modalName = document.getElementById('mascotModalName');
+let lastMsg = '';
+function pickMessage(){
+  if (SUPPORT_MESSAGES.length <= 1) return SUPPORT_MESSAGES[0];
+  let m = lastMsg;
+  while (m === lastMsg) m = SUPPORT_MESSAGES[Math.floor(Math.random()*SUPPORT_MESSAGES.length)];
+  lastMsg = m;
+  return m;
+}
+function openModal(){
+  const info = getMascotProgress();
+  modalBig.innerHTML = info.cur.svg;
+  modalName.textContent = `— ${info.cur.name}`;
+  modalMsg.textContent = pickMessage();
+  modal.classList.add('open');
+}
+function closeModal(){ modal.classList.remove('open'); }
+
+document.getElementById('mascotCard').addEventListener('click', openModal);
+document.getElementById('mascotCloseBtn').addEventListener('click', closeModal);
+document.getElementById('mascotNextMsg').addEventListener('click', () => { modalMsg.textContent = pickMessage(); });
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============ INIT ============ */
+renderMascot();
+renderTasks();
+</script>
+</body>
+</html>
