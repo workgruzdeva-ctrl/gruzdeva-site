@@ -1,16 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"/>
 <title>Клуб «Стая» — в стае вопросы решаются легче</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Клуб по подписке для взрослых с СДВГ. Задаёшь вопрос — стая отвечает. Еженедельные созвоны, живой чат, тренинги навыков. Первая неделя бесплатно.">
-<meta property="og:title" content="Клуб «Стая» — в стае вопросы решаются легче">
-<meta property="og:description" content="Клуб по подписке для взрослых с СДВГ. Задаёшь вопрос — стая отвечает.">
-<meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="Клуб по подписке для взрослых с СДВГ. Приноси затык — стая поддержит. Еженедельный даблинг-созвон в Зуме и живой чат своих."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root {
     --bg: #FFF7E6;
@@ -184,7 +181,19 @@
   .rhythm-sec .sec-head h2 { color: #fff; }
   .rhythm-sec .sec-head p { color: rgba(255,255,255,0.85); }
   .rhythm-sec .eyebrow { color: var(--green-deep); background: var(--yellow); }
-  .rhythm { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 52px; }
+  .rhythm { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 52px; }
+
+  /* ---------- doubling explainer ---------- */
+  .doubling { padding: 90px 0; }
+  .db-card { background: var(--card); border: 3px solid var(--ink); border-radius: 34px; padding: 56px; box-shadow: 0 12px 0 0 var(--ink); display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 50px; align-items: center; position: relative; overflow: hidden; }
+  .db-card h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 46px; line-height: 1.02; letter-spacing: -0.03em; margin: 18px 0 0; text-wrap: balance; color: var(--ink); }
+  .db-card h2 em { font-style: italic; font-weight: 500; color: var(--accent); }
+  .db-card p { margin: 20px 0 0; font-size: 19px; line-height: 1.58; color: var(--ink-2); }
+  .db-card p strong { font-weight: 800; color: var(--ink); background: color-mix(in srgb, var(--yellow) 55%, transparent); padding: 0 4px; border-radius: 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .zoom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .zoom-tile { aspect-ratio: 4 / 3; border-radius: 16px; border: 2.5px solid var(--ink); display: grid; place-items: center; font-family: 'Fraunces', serif; font-weight: 600; font-size: 30px; color: #fff; box-shadow: 0 5px 0 0 var(--ink); position: relative; }
+  .zoom-tile .cam { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,0.28); }
+  .zoom-tile .lbl { position: absolute; left: 8px; bottom: 8px; font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 800; background: rgba(0,0,0,0.32); color: #fff; padding: 3px 8px; border-radius: 7px; letter-spacing: 0.02em; }
   .rcard { background: var(--card); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 22px; padding: 28px 24px 26px; box-shadow: 0 7px 0 0 rgba(0,0,0,0.35); }
   .rcard .ic { width: 58px; height: 58px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 20px; border: 2.5px solid var(--ink); }
   .rcard .ic svg { width: 28px; height: 28px; }
@@ -353,7 +362,7 @@
       <a class="lnk" href="#how">Как устроено</a>
       <a class="lnk" href="#inside">Что входит</a>
       <a class="lnk" href="#price">Цена</a>
-      <a class="btn btn-primary btn-sm" data-buy="" href="#price">Влиться в стаю</a>
+      <a class="btn btn-primary btn-sm" data-buy href="#price">Влиться в стаю</a>
     </nav>
   </div>
 </div>
@@ -365,47 +374,47 @@
       <div class="badges">
         <span class="badge b-tan"><span class="dot"></span>клуб по подписке</span>
         <span class="badge b-yel"><span class="dot"></span>взрослые с СДВГ</span>
-        <span class="badge b-grn"><span class="dot"></span>первая неделя бесплатно</span>
+        <span class="badge b-grn"><span class="dot"></span>даблинг-созвон раз в неделю</span>
       </div>
-      <h1 class="title serif" id="hero-title">В стае вопросы<br>решаются <em>легче</em></h1>
+      <h1 class="title serif" id="hero-title">В стае вопросы<br/>решаются <em>легче</em></h1>
       <div class="subtitle serif">тёплое сообщество, а не очередной марафон</div>
       <div class="hero-body">
         <p>Задал вопрос вечером — к утру три ответа от тех, кто прошёл то же. <strong>Свой ритм, живой чат, свои люди.</strong></p>
       </div>
       <div class="cta-row">
-        <a class="btn btn-primary" data-buy="" href="#price">Влиться в стаю
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <a class="btn btn-primary" data-buy href="#price">Влиться в стаю
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <span class="cta-note"><span class="star">★</span> €15/мес · отписаться в любой момент</span>
+        <span class="cta-note"><span class="star">★</span> €29/мес · отписаться в любой момент</span>
       </div>
     </div>
 
     <div class="mascot-stage">
       <div class="hero-halo"></div>
-      <div class="spark s1"><svg width="38" height="38" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1l2.2 6.6L21 9l-5.4 4.1L17 21l-5-4-5 4 1.4-7.9L3 9l6.8-1.4z"></path></svg></div>
-      <div class="spark s3"><svg width="28" height="28" viewBox="0 0 24 24" fill="var(--yellow)"><path d="M12 1l2.2 6.6L21 9l-5.4 4.1L17 21l-5-4-5 4 1.4-7.9L3 9l6.8-1.4z"></path></svg></div>
+      <div class="spark s1"><svg width="38" height="38" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1l2.2 6.6L21 9l-5.4 4.1L17 21l-5-4-5 4 1.4-7.9L3 9l6.8-1.4z"/></svg></div>
+      <div class="spark s3"><svg width="28" height="28" viewBox="0 0 24 24" fill="var(--yellow)"><path d="M12 1l2.2 6.6L21 9l-5.4 4.1L17 21l-5-4-5 4 1.4-7.9L3 9l6.8-1.4z"/></svg></div>
       <div class="hero-art mascot-float">
         <svg viewBox="0 0 470 300" role="img" aria-label="Курочка ведёт птенцов — стая">
-          <ellipse cx="240" cy="256" rx="210" ry="14" fill="#1FA85A" opacity=".9"></ellipse>
-          <path d="M152 52 C110 64 88 118 88 170 C88 202 106 220 152 220 C198 220 216 202 216 170 C216 118 194 64 152 52 Z" fill="#fff" stroke="#241D14" stroke-width="4" stroke-linejoin="round"></path>
-          <path d="M148 50 q4 -18 17 -13 q1 -13 13 -10 q12 3 6 15 q10 4 2 14 q-21 5 -42 -2 z" fill="#E5432B" stroke="#241D14" stroke-width="2.4" stroke-linejoin="round"></path>
-          <path d="M92 100 l-18 8 l18 8 z" fill="#FFC527" stroke="#241D14" stroke-width="2.4" stroke-linejoin="round"></path>
-          <circle cx="120" cy="102" r="2.8" fill="#241D14"></circle>
-          <path d="M150 150 l13 26 l17 -30" fill="none" stroke="#241D14" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
-          <path d="M140 220 l-3 34 M172 220 l3 34" fill="none" stroke="#241D14" stroke-width="3.6" stroke-linecap="round"></path>
-          <path d="M137 254 l-7 7 M137 254 l7 7 M175 254 l-7 7 M175 254 l7 7" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"></path>
-          <path d="M292 196 C276 198 268 214 268 228 C268 242 278 250 292 250 C306 250 316 242 316 228 C316 214 308 198 292 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"></path>
-          <path d="M294 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"></path>
-          <circle cx="283" cy="220" r="1.9" fill="#241D14"></circle>
-          <path d="M286 250 l-1 12 M298 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"></path>
-          <path d="M348 196 C332 198 324 214 324 228 C324 242 334 250 348 250 C362 250 372 242 372 228 C372 214 364 198 348 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"></path>
-          <path d="M350 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"></path>
-          <circle cx="339" cy="220" r="1.9" fill="#241D14"></circle>
-          <path d="M342 250 l-1 12 M354 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"></path>
-          <path d="M404 196 C388 198 380 214 380 228 C380 242 390 250 404 250 C418 250 428 242 428 228 C428 214 420 198 404 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"></path>
-          <path d="M406 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"></path>
-          <circle cx="395" cy="220" r="1.9" fill="#241D14"></circle>
-          <path d="M398 250 l-1 12 M410 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"></path>
+          <ellipse cx="240" cy="256" rx="210" ry="14" fill="#1FA85A" opacity=".9"/>
+          <path d="M152 52 C110 64 88 118 88 170 C88 202 106 220 152 220 C198 220 216 202 216 170 C216 118 194 64 152 52 Z" fill="#fff" stroke="#241D14" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M148 50 q4 -18 17 -13 q1 -13 13 -10 q12 3 6 15 q10 4 2 14 q-21 5 -42 -2 z" fill="#E5432B" stroke="#241D14" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M92 100 l-18 8 l18 8 z" fill="#FFC527" stroke="#241D14" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="120" cy="102" r="2.8" fill="#241D14"/>
+          <path d="M150 150 l13 26 l17 -30" fill="none" stroke="#241D14" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M140 220 l-3 34 M172 220 l3 34" fill="none" stroke="#241D14" stroke-width="3.6" stroke-linecap="round"/>
+          <path d="M137 254 l-7 7 M137 254 l7 7 M175 254 l-7 7 M175 254 l7 7" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M292 196 C276 198 268 214 268 228 C268 242 278 250 292 250 C306 250 316 242 316 228 C316 214 308 198 292 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M294 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="283" cy="220" r="1.9" fill="#241D14"/>
+          <path d="M286 250 l-1 12 M298 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M348 196 C332 198 324 214 324 228 C324 242 334 250 348 250 C362 250 372 242 372 228 C372 214 364 198 348 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M350 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="339" cy="220" r="1.9" fill="#241D14"/>
+          <path d="M342 250 l-1 12 M354 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M404 196 C388 198 380 214 380 228 C380 242 390 250 404 250 C418 250 428 242 428 228 C428 214 420 198 404 196 Z" fill="#FFC527" stroke="#241D14" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M406 206 q11 -10 17 -1 q8 -1 4 9 q-11 6 -21 -3 z" fill="#fff" stroke="#241D14" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="395" cy="220" r="1.9" fill="#241D14"/>
+          <path d="M398 250 l-1 12 M410 250 l1 12" fill="none" stroke="#241D14" stroke-width="2.6" stroke-linecap="round"/>
         </svg>
       </div>
     </div>
@@ -423,9 +432,9 @@
 <!-- ======================= WHY FLOCK ======================= -->
 <section class="why" data-screen-label="Почему стая">
   <div class="wrap why-in reveal">
-    <div class="why-bird"><img id="bird-why" src="m/grp/birds/06_sobiraet_instrumenty.png" alt="Птенец"></div>
+    <div class="why-bird"><img id="bird-why" src="m/grp/birds/06_sobiraet_instrumenty.png" alt="Птенец"/></div>
     <div class="eyebrow">почему стая</div>
-    <h2 class="serif">В одиночку птица сбивается с курса.<br><em>В стае</em> — держит строй.</h2>
+    <h2 class="serif">В одиночку птица сбивается с курса.<br/><em>В стае</em> — держит строй.</h2>
     <p>СДВГ-мозгу тяжело лететь в пустоте. Клуб даёт ритм и тех, кто летит рядом.</p>
   </div>
 </section>
@@ -445,7 +454,7 @@
           <div class="av" style="background:var(--accent)">А</div>
           <div class="bubble">
             <div class="who">Аня <span>· 21:14</span></div>
-            <p>Завис на отчёте третий день. Открываю — закрываю. Не могу заставить себя начать. Что делать?</p>
+            <p>Зависла на отчёте третий день. Открываю — закрываю. Не могу заставить себя начать. Что делать?</p>
           </div>
         </div>
         <div class="msg ans reveal">
@@ -459,7 +468,7 @@
           <div class="av" style="background:#9a7400">М</div>
           <div class="bubble">
             <div class="who">Марк <span>· 21:18</span></div>
-            <p>Давай со-фокус? Включаю таймер на 25 минут в чате — сидим молча и пишем каждый своё. Через минуту стартуем.</p>
+            <p>Давай подаблим друг друга? Встречаемся в Зуме через 25 минут, посидим час каждый над своей задачей. Добро?</p>
           </div>
         </div>
         <div class="msg ans reveal">
@@ -472,8 +481,27 @@
       </div>
 
       <div class="sig-mascot reveal">
-        <div class="mwrap"><img id="bird-chat" src="m/grp/birds/07_probuet_krylya.png" alt="Птенец"></div>
+        <div class="mwrap"><img id="bird-chat" src="m/grp/birds/07_probuet_krylya.png" alt="Птенец"/></div>
         <p class="sig-note">Ни одного «просто соберись». Только конкретика от тех, кто рядом.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= DOUBLING EXPLAINER ======================= -->
+<section class="doubling" data-screen-label="Что на созвонах">
+  <div class="wrap">
+    <div class="db-card reveal">
+      <div>
+        <div class="eyebrow c">главная фишка</div>
+        <h2 class="serif">Раз в неделю — <em>час на свои дела</em>, всей стаей</h2>
+        <p>В клубе ты находишь партнёров по даблингу. Раз в неделю вся стая на 1,5 часа собирается в Зуме — и каждый делает свои дела. Иногда задача общая <strong>(всей стаей разбираем шкаф)</strong>, иногда твоя личная. Но раз в неделю ты гарантированно пинаешь свои задачи — и они перестают копиться. А между созвонами в чате можно найти своих и сесть подаблить в любой день.</p>
+      </div>
+      <div class="zoom-grid" aria-hidden="true">
+        <div class="zoom-tile" style="background:var(--accent)"><span class="cam"></span>А<span class="lbl">Аня</span></div>
+        <div class="zoom-tile" style="background:var(--green)"><span class="cam"></span>М<span class="lbl">Марк</span></div>
+        <div class="zoom-tile" style="background:#9a7400"><span class="cam"></span>Л<span class="lbl">Лена</span></div>
+        <div class="zoom-tile" style="background:var(--green-deep)"><span class="cam"></span>В<span class="lbl">Валя</span></div>
       </div>
     </div>
   </div>
@@ -481,7 +509,7 @@
 
 <!-- ======================= RHYTHM / WHAT'S INSIDE ======================= -->
 <section class="rhythm-sec" id="inside" data-screen-label="Что входит">
-  <img class="rhythm-bird" id="bird-rhythm" src="m/grp/birds/07_probuet_krylya.png" alt="">
+  <img class="rhythm-bird" id="bird-rhythm" src="m/grp/birds/07_probuet_krylya.png" alt=""/>
   <div class="wrap">
     <div class="sec-head center reveal">
       <div class="eyebrow">ритм недели</div>
@@ -490,22 +518,17 @@
     </div>
     <div class="rhythm">
       <div class="rcard reveal">
-        <div class="ic i1"><svg viewBox="0 0 24 24" fill="none"><path d="M15 10l5-3v10l-5-3M4 6h11v12H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg></div>
-        <h3>Созвон стаи</h3>
-        <p>Раз в неделю вживую. Можно просто слушать.</p>
+        <div class="ic i1"><svg viewBox="0 0 24 24" fill="none"><path d="M15 10l5-3v10l-5-3M4 6h11v12H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3>Даблинг-созвон раз в неделю</h3>
+        <p>Раз в неделю вся стая 1,5 часа в Зуме делает дела вместе. Раз в неделю ты точно сдвигаешь то, что застряло.</p>
       </div>
       <div class="rcard reveal">
-        <div class="ic i2"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg></div>
-        <h3>Живой чат</h3>
-        <p>Задал вопрос — ответили. Со-фокус каждый день.</p>
+        <div class="ic i2"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3>Партнёры по даблингу</h3>
+        <p>В чате находишь своих, чтобы сесть и поработать рядом в любой день.</p>
       </div>
       <div class="rcard reveal">
-        <div class="ic i3"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg></div>
-        <h3>Тренинги навыков</h3>
-        <p>Короткие практики под СДВГ: начать, спланировать, вернуться.</p>
-      </div>
-      <div class="rcard reveal">
-        <div class="ic i4"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4 7-9V6l-7-3-7 3v6c0 5 7 9 7 9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg></div>
+        <div class="ic i4"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4 7-9V6l-7-3-7 3v6c0 5 7 9 7 9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
         <h3>Своё гнездо</h3>
         <p>Закрытое место своих. Можно ничего не объяснять.</p>
       </div>
@@ -518,25 +541,25 @@
   <div class="wrap">
     <div class="how-inner reveal">
       <div class="flock-mini">
-        <img id="bird-how" src="m/grp/birds/04_ya_v_puti.png" alt="Птенец в пути">
+        <img id="bird-how" src="m/grp/birds/04_ya_v_puti.png" alt="Птенец в пути"/>
       </div>
       <div class="eyebrow">как устроено</div>
-      <h2 class="serif">Влиться просто.<br><em>Остаться</em> — ещё проще.</h2>
+      <h2 class="serif">Влиться просто.<br/><em>Остаться</em> — ещё проще.</h2>
       <div class="steps">
         <div class="step">
           <div class="n">1</div>
           <h3>Вступаешь в стаю</h3>
-          <p>Оплата через Telegram, доступ сразу. Первая неделя бесплатно.</p>
+          <p>Оплата через Telegram, доступ сразу.</p>
         </div>
         <div class="step">
           <div class="n">2</div>
-          <h3>Задаёшь свой вопрос</h3>
-          <p>Пишешь, что застряло. Стая отвечает в тот же вечер.</p>
+          <h3>Приносишь свой затык</h3>
+          <p>Пишешь в чат, что застряло. Стая поддержит, а я помогу разобраться.</p>
         </div>
         <div class="step">
           <div class="n">3</div>
-          <h3>Летишь в общем ритме</h3>
-          <p>Созвон раз в неделю, между ними — чат. Пропустил — стая ждёт.</p>
+          <h3>Живёшь в ритме стаи</h3>
+          <p>Раз в неделю даблинг-созвон, между ними — чат. Выпала на время — возвращаешься без объяснений, никто не отчитывает.</p>
         </div>
       </div>
     </div>
@@ -549,15 +572,14 @@
     <div class="price-wrap reveal">
       <div class="glow"></div>
       <div class="eyebrow">подписка</div>
-      <div class="price-tag">€15<small>в месяц · отписаться можно в любой момент</small></div>
+      <div class="price-tag">€29<small>в месяц · отписаться можно в любой момент</small></div>
       <ul class="incl">
-        <li>еженедельный <b>созвон стаи</b></li>
-        <li>живой <b>чат сообщества</b>, который не молчит</li>
-        <li><b>тренинги навыков</b> и практики под СДВГ</li>
-        <li>первая неделя — <b>бесплатно</b></li>
+        <li>еженедельный <b>даблинг-созвон</b> в Зуме</li>
+        <li>партнёры по даблингу в <b>живом чате</b> на каждый день</li>
+        <li><b>своё гнездо</b> — закрытое место своих</li>
       </ul>
-      <a class="btn" data-buy="" href="#">Влиться в стаю
-        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <a class="btn" data-buy href="#">Влиться в стаю
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
   </div>
@@ -567,40 +589,16 @@
 <section class="author-sec" data-screen-label="Об авторе">
   <div class="wrap">
     <div class="author reveal">
-      <div class="author-ph"><span>фото Вали</span></div>
+      <div class="author-ph"><img src="valya.jpg" alt="Валя Груздева" style="width:100%;height:100%;object-fit:cover;"></div>
       <div>
         <div class="eyebrow c">кто ведёт</div>
         <h2 class="serif">Валя Груздева</h2>
-        <p class="role">Врач-нейрофизиолог, сама живу с СДВГ. Веду стаю не «сверху», а летя рядом — потому что прошла этот путь сама.</p>
+        <p class="role">Врач-нейрофизиолог, работаю со взрослыми с СДВГ. Перевожу с умного на полезный — объясняю твой мозг и помогаю выстроить ритм.</p>
         <ul class="creds">
           <li>врач-нейрофизиолог</li>
-          <li>ADHD-CCSP</li>
+          <li>работаю со взрослыми с СДВГ (ADHD-CCSP)</li>
           <li>автор курса «Молодого птенца»</li>
         </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= TESTIMONIALS ======================= -->
-<section class="tst-sec" data-screen-label="Отзывы">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <div class="eyebrow y">голоса стаи</div>
-      <h2 class="serif">Как это меняется</h2>
-    </div>
-    <div class="tst">
-      <div class="tcard reveal">
-        <p class="quote">«Раньше я месяц не могла спросить совета — стыдно. Тут спросила в первый вечер, и оказалось, что так у всех. Отпустило.»</p>
-        <div class="by"><div class="av" style="background:var(--accent)">К</div><div class="meta"><b>Катя</b><span>в стае 4 месяца</span></div></div>
-      </div>
-      <div class="tcard reveal">
-        <p class="quote">«Со-фокус на созвонах — единственное, что реально сдвигает мои дела. Один бы я так и сидел.»</p>
-        <div class="by"><div class="av" style="background:var(--green-deep)">Д</div><div class="meta"><b>Дима</b><span>в стае полгода</span></div></div>
-      </div>
-      <div class="tcard reveal">
-        <p class="quote">«Пропадала на две недели, вернулась — никто не отчитывал. Просто „с возвращением“. Для меня это всё.»</p>
-        <div class="by"><div class="av" style="background:#9a7400">О</div><div class="meta"><b>Оля</b><span>в стае год</span></div></div>
       </div>
     </div>
   </div>
@@ -618,7 +616,7 @@
       <details><summary>А если я стесняюсь говорить на созвонах?</summary><div class="ans">Можно просто быть рядом и слушать. Никто не заставляет включать камеру или выступать — само присутствие в ритме уже работает.</div></details>
       <details><summary>Что если пропущу неделю или месяц?</summary><div class="ans">Ничего страшного. Стая не улетает без тебя — возвращаешься, когда есть силы. Записи созвонов и чат остаются на месте.</div></details>
       <details><summary>Чем это отличается от терапии?</summary><div class="ans">Это не терапия и не замена ей. Клуб — про ежедневную опору, ритм и сообщество своих. Многие совмещают его с личной работой со специалистом.</div></details>
-      <details><summary>Как оплатить и отписаться?</summary><div class="ans">Подписка оформляется через Telegram, картой в ₽ или €. Первая неделя бесплатно, отписаться можно в пару кликов в любой момент.</div></details>
+      <details><summary>Как оплатить и отписаться?</summary><div class="ans">Подписка оформляется через Telegram, картой в ₽ или €. Отписаться можно в пару кликов в любой момент.</div></details>
     </div>
   </div>
 </section>
@@ -628,15 +626,15 @@
   <div class="wrap">
     <div class="final reveal">
       <div class="glow"></div>
-      <div class="final-bird"><img id="bird-final" src="m/grp/birds/09_koroleva_stai.png" alt="Королева стаи"></div>
+      <div class="final-bird"><img id="bird-final" src="m/grp/birds/09_koroleva_stai.png" alt="Королева стаи"/></div>
       <div class="eyebrow">можно прямо сейчас</div>
-      <h2 class="serif">Хватит лететь<br>в <em>одиночку</em></h2>
-      <p>Первая неделя бесплатно. Загляни и задай свой первый вопрос.</p>
+      <h2 class="serif">Хватит лететь<br/>в <em>одиночку</em></h2>
+      <p>Загляни, принеси свой затык — и сдвинь его на ближайшем созвоне.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" data-buy="" href="#">Влиться в стаю
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <a class="btn btn-primary" data-buy href="#">Влиться в стаю
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <span class="cta-note"><span class="star">★</span> €15/мес · отписаться в любой момент</span>
+        <span class="cta-note"><span class="star">★</span> €29/мес · отписаться в любой момент</span>
       </div>
     </div>
   </div>
@@ -655,11 +653,9 @@
   </div>
 </footer>
 
-
 <script>
-  // Ссылка оплаты / запись (Telegram / Tribute) — подставь свою при необходимости
   const PAY_LINK = "https://t.me/dr_gruzdeva";
-  document.querySelectorAll('[data-buy]').forEach(function(a){ a.setAttribute('href', PAY_LINK); });
+  document.querySelectorAll('[data-buy]').forEach(a => a.href = PAY_LINK);
 
   // Reveal on scroll
   (function () {
@@ -674,5 +670,6 @@
     els.forEach((el) => io.observe(el));
   })();
 </script>
+
 </body>
 </html>
