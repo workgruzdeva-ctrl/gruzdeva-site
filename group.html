@@ -1308,17 +1308,55 @@
     @media (max-width:900px){.quotes-grid{grid-template-columns:1fr;max-width:760px;margin:0 auto}}
     .quote{background:var(--card,#fff);border:1px solid var(--line);border-radius:24px;padding:50px 40px 34px;position:relative;box-shadow:0 14px 36px rgba(26,22,20,.04)}
     .quote-mark{position:absolute;top:14px;left:30px;font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:96px;line-height:.8;color:var(--accent);opacity:.5;font-weight:700}
-    .quote blockquote{font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:16.5px;line-height:1.6;color:var(--ink);position:relative}
+    .quote blockquote{font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:16.5px;line-height:1.6;color:var(--ink);position:relative;max-height:340px;overflow:hidden;transition:max-height .35s ease}
+    .quote.expanded blockquote{max-height:none}
+    .quote blockquote::after{
+      content:"";position:absolute;left:0;right:0;bottom:0;height:80px;
+      background:linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--card,#fff) 90%);
+      pointer-events:none;transition:opacity .25s;
+    }
+    .quote.expanded blockquote::after{opacity:0}
     .quote blockquote p{margin:0 0 12px}
     .quote blockquote p:last-child{margin-bottom:0}
     .quote blockquote strong{color:var(--sage-deep);font-weight:600}
-    .quote-by{margin-top:22px;font-weight:600;font-size:14px;color:var(--soft);text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif}
+    .quote-toggle{
+      display:inline-flex;align-items:center;gap:7px;
+      margin-top:12px;background:transparent;border:none;cursor:pointer;
+      font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;
+      font-weight:700;font-size:14px;color:var(--sage-deep);
+      padding:6px 0;border-bottom:1.5px dashed var(--sage-deep);
+    }
+    .quote-toggle:hover{color:var(--accent-deep);border-color:var(--accent-deep)}
+    .quote-toggle .chev{transition:transform .25s ease}
+    .quote.expanded .quote-toggle .chev{transform:rotate(180deg)}
+    .quote-by{margin-top:18px;font-weight:600;font-size:14px;color:var(--soft);text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif}
     @media (max-width:600px){
       .quote{padding:40px 26px 28px}
       .quote-mark{font-size:72px;left:20px;top:8px}
-      .quote blockquote{font-size:15.5px}
+      .quote blockquote{font-size:15.5px;max-height:280px}
     }
   </style>
+
+  <script>
+    document.querySelectorAll('.testimonials .quote').forEach(q => {
+      const bq = q.querySelector('blockquote');
+      if (!bq) return;
+      // вставляем кнопку «читать дальше» если контент длинный
+      const fullH = bq.scrollHeight;
+      const limitH = parseInt(getComputedStyle(bq).maxHeight, 10) || 340;
+      if (fullH > limitH + 40){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quote-toggle';
+        btn.innerHTML = '<span class="lbl">читать дальше</span> <span class="chev">▾</span>';
+        btn.addEventListener('click', () => {
+          const open = q.classList.toggle('expanded');
+          btn.querySelector('.lbl').textContent = open ? 'свернуть' : 'читать дальше';
+        });
+        bq.after(btn);
+      }
+    });
+  </script>
 
   <!-- CTA — 2 колонки + шаги -->
   <section class="bleed sage-deep cta-block">
