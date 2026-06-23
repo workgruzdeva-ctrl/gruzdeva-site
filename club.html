@@ -654,8 +654,12 @@
 </footer>
 
 <script>
-  const PAY_LINK = "https://t.me/dr_gruzdeva";
-  document.querySelectorAll('[data-buy]').forEach(a => a.href = PAY_LINK);
+  const PAY_LINK = "https://web.tribute.tg/s/Z0p";
+  document.querySelectorAll('[data-buy]').forEach(a => {
+    a.href = PAY_LINK;
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
 
   // Reveal on scroll
   (function () {
