@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Кабинет участника · тренинг навыков при СДВГ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4EEE2; --paper:#FBF8EE; --card:#FFFFFF;
+    --ink:#1A1614; --soft:#4A423D; --muted:#857C75;
+    --line:#E8E1D4;
+    --accent:#D9694A;     /* coral — основное */
+    --accent-soft:#F3D9C9;
+    --green:#5E6B4A;
+    --green-soft:#D9DDC8;
+    --yellow:#F5C400;
+    --yellow-soft:#FFEFB8;
+    --lilac:#B4A4D8;
+    --lilac-soft:#E8E0F2;
+    --teal:#6FA39A;
+    --teal-soft:#D8E9E5;
+    --r:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);color:var(--ink);
+    line-height:1.55;-webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .serif{font-family:'Fraunces',Georgia,serif}
+
+  /* ============ LAYOUT ============ */
+  .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;gap:0}
+  .sidebar{
+    background:var(--paper);border-right:1px solid var(--line);
+    padding:26px 18px;position:sticky;top:0;height:100vh;overflow:auto;
+  }
+  .main{padding:36px 44px 80px;max-width:840px;width:100%}
+  @media(max-width:880px){
+    .app{grid-template-columns:1fr}
+    .sidebar{position:relative;height:auto;padding:14px 18px;border-right:none;border-bottom:1px solid var(--line)}
+    .sidebar .logo,.sidebar .who{display:none}
+    .nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .nav a{flex:none;font-size:13px;padding:8px 12px;border-radius:99px}
+    .main{padding:24px 18px 60px}
+  }
+
+  /* sidebar */
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:6px}
+  .logo .d{width:11px;height:11px;border-radius:50%;background:var(--yellow)}
+  .who{font-size:13px;color:var(--muted);margin-bottom:24px;font-family:'Fraunces',serif;font-style:italic}
+  .nav{display:flex;flex-direction:column;gap:4px}
+  .nav a{
+    display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:10px;
+    text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;
+    transition:background .12s, color .12s;
+  }
+  .nav a:hover{background:var(--accent-soft);color:var(--accent)}
+  .nav a.active{background:var(--ink);color:var(--paper)}
+  .nav a .em{font-size:16px}
+
+  /* mascot widget in sidebar */
+  .ms-mini{
+    margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px;text-align:center;
+  }
+  .ms-mini .em{font-size:38px;line-height:1}
+  .ms-mini .lvl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:700}
+  .ms-mini .nm{font-family:'Fraunces',serif;font-size:14px;font-weight:600;margin-top:2px;line-height:1.2}
+  .ms-mini .bar{margin-top:10px;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+  .ms-mini .bar i{display:block;height:100%;background:var(--yellow);width:0;transition:width .35s}
+  .ms-mini .pts{font-size:11px;color:var(--muted);margin-top:6px}
+  @media(max-width:880px){.ms-mini{display:none}}
+
+  .reset{margin-top:18px;background:transparent;border:1px solid var(--line);color:var(--muted);font:inherit;font-size:12px;padding:7px 10px;border-radius:8px;cursor:pointer;width:100%}
+  .reset:hover{color:var(--accent);border-color:var(--accent)}
+  @media(max-width:880px){.reset{display:none}}
+
+  /* ============ PAGES ============ */
+  .page{display:none;animation:fade .3s}
+  .page.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:36px;line-height:1.05;letter-spacing:-.018em;margin-bottom:8px}
+  h1 em{font-style:italic;color:var(--accent);font-weight:500}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.15;margin:36px 0 14px}
+  h3{font-family:'Fraunces',serif;font-weight:600;font-size:17px;margin-bottom:8px}
+  .lead{font-size:16px;color:var(--soft);max-width:560px}
+
+  /* ============ COMMON ============ */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .card+.card{margin-top:14px}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    background:var(--ink);color:var(--paper);border:none;
+    padding:13px 22px;border-radius:99px;
+    font:inherit;font-weight:700;font-size:14px;cursor:pointer;
+    transition:transform .12s,box-shadow .12s;text-decoration:none;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.12)}
+  .btn-coral{background:var(--accent)}
+  .btn-yellow{background:var(--yellow);color:var(--ink)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+
+  input[type="text"], textarea{
+    width:100%;font:inherit;font-size:15px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;
+    transition:border-color .15s;
+  }
+  textarea{resize:vertical;min-height:80px;line-height:1.5}
+  input[type="text"]:focus,textarea:focus{outline:none;border-color:var(--accent)}
+
+  /* checkbox group */
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  @media(max-width:560px){.checks{grid-template-columns:1fr}}
+  .check{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;
+    border:1px solid var(--line);border-radius:10px;cursor:pointer;
+    background:var(--paper);font-size:14px;transition:all .12s;
+  }
+  .check:hover{border-color:var(--accent)}
+  .check input{display:none}
+  .check .box{
+    width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);
+    flex:none;display:grid;place-items:center;color:transparent;font-size:11px;font-weight:700;
+  }
+  .check.on{background:var(--accent-soft);border-color:var(--accent)}
+  .check.on .box{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* small label */
+  .label{font-size:13px;font-weight:700;color:var(--soft);letter-spacing:.02em;margin-bottom:6px;display:block}
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+
+  /* ============ HOME ============ */
+  .home-hi{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--muted);margin-bottom:4px}
+  .week-pill{
+    display:inline-flex;align-items:center;gap:8px;background:var(--yellow-soft);
+    padding:6px 14px;border-radius:99px;font-size:13px;font-weight:700;color:var(--ink);
+    margin-bottom:18px;
+  }
+  .task-card{
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:20px;
+    padding:24px;position:relative;
+  }
+  .task-card .tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:10px}
+  .task-card .ttxt{font-family:'Fraunces',serif;font-weight:500;font-size:22px;line-height:1.3}
+
+  .week-bar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+  .wb-day{
+    aspect-ratio:1/1;border-radius:8px;background:var(--line);
+    display:grid;place-items:center;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.04em;
+    transition:background .2s;
+  }
+  .wb-day.s-full{background:var(--green)}
+  .wb-day.s-partial{background:var(--yellow)}
+  .wb-day.s-contact{background:var(--teal)}
+  .wb-day.s-understood{background:var(--lilac-soft);color:var(--lilac);border:1px solid var(--lilac)}
+  .wb-day.s-full,.wb-day.s-partial,.wb-day.s-contact{color:#fff}
+  .wb-day.today{outline:2px solid var(--accent);outline-offset:2px}
+
+  .pct{font-family:'Fraunces',serif;font-weight:600;font-size:42px;line-height:1;color:var(--accent)}
+  .pct-label{font-size:13px;color:var(--soft);margin-top:6px}
+  .home-comment{margin-top:14px;font-style:italic;color:var(--soft);font-family:'Fraunces',serif;font-size:15px}
+
+  /* Big mascot card */
+  .ms-big{
+    background:linear-gradient(135deg,var(--yellow-soft),var(--paper));
+    border:1px solid var(--line);border-radius:22px;padding:24px;
+    display:flex;align-items:center;gap:22px;
+  }
+  .ms-big .em{font-size:80px;line-height:1;flex:none}
+  .ms-big .lvl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  .ms-big .nm{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:4px 0 10px}
+  .ms-big .phrase{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--soft);line-height:1.5}
+  @media(max-width:560px){.ms-big{flex-direction:column;text-align:center}}
+
+  /* Quick action — отметить шаг */
+  .qa{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:14px;
+  }
+  @media(max-width:560px){.qa{grid-template-columns:1fr 1fr}}
+  .qa-btn{
+    padding:14px 8px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);
+    cursor:pointer;text-align:center;font:inherit;font-size:12px;font-weight:600;color:var(--soft);
+    line-height:1.3;transition:all .12s;
+  }
+  .qa-btn:hover{border-color:var(--accent)}
+  .qa-btn.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .qa-btn .em{display:block;font-size:22px;margin-bottom:4px}
+
+  /* ============ TRACKER ============ */
+  .day-card{margin-bottom:12px}
+  .day-card .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+  .day-card .dname{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+  .day-card .status{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .day-card.s-full .status{color:var(--green)}
+  .day-card.s-partial .status{color:var(--accent)}
+  .day-card.s-contact .status{color:var(--teal)}
+  .day-card.s-understood .status{color:var(--lilac)}
+
+  /* ============ JOURNAL ============ */
+  .save-msg{margin-top:14px;padding:14px 18px;background:var(--green-soft);border-radius:12px;color:var(--green);font-family:'Fraunces',serif;font-style:italic;display:none}
+  .save-msg.show{display:block;animation:fade .3s}
+
+  .goose-help{background:var(--lilac-soft);border:1px dashed var(--lilac);border-radius:16px;padding:20px;margin-top:18px;text-align:center}
+  .goose-help .em{font-size:36px;line-height:1}
+  .goose-help .phr{font-family:'Fraunces',serif;font-style:italic;margin:10px 0 14px;font-size:15px}
+
+  /* ============ APTECHKA ============ */
+  .apt-group{margin-bottom:30px}
+  .apt-group h3{margin:6px 0 12px;font-size:18px}
+  .apt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.apt-grid{grid-template-columns:1fr}}
+  .apt-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    transition:border-color .15s, transform .15s;
+  }
+  .apt-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .apt-card .name{font-family:'Fraunces',serif;font-weight:600;font-size:15px;margin-bottom:6px}
+  .apt-card .desc{font-size:13px;color:var(--soft);margin-bottom:10px;line-height:1.45}
+  .apt-card a{font-size:12px;letter-spacing:.04em;color:var(--accent);text-decoration:none;font-weight:700}
+
+  /* ============ MANUAL ============ */
+  .manual-out{
+    background:linear-gradient(140deg,var(--accent-soft),var(--yellow-soft));
+    border:1px solid var(--accent);border-radius:22px;padding:30px;margin-top:18px;display:none;
+  }
+  .manual-out.show{display:block;animation:fade .35s}
+  .manual-out h3{font-family:'Fraunces',serif;font-size:24px;margin-bottom:14px}
+  .manual-out .mline{margin:10px 0;font-family:'Fraunces',serif;font-size:15px;line-height:1.5}
+  .manual-out .mline strong{font-weight:600;color:var(--accent)}
+
+  .toast{
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:10px 18px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="logo"><span class="d"></span>be smart · СДВГ</div>
+    <div class="who">Привет, <span id="userName">Катя</span></div>
+
+    <nav class="nav" id="nav">
+      <a href="#" data-page="home" class="active"><span class="em">🏠</span>Главная</a>
+      <a href="#" data-page="tracker"><span class="em">📊</span>Мой трекер</a>
+      <a href="#" data-page="journal"><span class="em">📓</span>Дневник</a>
+      <a href="#" data-page="before-after"><span class="em">🔁</span>До / После</a>
+      <a href="#" data-page="apt"><span class="em">🧰</span>Аптечка навыков</a>
+      <a href="#" data-page="manual"><span class="em">📜</span>Инструкция к себе</a>
+    </nav>
+
+    <div class="ms-mini" id="msMini">
+      <div class="em" id="msMiniEm">🥚</div>
+      <div class="lvl" id="msMiniLvl">Уровень 1</div>
+      <div class="nm" id="msMiniNm">Яйцо</div>
+      <div class="bar"><i id="msMiniBar"></i></div>
+      <div class="pts" id="msMiniPts">0 баллов</div>
+    </div>
+
+    <button class="reset" id="resetBtn">Сбросить демо-данные</button>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ===== ГЛАВНАЯ ===== -->
+    <section class="page active" data-page="home">
+      <div class="home-hi">Привет, <span class="userName">Катя</span></div>
+      <h1>Сейчас твоя неделя <em><span id="curWeek">2</span> из <span id="totalWeeks">6</span></em></h1>
+
+      <div class="task-card" style="margin-top:18px">
+        <div class="tag">Задача недели</div>
+        <div class="ttxt" id="weekTask">15 минут в день разбирать документы. Не закончить. Просто быть внутри задачи.</div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h3>Отметить сегодняшний шаг</h3>
+        <p class="lead" style="margin-top:4px">Не «сделала ли я всё». А «как я сегодня встретилась с задачей».</p>
+        <div class="qa" id="qaButtons"></div>
+        <div id="qaHint" style="margin-top:10px;font-size:13px;color:var(--muted);font-style:italic"></div>
+      </div>
+
+      <h2>Прогресс недели</h2>
+      <div class="card">
+        <div style="display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+          <div>
+            <div class="pct" id="weekPct">0%</div>
+            <div class="pct-label" id="weekDays">0 из 7 дней отмечены</div>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div class="week-bar" id="weekBar"></div>
+          </div>
+        </div>
+        <div class="home-comment" id="weekComment"></div>
+      </div>
+
+      <h2>Маскот</h2>
+      <div class="ms-big">
+        <div class="em" id="msBigEm">🥚</div>
+        <div>
+          <div class="lvl" id="msBigLvl">Уровень 1 · 0 баллов</div>
+          <div class="nm" id="msBigNm">Яйцо</div>
+          <div class="phrase" id="msBigPhrase">Я пока просто лежу, но уже участвую.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ТРЕКЕР ===== -->
+    <section class="page" data-page="tracker">
+      <h1>Мой <em>трекер</em></h1>
+      <p class="lead">Здесь мы не ищем идеальности. Мы смотрим, как ты контактируешь с задачей. Даже «я понял/а, почему не сделал/а» — это уже данные.</p>
+
+      <div class="card" style="margin-top:18px;background:var(--yellow-soft);border-color:var(--yellow)">
+        <h3 style="margin-bottom:6px">Общий процент недели</h3>
+        <div style="display:flex;align-items:baseline;gap:14px">
+          <div class="pct" id="trackPct">0%</div>
+          <div class="pct-label" id="trackPctLabel">контакта с задачей</div>
+        </div>
+      </div>
+
+      <h2>Дни недели</h2>
+      <div id="dayCards"></div>
+    </section>
+
+    <!-- ===== ДНЕВНИК ===== -->
+    <section class="page" data-page="journal">
+      <h1>Дневник <em>наблюдений</em></h1>
+      <p class="lead">Это не отчёт для строгой комиссии. Это карта твоей операционной системы.</p>
+
+      <div class="card" style="margin-top:18px">
+        <div class="field">
+          <label class="label">Что помогло?</label>
+          <div class="checks" id="helpedChecks"></div>
+        </div>
+        <div class="field">
+          <label class="label">Что помешало?</label>
+          <div class="checks" id="hinderedChecks"></div>
+        </div>
+        <div class="field">
+          <label class="label">Одна фраза про день</label>
+          <input type="text" id="journalPhrase" placeholder="например: «вернулась, хотя думала, что не буду»" maxlength="200">
+        </div>
+        <button class="btn btn-coral" id="saveJournal">Сохранить наблюдение</button>
+        <div class="save-msg" id="journalSaved">Записано. Это не отчёт для строгой комиссии, это карта твоей операционной системы.</div>
+      </div>
+
+      <div class="goose-help">
+        <div class="em">🦢</div>
+        <div class="phr" id="goosePhrase">Тыкни сюда, если просто плохо.</div>
+        <button class="btn btn-ghost" id="gooseBtn">Мне плохо, я хочу просто тыкнуть в гуся</button>
+      </div>
+    </section>
+
+    <!-- ===== ДО / ПОСЛЕ ===== -->
+    <section class="page" data-page="before-after">
+      <h1>До <em>/</em> После</h1>
+      <p class="lead">Точки начала, середины и финиша. Не для оценки, а чтобы видеть, что меняется.</p>
+
+      <h2>Стартовая точка</h2>
+      <div class="card">
+        <div class="field">
+          <label class="label">Сейчас мне труднее всего:</label>
+          <div class="checks" id="hardestChecks"></div>
+        </div>
+        <div class="field">
+          <label class="label">Моя главная цель на 6 недель</label>
+          <textarea id="ba-goal" placeholder="Я хочу научиться начинать рабочие задачи без трёх часов внутреннего суда."></textarea>
+        </div>
+        <div class="field">
+          <label class="label">Как я пойму, что стало лучше?</label>
+          <div class="checks" id="betterChecks"></div>
+        </div>
+      </div>
+
+      <h2>Промежуточная точка</h2>
+      <div class="card">
+        <div class="field"><label class="label">Что уже чуть-чуть сдвинулось?</label>
+          <textarea id="ba-mid-shift"></textarea></div>
+        <div class="field"><label class="label">Что всё ещё трудно?</label>
+          <textarea id="ba-mid-hard"></textarea></div>
+        <div class="field"><label class="label">Какой инструмент неожиданно помог?</label>
+          <textarea id="ba-mid-tool"></textarea></div>
+      </div>
+
+      <h2>Финальная точка</h2>
+      <div class="card">
+        <div class="field"><label class="label">Что стало легче?</label>
+          <textarea id="ba-fin-easy"></textarea></div>
+        <div class="field"><label class="label">Что я теперь знаю о себе?</label>
+          <textarea id="ba-fin-know"></textarea></div>
+        <div class="field"><label class="label">Какие 2 инструмента реально сработали?</label>
+          <textarea id="ba-fin-tools"></textarea></div>
+        <div class="field"><label class="label">Что я беру с собой дальше?</label>
+          <textarea id="ba-fin-take"></textarea></div>
+      </div>
+
+      <button class="btn btn-coral" id="saveBA" style="margin-top:14px">Сохранить</button>
+      <div class="save-msg" id="baSaved">Сохранено. Все три точки видны только тебе.</div>
+
+      <h2>Сравнение</h2>
+      <div class="card" style="background:var(--paper)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" id="compareGrid">
+          <div>
+            <div class="label" style="color:var(--muted)">Было</div>
+            <div style="font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--soft)" id="cmpBefore">— заполни стартовую точку —</div>
+          </div>
+          <div>
+            <div class="label" style="color:var(--accent)">Стало</div>
+            <div style="font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink)" id="cmpAfter">— заполни финальную точку —</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== АПТЕЧКА ===== -->
+    <section class="page" data-page="apt">
+      <h1>Аптечка <em>навыков</em></h1>
+      <p class="lead">Не библиотека. Скорее, ящик с пластырями: какой нужен — в зависимости от того, что сейчас болит.</p>
+
+      <div id="aptechka" style="margin-top:24px"></div>
+    </section>
+
+    <!-- ===== ИНСТРУКЦИЯ ===== -->
+    <section class="page" data-page="manual">
+      <h1>Моя <em>инструкция к себе</em></h1>
+      <p class="lead">Не для дисциплины. Чтобы было, что положить в карман и достать, когда снова забудешь, как это всё работает.</p>
+
+      <div class="card" style="margin-top:18px">
+        <div class="field"><label class="label">Мне легче начинать, когда:</label>
+          <textarea id="mn-start"></textarea></div>
+        <div class="field"><label class="label">Мне мешает:</label>
+          <textarea id="mn-stop"></textarea></div>
+        <div class="field"><label class="label">Мои первые признаки перегруза:</label>
+          <textarea id="mn-overload"></textarea></div>
+        <div class="field"><label class="label">Мне помогают внешние стимулы:</label>
+          <textarea id="mn-external"></textarea></div>
+        <div class="field"><label class="label">Мне не помогают советы типа:</label>
+          <textarea id="mn-avoid"></textarea></div>
+        <div class="field"><label class="label">Если я пропустила 3 дня, мне нужно:</label>
+          <textarea id="mn-after-gap"></textarea></div>
+        <div class="field"><label class="label">Мой минимальный рабочий день выглядит так:</label>
+          <textarea id="mn-min-day"></textarea></div>
+        <button class="btn btn-coral" id="assembleBtn">Собрать мою инструкцию</button>
+      </div>
+
+      <div class="manual-out" id="manualOut">
+        <h3>Моя инструкция к себе</h3>
+        <div id="manualBody"></div>
+        <div style="margin-top:18px">
+          <button class="btn btn-ghost" id="copyManual">Скопировать текст</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   Кабинет участника · СДВГ-тренинг
+   ============================================================ */
+const KEY = 'adhd_cabinet_v1';
+
+/* ===== Демо-данные для Кати ===== */
+const DEMO = {
+  name: 'Катя',
+  currentWeek: 2,
+  totalWeeks: 6,
+  weekTask: '15 минут в день разбирать документы. Не закончить. Просто быть внутри задачи.',
+  days: {
+    mon: { status:'full', note:'Поставила таймер на 15 минут и закрыла после звонка.' },
+    tue: { status:'partial', note:'Села на 5 минут, отвлеклась — но вернулась.' },
+    wed: { status:'understood', note:'Очень устала, но поняла что вчера было поздно лечь.' },
+    thu: { status:'contact', note:'Открыла папку с документами. Дальше не пошло, и это тоже шаг.' },
+    fri: null, sat: null, sun: null,
+  },
+  observations: [],
+  before: { hardest: ['start','prio'], goal: '', better: [] },
+  mid: { shift:'', hard:'', tool:'' },
+  after: { easy:'', know:'', tools:'', take:'' },
+  manual: { start:'', stop:'', overload:'', external:'', avoid:'', afterGap:'', minDay:'' },
+  points: 8, // демо-баллы
+};
+
+/* ===== load/save ===== */
+function load(){ try{ const r=localStorage.getItem(KEY); return r?JSON.parse(r):structuredClone(DEMO);}catch(e){return structuredClone(DEMO);} }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+let state = load();
+
+/* ===== константы ===== */
+const STATUSES = [
+  { id:'full',       em:'✅', label:'Сделала полностью', weight:1.0,  pts:3 },
+  { id:'partial',    em:'🟡', label:'Сделала кусочек',   weight:0.7,  pts:2 },
+  { id:'contact',    em:'🔵', label:'Пришла к задаче',   weight:0.4,  pts:1 },
+  { id:'understood', em:'⚪', label:'Поняла, почему нет',weight:0.2,  pts:1 },
+];
+const DAYS = [
+  {id:'mon',full:'Понедельник',short:'Пн'},
+  {id:'tue',full:'Вторник',    short:'Вт'},
+  {id:'wed',full:'Среда',      short:'Ср'},
+  {id:'thu',full:'Четверг',    short:'Чт'},
+  {id:'fri',full:'Пятница',    short:'Пт'},
+  {id:'sat',full:'Суббота',    short:'Сб'},
+  {id:'sun',full:'Воскресенье',short:'Вс'},
+];
+
+const MASCOTS = [
+  { em:'🥚', name:'Яйцо',                           threshold:0,   phrase:'Я пока просто лежу, но уже участвую.' },
+  { em:'🐣', name:'Птенец',                         threshold:10,  phrase:'Я сделала первый тык.' },
+  { em:'⏱🦢', name:'Гусь с таймером',                 threshold:25,  phrase:'Я умею появляться в задаче.' },
+  { em:'📓🦢', name:'Гусь с блокнотом',                threshold:50,  phrase:'Я собираю данные, а не приговоры.' },
+  { em:'🥿🦢', name:'Гусь в тапках',                   threshold:80,  phrase:'Я возвращаюсь после пропуска.' },
+  { em:'🎓🦢', name:'Гусь-наставник',                  threshold:120, phrase:'Я знаю свои паттерны.' },
+  { em:'👑🦢', name:'Гусь-король исполнительных навыков', threshold:180, phrase:'Я не исцелилась, я вооружилась.' },
+];
+
+const HELPED = ['таймер','другой человек рядом','музыка','задача была маленькой','дедлайн','страх последствий','понятный первый шаг','другое'];
+const HINDERED = ['не поняла, с чего начать','усталость','тревога','перфекционизм','забыла','было слишком много шагов','стыд после пропуска','другое'];
+
+const HARDEST_OPTS = [
+  {id:'start',label:'начинать задачи'},
+  {id:'finish',label:'заканчивать задачи'},
+  {id:'remember',label:'помнить'},
+  {id:'plan',label:'планировать'},
+  {id:'rest',label:'отдыхать'},
+  {id:'self-control',label:'не срываться'},
+  {id:'shame',label:'не тонуть в стыде'},
+  {id:'prio',label:'выбирать приоритет'},
+  {id:'other',label:'другое'},
+];
+const BETTER_OPTS = [
+  'я начинаю хотя бы 3 раза в неделю',
+  'я меньше избегаю',
+  'я быстрее возвращаюсь после срыва',
+  'я меньше ругаю себя',
+  'я понимаю, что мне помогает',
+  'я могу делать маленький кусок без требования закончить',
+];
+
+const APTECHKA = [
+  { group:'Когда не могу начать', em:'🌱', items:[
+    {name:'3-минутный старт', desc:'Минимум, который тебе разрешено сделать. Можно остановиться через 3 минуты.'},
+    {name:'Body doubling', desc:'Кто-то рядом — на созвоне, в кафе, в чате. Даже молча.'},
+    {name:'«Открыть файл — уже задача»', desc:'Декомпозируй до уровня одного клика.'},
+    {name:'Список первых микрошагов', desc:'Не план дня, а 3 действия по 2 минуты.'},
+  ]},
+  { group:'Когда застряла в стыде', em:'🫶', items:[
+    {name:'Вина vs стыд', desc:'Вина: «я сделала плохое». Стыд: «я плохая». Разговаривай с виной.'},
+    {name:'Данные, не приговор', desc:'Пропуск — это информация, не оценка.'},
+    {name:'Как вернуться после пропуска', desc:'Без догоняющих марафонов. Просто следующий шаг.'},
+  ]},
+  { group:'Когда всё слишком большое', em:'🧩', items:[
+    {name:'Декомпозиция', desc:'Большая задача → 3-5 крошечных. Каждая на 5-15 минут.'},
+    {name:'Задача на 15 минут', desc:'Не «доделать», а «побыть с задачей 15 минут».'},
+    {name:'«Достаточно хорошо»', desc:'Опредeли заранее, что считается «ок». Не «идеально».'},
+  ]},
+  { group:'Когда забыла всё на свете', em:'📌', items:[
+    {name:'Внешняя память', desc:'Записывай туда, куда точно посмотришь — телефон, дверь, зеркало.'},
+    {name:'Таймеры', desc:'Не «помни» — поставь напоминание.'},
+    {name:'Чек-листы', desc:'Не для дисциплины. Чтобы освободить рабочую память.'},
+    {name:'Утренний якорь', desc:'Один и тот же первый шаг каждое утро.'},
+  ]},
+  { group:'Когда нет сил', em:'🛌', items:[
+    {name:'Минимальный день', desc:'Заранее знаешь, что считается «вылеженной задачей». 1–2 пункта, не больше.'},
+    {name:'Шкала ложечек', desc:'Сегодня ложечек: 2 из 10. Что можно сделать на 2 ложечки?'},
+    {name:'Отдых как задача', desc:'Не «провал», а планомерный пункт. Без вины.'},
+  ]},
+];
+
+const GOOSE_PHRASES = [
+  'Ты не сломала систему. Ты просто сейчас в сложном месте.',
+  'Можно не делать красиво. Можно сделать криво и маленько.',
+  'Пропуск — это не конец трека. Это просто клеточка без данных.',
+  'Сегодня достаточно вернуться на один миллиметр.',
+  'Ты не обязана стать новым человеком. Ты уже вернулась к задаче. Это вообще-то навык.',
+  'Усталость — не лень. И не повод тренироваться сильнее.',
+  'Завтра — это тоже опция. Не «провал», а «следующий заход».',
+];
+
+/* ============ NAV ============ */
+document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const page = a.dataset.page;
+  document.querySelectorAll('#nav a').forEach(x => x.classList.toggle('active', x===a));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.dataset.page===page));
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ============ MASCOT ============ */
+function currentMascot(){
+  let m = MASCOTS[0];
+  for (const x of MASCOTS) if (state.points >= x.threshold) m = x;
+  return m;
+}
+function nextMascot(){
+  const cur = currentMascot();
+  const idx = MASCOTS.indexOf(cur);
+  return MASCOTS[idx+1] || null;
+}
+function renderMascots(){
+  const m = currentMascot();
+  const idx = MASCOTS.indexOf(m);
+  const nxt = nextMascot();
+  document.getElementById('msMiniEm').textContent = m.em;
+  document.getElementById('msMiniLvl').textContent = 'Уровень ' + (idx+1);
+  document.getElementById('msMiniNm').textContent = m.name;
+  document.getElementById('msMiniPts').textContent = state.points + ' баллов';
+  const pct = nxt ? Math.min(100, ((state.points - m.threshold) / (nxt.threshold - m.threshold)) * 100) : 100;
+  document.getElementById('msMiniBar').style.width = pct + '%';
+
+  document.getElementById('msBigEm').textContent = m.em;
+  document.getElementById('msBigLvl').textContent = 'Уровень ' + (idx+1) + ' · ' + state.points + ' баллов';
+  document.getElementById('msBigNm').textContent = m.name;
+  document.getElementById('msBigPhrase').textContent = m.phrase;
+}
+function addPoints(p, label){
+  state.points += p;
+  save();
+  renderMascots();
+  if (label) toast('+' + p + ' — ' + label);
+}
+
+/* ============ HOME ============ */
+function calcWeek(){
+  let weighted = 0, marked = 0, total = DAYS.length;
+  for (const d of DAYS) {
+    const r = state.days[d.id];
+    if (r && r.status) {
+      marked++;
+      const st = STATUSES.find(s => s.id === r.status);
+      if (st) weighted += st.weight;
+    }
+  }
+  return { pct: Math.round((weighted/total)*100), marked, total };
+}
+function renderHome(){
+  document.querySelectorAll('.userName, #userName').forEach(n => n.textContent = state.name);
+  document.getElementById('curWeek').textContent = state.currentWeek;
+  document.getElementById('totalWeeks').textContent = state.totalWeeks;
+  document.getElementById('weekTask').textContent = state.weekTask;
+
+  // Quick-action кнопки (отметить шаг "сегодня" — берём первый незаполненный или сегодняшний день для демо: четверг)
+  const todayId = pickTodayId();
+  const qa = document.getElementById('qaButtons');
+  qa.innerHTML = '';
+  STATUSES.forEach(st => {
+    const b = document.createElement('button');
+    b.className = 'qa-btn';
+    if (state.days[todayId]?.status === st.id) b.classList.add('on');
+    b.innerHTML = `<span class="em">${st.em}</span>${st.label}`;
+    b.addEventListener('click', () => {
+      const prev = state.days[todayId]?.status;
+      if (prev === st.id){
+        state.days[todayId] = null;
+      } else {
+        if (!state.days[todayId]) state.days[todayId] = {};
+        state.days[todayId].status = st.id;
+        addPoints(st.pts, st.label);
+      }
+      save();
+      renderHome();
+      renderTracker();
+    });
+    qa.appendChild(b);
+  });
+  document.getElementById('qaHint').textContent = `Отмечаешь шаг для дня: ${DAYS.find(d=>d.id===todayId).full}`;
+
+  // week bar
+  const wb = document.getElementById('weekBar');
+  wb.innerHTML = '';
+  DAYS.forEach(d => {
+    const r = state.days[d.id];
+    const el = document.createElement('div');
+    el.className = 'wb-day';
+    if (d.id === todayId) el.classList.add('today');
+    if (r?.status) el.classList.add('s-'+r.status);
+    el.textContent = d.short;
+    wb.appendChild(el);
+  });
+  // pct
+  const w = calcWeek();
+  document.getElementById('weekPct').textContent = w.pct + '%';
+  document.getElementById('weekDays').textContent = w.marked + ' из ' + w.total + ' дней отмечены';
+  document.getElementById('weekComment').textContent =
+    w.marked === 0 ? 'Неделя только начинается. Можно идти медленно.' :
+    w.marked < 3   ? `Ты уже ${w.marked} раз пришла к задаче. Это не «мало», это данные.` :
+    w.marked < 6   ? `Ты появлялась ${w.marked} раз. Это значит, что задача уже не «избегаемая».` :
+                     'Контакт с задачей был почти каждый день. Это очень круто, не обесценивай.';
+
+  renderMascots();
+}
+function pickTodayId(){
+  // в реальном продакшне — день недели. Для демо берём первый незаполненный.
+  for (const d of DAYS) if (!state.days[d.id]) return d.id;
+  return 'sun';
+}
+
+/* ============ TRACKER ============ */
+function renderTracker(){
+  const c = document.getElementById('dayCards');
+  c.innerHTML = '';
+  DAYS.forEach(d => {
+    const r = state.days[d.id] || {};
+    const wrap = document.createElement('div');
+    wrap.className = 'card day-card';
+    if (r.status) wrap.classList.add('s-'+r.status);
+    const st = STATUSES.find(s => s.id === r.status);
+    wrap.innerHTML = `
+      <div class="head">
+        <div class="dname">${d.full}</div>
+        <div class="status">${st ? st.em + ' ' + st.label : 'не отмечено'}</div>
+      </div>
+      <div class="qa"></div>
+      <div class="field" style="margin-top:10px"><input type="text" placeholder="одна фраза про день" value="${(r.note||'').replace(/"/g,'&quot;')}"></div>
+    `;
+    const qa = wrap.querySelector('.qa');
+    STATUSES.forEach(s => {
+      const b = document.createElement('button');
+      b.className = 'qa-btn' + (r.status === s.id ? ' on':'');
+      b.innerHTML = `<span class="em">${s.em}</span>${s.label}`;
+      b.addEventListener('click', () => {
+        if (state.days[d.id]?.status === s.id){
+          // снять отметку
+          if (state.days[d.id]) state.days[d.id].status = null;
+        } else {
+          if (!state.days[d.id]) state.days[d.id] = {};
+          state.days[d.id].status = s.id;
+          addPoints(s.pts, d.full);
+        }
+        save();
+        renderTracker();
+        renderHome();
+      });
+      qa.appendChild(b);
+    });
+    // note input
+    const input = wrap.querySelector('input');
+    input.addEventListener('input', () => {
+      if (!state.days[d.id]) state.days[d.id] = {};
+      state.days[d.id].note = input.value;
+      save();
+    });
+    c.appendChild(wrap);
+  });
+  // overall pct
+  const w = calcWeek();
+  document.getElementById('trackPct').textContent = w.pct + '%';
+  document.getElementById('trackPctLabel').textContent = w.pct < 30 ? 'тихий контакт с задачей' : w.pct < 70 ? 'регулярный контакт' : 'сильный контакт';
+}
+
+/* ============ JOURNAL ============ */
+function renderJournalChecks(){
+  const helpedEl = document.getElementById('helpedChecks');
+  const hinderedEl = document.getElementById('hinderedChecks');
+  helpedEl.innerHTML = '';
+  hinderedEl.innerHTML = '';
+  HELPED.forEach((h,i) => helpedEl.appendChild(buildCheck('helped-'+i, h, 'helped')));
+  HINDERED.forEach((h,i) => hinderedEl.appendChild(buildCheck('hindered-'+i, h, 'hindered')));
+}
+function buildCheck(id, label, group){
+  const el = document.createElement('label');
+  el.className = 'check';
+  el.dataset.group = group;
+  el.dataset.id = id;
+  el.innerHTML = `<span class="box">✓</span><span>${label}</span>`;
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    el.classList.toggle('on');
+  });
+  return el;
+}
+document.getElementById('saveJournal').addEventListener('click', () => {
+  const helped = [...document.querySelectorAll('#helpedChecks .check.on')].map(x => x.querySelector('span:last-child').textContent);
+  const hindered = [...document.querySelectorAll('#hinderedChecks .check.on')].map(x => x.querySelector('span:last-child').textContent);
+  const phrase = document.getElementById('journalPhrase').value.trim();
+  state.observations.push({ at:Date.now(), helped, hindered, phrase });
+  save();
+  addPoints(1, 'наблюдение');
+  const m = document.getElementById('journalSaved');
+  m.classList.add('show');
+  setTimeout(() => m.classList.remove('show'), 4000);
+  // очистка
+  document.querySelectorAll('#helpedChecks .check.on, #hinderedChecks .check.on').forEach(x => x.classList.remove('on'));
+  document.getElementById('journalPhrase').value = '';
+});
+document.getElementById('gooseBtn').addEventListener('click', () => {
+  const ph = GOOSE_PHRASES[Math.floor(Math.random()*GOOSE_PHRASES.length)];
+  document.getElementById('goosePhrase').textContent = ph;
+});
+
+/* ============ BEFORE / AFTER ============ */
+function renderBA(){
+  const hc = document.getElementById('hardestChecks');
+  const bc = document.getElementById('betterChecks');
+  hc.innerHTML = ''; bc.innerHTML = '';
+  HARDEST_OPTS.forEach(o => {
+    const el = buildCheck('hardest-'+o.id, o.label, 'hardest');
+    if (state.before.hardest?.includes(o.id)) el.classList.add('on');
+    el.dataset.optId = o.id;
+    hc.appendChild(el);
+  });
+  BETTER_OPTS.forEach((o,i) => {
+    const el = buildCheck('better-'+i, o, 'better');
+    if (state.before.better?.includes(o)) el.classList.add('on');
+    bc.appendChild(el);
+  });
+
+  document.getElementById('ba-goal').value = state.before.goal || '';
+  document.getElementById('ba-mid-shift').value = state.mid.shift || '';
+  document.getElementById('ba-mid-hard').value = state.mid.hard || '';
+  document.getElementById('ba-mid-tool').value = state.mid.tool || '';
+  document.getElementById('ba-fin-easy').value = state.after.easy || '';
+  document.getElementById('ba-fin-know').value = state.after.know || '';
+  document.getElementById('ba-fin-tools').value = state.after.tools || '';
+  document.getElementById('ba-fin-take').value = state.after.take || '';
+
+  // сравнение
+  const before = state.before.goal ? `«${state.before.goal.trim()}»` : '— заполни стартовую точку —';
+  const after  = state.after.know  ? `«${state.after.know.trim()}»` : '— заполни финальную точку —';
+  document.getElementById('cmpBefore').textContent = before;
+  document.getElementById('cmpAfter').textContent  = after;
+}
+document.getElementById('saveBA').addEventListener('click', () => {
+  // hardest
+  state.before.hardest = [...document.querySelectorAll('#hardestChecks .check.on')].map(x => x.dataset.optId);
+  state.before.better = [...document.querySelectorAll('#betterChecks .check.on')].map(x => x.querySelector('span:last-child').textContent);
+  state.before.goal = document.getElementById('ba-goal').value;
+  const filledBefore = state.before.hardest.length || state.before.goal || state.before.better.length;
+  const filledMid    = document.getElementById('ba-mid-shift').value || document.getElementById('ba-mid-hard').value || document.getElementById('ba-mid-tool').value;
+  const filledAfter  = document.getElementById('ba-fin-easy').value || document.getElementById('ba-fin-know').value || document.getElementById('ba-fin-tools').value || document.getElementById('ba-fin-take').value;
+  state.mid = {
+    shift: document.getElementById('ba-mid-shift').value,
+    hard:  document.getElementById('ba-mid-hard').value,
+    tool:  document.getElementById('ba-mid-tool').value,
+  };
+  state.after = {
+    easy:  document.getElementById('ba-fin-easy').value,
+    know:  document.getElementById('ba-fin-know').value,
+    tools: document.getElementById('ba-fin-tools').value,
+    take:  document.getElementById('ba-fin-take').value,
+  };
+  // points
+  if (filledBefore && !state._beforeAwarded){ addPoints(3,'стартовая точка'); state._beforeAwarded = true; }
+  if (filledMid && !state._midAwarded){ addPoints(3,'промежуточная точка'); state._midAwarded = true; }
+  if (filledAfter && !state._afterAwarded){ addPoints(5,'финальная точка'); state._afterAwarded = true; }
+  save();
+  renderBA();
+  const m = document.getElementById('baSaved');
+  m.classList.add('show');
+  setTimeout(()=>m.classList.remove('show'), 3000);
+});
+
+/* ============ АПТЕЧКА ============ */
+function renderApt(){
+  const c = document.getElementById('aptechka');
+  c.innerHTML = '';
+  APTECHKA.forEach(g => {
+    const wrap = document.createElement('div');
+    wrap.className = 'apt-group';
+    wrap.innerHTML = `<h3>${g.em} ${g.group}</h3><div class="apt-grid"></div>`;
+    const grid = wrap.querySelector('.apt-grid');
+    g.items.forEach(it => {
+      const card = document.createElement('div');
+      card.className = 'apt-card';
+      card.innerHTML = `
+        <div class="name">${it.name}</div>
+        <div class="desc">${it.desc}</div>
+        <a href="#" onclick="event.preventDefault();toast('Откроется материал «${it.name}». Заглушка — добавим ссылку.')">Открыть →</a>
+      `;
+      grid.appendChild(card);
+    });
+    c.appendChild(wrap);
+  });
+}
+
+/* ============ MANUAL ============ */
+function renderManual(){
+  document.getElementById('mn-start').value = state.manual.start || '';
+  document.getElementById('mn-stop').value = state.manual.stop || '';
+  document.getElementById('mn-overload').value = state.manual.overload || '';
+  document.getElementById('mn-external').value = state.manual.external || '';
+  document.getElementById('mn-avoid').value = state.manual.avoid || '';
+  document.getElementById('mn-after-gap').value = state.manual.afterGap || '';
+  document.getElementById('mn-min-day').value = state.manual.minDay || '';
+}
+document.getElementById('assembleBtn').addEventListener('click', () => {
+  state.manual = {
+    start: document.getElementById('mn-start').value.trim(),
+    stop: document.getElementById('mn-stop').value.trim(),
+    overload: document.getElementById('mn-overload').value.trim(),
+    external: document.getElementById('mn-external').value.trim(),
+    avoid: document.getElementById('mn-avoid').value.trim(),
+    afterGap: document.getElementById('mn-after-gap').value.trim(),
+    minDay: document.getElementById('mn-min-day').value.trim(),
+  };
+  if (!state._manualAwarded){ addPoints(5,'собрала инструкцию'); state._manualAwarded = true; }
+  save();
+  const lines = [];
+  if (state.manual.start)    lines.push(`<div class="mline"><strong>Мне легче начинать, когда:</strong> ${state.manual.start}</div>`);
+  if (state.manual.stop)     lines.push(`<div class="mline"><strong>Мне мешает:</strong> ${state.manual.stop}</div>`);
+  if (state.manual.overload) lines.push(`<div class="mline"><strong>Первые признаки перегруза:</strong> ${state.manual.overload}</div>`);
+  if (state.manual.external) lines.push(`<div class="mline"><strong>Внешние стимулы, которые помогают:</strong> ${state.manual.external}</div>`);
+  if (state.manual.avoid)    lines.push(`<div class="mline"><strong>Советы, которые не работают:</strong> ${state.manual.avoid}</div>`);
+  if (state.manual.afterGap) lines.push(`<div class="mline"><strong>После 3 пропусков мне нужно:</strong> ${state.manual.afterGap}</div>`);
+  if (state.manual.minDay)   lines.push(`<div class="mline"><strong>Мой минимальный день:</strong> ${state.manual.minDay}</div>`);
+  document.getElementById('manualBody').innerHTML = lines.length ? lines.join('') : '<div class="mline">Заполни хотя бы одно поле — карточка соберётся.</div>';
+  document.getElementById('manualOut').classList.add('show');
+});
+document.getElementById('copyManual').addEventListener('click', () => {
+  const text = [
+    state.manual.start    ? `Мне легче начинать, когда: ${state.manual.start}` : '',
+    state.manual.stop     ? `Мне мешает: ${state.manual.stop}` : '',
+    state.manual.overload ? `Первые признаки перегруза: ${state.manual.overload}` : '',
+    state.manual.external ? `Внешние стимулы, которые помогают: ${state.manual.external}` : '',
+    state.manual.avoid    ? `Советы, которые не работают: ${state.manual.avoid}` : '',
+    state.manual.afterGap ? `После 3 пропусков мне нужно: ${state.manual.afterGap}` : '',
+    state.manual.minDay   ? `Мой минимальный день: ${state.manual.minDay}` : '',
+  ].filter(Boolean).join('\n');
+  navigator.clipboard.writeText(text).then(() => toast('Скопировано в буфер'));
+});
+
+/* ============ RESET ============ */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('Сбросить демо-данные?')) return;
+  localStorage.removeItem(KEY);
+  state = load();
+  renderAll();
+  toast('Демо сброшено');
+});
+
+/* ============ INIT ============ */
+function renderAll(){
+  renderHome();
+  renderTracker();
+  renderJournalChecks();
+  renderBA();
+  renderApt();
+  renderManual();
+}
+renderAll();
+</script>
+</body>
+</html>
