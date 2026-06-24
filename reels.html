@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Шаблон рилса/сторис · Стая</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF7E6;--paper:#FFFCF4;--ink:#241D14;--ink-mid:#5A5042;--muted:#9C907A;
+    --accent:#FF6A3D;--yellow:#FFC527;--yellow-soft:#FFE08A;--green:#1FA85A;--green-deep:#12643A;
+    --lilac:#7C5CFF;--line:#F0DEB6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Manrope',-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:30px 20px 60px}
+  .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:32px}
+  @media(max-width:880px){.wrap{grid-template-columns:1fr}}
+
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:32px;letter-spacing:-.02em;margin-bottom:6px}
+  h1 em{font-style:italic;color:var(--accent);font-weight:500}
+  .lead{color:var(--ink-mid);font-size:15px;margin-bottom:24px}
+
+  /* Preview frame */
+  .preview-wrap{
+    background:#000;border-radius:24px;padding:14px;
+    box-shadow:0 24px 60px rgba(0,0,0,.16);
+    aspect-ratio:9/16;max-width:430px;width:100%;margin:0 auto;
+    position:relative;overflow:hidden;
+  }
+  .preview-wrap canvas{
+    width:100%;height:100%;display:block;border-radius:14px;
+  }
+
+  /* Controls */
+  .panel{background:#fff;border-radius:18px;padding:24px;border:1px solid var(--line);position:sticky;top:20px;height:fit-content}
+  .field{margin-bottom:16px}
+  .label{font-size:12px;font-weight:700;color:var(--ink-mid);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;display:block}
+  input[type=text],textarea,select{
+    width:100%;font:inherit;font-size:15px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:11px 13px;
+  }
+  textarea{resize:vertical;min-height:80px;line-height:1.4}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+
+  .templates{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+  .tpl{
+    padding:9px 8px;border-radius:8px;background:var(--paper);border:1.5px solid var(--line);
+    cursor:pointer;font:inherit;font-size:12px;font-weight:600;color:var(--ink-mid);text-align:center;
+    transition:all .12s;line-height:1.2;
+  }
+  .tpl:hover{border-color:var(--accent)}
+  .tpl.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .palette{display:flex;gap:8px;flex-wrap:wrap}
+  .pal{
+    width:38px;height:38px;border-radius:10px;cursor:pointer;border:2px solid transparent;
+    transition:all .12s;position:relative;
+  }
+  .pal:hover{transform:scale(1.05)}
+  .pal.on{border-color:var(--ink)}
+  .pal.cream{background:#FFF7E6}
+  .pal.coral{background:#FF6A3D}
+  .pal.yellow{background:#FFC527}
+  .pal.green{background:#12643A}
+  .pal.ink{background:#241D14}
+  .pal.lilac{background:#7C5CFF}
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+    background:var(--accent);color:#fff;border:none;
+    padding:15px 22px;border-radius:99px;
+    font:inherit;font-weight:700;font-size:15px;cursor:pointer;
+    transition:transform .12s;margin-top:6px;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,106,61,.32)}
+  .btn-ink{background:var(--ink)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+
+  .row{display:flex;gap:8px}
+  .row>*{flex:1}
+  .switch{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-mid)}
+  .switch input{margin:0}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:11px 22px;border-radius:99px;
+    font-size:13px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== PREVIEW ===== -->
+  <div>
+    <h1>Шаблон <em>рилса</em> / сторис</h1>
+    <p class="lead">Меняй текст и палитру справа — превью обновляется мгновенно. Скачивается в 1080×1920.</p>
+    <div class="preview-wrap">
+      <canvas id="cv" width="540" height="960"></canvas>
+    </div>
+  </div>
+
+  <!-- ===== CONTROLS ===== -->
+  <aside class="panel">
+    <div class="field">
+      <span class="label">Тип плашки</span>
+      <div class="templates" id="tpls">
+        <button class="tpl on" data-badge="Минутка" data-em="⏱">⏱ Минутка</button>
+        <button class="tpl" data-badge="Пенделёк" data-em="🐣">🐣 Пенделёк</button>
+        <button class="tpl" data-badge="Карточка дня" data-em="🪶">🪶 Карточка дня</button>
+        <button class="tpl" data-badge="Анонс" data-em="📣">📣 Анонс</button>
+        <button class="tpl" data-badge="Вопрос" data-em="❓">❓ Вопрос</button>
+        <button class="tpl" data-badge="Совет дня" data-em="💡">💡 Совет</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="label">Свой текст плашки</span>
+      <input type="text" id="badge" value="Минутка" maxlength="40">
+    </div>
+
+    <div class="field">
+      <span class="label">Тема (главный текст)</span>
+      <textarea id="title" maxlength="120">Про щекотание</textarea>
+    </div>
+
+    <div class="field">
+      <span class="label">Подзаголовок / описание</span>
+      <input type="text" id="sub" value="" placeholder="опционально — короткая подпись">
+    </div>
+
+    <div class="field">
+      <span class="label">Палитра</span>
+      <div class="palette" id="palette">
+        <div class="pal cream on" data-bg="#FFF7E6" data-ink="#241D14" data-accent="#FF6A3D"></div>
+        <div class="pal coral" data-bg="#FF6A3D" data-ink="#FFFCF4" data-accent="#FFC527"></div>
+        <div class="pal yellow" data-bg="#FFC527" data-ink="#241D14" data-accent="#FF6A3D"></div>
+        <div class="pal green" data-bg="#12643A" data-ink="#FFFCF4" data-accent="#FFC527"></div>
+        <div class="pal ink" data-bg="#241D14" data-ink="#FFFCF4" data-accent="#FF6A3D"></div>
+        <div class="pal lilac" data-bg="#7C5CFF" data-ink="#FFFCF4" data-accent="#FFC527"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="label">Бренд внизу</span>
+      <input type="text" id="brand" value="@dr_gruzdeva" maxlength="60">
+    </div>
+
+    <div class="field switch">
+      <input type="checkbox" id="showBird" checked>
+      <label for="showBird">Показать птицу-королеву</label>
+    </div>
+
+    <button class="btn" id="downloadBtn">⬇  Скачать 1080×1920</button>
+    <button class="btn btn-ghost" id="copyJpg" style="margin-top:8px">Скопировать в буфер</button>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+const state = {
+  badge: 'Минутка',
+  title: 'Про щекотание',
+  sub: '',
+  brand: '@dr_gruzdeva',
+  bg: '#FFF7E6',
+  ink: '#241D14',
+  accent: '#FF6A3D',
+  showBird: true,
+};
+
+/* ====== UI bindings ====== */
+document.querySelectorAll('#tpls .tpl').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#tpls .tpl').forEach(x => x.classList.toggle('on', x===b));
+  state.badge = b.dataset.badge;
+  document.getElementById('badge').value = state.badge;
+  draw(ctx, cv.width, cv.height);
+}));
+
+document.getElementById('badge').addEventListener('input', e => { state.badge = e.target.value; draw(ctx, cv.width, cv.height); });
+document.getElementById('title').addEventListener('input', e => { state.title = e.target.value; draw(ctx, cv.width, cv.height); });
+document.getElementById('sub').addEventListener('input', e => { state.sub = e.target.value; draw(ctx, cv.width, cv.height); });
+document.getElementById('brand').addEventListener('input', e => { state.brand = e.target.value; draw(ctx, cv.width, cv.height); });
+document.getElementById('showBird').addEventListener('change', e => { state.showBird = e.target.checked; draw(ctx, cv.width, cv.height); });
+
+document.querySelectorAll('#palette .pal').forEach(p => p.addEventListener('click', () => {
+  document.querySelectorAll('#palette .pal').forEach(x => x.classList.toggle('on', x===p));
+  state.bg = p.dataset.bg;
+  state.ink = p.dataset.ink;
+  state.accent = p.dataset.accent;
+  draw(ctx, cv.width, cv.height);
+}));
+
+/* ====== DRAWING ====== */
+function draw(ctx, w, h){
+  // background — gradient
+  const g = ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0, state.bg);
+  g.addColorStop(1, mix(state.bg, '#000', 0.05));
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,w,h);
+
+  // soft decorative blobs
+  drawBlob(ctx, w*0.85, h*0.18, w*0.55, hexA(state.accent, 0.14));
+  drawBlob(ctx, w*0.15, h*0.82, w*0.5, hexA(state.accent, 0.10));
+
+  // badge
+  const padX = w*0.07;
+  const badgeY = h*0.10;
+  const badgeFontPx = Math.max(20, w*0.044);
+  ctx.font = `700 ${badgeFontPx}px "Manrope",sans-serif`;
+  const bw = ctx.measureText(state.badge.toUpperCase()).width + padX*0.9;
+  const bh = badgeFontPx*1.85;
+  roundRect(ctx, padX, badgeY, bw, bh, bh/2);
+  ctx.fillStyle = state.accent; ctx.fill();
+  ctx.fillStyle = invertOn(state.accent);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(state.badge.toUpperCase(), padX + bw*0.10, badgeY + bh*0.55);
+
+  // title
+  ctx.fillStyle = state.ink;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  let titleSize = w*0.13;
+  ctx.font = `600 ${titleSize}px "Fraunces","Georgia",serif`;
+  const maxTW = w - padX*2;
+  let lines = wrap(ctx, state.title, maxTW);
+  while ((lines.length > 5 || lines.some(l => ctx.measureText(l).width > maxTW)) && titleSize > w*0.06){
+    titleSize -= w*0.005;
+    ctx.font = `600 ${titleSize}px "Fraunces","Georgia",serif`;
+    lines = wrap(ctx, state.title, maxTW);
+  }
+  let ty = h*0.26;
+  for (const ln of lines){
+    ctx.fillText(ln, padX, ty);
+    ty += titleSize*1.12;
+  }
+
+  // subtitle
+  if (state.sub){
+    ctx.font = `italic 500 ${w*0.045}px "Fraunces","Georgia",serif`;
+    ctx.fillStyle = hexA(state.ink, 0.7);
+    const subLines = wrap(ctx, state.sub, maxTW);
+    let sy = ty + w*0.04;
+    for (const ln of subLines){
+      ctx.fillText(ln, padX, sy);
+      sy += w*0.052;
+    }
+  }
+
+  // bird (optional)
+  if (state.showBird){
+    drawCrownedBird(ctx, w*0.78, h*0.58, w*0.13, state);
+  }
+
+  // Bottom band
+  const bandH = h*0.10;
+  ctx.fillStyle = hexA(state.ink, 0.9);
+  ctx.fillRect(0, h - bandH, w, bandH);
+  // yellow dot
+  ctx.beginPath();
+  ctx.arc(padX, h - bandH/2, w*0.018, 0, Math.PI*2);
+  ctx.fillStyle = '#FFC527'; ctx.fill();
+  // brand text
+  ctx.fillStyle = state.bg;
+  ctx.font = `700 ${w*0.034}px "Manrope",sans-serif`;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(`Валя Груздева · ${state.brand}`, padX + w*0.05, h - bandH/2);
+}
+
+/* === вспомогательные === */
+function wrap(ctx, text, maxW){
+  const words = text.split(/\s+/);
+  const out = []; let cur = '';
+  for (const w of words){
+    const test = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(test).width <= maxW) cur = test;
+    else { if (cur) out.push(cur); cur = w; }
+  }
+  if (cur) out.push(cur);
+  return out.length ? out : [''];
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}
+function drawBlob(ctx, cx, cy, r, color){
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fill();
+}
+function hexA(hex, alpha){
+  const c = hex.replace('#','');
+  const r = parseInt(c.slice(0,2),16), g = parseInt(c.slice(2,4),16), b = parseInt(c.slice(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function mix(a,b,t){
+  const A = parseHex(a), B = parseHex(b);
+  const r = Math.round(A[0]*(1-t)+B[0]*t);
+  const g = Math.round(A[1]*(1-t)+B[1]*t);
+  const bl = Math.round(A[2]*(1-t)+B[2]*t);
+  return `rgb(${r},${g},${bl})`;
+}
+function parseHex(h){const c=h.replace('#','');return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
+function invertOn(hex){
+  const [r,g,b] = parseHex(hex);
+  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+  return lum > 0.55 ? '#241D14' : '#FFFCF4';
+}
+
+/* Простая королева-птичка */
+function drawCrownedBird(ctx, cx, cy, r, st){
+  // тень
+  ctx.fillStyle = hexA(st.ink, 0.15);
+  ctx.beginPath(); ctx.ellipse(cx, cy+r*1.1, r*0.7, r*0.12, 0, 0, Math.PI*2); ctx.fill();
+  // тело
+  ctx.fillStyle = '#fff'; ctx.strokeStyle = st.ink; ctx.lineWidth = Math.max(2, r*0.05);
+  ctx.beginPath(); ctx.ellipse(cx, cy, r, r*1.05, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  // глазки
+  ctx.strokeStyle = st.ink;
+  ctx.beginPath(); ctx.arc(cx-r*0.32, cy-r*0.05, r*0.12, 0.1*Math.PI, 0.9*Math.PI); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx+r*0.32, cy-r*0.05, r*0.12, 0.1*Math.PI, 0.9*Math.PI); ctx.stroke();
+  // щёчки
+  ctx.fillStyle = '#F9A38B';
+  ctx.beginPath(); ctx.ellipse(cx-r*0.5, cy+r*0.18, r*0.13, r*0.08, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+r*0.5, cy+r*0.18, r*0.13, r*0.08, 0, 0, Math.PI*2); ctx.fill();
+  // клюв
+  ctx.fillStyle = '#FFC527'; ctx.strokeStyle = st.ink;
+  ctx.beginPath();
+  ctx.moveTo(cx-r*0.12, cy+r*0.10); ctx.lineTo(cx+r*0.12, cy+r*0.10); ctx.lineTo(cx, cy+r*0.28); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  // корона
+  const cw = r*1.2, ch = r*0.45, cby = cy - r*1.05;
+  ctx.fillStyle = '#FFC527'; ctx.strokeStyle = st.ink;
+  ctx.beginPath();
+  ctx.moveTo(cx-cw/2, cby);
+  ctx.lineTo(cx-cw*0.35, cby - ch*0.8);
+  ctx.lineTo(cx-cw*0.2,  cby - ch*0.2);
+  ctx.lineTo(cx,         cby - ch);
+  ctx.lineTo(cx+cw*0.2,  cby - ch*0.2);
+  ctx.lineTo(cx+cw*0.35, cby - ch*0.8);
+  ctx.lineTo(cx+cw/2, cby);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+}
+
+/* ====== Download ====== */
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const big = document.createElement('canvas');
+  big.width = 1080; big.height = 1920;
+  draw(big.getContext('2d'), 1080, 1920);
+  big.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safe = (state.title || 'reels').replace(/[^\wа-яА-ЯёЁ\- ]+/g,'').replace(/\s+/g,'-').toLowerCase().slice(0,40) || 'reels';
+    a.download = `${safe}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('Скачано — добавь в сторис!');
+  }, 'image/png');
+});
+
+document.getElementById('copyJpg').addEventListener('click', async () => {
+  try {
+    const big = document.createElement('canvas');
+    big.width = 1080; big.height = 1920;
+    draw(big.getContext('2d'), 1080, 1920);
+    big.toBlob(async blob => {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+        toast('Скопировано в буфер');
+      } catch(e){ toast('Браузер не дал скопировать — нажми «Скачать»'); }
+    }, 'image/png');
+  } catch(e){ toast('Не получилось — нажми «Скачать»'); }
+});
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+draw(ctx, cv.width, cv.height);
+</script>
+</body>
+</html>
