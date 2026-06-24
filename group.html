@@ -1318,13 +1318,13 @@
 
   <style>
     .testimonials{padding:80px 0;background:var(--paper)}
-    .testimonials .inner{max-width:1140px;margin:0 auto;padding:0 24px}
+    .testimonials .inner{max-width:1340px;margin:0 auto;padding:0 32px}
     .testimonials .eyebrow{text-align:center;font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--sage-deep);margin-bottom:32px}
-    .quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
-    @media (max-width:960px){.quotes-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
-    .quote{background:var(--card,#fff);border:1px solid var(--line);border-radius:22px;padding:44px 28px 28px;position:relative;box-shadow:0 14px 36px rgba(26,22,20,.04)}
-    .quote-mark{position:absolute;top:10px;left:22px;font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:80px;line-height:.8;color:var(--accent);opacity:.5;font-weight:700}
-    .quote blockquote{font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:15.5px;line-height:1.55;color:var(--ink);position:relative;max-height:320px;overflow:hidden;transition:max-height .35s ease}
+    .quotes-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+    @media (max-width:1000px){.quotes-grid{grid-template-columns:1fr;max-width:720px;margin:0 auto}}
+    .quote{background:var(--card,#fff);border:1px solid var(--line);border-radius:22px;padding:42px 30px 28px;position:relative;box-shadow:0 14px 36px rgba(26,22,20,.04);min-width:0}
+    .quote-mark{position:absolute;top:8px;left:22px;font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:80px;line-height:.8;color:var(--accent);opacity:.5;font-weight:700}
+    .quote blockquote{font-family:'Charter','Iowan Old Style','Georgia',serif;font-size:15px;line-height:1.55;color:var(--ink);position:relative;max-height:340px;overflow:hidden;transition:max-height .35s ease;word-wrap:break-word;hyphens:auto}
     .quote.expanded blockquote{max-height:none}
     .quote blockquote::after{
       content:"";position:absolute;left:0;right:0;bottom:0;height:80px;
