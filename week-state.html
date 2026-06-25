@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Задание недели · Сначала состояние, потом решение</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEE2; --paper-2:#FBF6EC; --card:#FFFFFF;
+    --ink:#1A1614; --soft:#5A5042; --muted:#9C907A;
+    --accent:#D97757; --accent-deep:#B5380F; --accent-soft:#F7D9C8;
+    --sage:#8DA383; --sage-deep:#5E6B4A; --sage-soft:#DDE5D2;
+    --yellow:#FFC93C; --yellow-soft:#FFE9A8;
+    --line:#E6DCC6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  body{
+    min-height:100vh;padding:24px 18px 64px;
+    background-image:
+      radial-gradient(circle at 12% 8%, color-mix(in srgb,var(--yellow) 22%,transparent), transparent 38%),
+      radial-gradient(circle at 88% 92%, color-mix(in srgb,var(--sage) 22%,transparent), transparent 42%);
+  }
+  .serif{font-family:'Fraunces','Georgia',serif}
+  .wrap{max-width:760px;margin:0 auto}
+
+  /* TOP NAV */
+  .topnav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px;font-size:14px;font-weight:600}
+  .topnav .logo{display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none}
+  .topnav .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--yellow);border:1.5px solid var(--ink)}
+  .topnav .back{color:var(--soft);text-decoration:none;border-bottom:1.5px dashed var(--soft);padding-bottom:1px}
+  .topnav .back:hover{color:var(--accent-deep);border-color:var(--accent-deep)}
+
+  /* HERO */
+  .hero{text-align:center;margin-bottom:32px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--sage-deep);color:var(--paper-2);
+    font-weight:800;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;padding:7px 14px;border-radius:999px;margin-bottom:18px}
+  .eyebrow::before{content:"●";color:var(--yellow);font-size:9px}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,6.6vw,46px);line-height:1.1;letter-spacing:-.025em;color:var(--ink)}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{color:var(--soft);font-size:17px;line-height:1.55;margin:18px auto 0;max-width:600px}
+
+  /* SECTION CARDS */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    padding:28px 26px;margin-bottom:18px;box-shadow:0 14px 36px rgba(26,22,20,.04)
+  }
+  .card h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.2;margin-bottom:12px;letter-spacing:-.01em}
+  .card h2 .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+    background:var(--sage-deep);color:var(--paper-2);font-family:'Inter',sans-serif;font-size:14px;font-weight:800;margin-right:10px;vertical-align:1px}
+  .card p{font-size:15.5px;line-height:1.65;color:var(--ink)}
+  .card p + p{margin-top:12px}
+  .card .tag{display:inline-block;background:var(--yellow-soft);color:#8A6500;font-weight:800;font-size:11.5px;letter-spacing:.12em;
+    text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+  .card .tag.sage{background:var(--sage-soft);color:var(--sage-deep)}
+  .card .tag.coral{background:var(--accent-soft);color:var(--accent-deep)}
+
+  /* TRIGGERS — мелкие плашки */
+  .triggers{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+  .triggers span{background:var(--paper);border:1px solid var(--line);color:var(--soft);font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px}
+
+  /* HALT QUESTIONS */
+  .halt{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+  .halt-q{display:flex;gap:14px;align-items:flex-start;padding:16px 16px;background:var(--paper-2);border:1px solid var(--line);border-radius:16px}
+  .halt-q .ico{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:18px}
+  .halt-q .ico.h{background:#FFE9A8}.halt-q .ico.a{background:var(--accent-soft)}
+  .halt-q .ico.l{background:var(--sage-soft)}.halt-q .ico.t{background:#E6DCC6}
+  .halt-q .body{flex:1;min-width:0}
+  .halt-q .body b{display:block;font-size:15px;font-weight:700;color:var(--sage-deep);margin-bottom:4px}
+  .halt-q .body p{font-size:14.5px;line-height:1.55;color:var(--ink)}
+
+  /* ИНТЕРАКТИВНЫЙ ЧЕК-ЛИСТ */
+  .checklist{background:linear-gradient(180deg,var(--sage-soft) 0%, var(--paper-2) 100%);
+    border:2px solid var(--sage-deep);border-radius:22px;padding:26px 24px;margin:24px 0}
+  .checklist .tag{background:var(--sage-deep);color:var(--paper-2)}
+  .checklist h2{margin-bottom:8px}
+  .checklist .hint{font-size:14px;color:var(--soft);margin-bottom:18px}
+  .check-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px 14px;
+    background:var(--card);border-radius:14px;margin-bottom:10px;border:1px solid var(--line)}
+  .check-row .q{font-size:15px;font-weight:600;color:var(--ink);display:flex;gap:10px;align-items:center}
+  .check-row .q .emo{font-size:18px}
+  .check-row button{font-family:'Inter',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;
+    border:1.5px solid var(--line);background:var(--paper-2);color:var(--soft);
+    padding:8px 14px;border-radius:999px;cursor:pointer;transition:all .15s;min-width:56px}
+  .check-row button:hover{border-color:var(--sage-deep);color:var(--sage-deep)}
+  .check-row button.yes.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .check-row button.no.on{background:var(--sage-deep);border-color:var(--sage-deep);color:var(--paper-2)}
+
+  .result{margin-top:18px;padding:18px 18px;border-radius:14px;display:none;font-size:14.5px;line-height:1.6}
+  .result.ok{display:block;background:var(--sage-soft);color:var(--sage-deep);border:1px solid var(--sage)}
+  .result.help{display:block;background:var(--yellow-soft);color:#7A5500;border:1px solid var(--yellow)}
+  .result b{display:block;font-family:'Fraunces',serif;font-size:17px;margin-bottom:6px;font-weight:600}
+  .result ul{margin:8px 0 0;padding-left:20px}
+  .result li{margin:4px 0}
+
+  .check-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .check-actions button{flex:1;min-width:120px;font-family:'Inter',sans-serif;font-weight:700;font-size:13.5px;
+    border:1.5px solid var(--ink);background:var(--paper-2);color:var(--ink);padding:11px 14px;border-radius:999px;cursor:pointer}
+  .check-actions button:hover{background:var(--paper)}
+
+  /* ЕСЛИ-ТО формула */
+  .if-then{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:16px;padding:18px 20px;margin:14px 0;
+    font-family:'Fraunces',serif;font-size:16.5px;line-height:1.5;color:var(--ink)}
+  .if-then b{color:var(--accent-deep);font-weight:600}
+
+  /* CTA BLOCK */
+  .cta{text-align:center;margin:36px auto 0;max-width:520px}
+  .cta-buttons{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+  .cta-btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:700;font-size:15px;
+    padding:14px 22px;border-radius:999px;border:1.5px solid var(--ink);transition:transform .1s}
+  .cta-btn:hover{transform:translateY(-1px)}
+  .cta-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .cta-btn.ghost{background:transparent;color:var(--ink)}
+  .cta-note{font-size:13.5px;color:var(--soft);margin-top:14px}
+
+  footer{text-align:center;font-size:13px;color:var(--muted);margin-top:48px}
+
+  @media (max-width:560px){
+    .card{padding:24px 20px}
+    .check-row{grid-template-columns:1fr;gap:8px}
+    .check-row .q{margin-bottom:4px}
+    .check-row button{width:100%}
+    .check-row .yes,.check-row .no{display:inline-block;width:48%}
+    .check-row{display:flex;flex-direction:column;align-items:stretch}
+    .check-row .qa{display:flex;gap:8px}
+    .check-row .qa button{flex:1}
+  }
+
+  /* PRINT */
+  @media print{
+    body{background:#fff;padding:0}
+    .topnav,.cta,.check-actions,footer{display:none}
+    .card,.checklist{box-shadow:none;page-break-inside:avoid}
+    .check-row button{display:none}
+    .check-row::after{content:"☐ да    ☐ нет";font-weight:600;color:var(--soft)}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topnav">
+    <a href="index.html" class="logo"><span class="dot"></span>Gruzdeva V.А.</a>
+    <a href="group.html" class="back">К группе</a>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">задание недели · группа</div>
+    <h1>Сначала <em>состояние</em>,<br>потом решение</h1>
+    <p class="lede">Тренируем очень важный навык: не бросаться решать проблему из любого состояния.<br>
+      Сначала маленькая проверка — и только потом действие.</p>
+  </header>
+
+  <!-- 1. Когда применять -->
+  <section class="card">
+    <span class="tag coral">когда применять</span>
+    <h2><span class="num">1</span>Замечаем, что что-то идёт не так</h2>
+    <p>Как только ловите себя на одном из этих состояний — это сигнал остановиться на минуту, а не сразу действовать:</p>
+    <div class="triggers">
+      <span>недовольна</span>
+      <span>раздражена</span>
+      <span>тревожусь</span>
+      <span>хочу всё отменить</span>
+      <span>хочу сорваться</span>
+      <span>хочу резко ответить</span>
+      <span>хочу сбежать</span>
+      <span>залипла в риилсиках</span>
+      <span>хочу бросить задачу</span>
+    </div>
+  </section>
+
+  <!-- 2. 4 вопроса -->
+  <section class="card">
+    <span class="tag sage">4 вопроса к себе</span>
+    <h2><span class="num">2</span>Не решаем проблему сразу — сначала спрашиваем</h2>
+
+    <div class="halt">
+      <div class="halt-q">
+        <div class="ico h">🥖</div>
+        <div class="body">
+          <b>Голодная?</b>
+          <p>Я ела? Пила воду? У меня не просел сахар? Я не пытаюсь думать мозгом, который давно просит бутерброд?</p>
+        </div>
+      </div>
+      <div class="halt-q">
+        <div class="ico a">🌶️</div>
+        <div class="body">
+          <b>Злая, раздражённая, перегруженная?</b>
+          <p>Я сейчас правда думаю — или уже внутренне спорю, защищаюсь, нападаю, обижаюсь, сжимаю челюсть и хочу кого-нибудь мысленно укусить?</p>
+        </div>
+      </div>
+      <div class="halt-q">
+        <div class="ico l">🫂</div>
+        <div class="body">
+          <b>Одиноко?</b>
+          <p>Мне правда нужно срочно решить проблему — или мне нужна поддержка, контакт, кто-то рядом, сообщение в чат, даблинг, ощущение «я не одна»?</p>
+        </div>
+      </div>
+      <div class="halt-q">
+        <div class="ico t">🔋</div>
+        <div class="body">
+          <b>Уставшая?</b>
+          <p>Я выспалась? У меня есть силы? Или я пытаюсь принимать взрослые решения в состоянии старой батарейки из пульта?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Что после -->
+  <section class="card">
+    <span class="tag">правило</span>
+    <h2><span class="num">3</span>Если хотя бы один ответ «да»</h2>
+    <p>Первая задача — <b>не решить всю проблему</b>, а сначала немного улучшить этот пункт. Поесть. Подышать. Написать в чат. Прилечь на 15 минут.</p>
+    <p>Только после этого возвращаемся к проблеме и спрашиваем:</p>
+    <div class="if-then">
+      <b>А теперь — я хочу реагировать так же?</b><br>
+      Проблема выглядит такой же большой? Что будет минимально разумным следующим шагом?
+    </div>
+  </section>
+
+  <!-- 4. Дополнительное -->
+  <section class="card">
+    <span class="tag coral">бонус</span>
+    <h2><span class="num">+</span>Чек состояния <i>перед</i> трудной задачей</h2>
+    <p>Перед тем как сесть за сложную, неприятную или большую задачу — попробуйте сделать тот же короткий чек состояния. Можно использовать формулу «если — то»:</p>
+    <div class="if-then">
+      <b>Если</b> я сажусь за сложную задачу,<br>
+      <b>то</b> сначала я проверяю своё физическое и эмоциональное состояние.
+    </div>
+  </section>
+
+  <!-- 5. ИНТЕРАКТИВНЫЙ ЧЕК-ЛИСТ -->
+  <section class="checklist">
+    <span class="tag">мини-чек-лист</span>
+    <h2 style="margin-top:6px"><span class="serif">Проверь себя за 30 секунд</span></h2>
+    <div class="hint">Отметь честно. Это не оценка — это карта местности.</div>
+
+    <div class="check-row" data-key="h">
+      <div class="q"><span class="emo">🥖</span><span>Я голодная или хочу пить?</span></div>
+      <div class="qa">
+        <button class="yes">Да</button>
+        <button class="no">Нет</button>
+      </div>
+    </div>
+
+    <div class="check-row" data-key="a">
+      <div class="q"><span class="emo">🌶️</span><span>Я злая, раздражённая, перегруженная?</span></div>
+      <div class="qa">
+        <button class="yes">Да</button>
+        <button class="no">Нет</button>
+      </div>
+    </div>
+
+    <div class="check-row" data-key="l">
+      <div class="q"><span class="emo">🫂</span><span>Мне одиноко / нужна поддержка?</span></div>
+      <div class="qa">
+        <button class="yes">Да</button>
+        <button class="no">Нет</button>
+      </div>
+    </div>
+
+    <div class="check-row" data-key="t">
+      <div class="q"><span class="emo">🔋</span><span>Я уставшая, не выспалась?</span></div>
+      <div class="qa">
+        <button class="yes">Да</button>
+        <button class="no">Нет</button>
+      </div>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <div class="check-actions">
+      <button id="resetBtn" type="button">Сбросить</button>
+      <button id="printBtn" type="button">🖨️ Распечатать на холодильник</button>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <p class="serif" style="font-size:18px;color:var(--soft);font-style:italic">Поделись с группой, как прошла неделя →</p>
+    <div class="cta-buttons">
+      <a class="cta-btn primary" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">🪶 В чат стаи</a>
+      <a class="cta-btn ghost" href="group.html">К программе группы</a>
+    </div>
+    <p class="cta-note">Хороший момент написать в чат, что вы попробовали. Не отчёт «получилось/не получилось» — а наблюдение: что заметила.</p>
+  </section>
+
+  <footer>Gruzdeva V.А. · СДВГ-коучинг для женщин · группа</footer>
+</div>
+
+<script>
+  const rows = document.querySelectorAll('.check-row');
+  const result = document.getElementById('result');
+  const state = {};
+
+  rows.forEach(row => {
+    const key = row.dataset.key;
+    const yes = row.querySelector('.yes');
+    const no  = row.querySelector('.no');
+    yes.addEventListener('click', () => { state[key] = true;  yes.classList.add('on'); no.classList.remove('on'); render(); });
+    no .addEventListener('click', () => { state[key] = false; no .classList.add('on'); yes.classList.remove('on'); render(); });
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    for (const k in state) delete state[k];
+    document.querySelectorAll('.check-row button').forEach(b => b.classList.remove('on'));
+    result.className = 'result';
+    result.innerHTML = '';
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+  const SUGG = {
+    h: 'поесть нормальной еды и/или выпить воды — 10 минут',
+    a: 'выйти на 5 минут на воздух, медленно подышать, написать в чат стаи что бесит',
+    l: 'написать кому-то прямо сейчас. В чат стаи, подруге, кому угодно. Контакт > решение',
+    t: 'отложить трудное на 20–40 минут, прилечь / послушать что-то мягкое'
+  };
+  const LABEL = { h:'голод/жажда', a:'злость/перегрузка', l:'одиночество', t:'усталость' };
+
+  function render(){
+    const keys = Object.keys(state);
+    if (keys.length < 4) {
+      result.className = 'result';
+      result.innerHTML = '';
+      return;
+    }
+    const yeses = keys.filter(k => state[k]);
+    if (yeses.length === 0) {
+      result.className = 'result ok';
+      result.innerHTML = '<b>Ты в зелёной зоне 🟢</b>Сейчас можно подходить к проблеме. Спроси себя: «Что будет минимально разумным следующим шагом?» — и сделай его.';
+    } else {
+      const items = yeses.map(k => `<li><b>${LABEL[k]}:</b> ${SUGG[k]}</li>`).join('');
+      result.className = 'result help';
+      result.innerHTML = '<b>Сначала позаботься о состоянии 🟡</b>Прежде чем браться за проблему, попробуй:<ul>'+items+'</ul>Когда станет чуть лучше — вернись к задаче и спроси: «Я всё ещё хочу реагировать так же? Проблема та же по размеру?»';
+    }
+  }
+</script>
+
+</body>
+</html>
