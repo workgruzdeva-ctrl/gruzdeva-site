@@ -180,3 +180,34 @@ body {
   .btn-row { flex-direction: column; align-items: stretch; }
   .btn-row .btn { justify-content: center; }
 }
+
+/* ===== drip про клуб ===== */
+.drip-club{
+  display:flex; align-items:flex-start; gap:14px;
+  background: linear-gradient(180deg, color-mix(in srgb, #F5C400 22%, #fff) 0%, #fff 100%);
+  border: 2px dashed #5E6B4A;
+  border-radius: 18px; padding: 18px 22px;
+  margin: 28px auto; max-width: 560px;
+  font-family: 'Manrope', -apple-system, sans-serif;
+}
+.drip-club .drip-bird{
+  flex-shrink:0; font-size:24px; line-height:1;
+  width:40px; height:40px; border-radius:50%;
+  background:#F5C400; border:2px solid #1A1614;
+  display:flex; align-items:center; justify-content:center;
+}
+.drip-club .drip-body{ flex:1; min-width:0 }
+.drip-club .drip-body p{
+  margin:0 0 10px; font-size:14.5px; line-height:1.5; color:#1A1614;
+}
+.drip-club .drip-link{
+  display:inline-flex; align-items:center; gap:6px;
+  font-weight:700; font-size:13.5px; letter-spacing:.02em;
+  color:#B5380F; text-decoration:none;
+  border-bottom:1.5px dashed #B5380F; padding-bottom:1px;
+}
+.drip-club .drip-link:hover{ color:#5E6B4A; border-color:#5E6B4A }
+@media (max-width:520px){
+  .drip-club{ padding:14px 16px; margin:22px auto; gap:10px }
+  .drip-club .drip-body p{ font-size:14px }
+}

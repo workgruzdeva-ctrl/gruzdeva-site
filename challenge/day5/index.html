@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="../day.css">
+<link rel="stylesheet" href="../day.css?v=1">
 <style>
   .templates {
     display: grid; gap: 14px; margin-top: 12px;
@@ -148,6 +148,14 @@
     </button>
   </div>
 
+  <aside class="drip-club" data-day="5">
+    <div class="drip-bird" aria-hidden="true">🪶</div>
+    <div class="drip-body">
+      <p>В клубе никто не стоит над душой и не спрашивает: «Ну что, сделала?» Не будет доски позора и нравоучений.</p>
+      <a class="drip-link" href="../club.html">В клуб «Стая» →</a>
+    </div>
+  </aside>
+
   <div class="btn-row">
     <button class="btn btn-primary" id="next-btn" disabled style="opacity:.5">
       Сначала отметь, что выложила
@@ -180,7 +188,7 @@ const TEMPLATES = [
   },
   {
     label: 'Просто рекомендация',
-    text: 'Если тебе актуальна тема СДВГ, прокрастинации и вечного «я сейчас начну, только ещё чуть-чуть полежу» — посмотри @dr_gruzdeva. У неё есть бесплатный мини-челлендж, групповой тренинг и очень человеческий подход.'
+    text: 'Если тебе актуальна тема СДВГ, прокрастинации и вечного «я сейчас начну, только ещё чуть-чуть полежу» — посмотри @dr_gruzdeva. У неё есть бесплатный мини-челлендж, клуб «Стая» и очень человеческий подход.'
   },
 ];
 
@@ -267,7 +275,7 @@ function drawStory(){
   ctx.fillStyle = '#4F4A41';
   ctx.font = '500 22px "Manrope", sans-serif';
   ctx.fillText('мини-челлендж перед', w/2, h*0.46);
-  ctx.fillText('групповым тренингом по СДВГ', w/2, h*0.50);
+  ctx.fillText('клубом «Стая» при СДВГ', w/2, h*0.50);
 
   // единая королева-птичка
   ShareUtils.drawCrownedBird(ctx, w/2, h*0.66, 65);
@@ -315,7 +323,7 @@ function drawStoryFullRes(targetCtx, tw, th){
   targetCtx.fillStyle = '#4F4A41';
   targetCtx.font = '500 44px "Manrope", sans-serif';
   targetCtx.fillText('мини-челлендж перед', tw/2, th*0.46);
-  targetCtx.fillText('групповым тренингом по СДВГ', tw/2, th*0.50);
+  targetCtx.fillText('клубом «Стая» при СДВГ', tw/2, th*0.50);
 
   // единая королева-птичка в HD
   ShareUtils.drawCrownedBird(targetCtx, tw/2, th*0.66, 130);
