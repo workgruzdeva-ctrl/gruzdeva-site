@@ -211,3 +211,18 @@ body {
   .drip-club{ padding:14px 16px; margin:22px auto; gap:10px }
   .drip-club .drip-body p{ font-size:14px }
 }
+
+/* ===== recovery hint ===== */
+.local-warning{
+  display:block; max-width:560px; margin:18px auto 28px;
+  padding:0 18px;
+  font-family:'Manrope', -apple-system, sans-serif;
+  font-size:12.5px; line-height:1.5;
+  color:#9C907A; text-align:center;
+}
+.local-warning a{
+  color:#B5380F; text-decoration:none;
+  border-bottom:1px dashed currentColor;
+  font-weight:600;
+}
+.local-warning a:hover{ color:#5E6B4A }
