@@ -181,7 +181,8 @@
   .rhythm-sec .sec-head h2 { color: #fff; }
   .rhythm-sec .sec-head p { color: rgba(255,255,255,0.85); }
   .rhythm-sec .eyebrow { color: var(--green-deep); background: var(--yellow); }
-  .rhythm { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 52px; }
+  .rhythm { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 52px; }
+  @media (max-width: 1100px) { .rhythm { grid-template-columns: repeat(2, 1fr); } }
 
   /* ---------- doubling explainer ---------- */
   .doubling { padding: 90px 0; }
@@ -216,6 +217,21 @@
   .step p { margin: 11px 0 0; font-size: 18px; line-height: 1.5; color: color-mix(in srgb, var(--ink) 78%, transparent); }
   .flock-mini { position: absolute; right: 50px; top: 40px; z-index: 1; }
   .flock-mini svg { display: block; overflow: visible; }
+
+  /* ---------- soft / no-pressure ---------- */
+  .soft-sec { padding: 0 0 92px; }
+  .soft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .soft-card { background: var(--card); border: 3px solid var(--ink); border-radius: 28px; padding: 38px 36px 34px; position: relative; box-shadow: 0 10px 0 0 var(--ink); }
+  .soft-card .mark { position: absolute; top: -16px; left: 28px; font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; font-size: 22px;
+    padding: 7px 15px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--yellow); color: var(--ink); }
+  .soft-card.b .mark { background: var(--accent); color: #fff; }
+  .soft-card h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 28px; line-height: 1.1; letter-spacing: -0.02em; margin: 12px 0 14px; color: var(--ink); }
+  .soft-card h3 em { font-style: italic; color: var(--accent); font-weight: 500; }
+  .soft-card.b h3 em { color: var(--green-deep); }
+  .soft-card p { font-size: 17px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+  .soft-card p + p { margin-top: 10px; }
+  .soft-card p strong { color: var(--ink); font-weight: 800; }
+  @media (max-width: 880px) { .soft-grid { grid-template-columns: 1fr; gap: 30px; } .soft-card { padding: 34px 28px 28px; } .soft-card h3 { font-size: 24px; } .soft-card p { font-size: 16px; } }
 
   /* ---------- price ---------- */
   .price-sec { padding: 0 0 92px; }
@@ -495,7 +511,7 @@
       <div>
         <div class="eyebrow c">главная фишка</div>
         <h2 class="serif">Раз в неделю — <em>час на свои дела</em>, всей стаей</h2>
-        <p>В клубе ты находишь партнёров по даблингу. Раз в неделю вся стая на 1,5 часа собирается в Зуме — и каждый делает свои дела. Иногда задача общая <strong>(всей стаей разбираем шкаф)</strong>, иногда твоя личная. Но раз в неделю ты гарантированно пинаешь свои задачи — и они перестают копиться. А между созвонами в чате можно найти своих и сесть подаблить в любой день.</p>
+        <p>Раз в неделю встречаемся в Зуме, коротко называем задачу, включаем таймер — и каждый делает своё. <strong>Кто-то пишет письмо, кто-то разбирает документы, кто-то наконец моет посуду.</strong> Раз в неделю ты точно сдвигаешь то, что копилось. А между созвонами в чате можно найти своих и сесть подаблить в любой день.</p>
       </div>
       <div class="zoom-grid" aria-hidden="true">
         <div class="zoom-tile" style="background:var(--accent)"><span class="cam"></span>А<span class="lbl">Аня</span></div>
@@ -526,6 +542,11 @@
         <div class="ic i2"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
         <h3>Партнёры по даблингу</h3>
         <p>В чате находишь своих, чтобы сесть и поработать рядом в любой день.</p>
+      </div>
+      <div class="rcard reveal">
+        <div class="ic i3"><svg viewBox="0 0 24 24" fill="none"><path d="M9 3v18M3 7.5h6M3 16.5h6M14 7l4 4-4 4M18 11h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Техника недели</h3>
+        <p>Маленькая, рабочая. Пробуем вместе, смотрим, что сработало, забираем себе.</p>
       </div>
       <div class="rcard reveal">
         <div class="ic i4"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4 7-9V6l-7-3-7 3v6c0 5 7 9 7 9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
@@ -561,6 +582,31 @@
           <h3>Живёшь в ритме стаи</h3>
           <p>Раз в неделю даблинг-созвон, между ними — чат. Выпала на время — возвращаешься без объяснений, никто не отчитывает.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= NO PRESSURE ======================= -->
+<section class="soft-sec" data-screen-label="Без давления">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <div class="eyebrow">атмосфера стаи</div>
+      <h2 class="serif">Тут <em>не подгоняют</em> и не стыдят</h2>
+      <p>Стая работает не за счёт давления, а за счёт того, что рядом — свои.</p>
+    </div>
+    <div class="soft-grid">
+      <div class="soft-card reveal">
+        <span class="mark">без давления</span>
+        <h3>Никто не стоит над душой</h3>
+        <p>Никто не спрашивает: <strong>«Ну что, сделала?»</strong>. Не будет ни доски позора, ни нравоучений, ни взвешивания «кто на этой неделе молодец».</p>
+        <p>Мы создаём условия, чтобы взяться за накопившееся стало <strong>чуть легче</strong> — а не страшнее.</p>
+      </div>
+      <div class="soft-card b reveal">
+        <span class="mark">без объяснительной</span>
+        <h3>Пропала? Бывает. <em>Вернулась?</em> Отлично.</h3>
+        <p>В «Стае» не нужно приносить объяснительную каждый раз. Можно просто снова прийти на созвон и <strong>сесть рядом</strong>.</p>
+        <p>Уходить и возвращаться — нормальная часть жизни с СДВГ. Стая ждёт без вопросов.</p>
       </div>
     </div>
   </div>
@@ -614,7 +660,7 @@
     <div class="faq-list reveal">
       <details><summary>Нужен ли поставленный диагноз?</summary><div class="ans">Нет. Клуб подойдёт, даже если ты только подозреваешь у себя СДВГ. Здесь не лечат — здесь поддерживают и дают структуру.</div></details>
       <details><summary>А если я стесняюсь говорить на созвонах?</summary><div class="ans">Можно просто быть рядом и слушать. Никто не заставляет включать камеру или выступать — само присутствие в ритме уже работает.</div></details>
-      <details><summary>Что если пропущу неделю или месяц?</summary><div class="ans">Ничего страшного. Стая не улетает без тебя — возвращаешься, когда есть силы. Записи созвонов и чат остаются на месте.</div></details>
+      <details><summary>Что если пропущу неделю или месяц?</summary><div class="ans">Объяснительную приносить не надо. Стая не улетает без тебя — просто возвращаешься на следующий созвон и садишься рядом. Записи и чат остаются на месте.</div></details>
       <details><summary>Чем это отличается от терапии?</summary><div class="ans">Это не терапия и не замена ей. Клуб — про ежедневную опору, ритм и сообщество своих. Многие совмещают его с личной работой со специалистом.</div></details>
       <details><summary>Как оплатить и отписаться?</summary><div class="ans">Подписка оформляется через Telegram, картой в ₽ или €. Отписаться можно в пару кликов в любой момент.</div></details>
     </div>
