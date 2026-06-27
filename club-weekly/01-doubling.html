@@ -71,11 +71,14 @@
   .wfriday .chick{width:54px;flex:none}
 
   /* actions */
-  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .share-title{margin:30px 0 12px;text-align:center;font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--ink-2);font-weight:500}
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
   .act{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:14px;
-    padding:11px 18px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;font-family:'Manrope',sans-serif}
+    padding:11px 18px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;font-family:'Manrope',sans-serif;transition:transform .12s}
   .act:hover{transform:translateY(-1px)}
-  .act.primary{background:var(--coral);color:#fff;border-color:var(--ink)}
+  .act.tg{background:#229ED9;color:#fff}
+  .act.wa{background:#25D366;color:#fff}
+  .act.share-native{background:var(--coral);color:#fff}
   .act svg{width:16px;height:16px}
 
   .foot-note{margin-top:34px;text-align:center;font-size:13px;color:var(--muted)}
@@ -146,19 +149,63 @@
     </div>
   </article>
 
+  <p class="share-title">Полезно для подруги? Поделись:</p>
   <div class="actions">
-    <a class="act primary" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">
+    <a class="act tg" id="share-tg" target="_blank" rel="noopener" aria-label="Поделиться в Telegram">
       <svg viewBox="0 0 24 24" fill="none"><path d="M21 5L2 12.5l6 2 2 6 5-4.5 5 4 1-15z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-      В чат стаи
+      Telegram
     </a>
-    <button class="act" type="button" onclick="navigator.clipboard.writeText(location.href).then(()=>{this.innerHTML='✓ ссылка скопирована'})">
+    <a class="act wa" id="share-wa" target="_blank" rel="noopener" aria-label="Поделиться в WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 11-3.5-6.6L20 4l-1.4 3.5A8 8 0 0120 12zM8 11.5c.5 2 2.5 4 4.5 4.5l1.5-1.5 2.5 1.5-1 2.5c-3.5 0-7-3.5-7-7l2.5-1 1.5 2.5L11 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      WhatsApp
+    </a>
+    <button class="act share-native" id="share-native" type="button" hidden aria-label="Поделиться">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Поделиться
+    </button>
+    <button class="act copy" id="copy-btn" type="button" aria-label="Скопировать ссылку">
       <svg viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Скопировать ссылку
+      <span>Скопировать ссылку</span>
     </button>
   </div>
 
   <p class="foot-note">Карточка недели · клуб «Стая» · <a href="../club.html">страница клуба</a></p>
 </div>
+
+<script>
+  const SHARE_URL  = location.href;
+  const SHARE_TEXT = 'Карточка недели от клуба «Стая»: даблинг — делаешь своё дело рядом с кем-то, и оно наконец идёт 🪶';
+
+  // TG, WA — прямые шарилки
+  document.getElementById('share-tg').href =
+    'https://t.me/share/url?url=' + encodeURIComponent(SHARE_URL) + '&text=' + encodeURIComponent(SHARE_TEXT);
+  document.getElementById('share-wa').href =
+    'https://api.whatsapp.com/send?text=' + encodeURIComponent(SHARE_TEXT + ' ' + SHARE_URL);
+
+  // Системный share (показывается только если поддерживается)
+  const nativeBtn = document.getElementById('share-native');
+  if (navigator.share) {
+    nativeBtn.hidden = false;
+    nativeBtn.addEventListener('click', () => {
+      navigator.share({ title: 'Даблинг — карточка недели', text: SHARE_TEXT, url: SHARE_URL })
+        .catch(() => {});
+    });
+  }
+
+  // Copy
+  const copyBtn = document.getElementById('copy-btn');
+  copyBtn.addEventListener('click', () => {
+    const span = copyBtn.querySelector('span');
+    const original = span.textContent;
+    navigator.clipboard.writeText(SHARE_URL).then(() => {
+      span.textContent = '✓ скопировано';
+      setTimeout(() => { span.textContent = original; }, 2200);
+    }).catch(() => {
+      span.textContent = 'не получилось :(';
+      setTimeout(() => { span.textContent = original; }, 2200);
+    });
+  });
+</script>
 
 </body>
 </html>
