@@ -242,14 +242,14 @@
 
   <div class="share-block">
     <h3>Поделись бинго</h3>
-    <p>Скачай свою карту в высоком разрешении — её можно постить в сторис как итог 9 дней.</p>
+    <p>Скачай свою карту в высоком разрешении — её можно постить в сторис как итог 9 дней. А ещё можно скинуть результат в комментарии к посту дня в блоге @drgruzdeva — чтобы быть в курсе следующих заходов.</p>
     <div class="btn-row" style="margin:0">
       <button class="btn btn-primary" id="share-image">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Сохранить картинку
       </button>
       <button class="btn btn-yellow" id="share-chat" style="background:var(--ink); color:#fff; box-shadow:none">
-        В чат стаи ✈︎
+        В блог @drgruzdeva ✈︎
       </button>
     </div>
     <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
@@ -434,10 +434,10 @@ document.getElementById('share-chat').addEventListener('click', async () => {
   const text = lines.join('\n');
   try{
     await navigator.clipboard.writeText(text);
-    showHint('Скопировано — открываю чат стаи…');
-    setTimeout(()=> window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank'), 600);
+    showHint('Скопировано — открываю блог…');
+    setTimeout(()=> window.open('https://t.me/drgruzdeva','_blank'), 600);
   }catch(e){
-    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    window.open('https://t.me/drgruzdeva','_blank');
     showHint('Не вышло скопировать — допиши от руки.');
   }
 });

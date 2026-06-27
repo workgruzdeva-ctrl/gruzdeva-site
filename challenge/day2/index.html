@@ -141,9 +141,9 @@
 
     <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
       <h3>Поделиться результатом</h3>
-      <p style="margin-bottom:14px">Можно отправить свой результат в чат стаи или сохранить картинку для сторис.</p>
+      <p style="margin-bottom:14px">Можно отправить свой результат в комментарии к посту дня в блоге или сохранить картинку для сторис.</p>
       <div class="btn-row" style="justify-content:flex-start; margin:0">
-        <button class="btn btn-primary" id="share-chat">В чат стаи ✈︎</button>
+        <button class="btn btn-primary" id="share-chat">В блог @drgruzdeva ✈︎</button>
         <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">Сохранить картинку</button>
       </div>
       <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
@@ -412,10 +412,10 @@ ${r.name}
 💤 Пропустила «жми»: ${r.miss}`;
   try{
     await navigator.clipboard.writeText(text);
-    showHint('Результат скопирован — открываю чат стаи…');
-    setTimeout(()=> window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank'), 600);
+    showHint('Результат скопирован — открываю блог…');
+    setTimeout(()=> window.open('https://t.me/drgruzdeva','_blank'), 600);
   }catch(e){
-    window.open('https://t.me/+tRup-m2_sTo0OGZi','_blank');
+    window.open('https://t.me/drgruzdeva','_blank');
     showHint('Не вышло скопировать автоматически — допиши от руки.');
   }
 });
