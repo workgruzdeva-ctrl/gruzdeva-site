@@ -236,6 +236,22 @@
   .reg-form input:focus { outline: none; border-color: var(--coral); }
   .reg-note { margin: 18px 0 0; font-size: 14px; color: var(--muted); }
   .reg-note a { color: var(--coral); font-weight: 600; }
+  .reg-recovery { margin: 14px 0 0; font-size: 13px; color: var(--muted); }
+  .reg-recovery a { color: var(--coral); border-bottom: 1px dashed currentColor; text-decoration: none; cursor: pointer; }
+  .reg-recovery a:hover { color: var(--ink); }
+
+  /* ---------- recovery modal ---------- */
+  .rec-modal { position: fixed; inset: 0; background: rgba(26,22,20,.55); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 18px; }
+  .rec-modal.open { display: flex; }
+  .rec-card { background: var(--bg); border: 2px solid var(--ink); border-radius: 22px; padding: 28px 26px 24px; max-width: 460px; width: 100%; box-shadow: 0 14px 0 0 var(--ink); position: relative; }
+  .rec-card h4 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .rec-card p { font-size: 14.5px; line-height: 1.5; color: var(--ink-2); margin: 0 0 16px; }
+  .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 6px; }
+  .rec-day { background: var(--bg-2); border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 0; font: inherit; font-weight: 700; font-size: 16px; color: var(--ink); cursor: pointer; font-family: 'Fraunces', serif; transition: all .12s; }
+  .rec-day:hover { background: var(--coral); color: #fff; border-color: var(--coral); transform: translateY(-1px); }
+  .rec-hint { font-size: 12.5px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
+  .rec-close { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 22px; line-height: 1; color: var(--muted); cursor: pointer; padding: 4px 8px; }
+  .rec-close:hover { color: var(--ink); }
 
   /* ---------- footer ---------- */
   .foot { border-top: 1px solid var(--line); }
@@ -585,6 +601,7 @@
           <p class="reg-note">Параллельно — заходи в общий чат стаи в Telegram. Там я отвечаю на вопросы и подсматриваю как ты там 👀<br>
             <a href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">→ перейти в чат</a>
           </p>
+          <p class="reg-recovery">Уже была раньше, но прогресс пропал? <a id="recovery-open" href="#recovery">У меня уже пропал — восстановить →</a></p>
         </div>
       </div>
     </section>
@@ -1097,7 +1114,71 @@ document.getElementById('reset-btn').addEventListener('click', ()=>{
   }
 });
 
+/* ============== RECOVERY MODAL ============== */
+const recModal = document.getElementById('recovery-modal');
+function openRecovery(){ recModal.classList.add('open'); }
+function closeRecovery(){ recModal.classList.remove('open'); }
+
+document.getElementById('recovery-open').addEventListener('click', (e)=>{
+  e.preventDefault();
+  openRecovery();
+});
+document.getElementById('recovery-close').addEventListener('click', closeRecovery);
+recModal.addEventListener('click', (e)=>{ if(e.target === recModal) closeRecovery(); });
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && recModal.classList.contains('open')) closeRecovery(); });
+
+document.querySelectorAll('.rec-day').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const day = parseInt(btn.dataset.day, 10);
+    if(!day || day < 1 || day > 9) return;
+
+    const existing = (function(){
+      try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch(e){ return null; }
+    })();
+    const name = (existing && existing.name)
+      || (prompt('Как тебя называть? (только для приветствия птички)', 'друг') || 'друг').trim()
+      || 'друг';
+
+    const s = { name, startedAt: Date.now(), days: {} };
+    // Все дни до выбранного — как done без результата
+    for (let i = 1; i < day; i++) {
+      s.days[i] = { done: true, result: null, at: Date.now() - (day - i) * 86400000 };
+    }
+    localStorage.setItem(LS_KEY, JSON.stringify(s));
+    closeRecovery();
+    location.hash = '';
+    location.reload();
+  });
+});
+
+// Auto-open if user came from a day-page via #recovery
+if (location.hash === '#recovery') {
+  setTimeout(openRecovery, 250);
+}
+
 init();
 </script>
+
+<!-- ============== RECOVERY MODAL ============== -->
+<div class="rec-modal" id="recovery-modal" role="dialog" aria-modal="true" aria-labelledby="rec-title">
+  <div class="rec-card">
+    <button class="rec-close" id="recovery-close" aria-label="Закрыть">×</button>
+    <h4 id="rec-title">Восстановить прогресс</h4>
+    <p>На каком дне ты остановилась? Открою всё до этого дня.</p>
+    <div class="rec-grid">
+      <button class="rec-day" data-day="1" type="button">1</button>
+      <button class="rec-day" data-day="2" type="button">2</button>
+      <button class="rec-day" data-day="3" type="button">3</button>
+      <button class="rec-day" data-day="4" type="button">4</button>
+      <button class="rec-day" data-day="5" type="button">5</button>
+      <button class="rec-day" data-day="6" type="button">6</button>
+      <button class="rec-day" data-day="7" type="button">7</button>
+      <button class="rec-day" data-day="8" type="button">8</button>
+      <button class="rec-day" data-day="9" type="button">9</button>
+    </div>
+    <p class="rec-hint">Результаты прошлых заданий не сохранятся (они были у тебя в браузере и пропали с ним), но к птичке и следующему дню вернёмся.</p>
+  </div>
+</div>
+
 </body>
 </html>
