@@ -805,6 +805,27 @@
   <span>В клуб</span>
 </a>
 
+<!-- ============== RECOVERY MODAL (должен быть ДО <script>, иначе JS не найдёт #recovery-modal и весь init() упадёт) ============== -->
+<div class="rec-modal" id="recovery-modal" role="dialog" aria-modal="true" aria-labelledby="rec-title">
+  <div class="rec-card">
+    <button class="rec-close" id="recovery-close" aria-label="Закрыть">×</button>
+    <h4 id="rec-title">Восстановить прогресс</h4>
+    <p>На каком дне ты остановилась? Открою всё до этого дня.</p>
+    <div class="rec-grid">
+      <button class="rec-day" data-day="1" type="button">1</button>
+      <button class="rec-day" data-day="2" type="button">2</button>
+      <button class="rec-day" data-day="3" type="button">3</button>
+      <button class="rec-day" data-day="4" type="button">4</button>
+      <button class="rec-day" data-day="5" type="button">5</button>
+      <button class="rec-day" data-day="6" type="button">6</button>
+      <button class="rec-day" data-day="7" type="button">7</button>
+      <button class="rec-day" data-day="8" type="button">8</button>
+      <button class="rec-day" data-day="9" type="button">9</button>
+    </div>
+    <p class="rec-hint">Результаты прошлых заданий не сохранятся (они были у тебя в браузере и пропали с ним), но к птичке и следующему дню вернёмся.</p>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    CHALLENGE · single-page lander + personal home
@@ -1158,27 +1179,6 @@ if (location.hash === '#recovery') {
 
 init();
 </script>
-
-<!-- ============== RECOVERY MODAL ============== -->
-<div class="rec-modal" id="recovery-modal" role="dialog" aria-modal="true" aria-labelledby="rec-title">
-  <div class="rec-card">
-    <button class="rec-close" id="recovery-close" aria-label="Закрыть">×</button>
-    <h4 id="rec-title">Восстановить прогресс</h4>
-    <p>На каком дне ты остановилась? Открою всё до этого дня.</p>
-    <div class="rec-grid">
-      <button class="rec-day" data-day="1" type="button">1</button>
-      <button class="rec-day" data-day="2" type="button">2</button>
-      <button class="rec-day" data-day="3" type="button">3</button>
-      <button class="rec-day" data-day="4" type="button">4</button>
-      <button class="rec-day" data-day="5" type="button">5</button>
-      <button class="rec-day" data-day="6" type="button">6</button>
-      <button class="rec-day" data-day="7" type="button">7</button>
-      <button class="rec-day" data-day="8" type="button">8</button>
-      <button class="rec-day" data-day="9" type="button">9</button>
-    </div>
-    <p class="rec-hint">Результаты прошлых заданий не сохранятся (они были у тебя в браузере и пропали с ним), но к птичке и следующему дню вернёмся.</p>
-  </div>
-</div>
 
 </body>
 </html>
