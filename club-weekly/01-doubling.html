@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>Карточка недели · Даблинг — Стая</title>
+<meta name="description" content="Первая техника клуба «Стая»: даблинг. Делаешь своё дело рядом с кем-то — и оно наконец идёт."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@500;600;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#FFF7E6; --card:#FFFFFF;
+    --ink:#241D14; --ink-2:#5A5042; --muted:#9C907A;
+    --coral:#FF6A3D; --coral-deep:#C8451F;
+    --yellow:#FFC527; --yellow-soft:#FFE08A;
+    --green:#1FA85A; --green-deep:#12643A; --line:#F0DEB6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Manrope',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 12% 6%, color-mix(in srgb,var(--yellow) 32%,transparent), transparent 38%),
+                     radial-gradient(circle at 90% 98%, color-mix(in srgb,var(--coral) 18%,transparent), transparent 46%);
+    background-attachment:fixed;
+    padding:36px 18px 64px;
+  }
+  .serif{font-family:'Fraunces','Georgia',serif}
+  .page{max-width:720px;margin:0 auto}
+
+  /* topnav */
+  .topnav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px;font-size:14.5px;font-weight:700}
+  .topnav .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;white-space:nowrap}
+  .topnav .brand .d{width:13px;height:13px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink)}
+  .topnav .brand b{color:var(--coral)}
+  .topnav .back{color:var(--ink-2);text-decoration:none;border-bottom:1.5px dashed currentColor;padding-bottom:1px}
+  .topnav .back:hover{color:var(--coral-deep)}
+
+  /* week-card (адаптивная, без scaling) */
+  .wcard{background:var(--card);border:3.5px solid var(--ink);border-radius:32px;
+    box-shadow:0 14px 0 0 var(--ink);padding:42px 38px 38px;display:flex;flex-direction:column}
+  .wtop{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  .wpill{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;font-weight:800;font-size:14px;padding:8px 15px;
+    border-radius:999px;border:2.5px solid var(--ink);background:var(--card)}
+  .wpill .dot{width:10px;height:10px;border-radius:50%;background:var(--coral)}
+  .wbrand{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-weight:800;font-size:13.5px;color:var(--ink-2)}
+  .wbrand .d{width:11px;height:11px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink)}
+  .wbrand b{color:var(--coral)}
+
+  .wlabel{font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-deep)}
+  .wtitle{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(40px,7vw,56px);line-height:1.0;letter-spacing:-0.03em;margin-top:8px}
+  .wintro{font-size:18px;line-height:1.5;color:var(--ink-2);margin-top:18px;font-weight:500}
+
+  .wpanel{margin-top:26px;background:var(--yellow-soft);border:2.5px solid var(--ink);border-radius:22px;padding:22px 24px}
+  .wpanel .h{display:flex;align-items:center;gap:11px;font-weight:800;font-size:16px;color:var(--ink);margin-bottom:10px;letter-spacing:.01em}
+  .wpanel .h .ic{width:34px;height:34px;border-radius:50%;background:var(--yellow);border:2.5px solid var(--ink);display:grid;place-items:center;font-size:18px}
+  .wpanel p{font-size:17px;line-height:1.5;color:var(--ink)}
+
+  .sech{font-weight:800;font-size:12.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--green-deep);margin:28px 0 4px}
+  .wsteps{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:12px}
+  .wsteps li{display:flex;align-items:flex-start;gap:14px}
+  .wsteps .num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--coral);border:2.5px solid var(--ink);
+    color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:19px;display:grid;place-items:center;box-shadow:0 4px 0 0 var(--ink)}
+  .wsteps .stxt{font-size:17.5px;line-height:1.45;font-weight:500;padding-top:5px;min-width:0}
+
+  .wcta{margin-top:28px;background:var(--coral);border:3px solid var(--ink);border-radius:24px;padding:22px 26px;box-shadow:0 7px 0 0 var(--coral-deep)}
+  .wcta .h{font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#FFE7DC;margin-bottom:8px}
+  .wcta p{font-size:18px;line-height:1.4;color:#fff;font-weight:700}
+
+  .wfriday{margin-top:26px;display:flex;align-items:center;gap:14px;font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:18px;color:var(--ink-2);line-height:1.35}
+  .wfriday .chick{width:54px;flex:none}
+
+  /* actions */
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .act{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:14px;
+    padding:11px 18px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;font-family:'Manrope',sans-serif}
+  .act:hover{transform:translateY(-1px)}
+  .act.primary{background:var(--coral);color:#fff;border-color:var(--ink)}
+  .act svg{width:16px;height:16px}
+
+  .foot-note{margin-top:34px;text-align:center;font-size:13px;color:var(--muted)}
+  .foot-note a{color:var(--coral);text-decoration:none;border-bottom:1px dashed currentColor;font-weight:600}
+
+  @media (max-width:560px){
+    .wcard{padding:32px 22px 28px;border-radius:26px;box-shadow:0 10px 0 0 var(--ink)}
+    .wtitle{font-size:38px}
+    .wintro{font-size:16.5px}
+    .wpanel{padding:18px 20px;border-radius:18px}
+    .wpanel p{font-size:16px}
+    .wsteps .stxt{font-size:16px}
+    .wcta{padding:18px 20px;border-radius:20px}
+    .wcta p{font-size:16.5px}
+    .wfriday{font-size:16.5px;gap:10px}
+    .wfriday .chick{width:46px}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topnav">
+    <a href="../club.html" class="brand"><span class="d"></span>СТАЯ&nbsp;·&nbsp;<b>be smart</b></a>
+    <a href="../club.html" class="back">← к клубу</a>
+  </div>
+
+  <article class="wcard">
+    <div class="wtop">
+      <span class="wpill"><span class="dot"></span>🎯 карточка недели · #1</span>
+      <span class="wbrand"><span class="d"></span>СТАЯ&nbsp;·&nbsp;<b>be smart</b></span>
+    </div>
+    <div class="wlabel">на этой неделе тренируем</div>
+    <h1 class="wtitle serif">Даблинг</h1>
+    <p class="wintro">Это когда делаешь своё дело рядом с кем-то — в Зуме или вживую, можно вообще молча. Друг другу не помогаете, просто сидите рядом и работаете.</p>
+
+    <div class="wpanel">
+      <div class="h"><span class="ic">🧠</span>Почему правда работает</div>
+      <p>Звучит как магия, но это наука: в исследовании 2024-го почти 85% нейроотличных сказали, что рядом с кем-то дела наконец доделываются. Мозгу хватает чужого присутствия, чтобы включиться. Поэтому одной — тоска, а стаей — идёт.</p>
+    </div>
+
+    <div class="sech">Как делаешь</div>
+    <ol class="wsteps">
+      <li><span class="num">1</span><span class="stxt">Зовёшь кого-то из чата или приходишь на наш созвон.</span></li>
+      <li><span class="num">2</span><span class="stxt">Говоришь вслух: «всё, начинаю, делаю вот это».</span></li>
+      <li><span class="num">3</span><span class="stxt">Сидите и пилите каждая своё.</span></li>
+    </ol>
+
+    <div class="wcta">
+      <div class="h">а теперь ты</div>
+      <p>Напиши, с кем и когда на этой неделе сядешь подаблить. Можно прям тут найти пару.</p>
+    </div>
+
+    <div class="wfriday">
+      <span class="chick">
+        <svg viewBox="0 0 110 120" fill="none">
+          <line x1="42" y1="100" x2="38" y2="118" stroke="#241D14" stroke-width="4.5" stroke-linecap="round"/>
+          <line x1="66" y1="100" x2="70" y2="118" stroke="#241D14" stroke-width="4.5" stroke-linecap="round"/>
+          <ellipse cx="55" cy="64" rx="40" ry="42" fill="#FFC527" stroke="#241D14" stroke-width="5"/>
+          <path d="M40,26 q8,-16 18,-4 q10,-10 16,4 q4,10 -6,12 q-16,4 -28,-2 q-6,-4 0,-10Z" fill="#FFFCF4" stroke="#241D14" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="44" cy="60" r="4.6" fill="#241D14"/><circle cx="68" cy="60" r="4.6" fill="#241D14"/>
+          <path d="M50,70 L64,70 L57,80 Z" fill="#FF6A3D" stroke="#241D14" stroke-width="3.4" stroke-linejoin="round"/>
+          <path d="M16,72 q-10,2 -12,10" stroke="#241D14" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </svg>
+      </span>
+      <span>В пятницу расскажи, что получилось 🐣</span>
+    </div>
+  </article>
+
+  <div class="actions">
+    <a class="act primary" href="https://t.me/+tRup-m2_sTo0OGZi" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 5L2 12.5l6 2 2 6 5-4.5 5 4 1-15z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      В чат стаи
+    </a>
+    <button class="act" type="button" onclick="navigator.clipboard.writeText(location.href).then(()=>{this.innerHTML='✓ ссылка скопирована'})">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Скопировать ссылку
+    </button>
+  </div>
+
+  <p class="foot-note">Карточка недели · клуб «Стая» · <a href="../club.html">страница клуба</a></p>
+</div>
+
+</body>
+</html>
