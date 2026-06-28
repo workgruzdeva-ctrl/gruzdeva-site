@@ -175,8 +175,11 @@
     <div class="cta-grid one">
       <a class="cta-card" href="club.html">
         <span class="cta-icon" style="background:var(--yellow);color:#241D14">🐤</span>
-        <h3 class="cta-title">Клуб «Стая»</h3>
-        <span class="cta-more">Подробнее →</span>
+        <div class="cta-body">
+          <h3 class="cta-title">Клуб «Стая»</h3>
+          <p class="cta-desc">Раз в неделю созваниваемся в Зуме и вместе разгребаем свои дела.</p>
+          <span class="cta-more">Подробнее →</span>
+        </div>
       </a>
     </div>
   </div>
@@ -185,19 +188,24 @@
     .cta-row{max-width:520px;margin:38px auto 30px;padding:0 6px}
     .cta-label{font-family:'Manrope',sans-serif;font-weight:600;font-size:14px;color:var(--ink-2);text-align:center;margin-bottom:14px}
     .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .cta-grid.one{grid-template-columns:1fr;max-width:280px;margin:0 auto}
+    .cta-grid.one{grid-template-columns:1fr;max-width:480px;margin:0 auto}
     .cta-card{
       display:block;background:var(--card);border:1.5px solid var(--line);border-radius:18px;
       padding:18px 18px 16px;text-decoration:none;color:var(--ink);
       transition:transform .14s,box-shadow .14s,border-color .14s;
       box-shadow:0 6px 16px rgba(42,29,20,.04);
     }
+    .cta-grid.one .cta-card{display:flex;gap:16px;align-items:flex-start;padding:20px 22px}
     .cta-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(42,29,20,.10);border-color:var(--accent)}
     .cta-icon{
       display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;
-      font-size:22px;line-height:1;margin-bottom:10px;
+      font-size:22px;line-height:1;margin-bottom:10px;flex-shrink:0;
     }
+    .cta-grid.one .cta-icon{width:52px;height:52px;font-size:26px;margin-bottom:0}
+    .cta-grid.one .cta-body{flex:1;min-width:0}
     .cta-title{font-family:'Manrope',sans-serif;font-weight:700;font-size:16px;line-height:1.2;margin:0 0 8px}
+    .cta-grid.one .cta-title{font-size:17px;margin:2px 0 4px}
+    .cta-desc{font-family:'Manrope',sans-serif;font-size:13.5px;line-height:1.45;color:var(--ink-2);margin:0 0 8px;font-weight:500}
     .cta-more{font-size:13px;font-weight:600;color:var(--accent)}
     @media (max-width:480px){.cta-grid{grid-template-columns:1fr}}
   </style>
