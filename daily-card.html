@@ -301,30 +301,36 @@
     setTimeout(()=>{ el.textContent = ''; }, 3500);
   }
 
+  // Мобильное устройство = касательный указатель + нет hover.
+  // На десктопе Safari тоже умеет navigator.share, но в системном share Telegram'а нет —
+  // поэтому Web Share API используем ТОЛЬКО на телефонах/планшетах.
+  const isTouchMobile = matchMedia('(pointer:coarse)').matches && matchMedia('(hover:none)').matches;
+
   document.getElementById('shareTg').addEventListener('click', async () => {
     const text = textEl.textContent.trim();
     const tag = tagEl.textContent.trim();
     const msg = `🐣 Пенделёк дня от Вали Груздевой\n\n[${tag}]\n${text}\n\nСвой пенделёк — крути тут:`;
 
-    // Сначала пробуем системный share с картинкой — на мобиле передастся в TG как фото
-    try {
-      const blob = await generateStoryBlob(text, tag);
-      const file = new File([blob], 'pendelёk.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          text: `🐣 Пенделёк дня: ${text}\n\nСвой пенделёк — у Вали Груздевой 👉 ${PAGE_URL}`,
-        });
-        flashHint('Картинка отправлена.');
-        return;
+    // На мобиле — системный share с картинкой (в нём есть Telegram, картинка попадёт как фото)
+    if (isTouchMobile && navigator.share) {
+      try {
+        const blob = await generateStoryBlob(text, tag);
+        const file = new File([blob], 'pendelёk.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            text: `🐣 Пенделёк дня: ${text}\n\nСвой пенделёк — у Вали Груздевой 👉 ${PAGE_URL}`,
+          });
+          flashHint('Картинка отправлена.');
+          return;
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') { return; }
+        // иначе — падаем в обычный TG-share-URL
       }
-    } catch (e) {
-      // пользователь отменил share — выходим без fallback
-      if (e && e.name === 'AbortError') { return; }
-      // иначе падаем в fallback
     }
 
-    // Fallback (десктоп, старые браузеры): текстовая TG-шарилка
+    // Десктоп (или мобиле без поддержки) — открываем шаринг в Telegram (текст + ссылка)
     const url = `https://t.me/share/url?url=${encodeURIComponent(PAGE_URL)}&text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank', 'noopener');
   });
