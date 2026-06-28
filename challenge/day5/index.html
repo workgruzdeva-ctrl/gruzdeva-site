@@ -91,9 +91,10 @@
 <main class="wrap">
 
   <header class="day-head">
-    <div class="eyebrow"><span class="d"></span>день 5 из 9</div>
+    <div class="eyebrow"><span class="d"></span>день 5 из 9 · часть 1 из 2</div>
     <h1>Расскажи в <em>сторис</em></h1>
     <p class="lead">Если тебе сейчас немножко тепло от того, что ты тут делаешь — поделись. Расскажи про челлендж, про Валечку, про птичку — что больше нравится. Это мой самый честный способ продвижения: только если получаешь удовольствие.</p>
+    <p class="lead" style="margin-top:14px; font-style:italic; color:var(--ink-2)">⏵ Сегодня <b>два задания подряд</b>. Сначала сторис, потом мини-игра «Висконсин» — карточная сортировка.</p>
   </header>
 
   <div class="panel">
@@ -377,7 +378,7 @@ function applyDoneState(){
   nextBtn.disabled = false;
   nextBtn.style.opacity = '1';
   nextBtn.innerHTML = `
-    К птичке
+    Продолжаем сегодня → Висконсин
     <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
   `;
 }
@@ -392,7 +393,8 @@ markBtn.addEventListener('click', () => {
 
 nextBtn.addEventListener('click', () => {
   if(!Challenge.isDone(5)) return;
-  Challenge.goHome();
+  // 5 и 6 — один день: после сторис сразу к Висконсину
+  window.location.href = '../day6/index.html';
 });
 </script>
 </body>
