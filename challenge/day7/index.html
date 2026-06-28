@@ -4,159 +4,78 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<title>День 7 · Опрос для близких</title>
+<title>День 6 · Flanker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../day.css?v=2">
 <style>
-  .q-block {
-    background: #fff; border: 1.5px solid var(--line); border-radius: 16px;
-    padding: 18px 20px; margin-bottom: 12px;
+  #fl-stage {
+    width: 100%; min-height: 480px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 28px;
+    background: var(--ink); color: var(--bg);
+    border-radius: 28px; position: relative; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .12s ease;
+    overflow: hidden;
   }
-  .q-block .q-label {
-    font-family: 'Fraunces', serif; font-style: italic;
-    font-size: 13px; color: var(--muted); margin-bottom: 4px;
+  /* Половины экрана — кликабельная зона для тача */
+  .fl-half {
+    position: absolute; top: 0; bottom: 0; width: 50%;
+    z-index: 2; cursor: pointer;
   }
-  .q-block .q-text {
+  .fl-half.left  { left: 0; }
+  .fl-half.right { right: 0; }
+  .fl-half-label {
+    position: absolute; bottom: 14px; font-size: 36px; font-weight: 700;
+    color: rgba(255,255,255,0.18); pointer-events: none;
+  }
+  .fl-half.left  .fl-half-label { left: 28px; }
+  .fl-half.right .fl-half-label { right: 28px; }
+  #fl-stage.idle .fl-half { display: none; }
+  #fl-stage.idle { background: var(--bg-2); color: var(--ink); }
+  #fl-stage.fb-correct { background: #5E6B4A; }
+  #fl-stage.fb-error   { background: #B84C32; }
+
+  .fl-progress {
+    position: absolute; top: 16px; left: 20px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; color: rgba(255,255,255,0.5);
+  }
+  #fl-stage.idle .fl-progress { color: var(--muted); }
+
+  .fl-arrows {
+    font-family: 'Manrope', sans-serif; font-weight: 700;
+    font-size: 90px; line-height: 1;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+
+  .fl-msg {
     font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 18px; color: var(--ink); margin-bottom: 12px; line-height: 1.3;
+    font-size: 22px; text-align: center; padding: 0 24px; max-width: 480px;
   }
-  .q-block input[type="text"] {
-    width: 100%; padding: 12px 16px;
-    border: 1.5px solid var(--line); border-radius: 999px;
-    background: var(--bg); color: var(--ink);
-    font-family: 'Manrope', sans-serif; font-size: 15px;
-    box-sizing: border-box;
+  .fl-hint {
+    font-family: 'Manrope', sans-serif; font-weight: 500;
+    font-size: 14px; color: var(--muted); text-align: center; max-width: 360px;
   }
-  .q-block input[type="text"]:focus {
-    outline: none; border-color: var(--coral);
-  }
+  #fl-stage:not(.idle) .fl-hint { color: rgba(255,255,255,0.6); }
 
-  /* meme picker — сетка с эмодзи (общая для пиктограмм-выбора) */
-  .meme-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  .fl-controls {
+    display: flex; gap: 14px; width: 100%; max-width: 380px;
+    margin-top: 12px;
   }
-  @media (max-width: 500px) { .meme-grid { grid-template-columns: repeat(3, 1fr); } }
-  .meme-card {
-    background: var(--bg); border: 2px solid var(--line); border-radius: 14px;
-    padding: 10px 6px; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    transition: all .12s ease;
-    text-align: center;
-  }
-  .meme-card:hover { border-color: var(--coral); transform: translateY(-1px); }
-  .meme-card.selected {
-    border-color: var(--coral); background: #f4e0d4;
-  }
-  .meme-card .meme-emoji {
-    font-size: 36px; line-height: 1;
-  }
-  .meme-card .meme-label {
-    font-size: 11px; font-weight: 600; color: var(--ink-2);
-    line-height: 1.2;
-  }
-  .meme-card.selected .meme-label { color: var(--coral); }
-
-  /* meme в compare */
-  .meme-display {
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
-  .meme-display .meme-emoji { font-size: 40px; }
-  .meme-display .meme-label { font-size: 12px; font-weight: 600; }
-
-  /* цветной swatch вместо эмодзи */
-  .color-swatch {
-    width: 70px; height: 70px; border-radius: 14px;
-    border: 2px solid rgba(0,0,0,0.08);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  }
-  .meme-display .color-swatch { width: 80px; height: 80px; border-radius: 16px; }
-
-  .link-box {
-    background: var(--bg-2); border: 2px dashed var(--line); border-radius: 16px;
-    padding: 18px; margin: 16px 0;
-  }
-  .link-box .lb-label {
-    font-family: 'Fraunces', serif; font-style: italic;
-    font-size: 13px; color: var(--muted); margin-bottom: 8px;
-  }
-  .link-box .lb-value {
-    font-family: 'Manrope', sans-serif; font-size: 13px;
-    color: var(--ink-2); word-break: break-all; line-height: 1.4;
-    background: #fff; padding: 12px 14px; border-radius: 10px;
-    border: 1px solid var(--line);
-    margin-bottom: 12px;
-  }
-
-  .compare-grid { display: grid; gap: 10px; margin-top: 14px; }
-  .compare-row {
-    background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
-    padding: 16px 18px;
-  }
-  .compare-row .cr-q {
-    font-family: 'Fraunces', serif; font-style: italic;
-    font-size: 14px; color: var(--muted); margin-bottom: 10px;
-  }
-  .compare-row .cr-answers {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  .compare-row .cr-cell {
-    padding: 12px 14px; border-radius: 10px; min-height: 56px;
-  }
-  .compare-row .cr-cell .cell-label {
-    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-    font-weight: 700; margin-bottom: 4px;
-  }
-  .compare-row .cr-cell .cell-value {
-    font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500;
-  }
-  .compare-row .cr-me { background: #f0ead9; }
-  .compare-row .cr-me .cell-label { color: var(--green-deep); }
-  .compare-row .cr-them { background: #f4e0d4; }
-  .compare-row .cr-them .cell-label { color: var(--coral); }
-  @media (max-width: 500px) {
-    .compare-row .cr-answers { grid-template-columns: 1fr; }
-  }
-
-  .selfreport {
-    background: var(--bg-2); border: 2px dashed var(--line); border-radius: 20px;
-    padding: 24px; margin: 20px 0; text-align: center;
-    transition: all .15s ease;
-  }
-  .selfreport.done {
-    background: #f0ead9; border-style: solid; border-color: var(--green-deep);
-  }
-  .selfreport .ico { font-size: 36px; margin-bottom: 6px; }
-  .selfreport h3 {
+  .fl-btn {
+    flex: 1; background: var(--yellow); color: var(--ink); border: none;
+    padding: 22px 0; border-radius: 18px;
     font-family: 'Fraunces', serif; font-weight: 600;
-    font-size: 20px; margin: 4px 0 6px;
+    font-size: 36px; line-height: 1;
+    cursor: pointer; box-shadow: 0 10px 22px rgba(245,196,0,0.28);
+    transition: transform .12s ease;
   }
-  .selfreport p { font-size: 14px; color: var(--ink-2); margin: 0 0 14px; }
-
-  .check-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--coral); color: #fff; border: none;
-    padding: 14px 22px; border-radius: 999px;
-    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px;
-    cursor: pointer; transition: transform .15s ease;
-  }
-  .check-btn:hover { transform: translateY(-2px); }
-  .check-btn.done { background: var(--green-deep); cursor: default; }
-  .check-btn.done:hover { transform: none; }
-
-  .copy-link-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--ink); color: #fff; border: none;
-    padding: 11px 18px; border-radius: 999px;
-    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px;
-    cursor: pointer;
-  }
-  .tg-cta {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: #29A1E0; color: #fff; padding: 11px 18px; border-radius: 999px;
-    font-weight: 700; font-size: 14px; text-decoration: none;
-  }
+  .fl-btn:active { transform: translateY(2px); }
+  .fl-btn:disabled { opacity: .35; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -173,145 +92,75 @@
 
 <main class="wrap">
 
-  <header class="day-head" id="day-header">
-    <div class="eyebrow"><span class="d"></span>день 7 из 9</div>
-    <h1>Опрос для <em>близких</em></h1>
-    <p class="lead">4 коротких вопроса для тех, кто помнит тебя маленькой. Отправь маме, сестре, бабушке, лучшей подруге — кому угодно, кто знает тебя с детства.</p>
+  <header class="day-head">
+    <div class="eyebrow"><span class="d"></span>день 6 из 7</div>
+    <h1>Flanker — <em>фильтр внимания</em></h1>
+    <p class="lead">Ряд из 5 стрелок. Тебе нужна только центральная — её направление. Боковые мешают. Тест проверяет, насколько чисто мозг может отфильтровать лишнее.</p>
   </header>
 
-  <!-- ============================================
-       РЕЖИМ 1: я заполняю свои ответы → создаю ссылку для близкого
-       ============================================ -->
-  <section id="mode-self" hidden>
-
+  <section id="intro">
     <div class="panel">
-      <h3>1. Сначала ответь сама</h3>
-      <p style="font-size:14px; color:var(--ink-2)">Запиши, как ты сейчас сама себя видишь — без раздумий, первое что пришло.</p>
-
-      <div id="q-self" style="margin-top:14px"></div>
-
-      <div class="btn-row" style="margin-top:6px; justify-content:flex-start">
-        <button class="btn btn-primary" id="generate-link">
-          Готово, сгенерировать ссылку
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
+      <h3>Как это работает</h3>
+      <ul>
+        <li>На экране — 5 стрелок в ряд, типа <b>← ← <span style="color:var(--coral)">←</span> ← ←</b>.</li>
+        <li>Реагируй только на <b>центральную</b> стрелку.</li>
+        <li>На <b>телефоне</b>: тапай в левую или правую половину экрана.</li>
+        <li>На <b>компе</b>: жми стрелки <b>←</b> и <b>→</b> на клавиатуре.</li>
+        <li>30 стрелок, ~30 секунд. Чем быстрее — тем лучше, но не в ущерб точности.</li>
+      </ul>
+      <p style="margin-top:8px"><b>Разница в скорости</b> между «все одинаковые» и «боковые мешают» — это сила твоего фильтра.</p>
     </div>
-
-    <div id="self-after" hidden>
-      <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
-        <h3>2. Теперь отправь ссылку близкому</h3>
-        <p>Близкий откроет, ответит на те же вопросы про тебя — и получит ссылку, которую вернёт тебе обратно. Ты увидишь сравнение.</p>
-        <div class="link-box">
-          <div class="lb-label">ссылка для близкого</div>
-          <div class="lb-value" id="close-link"></div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <button class="copy-link-btn" id="copy-link">📋 Скопировать</button>
-            <a class="tg-cta" id="share-tg" target="_blank">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Отправить в Telegram
-            </a>
-          </div>
-        </div>
-        <p style="font-size:13px; color:var(--muted); margin-top:14px">Когда близкий ответит, он пришлёт тебе обратно новую ссылку — открой её, чтобы увидеть сравнение.</p>
-      </div>
-
-      <div class="selfreport" id="selfreport-self">
-        <div class="ico" id="report-ico">📨</div>
-        <h3 id="report-title">Отправила ссылку?</h3>
-        <p id="report-desc">Нажми, когда отправишь — птичка засчитает день.</p>
-        <button class="check-btn" id="mark-sent">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Отправила — отметить
-        </button>
-      </div>
-
-      <aside class="drip-club" data-day="7">
-        <div class="drip-bird" aria-hidden="true">🪶</div>
-        <div class="drip-body">
-          <p>Кроме даблинга, в клубе есть техника недели: маленькая, рабочая. Пробуем, смотрим, что сработало, забираем себе.</p>
-          <a class="drip-link" href="../../club.html">В клуб «Стая» →</a>
-        </div>
-      </aside>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="next-self" disabled style="opacity:.5">
-          Сначала отметь, что отправила
-        </button>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ============================================
-       РЕЖИМ 2: близкий отвечает на вопросы
-       ============================================ -->
-  <section id="mode-close" hidden>
-
-    <div class="panel">
-      <h3 id="close-greeting">Привет!</h3>
-      <p style="font-size:15px; color:var(--ink-2)" id="close-intro">— проходит мини-челлендж и хочет узнать, как её помнят те, кто рядом. Ответь на 4 коротких вопроса — это займёт минуту.</p>
-      <p style="font-size:13px; color:var(--muted); margin-top:6px">Никаких email и регистраций. Ответы зашиваются прямо в ссылку, которую ты потом скопируешь и отправишь обратно.</p>
-    </div>
-
-    <div id="q-close"></div>
-
-    <div class="btn-row" style="justify-content:flex-start">
-      <button class="btn btn-primary" id="finish-close">
-        Готово, получить ссылку
+    <div class="btn-row">
+      <button class="btn btn-primary btn-big" id="start-btn">Начать
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
-
-    <div id="close-after" hidden>
-      <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow); margin-top:18px">
-        <h3>Отлично, спасибо!</h3>
-        <p>Скопируй ссылку и отправь обратно <b id="close-name-final"></b> — она откроет и увидит, что ты ответил(а).</p>
-        <div class="link-box">
-          <div class="lb-label">ссылка с твоими ответами</div>
-          <div class="lb-value" id="result-link"></div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <button class="copy-link-btn" id="copy-result-link">📋 Скопировать</button>
-            <a class="tg-cta" id="share-result-tg" target="_blank">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Отправить в Telegram
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
-  <!-- ============================================
-       РЕЖИМ 3: сравнение моих ответов и близкого
-       ============================================ -->
-  <section id="mode-compare" hidden>
-    <div class="panel">
-      <h3 id="compare-title">Сравнение</h3>
-      <p style="font-size:14px; color:var(--ink-2)">Слева — что ты ответила сама, справа — что увидел в тебе близкий. Разница часто говорит больше, чем совпадение.</p>
-    </div>
+  <section id="game" class="game-area" hidden style="padding:0; background:transparent; border:none; min-height:0">
+    <div id="fl-stage" class="idle"></div>
+  </section>
 
-    <div class="compare-grid" id="compare-list"></div>
-
-    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow); margin-top:18px">
-      <h3>Что заметила?</h3>
-      <p>Где близкий увидел тебя совсем по-другому? Где, наоборот, попал в самую точку? Об этом интересно подумать или написать в комментариях к посту дня в блоге.</p>
-      <div style="margin-top:10px">
-        <a class="tg-cta" href="https://t.me/drgruzdeva" target="_blank" rel="noopener">
-          ✈︎ К посту в блоге @drgruzdeva
-        </a>
+  <section id="result" hidden>
+    <div class="result-panel">
+      <h2>Готово!</h2>
+      <p class="sub">Вот как работал твой фильтр:</p>
+      <div class="result-stats">
+        <div class="result-stat"><span class="v" id="r-acc">—</span><span class="l">точность, %</span></div>
+        <div class="result-stat"><span class="v" id="r-rt-c">—</span><span class="l">RT «все одинаковые», мс</span></div>
+        <div class="result-stat"><span class="v" id="r-rt-i">—</span><span class="l">RT «боковые мешают», мс</span></div>
+        <div class="result-stat"><span class="v" id="r-fe">—</span><span class="l">эффект помех (Δ мс)</span></div>
       </div>
+      <p class="comment" id="r-comment"></p>
     </div>
 
-    <div class="selfreport" id="selfreport-compare">
-      <div class="ico">🎉</div>
-      <h3>ТЫ ГЕРОЙ!</h3>
-      <p>Сравнение получено — птичка засчитала.</p>
+    <div class="panel">
+      <h3>Что это значит</h3>
+      <p><b>Эффект помех</b> — разница в скорости между «все стрелки одинаковые» и «боковые мешают». Это и есть цена отвлечения: сколько миллисекунд мозг тратит, чтобы заглушить лишнее.</p>
+      <p>У обычного взрослого этот эффект ~30–60мс. Сильно больше — значит мозгу сейчас тяжело отсекать раздражители: всё кричит «посмотри на меня». Знакомо?</p>
     </div>
+
+    <div class="panel" style="background:var(--yellow-soft); border-color:var(--yellow)">
+      <h3>Поделиться</h3>
+      <p style="margin-bottom:14px">В комментарии к посту дня в блоге или в сторис.</p>
+      <div class="btn-row" style="justify-content:flex-start; margin:0">
+        <button class="btn btn-primary" id="share-chat">В блог @drgruzdeva ✈︎</button>
+        <button class="btn btn-yellow" id="share-image" style="background:var(--ink); color:#fff; box-shadow:none">Сохранить картинку</button>
+      </div>
+      <p id="share-hint" style="font-size:13px; color:var(--ink-2); margin-top:14px; min-height:18px"></p>
+    </div>
+
+    <aside class="drip-club" data-day="8">
+      <div class="drip-bird" aria-hidden="true">🪶</div>
+      <div class="drip-body">
+        <p>Иногда задача не становится легче — но рядом с другими к ней проще подступиться. Давай в «Стаю»?</p>
+        <a class="drip-link" href="../../club.html">В клуб «Стая» →</a>
+      </div>
+    </aside>
 
     <div class="btn-row">
-      <button class="btn btn-primary" id="next-compare">
-        К птичке
+      <button class="btn btn-ghost" id="retry-btn">Пройти ещё раз</button>
+      <button class="btn btn-primary" id="next-btn">К птичке
         <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -329,295 +178,300 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
+<script src="../share-utils.js?v=4"></script>
 <script>
 /* ============================================================
-   День 7 — Опрос для близких
-   Логика через URL params (без сервера):
-     - Нет params         → режим self (я заполняю + создаю ссылку)
-     - ?me=...&name=...   → режим close (близкий отвечает)
-     - ?me=...&them=...&name=... → режим compare (сравнение)
+   Flanker — фильтр внимания
+   30 trials: 50% congruent (все ← ← ← ← ←) + 50% incongruent (← ← → ← ←)
+   Стимул до ответа или 1500мс, ISI 700мс
    ============================================================ */
 
-const QUESTIONS = [
-  { id:'character', text:'Если бы в детстве я была персонажем из мультика или кино, каким?', type:'text', placeholder:'одно-два слова, что первое пришло…' },
-  { id:'animal',    text:'Если бы в детстве я была животным, каким?',                        type:'text', placeholder:'одно-два слова' },
-  { id:'color',     text:'Если бы в детстве я была цветом, каким?',                          type:'color' },
-  { id:'weather',   text:'Если бы в детстве я была погодным явлением, каким?',               type:'text', placeholder:'одно-два слова' },
-];
-const QUESTIONS_THIRD = [
-  (name) => `Если бы в детстве ${name} была персонажем из мультика или кино, каким?`,
-  (name) => `Если бы в детстве ${name} была животным, каким?`,
-  (name) => `Если бы в детстве ${name} была цветом, каким?`,
-  (name) => `Если бы в детстве ${name} была погодным явлением, каким?`,
-];
+const TOTAL = 30;
+const STIM_TIMEOUT = 1500;
+const ISI = 700;
 
-/* Палитра цветов с настроениями */
-const COLORS = [
-  { id:'yellow',  hex:'#F5C400', label:'Жёлтый\nрадость' },
-  { id:'orange',  hex:'#E48030', label:'Оранжевый\nэнергия' },
-  { id:'red',     hex:'#C0573F', label:'Красный\nзлость' },
-  { id:'pink',    hex:'#F2A8B8', label:'Розовый\nнежность' },
-  { id:'purple',  hex:'#8E6CB0', label:'Фиолетовый\nмечта' },
-  { id:'blue',    hex:'#3C5A7A', label:'Синий\nспокой' },
-  { id:'sky',     hex:'#7FB3C9', label:'Голубой\nлёгкость' },
-  { id:'green',   hex:'#5E6B4A', label:'Зелёный\nбаланс' },
-  { id:'brown',   hex:'#8B6B4A', label:'Коричневый\nстабильность' },
-  { id:'gray',    hex:'#9A9690', label:'Серый\nтуман' },
-  { id:'black',   hex:'#1A1614', label:'Чёрный\nпусто' },
-  { id:'white',   hex:'#F4EEE2', label:'Белый\nясность' },
-];
+let trials = [];
+let trial = 0;
+let stimStartTime = 0;
+let stimDir = null;       // 'L' or 'R' — направление центральной стрелки
+let stimType = null;      // 'C' or 'I' — congruent/incongruent
+let responded = false;
+let phase = 'idle';
+let stimTimer = null, isiTimer = null;
 
-function memeById(id){ return COLORS.find(c => c.id === id); }
+const results = { hits:0, errors:0, missed:0, byType: { C: [], I: [] } };
 
-function enc(obj){
-  return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
-}
-function dec(str){
-  try { return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(str))))); }
-  catch(e){ return null; }
+const stage = document.getElementById('fl-stage');
+const intro = document.getElementById('intro');
+const gameEl = document.getElementById('game');
+const resultEl = document.getElementById('result');
+
+function buildTrials(){
+  const arr = [];
+  const half = TOTAL / 2;
+  for(let i=0;i<half;i++) arr.push('C');
+  for(let i=0;i<half;i++) arr.push('I');
+  // shuffle
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
 }
 
-function getParams(){
-  const p = new URLSearchParams(window.location.search);
-  return {
-    me: p.get('me'),
-    them: p.get('them'),
-    name: p.get('name'),
-  };
+function renderIdle(){
+  stage.className = 'idle';
+  stage.innerHTML = `
+    <div class="fl-progress">0 / ${TOTAL}</div>
+    <div class="fl-msg">Готова? Тапни, чтобы начать.</div>
+    <div class="fl-hint">Реагируй на <b>центральную</b> стрелку. Боковые игнорируй.</div>
+  `;
 }
 
-function buildLink(extra){
-  const u = new URL(window.location.href);
-  u.search = '';
-  Object.entries(extra).forEach(([k,v]) => v && u.searchParams.set(k, v));
-  return u.toString();
+function arrowsHTML(dir, type){
+  // dir: L/R, type: C/I
+  const center = dir === 'L' ? '←' : '→';
+  const flank = (type === 'C') ? center : (dir === 'L' ? '→' : '←');
+  return `${flank} ${flank} <span style="color:var(--coral)">${center}</span> ${flank} ${flank}`;
 }
 
-/* ---------- общая отрисовка вопроса ---------- */
-function renderQuestionBlock(idx, text, type, placeholder){
-  const el = document.createElement('div');
-  el.className = 'q-block';
-  el.dataset.i = idx;
-  el.dataset.type = type;
-  if(type === 'color'){
-    const cards = COLORS.map(c => `
-      <div class="meme-card" data-meme="${c.id}">
-        <div class="color-swatch" style="background:${c.hex}"></div>
-      </div>`).join('');
-    el.innerHTML = `
-      <div class="q-label">вопрос ${idx+1} из 4</div>
-      <div class="q-text">${text}</div>
-      <div class="meme-grid">${cards}</div>
-    `;
-    el.querySelectorAll('.meme-card').forEach(card => {
-      card.addEventListener('click', () => {
-        el.querySelectorAll('.meme-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        el.dataset.value = card.dataset.meme;
-      });
-    });
+function renderStim(){
+  stage.className = '';
+  stage.innerHTML = `
+    <div class="fl-progress">${trial+1} / ${TOTAL}</div>
+    <div class="fl-arrows">${arrowsHTML(stimDir, stimType)}</div>
+    <div class="fl-hint" style="position:absolute; bottom:14px; left:0; right:0; text-align:center; color:rgba(255,255,255,0.5)">тапни в левую или правую половину</div>
+    <div class="fl-half left"  id="half-L"><span class="fl-half-label">←</span></div>
+    <div class="fl-half right" id="half-R"><span class="fl-half-label">→</span></div>
+  `;
+  const respondL = (e)=>{ e.preventDefault(); e.stopPropagation(); respond('L'); };
+  const respondR = (e)=>{ e.preventDefault(); e.stopPropagation(); respond('R'); };
+  const hL = document.getElementById('half-L');
+  const hR = document.getElementById('half-R');
+  hL.addEventListener('click', respondL);
+  hR.addEventListener('click', respondR);
+  hL.addEventListener('touchstart', respondL, { passive: false });
+  hR.addEventListener('touchstart', respondR, { passive: false });
+}
+
+function renderBlank(){
+  stage.innerHTML = `
+    <div class="fl-progress">${trial} / ${TOTAL}</div>
+    <div class="fl-arrows" style="opacity:0.3">⋯</div>
+  `;
+}
+
+/* Web Audio beep */
+let audioCtx = null;
+function playBeep(correct){
+  try {
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(correct){
+      tone(660, 0.10, 'sine', 0);
+      tone(880, 0.14, 'sine', 0.04);
+    } else {
+      tone(180, 0.22, 'sawtooth', 0);
+    }
+  } catch(e){}
+}
+function tone(freq, dur, type, delay){
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  o.connect(g); g.connect(audioCtx.destination);
+  const t0 = audioCtx.currentTime + delay;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.2, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+
+function flash(correct){
+  stage.classList.remove('fb-correct','fb-error');
+  void stage.offsetWidth;
+  stage.classList.add(correct ? 'fb-correct' : 'fb-error');
+  playBeep(correct);
+  setTimeout(()=> stage.classList.remove('fb-correct','fb-error'), 320);
+}
+
+function startTrial(){
+  if(trial >= TOTAL){
+    finish();
+    return;
+  }
+  phase = 'stim';
+  responded = false;
+  stimDir = Math.random() < 0.5 ? 'L' : 'R';
+  stimType = trials[trial];
+  stimStartTime = performance.now();
+  renderStim();
+
+  stimTimer = setTimeout(() => {
+    if(!responded){
+      results.missed++;
+      flash(false);
+      phase = 'isi';
+      renderBlank();
+      isiTimer = setTimeout(() => { trial++; startTrial(); }, ISI);
+    }
+  }, STIM_TIMEOUT);
+}
+
+function respond(dir){
+  if(phase !== 'stim' || responded) return;
+  responded = true;
+  const rt = performance.now() - stimStartTime;
+  const correct = dir === stimDir;
+  if(correct){
+    results.hits++;
+    results.byType[stimType].push(rt);
+    flash(true);
   } else {
-    el.innerHTML = `
-      <div class="q-label">вопрос ${idx+1} из 4</div>
-      <div class="q-text">${text}</div>
-      <input type="text" maxlength="80" placeholder="${placeholder || 'одно-два слова'}" autocomplete="off">
-    `;
+    results.errors++;
+    flash(false);
   }
-  return el;
+  clearTimeout(stimTimer);
+  phase = 'isi';
+  setTimeout(() => {
+    renderBlank();
+    isiTimer = setTimeout(() => { trial++; startTrial(); }, Math.max(400, ISI - 200));
+  }, 330);
 }
 
-function readAnswers(wrap){
-  const blocks = wrap.querySelectorAll('.q-block');
-  return Array.from(blocks).map(b => {
-    if(b.dataset.type === 'color') return b.dataset.value || '';
-    const inp = b.querySelector('input');
-    return inp ? inp.value.trim() : '';
-  });
-}
-
-/* ---------- MODE SELF — я отвечаю и создаю ссылку ---------- */
-function initSelf(){
-  document.getElementById('mode-self').hidden = false;
-  const wrap = document.getElementById('q-self');
-  QUESTIONS.forEach((q, i) => {
-    wrap.appendChild(renderQuestionBlock(i, q.text, q.type, q.placeholder));
-  });
-
-  document.getElementById('generate-link').addEventListener('click', () => {
-    const answers = readAnswers(wrap);
-    if(answers.filter(a => a).length < 4){
-      alert('Заполни все 4 вопроса — даже коротко (включая выбор цвета).');
-      return;
-    }
-    const name = Challenge.getName();
-    const myAnswersEncoded = enc(answers);
-    const link = buildLink({ me: myAnswersEncoded, name });
-
-    document.getElementById('self-after').hidden = false;
-    document.getElementById('close-link').textContent = link;
-    document.getElementById('share-tg').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(`Ответь на 4 вопроса про меня в детстве 🙏`);
-
-    document.getElementById('copy-link').addEventListener('click', async () => {
-      try{
-        await navigator.clipboard.writeText(link);
-        document.getElementById('copy-link').textContent = '✓ Скопировано';
-        setTimeout(()=>{ document.getElementById('copy-link').innerHTML = '📋 Скопировать'; }, 2000);
-      }catch(e){
-        alert('Скопируй вручную — текст ниже');
-      }
-    }, { once: true });
-
-    // сохраняем свои ответы в localStorage чтобы потом подтянуть в режим compare
-    const state = Challenge.getState() || {};
-    state.day7my = answers;
-    Challenge.saveState(state);
-
-    window.scrollTo({top: document.getElementById('self-after').offsetTop - 20, behavior:'smooth'});
-  });
-
-  // mark-sent
-  const markBtn = document.getElementById('mark-sent');
-  const sr = document.getElementById('selfreport-self');
-  const nextBtn = document.getElementById('next-self');
-
-  function applyDoneState(){
-    sr.classList.add('done');
-    document.getElementById('report-ico').textContent = '🎉';
-    document.getElementById('report-title').textContent = 'ТЫ ГЕРОЙ!';
-    document.getElementById('report-desc').textContent = 'Спасибо, что делишься. Когда близкий ответит — открой его ссылку, увидишь сравнение.';
-    markBtn.classList.add('done');
-    markBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Отмечено
-    `;
-    markBtn.disabled = true;
-    nextBtn.disabled = false;
-    nextBtn.style.opacity = '1';
-    nextBtn.innerHTML = `К птичке <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function handleTap(){
+  if(phase === 'idle'){
+    trial = 0;
+    results.hits = 0; results.errors = 0; results.missed = 0;
+    results.byType = { C: [], I: [] };
+    trials = buildTrials();
+    startTrial();
   }
-
-  if(Challenge.isDone(7)) applyDoneState();
-
-  markBtn.addEventListener('click', () => {
-    if(Challenge.isDone(7)) return;
-    Challenge.markDone(7, { type:'survey-sent' });
-    applyDoneState();
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if(!Challenge.isDone(7)) return;
-    Challenge.goHome();
-  });
 }
 
-/* ---------- MODE CLOSE — близкий отвечает ---------- */
-function initClose(params){
-  document.getElementById('mode-close').hidden = false;
-  document.getElementById('day-header').querySelector('.lead').textContent =
-    `${params.name} проходит мини-челлендж «Стаей идти веселее» и хочет, чтобы ты рассказал, какой она была в детстве — через ассоциации. Ответь на 4 коротких вопроса.`;
-  document.getElementById('close-greeting').textContent = `Привет!`;
-  document.getElementById('close-intro').textContent = `Расскажи, какой ${params.name} была в детстве — через ассоциации. 4 коротких вопроса, это займёт минуту.`;
+function finish(){
+  phase = 'done';
+  clearTimeout(stimTimer); clearTimeout(isiTimer);
 
-  const wrap = document.getElementById('q-close');
-  QUESTIONS_THIRD.forEach((qFn, i) => {
-    const orig = QUESTIONS[i];
-    wrap.appendChild(renderQuestionBlock(i, qFn(params.name), orig.type, orig.placeholder));
-  });
+  const total = TOTAL;
+  const acc = Math.round((results.hits / total) * 100);
+  const rtC = results.byType.C.length ? Math.round(results.byType.C.reduce((s,x)=>s+x,0)/results.byType.C.length) : 0;
+  const rtI = results.byType.I.length ? Math.round(results.byType.I.reduce((s,x)=>s+x,0)/results.byType.I.length) : 0;
+  const fe = (rtC && rtI) ? rtI - rtC : 0;
 
-  document.getElementById('finish-close').addEventListener('click', () => {
-    const answers = readAnswers(wrap);
-    if(answers.filter(a => a).length < 4){
-      alert('Заполни, пожалуйста, все 4 — даже коротко (включая выбор цвета).');
-      return;
-    }
-    const themEncoded = enc(answers);
-    const link = buildLink({ me: params.me, them: themEncoded, name: params.name });
+  document.getElementById('r-acc').textContent = acc;
+  document.getElementById('r-rt-c').textContent = rtC || '—';
+  document.getElementById('r-rt-i').textContent = rtI || '—';
+  document.getElementById('r-fe').textContent = (fe > 0 ? '+' : '') + fe;
 
-    document.getElementById('close-after').hidden = false;
-    document.getElementById('close-name-final').textContent = params.name;
-    document.getElementById('result-link').textContent = link;
-    document.getElementById('share-result-tg').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(`Готово, ответил(а) на твои 4 вопроса 🐣`);
-
-    document.getElementById('copy-result-link').addEventListener('click', async () => {
-      try{
-        await navigator.clipboard.writeText(link);
-        document.getElementById('copy-result-link').textContent = '✓ Скопировано';
-        setTimeout(()=>{ document.getElementById('copy-result-link').innerHTML = '📋 Скопировать'; }, 2000);
-      }catch(e){
-        alert('Скопируй вручную.');
-      }
-    }, { once: true });
-
-    window.scrollTo({top: document.getElementById('close-after').offsetTop - 20, behavior:'smooth'});
-  });
-}
-
-/* ---------- MODE COMPARE — сравнение ---------- */
-function initCompare(params){
-  document.getElementById('mode-compare').hidden = false;
-  document.getElementById('compare-title').textContent = `Сравнение ответов`;
-
-  const me = dec(params.me) || [];
-  const them = dec(params.them) || [];
-
-  const list = document.getElementById('compare-list');
-
-  function renderCell(value, type){
-    if(type === 'color'){
-      const c = memeById(value);
-      if(!c) return '<span style="color:var(--muted)">—</span>';
-      return `
-        <div class="meme-display">
-          <div class="color-swatch" style="background:${c.hex}"></div>
-        </div>
-      `;
-    }
-    return value || '<span style="color:var(--muted)">—</span>';
-  }
-
-  QUESTIONS.forEach((q, i) => {
-    const row = document.createElement('div');
-    row.className = 'compare-row';
-    row.innerHTML = `
-      <div class="cr-q">${q.text}</div>
-      <div class="cr-answers">
-        <div class="cr-cell cr-me">
-          <div class="cell-label">я сама</div>
-          <div class="cell-value">${renderCell(me[i], q.type)}</div>
-        </div>
-        <div class="cr-cell cr-them">
-          <div class="cell-label">близкий</div>
-          <div class="cell-value">${renderCell(them[i], q.type)}</div>
-        </div>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-
-  // если ещё не done — отметить сейчас (раз увидела сравнение, значит дошла)
-  if(!Challenge.isDone(7)){
-    Challenge.markDone(7, { type:'survey-compared', me, them });
-  }
-
-  document.getElementById('next-compare').addEventListener('click', () => Challenge.goHome());
-}
-
-/* ---------- ROUTER ---------- */
-(function init(){
-  const p = getParams();
-  if(p.me && p.them){
-    // сравнение
-    initCompare(p);
-  } else if(p.me && p.name){
-    // близкий
-    initClose(p);
+  let comment;
+  if(acc >= 92 && fe <= 60){
+    comment = 'Фильтр работает чисто: помехи почти не тормозят. Это редкое попадание в норму, хорошо.';
+  } else if(acc >= 85 && fe <= 100){
+    comment = 'Фильтр в целом работает, но помехи цепляют. Норма для уставшего мозга.';
+  } else if(fe > 100 && acc >= 80){
+    comment = 'Точность ОК, но мозг тратит много времени на «заглушение» лишних стрелок. Это и есть тот налог, который СДВГ-мозг платит за фокус.';
+  } else if(acc < 80){
+    comment = 'Точность поплыла — фильтр пропускает слишком многое. Внимание не отлавливает центр, потому что всё одинаково громко.';
   } else {
-    // я сама — требуем регистрацию
-    if(Challenge.requireRegistration()){
-      initSelf();
-    }
+    comment = 'Помехи давят сильно — реакция замедляется на каждом «мешающем» стимуле. Когда вокруг шум, мозг затормаживается.';
   }
-})();
+  document.getElementById('r-comment').textContent = comment;
+
+  Challenge.markDone(7, {
+    type:'flanker',
+    accuracy: acc,
+    rtCongruent: rtC, rtIncongruent: rtI, flankerEffect: fe,
+    hits: results.hits, errors: results.errors, missed: results.missed,
+  });
+
+  intro.hidden = true;
+  gameEl.hidden = true;
+  resultEl.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  intro.hidden = true;
+  gameEl.hidden = false;
+  resultEl.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  resultEl.hidden = true;
+  gameEl.hidden = false;
+  intro.hidden = true;
+  phase = 'idle';
+  renderIdle();
+});
+
+document.getElementById('next-btn').addEventListener('click', () => Challenge.goHome());
+
+stage.addEventListener('click', handleTap);
+stage.addEventListener('touchstart', (e)=>{ if(phase==='idle'){ e.preventDefault(); handleTap(); } }, { passive: false });
+document.addEventListener('keydown', (e)=>{
+  if(gameEl.hidden) return;
+  if(phase === 'idle' && (e.code === 'Space' || e.code === 'Enter')){ e.preventDefault(); handleTap(); }
+  if(phase === 'stim'){
+    if(e.code === 'ArrowLeft'){ e.preventDefault(); respond('L'); }
+    if(e.code === 'ArrowRight'){ e.preventDefault(); respond('R'); }
+  }
+});
+
+/* ---------- SHARE ---------- */
+function showHint(text){
+  const el = document.getElementById('share-hint');
+  el.textContent = text;
+  setTimeout(()=>{ el.textContent=''; }, 4000);
+}
+document.getElementById('share-chat').addEventListener('click', async () => {
+  const name = Challenge.getName();
+  const acc = document.getElementById('r-acc').textContent;
+  const rtC = document.getElementById('r-rt-c').textContent;
+  const rtI = document.getElementById('r-rt-i').textContent;
+  const fe = document.getElementById('r-fe').textContent;
+  const text =
+`🐣 Стаей идти веселее · день 6 · Flanker
+${name}
+
+🎯 Точность: ${acc}%
+⚡️ RT без помех: ${rtC}мс
+🌀 RT с помехами: ${rtI}мс
+📊 Эффект помех: ${fe}мс`;
+  try{
+    await navigator.clipboard.writeText(text);
+    showHint('Скопировано — открываю блог…');
+    setTimeout(()=> window.open('https://t.me/drgruzdeva','_blank'), 600);
+  }catch(e){
+    window.open('https://t.me/drgruzdeva','_blank');
+    showHint('Не вышло скопировать — допиши от руки.');
+  }
+});
+
+document.getElementById('share-image').addEventListener('click', () => {
+  const name = Challenge.getName();
+  const acc = document.getElementById('r-acc').textContent;
+  const rtC = document.getElementById('r-rt-c').textContent;
+  const rtI = document.getElementById('r-rt-i').textContent;
+  const fe = document.getElementById('r-fe').textContent;
+
+  const canvas = ShareUtils.buildShareCanvas({
+    dayLabel: 'День 6 · Flanker',
+    title: 'Фильтр внимания',
+    subtitle: `${name} отбивала помехи`,
+    userName: name,
+    stats: [
+      { v: acc + '%',  l: 'точность' },
+      { v: fe + 'мс',  l: 'эффект помех' },
+      { v: rtC + 'мс', l: 'без помех' },
+      { v: rtI + 'мс', l: 'с помехами' },
+    ],
+  });
+  ShareUtils.downloadCanvas(canvas, `flanker-${name}.png`);
+  showHint('Картинка сохранена.');
+});
+
+Challenge.requireRegistration();
 </script>
 </body>
 </html>
