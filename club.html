@@ -5,6 +5,9 @@
 <title>Клуб «Стая» — в стае вопросы решаются легче</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="description" content="Клуб по подписке для взрослых с СДВГ. Приноси затык — стая поддержит. Еженедельный даблинг-созвон в Зуме и живой чат своих."/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -30,7 +33,9 @@
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
+  html { overflow-x: hidden; }
   .serif { font-family: 'Fraunces','Georgia',serif; }
   .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 40px; }
   section { position: relative; }
@@ -58,7 +63,7 @@
     display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
     font-weight: 800; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--green-deep); background: color-mix(in srgb, var(--green) 18%, var(--bg));
-    padding: 8px 16px; border-radius: 999px;
+    padding: 8px 16px; border-radius: 999px; max-width: 100%;
   }
   .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
   .eyebrow.c { color: color-mix(in srgb, var(--accent) 75%, #000); background: color-mix(in srgb, var(--accent) 18%, var(--bg)); }
@@ -231,7 +236,7 @@
   .soft-card p { font-size: 17px; line-height: 1.55; color: var(--ink-2); margin: 0; }
   .soft-card p + p { margin-top: 10px; }
   .soft-card p strong { color: var(--ink); font-weight: 800; }
-  @media (max-width: 880px) { .soft-grid { grid-template-columns: 1fr; gap: 30px; } .soft-card { padding: 34px 28px 28px; } .soft-card h3 { font-size: 24px; } .soft-card p { font-size: 16px; } }
+  @media (max-width: 880px) { .soft-grid { grid-template-columns: 1fr; gap: 30px; margin-top: 32px; } .soft-card { padding: 34px 28px 28px; } .soft-card h3 { font-size: 24px; } .soft-card p { font-size: 16px; } }
 
   /* ---------- price ---------- */
   .price-sec { padding: 0 0 92px; }
@@ -356,15 +361,76 @@
     .tst { grid-template-columns: 1fr; }
     .final h2 { font-size: 44px; }
     .price-tag { font-size: 82px; }
+    .db-card { grid-template-columns: 1fr; gap: 30px; padding: 38px 28px; border-radius: 26px; }
+    .db-card h2 { font-size: clamp(28px, 6vw, 38px); line-height: 1.05; }
+    .db-card p { font-size: 17px; }
+    .zoom-grid { max-width: 100%; }
+    .zoom-tile { font-size: 24px; }
+    .doubling { padding: 60px 0; }
+    .price-wrap { padding: 48px 28px; border-radius: 26px; }
+    .price-tag small { font-size: 16px; }
+    .incl li { font-size: 16px; }
+    .final { padding: 56px 28px; border-radius: 28px; }
+    .final p { font-size: 18px; }
+    .how-inner { border-radius: 26px; }
   }
   @media (max-width: 600px) {
     .wrap { padding: 0 22px; }
-    h1.title { font-size: 48px; }
-    .subtitle { font-size: 22px; }
+    h1.title { font-size: 44px; }
+    .subtitle { font-size: 20px; }
     .nav-links .lnk { display: none; }
     .msg.ans { margin-left: 0; }
     .author-ph { width: 170px; height: 200px; }
-    .why h2, .final h2 { font-size: 36px; }
+    .why h2, .final h2 { font-size: 34px; }
+    .sig h2, .sec-head h2, .how-inner h2 { font-size: 32px; }
+    .why { padding: 64px 0; }
+    .sig, .rhythm-sec, .how, .faq-sec, .final-sec { padding-top: 64px; padding-bottom: 64px; }
+    .why p, .sig .lede, .sec-head p { font-size: 17px; }
+    .hero { padding: 36px 0 56px; }
+    .hero-body p { font-size: 17px; }
+    .btn { padding: 16px 24px; font-size: 16px; }
+    .cta-note { font-size: 14px; }
+    .badge { font-size: 12px; padding: 7px 12px; }
+    .bubble p { font-size: 16px; }
+    .bubble { padding: 14px 18px; }
+    .msg .av { width: 40px; height: 40px; font-size: 16px; }
+    .strip .run { font-size: 18px; }
+    .strip .run span { gap: 24px; padding-right: 24px; }
+    .price-tag { font-size: 68px; }
+    .price-wrap { padding: 40px 22px; }
+    .incl { margin-top: 24px; }
+    .rhythm { grid-template-columns: 1fr; }
+    .rcard { padding: 24px 22px; }
+    .how-inner { padding: 36px 24px; }
+    .step h3 { font-size: 24px; }
+    .step p { font-size: 16px; }
+    .soft-card h3 { font-size: 22px; }
+    .soft-card .mark { font-size: 18px; padding: 6px 12px; top: -14px; left: 22px; }
+    .author h2 { font-size: 32px; }
+    .author .role { font-size: 17px; }
+    .author { padding: 30px 24px; border-radius: 22px; }
+    .author-ph { width: 150px; height: 180px; }
+    .creds li { font-size: 12px; padding: 6px 12px; }
+    .db-card { padding: 32px 22px; }
+    .db-card h2 { font-size: 26px; }
+    .db-card p { font-size: 16px; }
+    .zoom-tile { font-size: 20px; }
+    summary { font-size: 17px; padding: 18px 0; }
+    details { padding: 0 22px; }
+    details .ans { font-size: 16px; }
+    .final { padding: 48px 22px; }
+    .final p { font-size: 16px; }
+    .foot-in { padding: 22px 0; gap: 14px; }
+    .foot-links { gap: 16px; }
+    .foot-links a { font-size: 14px; }
+    .foot .cp { font-size: 12px; }
+  }
+  @media (max-width: 380px) {
+    h1.title { font-size: 38px; }
+    .badges { gap: 8px; }
+    .why h2, .final h2 { font-size: 30px; }
+    .db-card h2 { font-size: 24px; }
+    .price-tag { font-size: 60px; }
   }
 </style>
 </head>
@@ -643,7 +709,6 @@
         <ul class="creds">
           <li>врач-нейрофизиолог</li>
           <li>работаю со взрослыми с СДВГ (ADHD-CCSP)</li>
-          <li>автор курса «Молодого птенца»</li>
         </ul>
       </div>
     </div>
