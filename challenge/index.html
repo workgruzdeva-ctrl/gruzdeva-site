@@ -69,9 +69,12 @@
   .pills { display: flex; flex-wrap: wrap; gap: 12px; }
   .pill {
     padding: 9px 18px; border-radius: 999px; white-space: nowrap;
-    background: var(--bg-2); border: 1.5px solid var(--line);
-    font-weight: 600; font-size: 15px; color: var(--ink-2);
+    border: 1.5px solid var(--ink);
+    font-weight: 700; font-size: 15px;
   }
+  .pill:nth-child(1){ background: var(--yellow); color: var(--ink); }
+  .pill:nth-child(2){ background: var(--green-deep); color: var(--bg); }
+  .pill:nth-child(3){ background: var(--coral); color: #fff; }
   h1.title {
     margin: 30px 0 0; font-weight: 600;
     font-size: 86px; line-height: 0.98; letter-spacing: -0.03em; color: var(--ink);
