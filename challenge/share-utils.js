@@ -5,6 +5,21 @@
 
 window.ShareUtils = (function(){
 
+  /* ====== Прелоад «Королевы стаи» (готовая PNG из m/grp/birds/) ======
+     Путь вычисляем относительно share-utils.js: он лежит в /challenge/,
+     значит до /m/grp/birds/ — на один уровень вверх.
+     PNG ~320 КБ грузится за <1 сек, поэтому к моменту первого share-клика
+     она будет готова. Если по какой-то причине не загрузилась —
+     drawCrownedBird сделает fallback на canvas-арт. */
+  const _birdImg = new Image();
+  try {
+    const _self = document.currentScript || document.querySelector('script[src*="share-utils.js"]');
+    const _baseUrl = _self ? new URL(_self.src) : new URL(location.href);
+    _birdImg.src = new URL('../m/grp/birds/09_koroleva_stai.png', _baseUrl).href;
+  } catch(e) {
+    _birdImg.src = '../m/grp/birds/09_koroleva_stai.png';
+  }
+
   /* Рисует текст с автоматическим уменьшением шрифта если не влезает в maxW.
      baseFont: например "600 120px 'Fraunces', 'Georgia', serif"
   */
@@ -21,9 +36,20 @@ window.ShareUtils = (function(){
     ctx.fillText(text, x, y);
   }
 
-  /* Рисует «королеву стаи» (упрощённый силуэт под лого).
-     cx, cy — центр, r — радиус тела */
+  /* Рисует «королеву стаи».
+     cx, cy — центр, r — радиус (примерно половина высоты птички).
+     Если готовая PNG (m/grp/birds/09_koroleva_stai.png) уже загружена — рисуем её.
+     Иначе fallback на canvas-арт (нестрашно: первый клик в дне обычно
+     случается через несколько секунд после загрузки страницы). */
   function drawCrownedBird(ctx, cx, cy, r){
+    if (_birdImg && _birdImg.complete && _birdImg.naturalWidth > 0) {
+      // PNG-1200×1200 с прозрачным фоном; центрируем по (cx, cy), размер = 2.4r
+      const SIZE = r * 2.4;
+      ctx.drawImage(_birdImg, cx - SIZE / 2, cy - SIZE / 2, SIZE, SIZE);
+      return;
+    }
+
+    // ===== Fallback на canvas-арт (если PNG не успела загрузиться) =====
     // тень
     ctx.fillStyle = 'rgba(94,107,74,0.18)';
     ctx.beginPath();
