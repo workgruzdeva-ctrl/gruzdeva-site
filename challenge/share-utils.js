@@ -20,6 +20,78 @@ window.ShareUtils = (function(){
     _birdImg.src = '../m/grp/birds/09_koroleva_stai.png';
   }
 
+  /* ====== Персональные птицы для share-картинок ======
+     На каждый уровень — массив объектов {file, title, phrase}.
+     Уровень («low»/«mid»/«high») вычисляется в day-файле по результату теста,
+     внутри уровня выбирается случайный персонаж. */
+  const _CHARS = {
+    low: [
+      { file: 'levels/low-zhuk.png',       title: 'Сегодня ты — Жук-невывожук',        phrase: 'Сегодня ты сделала, что смогла. Чмок тебя в нос.' },
+      { file: 'levels/low-elezhevika.png', title: 'Сегодня ты — Ележевика',             phrase: 'Еле-еле, но ягодка.' },
+      { file: 'levels/low-myata.png',      title: 'Сегодня ты — Мята, немного помята',  phrase: 'Не сломалась, а примялась.' },
+    ],
+    mid: [
+      { file: 'levels/mid-utka.png',    title: 'Сегодня ты — достаточно умелая утка-Незабудка', phrase: 'Летишь не идеально, но вполне уверенно.' },
+      { file: 'levels/mid-golub.png',   title: 'Сегодня ты — Голубь-стратег',           phrase: 'Иногда путаешься, но в целом находишь дорогу к хлебушку.' },
+      { file: 'levels/mid-ptenets.png', title: 'Сегодня ты — Птенец-молодец',           phrase: 'Справилась не без приключений, но справилась.' },
+    ],
+    high: [
+      { file: 'levels/high-gus.png',    title: 'Сегодня ты — Гусь-всемогусь',           phrase: 'Тебе сегодня всё по плечу.' },
+      // позже добавятся:
+      // { file: 'levels/high-rock.png', title: 'Сегодня ты — Гусь-за-попу-кусь', phrase: 'Быстро, цепко, уверенно.' },
+      // { file: 'levels/high-zhar.png', title: 'Сегодня ты — Жар-птица',         phrase: 'Ты огонь, детка.' },
+    ],
+  };
+
+  // Прелоадим все доступные PNG персонажей (URL вычисляем от share-utils.js)
+  const _charImages = {};
+  const _charReady = {};
+  try {
+    const _selfC = document.currentScript || document.querySelector('script[src*="share-utils.js"]');
+    const _baseUrlC = _selfC ? new URL(_selfC.src) : new URL(location.href);
+    for (const lvl of ['low','mid','high']) {
+      for (const c of _CHARS[lvl]) {
+        const img = new Image();
+        img.src = new URL(c.file, _baseUrlC).href;
+        _charImages[c.file] = img;
+        _charReady[c.file] = new Promise(function(res){
+          if (img.complete && img.naturalWidth > 0) return res();
+          img.onload = res; img.onerror = res;
+        });
+      }
+    }
+  } catch(e) {}
+
+  // Случайный выбор персонажа по уровню. seed — опционально, для воспроизводимости.
+  function pickCharacter(level, seed){
+    const arr = _CHARS[level] || _CHARS.mid;
+    let idx;
+    if (typeof seed === 'number') {
+      idx = Math.abs(seed) % arr.length;
+    } else {
+      idx = Math.floor(Math.random() * arr.length);
+    }
+    return arr[idx];
+  }
+
+  // Простой word-wrap по ширине canvas-текста (для фразы под персонажем).
+  function wrap(ctx, text, maxW){
+    const words = String(text || '').split(/\s+/);
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      const test = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && cur) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = test;
+      }
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+
   /* Рисует текст с автоматическим уменьшением шрифта если не влезает в maxW.
      baseFont: например "600 120px 'Fraunces', 'Georgia', serif"
   */
@@ -199,8 +271,9 @@ window.ShareUtils = (function(){
     ctx.closePath();
   }
 
-  /* Главная функция: рисует единый «бинго-постер» для дня */
-  function buildShareCanvas({ dayLabel, title, subtitle, stats, userName }){
+  /* Главная функция: рисует единый «бинго-постер» для дня.
+     async — потому что ждёт прелоад PNG персонажа (если level передан). */
+  async function buildShareCanvas({ dayLabel, title, subtitle, stats, userName, level }){
     const W = 1080, H = 1920;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -222,52 +295,114 @@ window.ShareUtils = (function(){
     ctx.font = '700 30px "Manrope", sans-serif'; ctx.textAlign = 'left';
     ctx.fillText('Валя Груздева', 90, 112);
 
-    // crowned bird
-    drawCrownedBird(ctx, W/2, 360, 110);
+    if (level && _CHARS[level] && _CHARS[level].length > 0) {
+      // ====== НОВЫЙ ЛЕЙАУТ С ПЕРСОНАЖЕМ ======
+      const char = pickCharacter(level);
+      await (_charReady[char.file] || Promise.resolve());
+      const charImg = _charImages[char.file];
 
-    // day label
-    ctx.fillStyle = '#5E6B4A';
-    ctx.font = '700 26px "Manrope", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`• ${dayLabel.toUpperCase()}`, W/2, 580);
-
-    // title
-    drawFitText(ctx, title, W/2, 670, W - 120,
-      '600 78px "Fraunces", "Georgia", serif', '#2A2620', 'center');
-
-    // subtitle (имя + контекст)
-    if(subtitle){
-      drawFitText(ctx, subtitle, W/2, 745, W - 140,
-        'italic 500 42px "Fraunces", "Georgia", serif', '#D9694A', 'center');
-    }
-
-    // stats card
-    const cardY = 830, cardH = 700;
-    ctx.fillStyle = '#FBF7EE';
-    roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.fill();
-    ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
-    roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.stroke();
-
-    const cellW = (W - 160) / 2;
-    const cellH = cardH / 2;
-    const valueMaxW = cellW - 40;
-    stats.forEach((s, i) => {
-      const cx = 80 + cellW * (i % 2) + cellW/2;
-      const cy = cardY + cellH * Math.floor(i / 2) + cellH/2;
-
-      // value
-      drawFitText(ctx, String(s.v ?? '—'), cx, cy + 18, valueMaxW,
-        '600 110px "Fraunces", "Georgia", serif', '#D9694A', 'center');
-
-      // label
-      ctx.fillStyle = '#8C8A77';
-      ctx.font = '700 24px "Manrope", sans-serif';
+      // dayLabel сверху
+      ctx.fillStyle = '#5E6B4A';
+      ctx.font = '700 26px "Manrope", sans-serif';
       ctx.textAlign = 'center';
-      // переносим лейбл если он длинный
-      const labelMaxW = cellW - 30;
-      drawFitText(ctx, (s.l || '').toUpperCase(), cx, cy + 88, labelMaxW,
-        '700 24px "Manrope", sans-serif', '#8C8A77', 'center');
-    });
+      ctx.fillText(`• ${dayLabel.toUpperCase()}`, W/2, 250);
+
+      // ТИТУЛ — над персонажем
+      drawFitText(ctx, char.title, W/2, 340, W - 100,
+        'italic 600 50px "Fraunces", "Georgia", serif', '#D9694A', 'center');
+
+      // ПЕРСОНАЖ — большой, центр
+      if (charImg && charImg.naturalWidth > 0) {
+        const SIZE = 360;
+        ctx.drawImage(charImg, (W - SIZE)/2, 380, SIZE, SIZE);
+      }
+
+      // ФРАЗА под персонажем (с word-wrap)
+      ctx.font = 'italic 500 28px "Fraunces", "Georgia", serif';
+      ctx.fillStyle = '#5A5042';
+      ctx.textAlign = 'center';
+      const phraseLines = wrap(ctx, char.phrase, W - 160);
+      let py = 790;
+      for (const line of phraseLines) {
+        ctx.fillText(line, W/2, py);
+        py += 36;
+      }
+
+      // основной title теста (мелким, не дублирует титул)
+      drawFitText(ctx, title, W/2, 900, W - 120,
+        '600 38px "Fraunces", "Georgia", serif', '#2A2620', 'center');
+
+      // stats card — сдвинута вниз
+      if (stats && stats.length > 0) {
+        const cardY = 950, cardH = 600;
+        ctx.fillStyle = '#FBF7EE';
+        roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.fill();
+        ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+        roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.stroke();
+
+        const cellW = (W - 160) / 2;
+        const cellH = cardH / 2;
+        const valueMaxW = cellW - 40;
+        stats.forEach((s, i) => {
+          const cx = 80 + cellW * (i % 2) + cellW/2;
+          const cy = cardY + cellH * Math.floor(i / 2) + cellH/2;
+          drawFitText(ctx, String(s.v ?? '—'), cx, cy + 10, valueMaxW,
+            '600 96px "Fraunces", "Georgia", serif', '#D9694A', 'center');
+          const labelMaxW = cellW - 30;
+          drawFitText(ctx, (s.l || '').toUpperCase(), cx, cy + 76, labelMaxW,
+            '700 22px "Manrope", sans-serif', '#8C8A77', 'center');
+        });
+      }
+    } else {
+      // ====== СТАРЫЙ ЛЕЙАУТ (back-compat, для финала и где нет уровня) ======
+      // crowned bird
+      drawCrownedBird(ctx, W/2, 360, 110);
+
+      // day label
+      ctx.fillStyle = '#5E6B4A';
+      ctx.font = '700 26px "Manrope", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`• ${dayLabel.toUpperCase()}`, W/2, 580);
+
+      // title
+      drawFitText(ctx, title, W/2, 670, W - 120,
+        '600 78px "Fraunces", "Georgia", serif', '#2A2620', 'center');
+
+      // subtitle (имя + контекст)
+      if(subtitle){
+        drawFitText(ctx, subtitle, W/2, 745, W - 140,
+          'italic 500 42px "Fraunces", "Georgia", serif', '#D9694A', 'center');
+      }
+
+      // stats card
+      if (stats && stats.length > 0) {
+        const cardY = 830, cardH = 700;
+        ctx.fillStyle = '#FBF7EE';
+        roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.fill();
+        ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
+        roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.stroke();
+
+        const cellW = (W - 160) / 2;
+        const cellH = cardH / 2;
+        const valueMaxW = cellW - 40;
+        stats.forEach((s, i) => {
+          const cx = 80 + cellW * (i % 2) + cellW/2;
+          const cy = cardY + cellH * Math.floor(i / 2) + cellH/2;
+
+          // value
+          drawFitText(ctx, String(s.v ?? '—'), cx, cy + 18, valueMaxW,
+            '600 110px "Fraunces", "Georgia", serif', '#D9694A', 'center');
+
+          // label
+          ctx.fillStyle = '#8C8A77';
+          ctx.font = '700 24px "Manrope", sans-serif';
+          ctx.textAlign = 'center';
+          const labelMaxW = cellW - 30;
+          drawFitText(ctx, (s.l || '').toUpperCase(), cx, cy + 88, labelMaxW,
+            '700 24px "Manrope", sans-serif', '#8C8A77', 'center');
+        });
+      }
+    }
 
     // bottom slogan
     ctx.fillStyle = '#2A2620';
@@ -331,6 +466,7 @@ window.ShareUtils = (function(){
   return {
     drawFitText, drawCrownedBird, roundRect,
     buildShareCanvas, downloadCanvas,
+    pickCharacter,
     beep, beepLapse, ensureAudio,
   };
 })();

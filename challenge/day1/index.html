@@ -176,7 +176,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=4"></script>
+<script src="../share-utils.js?v=5"></script>
 <script>
 /* ============================================================
    PVT — Psychomotor Vigilance Test
@@ -408,13 +408,20 @@ challenge.gruzdeva.ru`;
 });
 
 /* Share as image — единый билдер из share-utils.js */
-document.getElementById('share-image').addEventListener('click', ()=>{
+function computeLevel(avgRT){
+  if (avgRT > 450) return 'low';
+  if (avgRT < 350) return 'high';
+  return 'mid';
+}
+document.getElementById('share-image').addEventListener('click', async ()=>{
   const r = getResultsForShare();
-  const canvas = ShareUtils.buildShareCanvas({
+  const level = computeLevel(parseInt(r.avg, 10) || 0);
+  const canvas = await ShareUtils.buildShareCanvas({
     dayLabel: 'День 1 · PVT',
     title: 'Тест бдительности',
     subtitle: `${r.name} проверила реакцию`,
     userName: r.name,
+    level,
     stats: [
       { v: r.avg + 'мс', l: 'средний RT' },
       { v: r.best + 'мс', l: 'лучший RT' },

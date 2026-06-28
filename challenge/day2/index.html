@@ -186,7 +186,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=4"></script>
+<script src="../share-utils.js?v=5"></script>
 <script>
 /* ============================================================
    Go / No-Go — реакция на Go (зелёные) и торможение на No-Go (красные)
@@ -432,13 +432,20 @@ ${r.name}
   }
 });
 
-document.getElementById('share-image').addEventListener('click', ()=>{
+function computeLevel(accuracyPct){
+  if (accuracyPct < 70) return 'low';
+  if (accuracyPct > 90) return 'high';
+  return 'mid';
+}
+document.getElementById('share-image').addEventListener('click', async ()=>{
   const r = getResultsForShare();
-  const canvas = ShareUtils.buildShareCanvas({
+  const level = computeLevel(parseInt(r.hitRate, 10) || 0);
+  const canvas = await ShareUtils.buildShareCanvas({
     dayLabel: 'День 2 · Go/No-Go',
     title: 'Реакция и тормоз',
     subtitle: `${r.name} проверила тормоз`,
     userName: r.name,
+    level,
     stats: [
       { v: r.hitRate + '%', l: 'точность «жми»' },
       { v: r.rt + 'мс',     l: 'средний RT' },
