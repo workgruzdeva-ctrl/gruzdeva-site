@@ -301,10 +301,30 @@
     setTimeout(()=>{ el.textContent = ''; }, 3500);
   }
 
-  document.getElementById('shareTg').addEventListener('click', () => {
+  document.getElementById('shareTg').addEventListener('click', async () => {
     const text = textEl.textContent.trim();
     const tag = tagEl.textContent.trim();
     const msg = `🐣 Пенделёк дня от Вали Груздевой\n\n[${tag}]\n${text}\n\nСвой пенделёк — крути тут:`;
+
+    // Сначала пробуем системный share с картинкой — на мобиле передастся в TG как фото
+    try {
+      const blob = await generateStoryBlob(text, tag);
+      const file = new File([blob], 'pendelёk.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          text: `🐣 Пенделёк дня: ${text}\n\nСвой пенделёк — у Вали Груздевой 👉 ${PAGE_URL}`,
+        });
+        flashHint('Картинка отправлена.');
+        return;
+      }
+    } catch (e) {
+      // пользователь отменил share — выходим без fallback
+      if (e && e.name === 'AbortError') { return; }
+      // иначе падаем в fallback
+    }
+
+    // Fallback (десктоп, старые браузеры): текстовая TG-шарилка
     const url = `https://t.me/share/url?url=${encodeURIComponent(PAGE_URL)}&text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank', 'noopener');
   });
@@ -312,10 +332,32 @@
   document.getElementById('shareImg').addEventListener('click', () => {
     const text = textEl.textContent.trim();
     const tag = tagEl.textContent.trim();
-    generateStoryImage(text, tag);
+    downloadStoryImage(text, tag);
   });
 
-  function generateStoryImage(text, tag){
+  // Возвращает Promise<Blob> с PNG-сторис
+  function generateStoryBlob(text, tag){
+    return new Promise((resolve) => {
+      const canvas = renderStoryCanvas(text, tag);
+      canvas.toBlob(resolve, 'image/png');
+    });
+  }
+
+  // Старое поведение — скачать PNG
+  function downloadStoryImage(text, tag){
+    const canvas = renderStoryCanvas(text, tag);
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'pendelёk.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      flashHint('Картинка сохранена — можно постить в сторис.');
+    }, 'image/png');
+  }
+
+  function renderStoryCanvas(text, tag){
     const W = 1080, H = 1920;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -377,16 +419,7 @@
     ctx.font = '500 28px "Manrope", sans-serif';
     ctx.fillText('@dr_gruzdeva · daily-card', W/2, H - 170);
 
-    // скачать
-    canvas.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'pendelёk.png';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      flashHint('Картинка сохранена — можно постить в сторис.');
-    }, 'image/png');
+    return canvas;
   }
 
   function wrap(ctx, txt, maxW){
