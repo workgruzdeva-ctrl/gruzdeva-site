@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Все картинки для сторис — превью</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEE2;
+    --accent:#D9694A;
+    --sage-deep:#5E6B4A;
+    --yellow:#F5C400;
+    --ink:#1A1614;
+    --muted:#8C8A77;
+    --card:#FBF7EE;
+    --border:#E6DECE;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,sans-serif;line-height:1.5}
+  .wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+  header.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:32px}
+  .back{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--card);text-decoration:none;font-weight:600;font-size:14px}
+  .back:hover{background:var(--accent)}
+  h1{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(32px,5vw,52px);line-height:1.1;margin:0 0 12px;color:var(--ink)}
+  .lede{font-size:18px;color:var(--sage-deep);max-width:760px;margin:0 0 8px}
+  .meta{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .section-title{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:28px;margin:48px 0 18px;color:var(--sage-deep);border-bottom:2px dashed var(--border);padding-bottom:10px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  @media (max-width: 900px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width: 620px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .card .preview{position:relative;width:100%;aspect-ratio:1080/1920;background:#EFE7D7;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .card .preview img{display:block;width:100%;height:100%;object-fit:cover}
+  .card .preview .spinner{font-family:'Manrope',sans-serif;font-size:13px;color:var(--muted);text-align:center;padding:0 16px}
+  .card h3{margin:0;font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:22px;color:var(--ink);line-height:1.15}
+  .card .data{font-size:13px;color:var(--sage-deep);background:#F0E9D8;border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
+  .card .data b{color:var(--ink)}
+  .card .source{font-size:13px}
+  .card .source a{color:var(--accent);text-decoration:none;font-weight:600}
+  .card .source a:hover{text-decoration:underline}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;font-weight:700;font-size:13px;text-decoration:none;border:none;cursor:pointer;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.primary:hover{background:#b8553a}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--card)}
+  .note{font-size:13px;color:var(--muted);font-style:italic;margin-top:4px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sage-deep);background:#E9E2CF;border-radius:999px;padding:4px 10px;align-self:flex-start}
+  footer.fin{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>Все картинки для сторис — превью</h1>
+      <p class="lede">Все шары-сторис, которые сейчас умеет генерировать сайт. Здесь они так выглядят, когда участницы их сохраняют и постят.</p>
+      <p class="meta">Превью — масштабированный canvas. Чтобы посмотреть в полном размере 1080×1920 — кнопка «Скачать PNG».</p>
+    </div>
+    <a class="back" href="index.html">← Назад на сайт</a>
+  </header>
+
+  <h2 class="section-title">Челлендж «Стаей идти веселее» — итоги дней</h2>
+  <div class="grid" id="grid-challenge">
+    <!-- 6 cards generated below -->
+  </div>
+
+  <h2 class="section-title">Пенделёк дня</h2>
+  <div class="grid" id="grid-misc">
+    <!-- 1 card -->
+  </div>
+
+  <h2 class="section-title">Карточка недели для клуба «Стая»</h2>
+  <div class="grid" id="grid-club">
+    <!-- 1 card -->
+  </div>
+
+  <footer class="fin">Генерится локально при загрузке страницы. Если что-то выглядит криво — это видно сразу, можно править рендерер в исходниках.</footer>
+
+</div>
+
+<script src="challenge/share-utils.js?v=1"></script>
+<script>
+/* ============================================================
+   Локальные копии рендереров из daily-card.html и
+   club-weekly/01-doubling.html — чтобы галерея могла
+   отрисовать все картинки в одном месте, не загружая
+   исходные страницы. Любая правка оригиналов потребует
+   синхронизации сюда.
+   ============================================================ */
+
+// === Прелоад «Королевы стаи» (она же в share-utils.js, но здесь свой Image для отдельных рендереров) ===
+const birdImg = new Image();
+birdImg.src = 'm/grp/birds/09_koroleva_stai.png';
+const birdReady = new Promise(res => {
+  if (birdImg.complete && birdImg.naturalWidth > 0) return res();
+  birdImg.onload = res;
+  birdImg.onerror = res;
+});
+
+function wrap(ctx, txt, maxW){
+  const words = String(txt).split(/\s+/);
+  const lines = [];
+  let cur = '';
+  for (const w of words){
+    const test = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(test).width <= maxW){ cur = test; }
+    else { if (cur) lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+// === Копия renderStoryCanvas из daily-card.html ===
+async function renderPendelekStory(text, tag){
+  await birdReady;
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, '#FFF7E6');
+  grad.addColorStop(1, '#FFFCF4');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#241D14';
+  ctx.fillRect(0,0,W,200);
+  ctx.beginPath(); ctx.arc(60,100,16,0,Math.PI*2);
+  ctx.fillStyle = '#FFC527'; ctx.fill();
+  ctx.fillStyle = '#FFF7E6';
+  ctx.font = '700 36px "Manrope", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('СТАЯ · be smart', 90, 112);
+
+  ctx.fillStyle = '#FF6A3D';
+  ctx.font = '800 30px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`• ${tag.toUpperCase()} •`, W/2, 360);
+
+  ctx.fillStyle = '#241D14';
+  ctx.font = '600 64px "Fraunces", "Georgia", serif';
+  ctx.fillText('Пенделёк дня', W/2, 460);
+
+  const zoneTop = 540, zoneBottom = 1280;
+  ctx.fillStyle = '#241D14';
+  let fontSize = 76;
+  ctx.font = `600 ${fontSize}px "Fraunces", "Georgia", serif`;
+  const maxW = W - 200;
+  let lines = wrap(ctx, text, maxW);
+  while (lines.length > 8 && fontSize > 40){
+    fontSize -= 4;
+    ctx.font = `600 ${fontSize}px "Fraunces", "Georgia", serif`;
+    lines = wrap(ctx, text, maxW);
+  }
+  const totalH = lines.length * fontSize * 1.25;
+  let y = (zoneTop + zoneBottom - totalH) / 2 + fontSize;
+  for (const line of lines){
+    ctx.fillText(line, W/2, y);
+    y += fontSize * 1.25;
+  }
+
+  if (birdImg.naturalWidth > 0) {
+    const BIRD_SIZE = 560;
+    const bx = (W - BIRD_SIZE) / 2;
+    const by = 1430 - BIRD_SIZE / 2;
+    ctx.drawImage(birdImg, bx, by, BIRD_SIZE, BIRD_SIZE);
+  }
+
+  ctx.fillStyle = '#FF6A3D';
+  ctx.font = '700 32px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Свой пенделёк — у Вали Груздевой', W/2, H - 130);
+
+  ctx.fillStyle = '#9C907A';
+  ctx.font = '500 28px "Manrope", sans-serif';
+  ctx.fillText('@dr_gruzdeva · daily-card', W/2, H - 80);
+
+  return canvas;
+}
+
+// === Копия renderDoublingStory из club-weekly/01-doubling.html ===
+async function renderDoublingStory(){
+  await birdReady;
+  const W = 1080, H = 1920;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0, '#FFF7E6');
+  grad.addColorStop(1, '#FFFCF4');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle = '#241D14';
+  ctx.fillRect(0,0,W,180);
+  ctx.beginPath(); ctx.arc(60,90,16,0,Math.PI*2);
+  ctx.fillStyle = '#FFC527'; ctx.fill();
+  ctx.fillStyle = '#FFF7E6';
+  ctx.font = '700 36px "Manrope", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('СТАЯ · be smart', 90, 102);
+  ctx.textAlign = 'right';
+  ctx.font = '700 24px "Manrope", sans-serif';
+  ctx.fillStyle = '#FFC527';
+  ctx.fillText('КАРТОЧКА #1', W - 60, 102);
+
+  ctx.fillStyle = '#FF6A3D';
+  ctx.font = '800 30px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('• ТЕХНИКА НЕДЕЛИ •', W/2, 320);
+
+  ctx.fillStyle = '#241D14';
+  ctx.font = '600 170px "Fraunces", "Georgia", serif';
+  ctx.fillText('Даблинг', W/2, 510);
+
+  ctx.fillStyle = '#5A5042';
+  ctx.font = 'italic 500 40px "Fraunces", "Georgia", serif';
+  ctx.fillText('Делаешь своё дело рядом', W/2, 600);
+  ctx.fillText('с кем-то — и оно идёт.', W/2, 654);
+
+  const panelX = 80, panelY = 770, panelW = W - 160, panelH = 480, panelR = 30;
+  ctx.fillStyle = '#FFE08A';
+  roundRect(ctx, panelX, panelY, panelW, panelH, panelR);
+  ctx.fill();
+  ctx.strokeStyle = '#241D14';
+  ctx.lineWidth = 4;
+  roundRect(ctx, panelX, panelY, panelW, panelH, panelR);
+  ctx.stroke();
+
+  ctx.fillStyle = '#241D14';
+  ctx.font = '800 28px "Manrope", sans-serif';
+  ctx.fillText('🧠  ПОЧЕМУ РАБОТАЕТ', W/2, 830);
+
+  ctx.font = '500 30px "Manrope", sans-serif';
+  const txt = 'Звучит как магия — но это наука. В исследовании 2024 года 85% нейроотличных сказали: рядом с кем-то дела наконец доделываются. Мозгу хватает чужого присутствия, чтобы включиться.';
+  const lines = wrap(ctx, txt, panelW - 80);
+  let y = 900;
+  for (const line of lines){
+    ctx.fillText(line, W/2, y);
+    y += 44;
+  }
+
+  if (birdImg.naturalWidth > 0) {
+    const SIZE = 460;
+    ctx.drawImage(birdImg, (W - SIZE)/2, 1330, SIZE, SIZE);
+  }
+
+  ctx.fillStyle = '#FF6A3D';
+  ctx.font = '700 32px "Manrope", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Подробнее в клубе «Стая»', W/2, H - 90);
+
+  ctx.fillStyle = '#9C907A';
+  ctx.font = '500 24px "Manrope", sans-serif';
+  ctx.fillText('@dr_gruzdeva · club-weekly', W/2, H - 50);
+
+  return canvas;
+}
+
+// === Конфиг превью для дней челленджа ===
+const challengeShares = [
+  {
+    id: 'day1-pvt',
+    title: 'День 1 · PVT',
+    source: 'challenge/day1.html',
+    data: 'PVT тест бдительности · среднее RT 342, лучшее 298, 2 лапса, 0 фальстартов',
+    args: {
+      dayLabel: 'День 1 · PVT',
+      title: 'Тест бдительности',
+      subtitle: 'Тест проверила реакцию',
+      stats: [
+        { v: '342', l: 'средний RT' },
+        { v: '298', l: 'лучший RT' },
+        { v: '2', l: 'лапсы' },
+        { v: '0', l: 'фальстарты' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day1-pvt.png',
+  },
+  {
+    id: 'day2-gng',
+    title: 'День 2 · Go / No-Go',
+    source: 'challenge/day2.html',
+    data: 'Go/No-Go · точность 92%, RT 378, 1 ошибочное жатие, 3 пропуска',
+    args: {
+      dayLabel: 'День 2 · Go/No-Go',
+      title: 'Реакция и торможение',
+      subtitle: 'Тест прошла',
+      stats: [
+        { v: '92%', l: 'точность жми' },
+        { v: '378', l: 'средний RT, мс' },
+        { v: '1', l: 'ошибочно жала' },
+        { v: '3', l: 'пропустила «жми»' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day2-gng.png',
+  },
+  {
+    id: 'day4-nback',
+    title: 'День 4 · N-back',
+    source: 'challenge/day4.html',
+    data: 'N-back рабочая память · 78% точность, 4 пропуска, 2 ошибочных нажатия',
+    args: {
+      dayLabel: 'День 4 · N-back',
+      title: 'Рабочая память',
+      subtitle: 'Тест прошла',
+      stats: [
+        { v: '78%', l: 'точность' },
+        { v: '4', l: 'пропустила' },
+        { v: '2', l: 'ошибочно жала' },
+        { v: '—', l: '' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day4-nback.png',
+  },
+  {
+    id: 'day5-wcst',
+    title: 'День 5 · Висконсин',
+    source: 'challenge/day6.html',
+    data: 'WCST гибкость мышления · 3 правила, 4 залипания, точность 81%',
+    args: {
+      dayLabel: 'День 5 · Висконсин',
+      title: 'Гибкость мышления',
+      subtitle: 'Поймала смены правил',
+      stats: [
+        { v: '3', l: 'правил угадала' },
+        { v: '4', l: 'залипания' },
+        { v: '81%', l: 'точность' },
+        { v: '—', l: '' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day5-wcst.png',
+  },
+  {
+    id: 'day6-flanker',
+    title: 'День 6 · Flanker',
+    source: 'challenge/day7.html',
+    data: 'Flanker фильтр внимания · 95% точность, эффект помех +48 мс',
+    args: {
+      dayLabel: 'День 6 · Flanker',
+      title: 'Фильтр внимания',
+      subtitle: 'Тест на отвлечение',
+      stats: [
+        { v: '95%', l: 'точность' },
+        { v: '+48 мс', l: 'эффект помех' },
+        { v: '412', l: 'RT простые' },
+        { v: '460', l: 'RT помехи' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day6-flanker.png',
+  },
+  {
+    id: 'day7-final',
+    title: 'День 7 · Финал',
+    source: 'challenge/day8.html',
+    data: 'Финал · 7/7 дней пройдено. Упрощённое превью — реальная картинка в day8 это бинго-карта 4×2',
+    note: 'Это упрощённое превью — реальная картинка в day8 это бинго-карта 4×2.',
+    args: {
+      dayLabel: 'День 7 · Финал',
+      title: 'Бинго заполнено',
+      subtitle: 'Все 7 дней пройдены',
+      stats: [
+        { v: '7/7', l: 'дней пройдено' },
+        { v: '👑', l: 'королева стаи' },
+        { v: '', l: '' },
+        { v: '', l: '' },
+      ],
+      userName: 'Аня',
+    },
+    filename: 'share-day7-final.png',
+  },
+];
+
+// ===== Карточный шаблон =====
+function buildCard({ title, source, data, note }){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <span class="badge">сторис · 1080×1920</span>
+    <div class="preview"><div class="spinner">Рисую…</div></div>
+    <h3></h3>
+    <div class="data"></div>
+    <div class="source">Откуда: <a target="_blank" rel="noopener"></a></div>
+    ${note ? `<div class="note">${note}</div>` : ''}
+    <div class="actions">
+      <a class="btn primary" download role="button">Скачать PNG 1080×1920</a>
+    </div>
+  `;
+  card.querySelector('h3').textContent = title;
+  card.querySelector('.data').innerHTML = `<b>Данные:</b> ${data}`;
+  const a = card.querySelector('.source a');
+  a.href = source;
+  a.textContent = source;
+  return card;
+}
+
+function attachCanvasToCard(card, canvas, filename){
+  const preview = card.querySelector('.preview');
+  preview.innerHTML = '';
+  const img = document.createElement('img');
+  img.alt = '';
+  preview.appendChild(img);
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    img.src = url;
+    const dl = card.querySelector('.btn.primary');
+    dl.href = url;
+    dl.download = filename;
+  }, 'image/png');
+}
+
+function showError(card, msg){
+  const preview = card.querySelector('.preview');
+  preview.innerHTML = `<div class="spinner" style="color:#D9694A">Не получилось: ${msg}</div>`;
+}
+
+// ===== Сборка галереи =====
+(async function main(){
+  // ждём, пока ShareUtils дозагрузит королеву
+  // (буффер на загрузку PNG)
+  await new Promise(r => setTimeout(r, 200));
+  await birdReady;
+
+  // 1) Челлендж — 6 шт.
+  const gridChallenge = document.getElementById('grid-challenge');
+  for (const item of challengeShares){
+    const card = buildCard(item);
+    gridChallenge.appendChild(card);
+    try {
+      if (!window.ShareUtils || typeof window.ShareUtils.buildShareCanvas !== 'function'){
+        throw new Error('ShareUtils не загрузился');
+      }
+      const canvas = window.ShareUtils.buildShareCanvas(item.args);
+      attachCanvasToCard(card, canvas, item.filename);
+    } catch (e){
+      showError(card, e.message || String(e));
+    }
+  }
+
+  // 2) Пенделёк
+  const gridMisc = document.getElementById('grid-misc');
+  const pendelekCard = buildCard({
+    title: 'Пенделёк дня',
+    source: 'daily-card.html',
+    data: 'Тег «инициация» + текст карточки. Птичка-королева внизу. Цвета: клуб (FF6A3D + FFC527).',
+  });
+  gridMisc.appendChild(pendelekCard);
+  try {
+    const c = await renderPendelekStory(
+      '«Потом» звонил из 2018-го и просит ему перезвонить. Возьми и сделай эту фигню. Прямо сейчас.',
+      'инициация'
+    );
+    attachCanvasToCard(pendelekCard, c, 'share-pendelek.png');
+  } catch (e){
+    showError(pendelekCard, e.message || String(e));
+  }
+
+  // 3) Даблинг
+  const gridClub = document.getElementById('grid-club');
+  const doublingCard = buildCard({
+    title: 'Даблинг — техника недели #1',
+    source: 'club-weekly/01-doubling.html',
+    data: 'Шапка «Стая · be smart», большой заголовок «Даблинг», жёлтая плашка «почему работает», птичка внизу.',
+  });
+  gridClub.appendChild(doublingCard);
+  try {
+    const c = await renderDoublingStory();
+    attachCanvasToCard(doublingCard, c, 'share-doubling.png');
+  } catch (e){
+    showError(doublingCard, e.message || String(e));
+  }
+})();
+</script>
+</body>
+</html>
