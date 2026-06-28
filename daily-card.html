@@ -341,17 +341,24 @@
     downloadStoryImage(text, tag);
   });
 
+  // Прелоад красивой PNG-птички (Королева стаи 1200×1200, прозрачный фон)
+  const birdImg = new Image();
+  birdImg.src = 'm/grp/birds/09_koroleva_stai.png';
+  const birdReady = new Promise(res => {
+    if (birdImg.complete) return res();
+    birdImg.onload = res;
+    birdImg.onerror = res; // если 404 — рендерим без птички, не падаем
+  });
+
   // Возвращает Promise<Blob> с PNG-сторис
-  function generateStoryBlob(text, tag){
-    return new Promise((resolve) => {
-      const canvas = renderStoryCanvas(text, tag);
-      canvas.toBlob(resolve, 'image/png');
-    });
+  async function generateStoryBlob(text, tag){
+    const canvas = await renderStoryCanvas(text, tag);
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   }
 
   // Старое поведение — скачать PNG
-  function downloadStoryImage(text, tag){
-    const canvas = renderStoryCanvas(text, tag);
+  async function downloadStoryImage(text, tag){
+    const canvas = await renderStoryCanvas(text, tag);
     canvas.toBlob((blob) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -363,7 +370,8 @@
     }, 'image/png');
   }
 
-  function renderStoryCanvas(text, tag){
+  async function renderStoryCanvas(text, tag){
+    await birdReady;
     const W = 1080, H = 1920;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -417,8 +425,13 @@
       y += fontSize * 1.25;
     }
 
-    // ====== ПТИЧКА — центр в (W/2, 1430), радиус тела 120px ======
-    drawChick(ctx, W/2, 1430, 120);
+    // ====== ПТИЧКА (Королева стаи) — PNG 1200×1200, прозрачный фон ======
+    if (birdImg.naturalWidth > 0) {
+      const BIRD_SIZE = 560;          // финальный размер на canvas
+      const bx = (W - BIRD_SIZE) / 2;
+      const by = 1430 - BIRD_SIZE / 2; // центр в Y=1430
+      ctx.drawImage(birdImg, bx, by, BIRD_SIZE, BIRD_SIZE);
+    }
 
     // низ
     ctx.fillStyle = '#FF6A3D';
@@ -431,78 +444,6 @@
     ctx.fillText('@dr_gruzdeva · daily-card', W/2, H - 80);
 
     return canvas;
-  }
-
-  /* Рисует цыплёнка (по референсу SVG из шаблона «карточка недели»).
-     cx, cy — центр тела; R — радиус тела в px (тело ≈ 2R по ширине, ≈ 2R*1.05 по высоте).
-     Включая хохолок и лапки птичка занимает ≈ 2R по ширине и ≈ 2.3R по высоте. */
-  function drawChick(ctx, cx, cy, R){
-    ctx.save();
-    ctx.translate(cx, cy);
-    const s = R / 40;          // SVG-rx был 40
-    ctx.scale(s, s);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    // SVG-координаты сдвигаем так, чтобы центр тела (55,64) оказался в (0,0)
-    const px = x => x - 55;
-    const py = y => y - 64;
-
-    // лапки
-    ctx.strokeStyle = '#241D14';
-    ctx.lineWidth = 4.5;
-    ctx.beginPath();
-    ctx.moveTo(px(42), py(100)); ctx.lineTo(px(38), py(118));
-    ctx.moveTo(px(66), py(100)); ctx.lineTo(px(70), py(118));
-    ctx.stroke();
-
-    // тело
-    ctx.fillStyle = '#FFC527';
-    ctx.strokeStyle = '#241D14';
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 40, 42, 0, 0, Math.PI*2);
-    ctx.fill(); ctx.stroke();
-
-    // хохолок (кудри сверху) — svg path d="M40,26 q8,-16 18,-4 q10,-10 16,4 q4,10 -6,12 q-16,4 -28,-2 q-6,-4 0,-10Z"
-    ctx.fillStyle = '#FFFCF4';
-    ctx.strokeStyle = '#241D14';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(px(40), py(26));
-    ctx.quadraticCurveTo(px(48), py(10), px(58), py(22));
-    ctx.quadraticCurveTo(px(68), py(12), px(74), py(26));
-    ctx.quadraticCurveTo(px(78), py(36), px(68), py(38));
-    ctx.quadraticCurveTo(px(52), py(42), px(40), py(36));
-    ctx.quadraticCurveTo(px(34), py(32), px(40), py(26));
-    ctx.closePath();
-    ctx.fill(); ctx.stroke();
-
-    // глазки
-    ctx.fillStyle = '#241D14';
-    ctx.beginPath(); ctx.arc(px(44), py(60), 4.6, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(px(68), py(60), 4.6, 0, Math.PI*2); ctx.fill();
-
-    // клювик
-    ctx.fillStyle = '#FF6A3D';
-    ctx.strokeStyle = '#241D14';
-    ctx.lineWidth = 3.4;
-    ctx.beginPath();
-    ctx.moveTo(px(50), py(70));
-    ctx.lineTo(px(64), py(70));
-    ctx.lineTo(px(57), py(80));
-    ctx.closePath();
-    ctx.fill(); ctx.stroke();
-
-    // крылышко (контурная дуга сбоку)
-    ctx.strokeStyle = '#241D14';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(px(16), py(72));
-    ctx.quadraticCurveTo(px(6), py(74), px(4), py(82));
-    ctx.stroke();
-
-    ctx.restore();
   }
 
   function wrap(ctx, txt, maxW){
