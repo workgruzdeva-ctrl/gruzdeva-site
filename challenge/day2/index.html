@@ -198,8 +198,8 @@ const NO_GO_RATIO = 0.25;
 // На мобиле палец доходит до экрана медленнее — даём больше времени.
 // На десктопе клик мышью быстрый, можно стандартный тайминг.
 const _isTouchMobile = matchMedia('(pointer:coarse)').matches;
-const STIM_MS = _isTouchMobile ? 1900 : 1100;
-const ISI_MS  = _isTouchMobile ? 850  : 600;
+const STIM_MS = _isTouchMobile ? 1500 : 1100;
+const ISI_MS  = _isTouchMobile ? 700  : 600;
 
 let trials = [];
 let trial = 0;
