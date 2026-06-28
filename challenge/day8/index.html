@@ -372,26 +372,6 @@ function renderBingo(){
 
 renderBingo();
 
-/* ---------- Промокод ---------- */
-const promoBox = document.getElementById('promo-code');
-promoBox.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText('STAYA20');
-    promoBox.classList.add('copied');
-    const original = promoBox.innerHTML;
-    promoBox.innerHTML = `
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Скопировано
-    `;
-    setTimeout(() => {
-      promoBox.classList.remove('copied');
-      promoBox.innerHTML = original;
-    }, 2000);
-  } catch (e) {
-    alert('Скопируй промокод вручную: STAYA20');
-  }
-});
-
 /* ---------- Share ---------- */
 function showHint(text){
   const el = document.getElementById('share-hint');
