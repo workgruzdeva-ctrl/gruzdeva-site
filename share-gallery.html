@@ -86,7 +86,7 @@
 
 </div>
 
-<script src="challenge/share-utils.js?v=1"></script>
+<script src="challenge/share-utils.js?v=7"></script>
 <script>
 /* ============================================================
    Локальные копии рендереров из daily-card.html и
@@ -295,6 +295,7 @@ const challengeShares = [
         { v: '0', l: 'фальстарты' },
       ],
       userName: 'Аня',
+      level: 'mid',
     },
     filename: 'share-day1-pvt.png',
   },
@@ -314,6 +315,7 @@ const challengeShares = [
         { v: '3', l: 'пропустила «жми»' },
       ],
       userName: 'Аня',
+      level: 'high',
     },
     filename: 'share-day2-gng.png',
   },
@@ -333,6 +335,7 @@ const challengeShares = [
         { v: '—', l: '' },
       ],
       userName: 'Аня',
+      level: 'mid',
     },
     filename: 'share-day4-nback.png',
   },
@@ -352,6 +355,7 @@ const challengeShares = [
         { v: '—', l: '' },
       ],
       userName: 'Аня',
+      level: 'mid',
     },
     filename: 'share-day5-wcst.png',
   },
@@ -371,6 +375,7 @@ const challengeShares = [
         { v: '460', l: 'RT помехи' },
       ],
       userName: 'Аня',
+      level: 'high',
     },
     filename: 'share-day6-flanker.png',
   },
@@ -455,7 +460,7 @@ function showError(card, msg){
       if (!window.ShareUtils || typeof window.ShareUtils.buildShareCanvas !== 'function'){
         throw new Error('ShareUtils не загрузился');
       }
-      const canvas = window.ShareUtils.buildShareCanvas(item.args);
+      const canvas = await window.ShareUtils.buildShareCanvas(item.args);
       attachCanvasToCard(card, canvas, item.filename);
     } catch (e){
       showError(card, e.message || String(e));
