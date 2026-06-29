@@ -25,21 +25,23 @@ window.ShareUtils = (function(){
      Уровень («low»/«mid»/«high») вычисляется в day-файле по результату теста,
      внутри уровня выбирается случайный персонаж.
      Префикс «сегодня ты —» отрисовывается отдельно в buildShareCanvas. */
+  // file — персонаж без фона (для canvas-композиции, если когда-нибудь понадобится)
+  // card — готовая PNG-карточка 1080×1920 для отдачи в сторис целиком
   const _CHARS = {
     low: [
-      { file: 'levels/low-zhuk.png',       name: 'Жук-невывожук',          phrase: 'Сегодня ты сделала, что смогла. Чмок тебя в нос.' },
-      { file: 'levels/low-elezhevika.png', name: 'Ележевика',              phrase: 'Еле-еле, но ягодка.' },
-      { file: 'levels/low-myata.png',      name: 'Мята, немного помята',   phrase: 'Не сломалась, а примялась.' },
+      { file: 'levels/low-zhuk.png',       card: 'levels/low-zhuk-card.png',       name: 'Жук-невывожук',          phrase: 'Сегодня ты сделала, что смогла. Чмок тебя в нос.' },
+      { file: 'levels/low-elezhevika.png', card: 'levels/low-elezhevika-card.png', name: 'Ележевика',              phrase: 'Еле-еле, но ягодка.' },
+      { file: 'levels/low-myata.png',      card: 'levels/low-myata-card.png',      name: 'Мята, немного помята',   phrase: 'Не сломалась, а примялась.' },
     ],
     mid: [
-      { file: 'levels/mid-utka.png',    name: 'Утка-Незабудка',  phrase: 'Летишь не идеально, но вполне уверенно.' },
-      { file: 'levels/mid-korolek.png', name: 'Королёк-нормалёк', phrase: 'Иногда путаешься, но в целом находишь дорогу к хлебушку.' },
-      { file: 'levels/mid-ptenets.png', name: 'Птенец-молодец',  phrase: 'Справилась не без приключений, но справилась.' },
+      { file: 'levels/mid-utka.png',    card: 'levels/mid-utka-card.png',    name: 'Утка-Незабудка',   phrase: 'Летишь не идеально, но вполне уверенно.' },
+      { file: 'levels/mid-korolek.png', card: 'levels/mid-korolek-card.png', name: 'Королёк-нормалёк', phrase: 'Иногда путаешься, но в целом находишь дорогу к хлебушку.' },
+      { file: 'levels/mid-ptenets.png', card: 'levels/mid-ptenets-card.png', name: 'Птенец-молодец',   phrase: 'Справилась не без приключений, но справилась.' },
     ],
     high: [
-      { file: 'levels/high-gus.png',  name: 'Гусь-всемогусь',     phrase: 'Тебе сегодня всё по плечу.' },
-      { file: 'levels/high-rock.png', name: 'Гусь-за-попу-кусь',  phrase: 'Быстро, цепко, уверенно.' },
-      { file: 'levels/high-zhar.png', name: 'Жар-птица',          phrase: 'Ты огонь, детка.' },
+      { file: 'levels/high-gus.png',  card: 'levels/high-gus-card.png',  name: 'Гусь-всемогусь',     phrase: 'Тебе сегодня всё по плечу.' },
+      { file: 'levels/high-rock.png', card: 'levels/high-rock-card.png', name: 'Гусь-за-попу-кусь',  phrase: 'Быстро, цепко, уверенно.' },
+      { file: 'levels/high-zhar.png', card: 'levels/high-zhar-card.png', name: 'Жар-птица',          phrase: 'Ты огонь, детка.' },
     ],
   };
 
@@ -486,10 +488,33 @@ window.ShareUtils = (function(){
     tone(440, 0.08, 'square', 0, 0.10);
   }
 
+  /* Скачивает готовую PNG-карточку 1080×1920 по уровню (low/mid/high).
+     Внутри уровня случайно выбирает одну из 3 карточек.
+     Путь к PNG относительный share-utils.js — поэтому работает из любого dayN/. */
+  function downloadCard(level){
+    const ch = pickCharacter(level);
+    if (!ch || !ch.card) return false;
+    // Вычисляем абсолютный URL карточки относительно share-utils.js
+    let cardUrl = ch.card;
+    try {
+      const _self = document.currentScript || document.querySelector('script[src*="share-utils.js"]');
+      if (_self) {
+        cardUrl = new URL(ch.card, _self.src).href;
+      }
+    } catch(e) {}
+    const a = document.createElement('a');
+    a.href = cardUrl;
+    a.download = (ch.name || 'staya-card').replace(/[^a-zA-Zа-яА-Я0-9]/gi, '-') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 500);
+    return ch;
+  }
+
   return {
     drawFitText, drawCrownedBird, roundRect,
     buildShareCanvas, downloadCanvas,
-    pickCharacter,
+    pickCharacter, downloadCard,
     beep, beepLapse, ensureAudio,
   };
 })();

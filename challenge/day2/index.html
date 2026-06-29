@@ -186,7 +186,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=12"></script>
+<script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
    Go / No-Go — реакция на Go (зелёные) и торможение на No-Go (красные)
@@ -437,24 +437,13 @@ function computeLevel(accuracyPct){
   if (accuracyPct > 90) return 'high';
   return 'mid';
 }
-document.getElementById('share-image').addEventListener('click', async ()=>{
+document.getElementById('share-image').addEventListener('click', ()=>{
   const r = getResultsForShare();
   const level = computeLevel(parseInt(r.hitRate, 10) || 0);
-  const canvas = await ShareUtils.buildShareCanvas({
-    dayLabel: 'День 2 · Go/No-Go',
-    title: 'Реакция и тормоз',
-    subtitle: `${r.name} проверила тормоз`,
-    userName: r.name,
-    level,
-    stats: [
-      { v: r.hitRate + '%', l: 'точность «жми»' },
-      { v: r.rt + 'мс',     l: 'средний RT' },
-      { v: r.fa,            l: 'ошибочно жала' },
-      { v: r.miss,          l: 'пропустила «жми»' },
-    ],
-  });
-  ShareUtils.downloadCanvas(canvas, `go-nogo-${r.name}.png`);
-  showHint('Картинка сохранена — можно постить в сторис.');
+  const ch = ShareUtils.downloadCard(level);
+  if (ch) {
+    showHint(`Сохранила: «${ch.name}» — теперь в твоих Downloads. Постируй в сторис!`);
+  }
 });
 
 /* require registered user */

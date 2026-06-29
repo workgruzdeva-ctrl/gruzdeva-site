@@ -176,7 +176,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=12"></script>
+<script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
    PVT — Psychomotor Vigilance Test
@@ -413,24 +413,13 @@ function computeLevel(avgRT){
   if (avgRT < 350) return 'high';
   return 'mid';
 }
-document.getElementById('share-image').addEventListener('click', async ()=>{
+document.getElementById('share-image').addEventListener('click', ()=>{
   const r = getResultsForShare();
   const level = computeLevel(parseInt(r.avg, 10) || 0);
-  const canvas = await ShareUtils.buildShareCanvas({
-    dayLabel: 'День 1 · PVT',
-    title: 'Тест бдительности',
-    subtitle: `${r.name} проверила реакцию`,
-    userName: r.name,
-    level,
-    stats: [
-      { v: r.avg + 'мс', l: 'средний RT' },
-      { v: r.best + 'мс', l: 'лучший RT' },
-      { v: r.lapses,    l: 'лапсы' },
-      { v: r.fs,        l: 'фальстарты' },
-    ],
-  });
-  ShareUtils.downloadCanvas(canvas, `pvt-${r.name}.png`);
-  showHint('Картинка сохранена — можно постить в сторис.');
+  const ch = ShareUtils.downloadCard(level);
+  if (ch) {
+    showHint(`Сохранила: «${ch.name}» — теперь в твоих Downloads. Постируй в сторис!`);
+  }
 });
 
 /* ---------- input ---------- */

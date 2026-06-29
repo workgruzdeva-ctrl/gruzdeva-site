@@ -195,7 +195,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=12"></script>
+<script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
    Flanker — фильтр внимания
@@ -471,29 +471,13 @@ function computeLevel(flankerEffectMs){
   if (flankerEffectMs < 50) return 'high';
   return 'mid';
 }
-document.getElementById('share-image').addEventListener('click', async () => {
-  const name = Challenge.getName();
-  const acc = document.getElementById('r-acc').textContent;
-  const rtC = document.getElementById('r-rt-c').textContent;
-  const rtI = document.getElementById('r-rt-i').textContent;
+document.getElementById('share-image').addEventListener('click', () => {
   const fe = document.getElementById('r-fe').textContent;
   const level = computeLevel(parseInt(fe, 10) || 0);
-
-  const canvas = await ShareUtils.buildShareCanvas({
-    dayLabel: 'День 6 · Flanker',
-    title: 'Фильтр внимания',
-    subtitle: `${name} отбивала помехи`,
-    userName: name,
-    level,
-    stats: [
-      { v: acc + '%',  l: 'точность' },
-      { v: fe + 'мс',  l: 'эффект помех' },
-      { v: rtC + 'мс', l: 'без помех' },
-      { v: rtI + 'мс', l: 'с помехами' },
-    ],
-  });
-  ShareUtils.downloadCanvas(canvas, `flanker-${name}.png`);
-  showHint('Картинка сохранена.');
+  const ch = ShareUtils.downloadCard(level);
+  if (ch) {
+    showHint(`Сохранила: «${ch.name}» — теперь в твоих Downloads. Постируй в сторис!`);
+  }
 });
 
 Challenge.requireRegistration();

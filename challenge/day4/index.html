@@ -190,7 +190,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=12"></script>
+<script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
    N-back — рабочая память, ДВА БЛОКА
@@ -498,26 +498,15 @@ function computeLevel(accuracyPct){
   if (accuracyPct > 80) return 'high';
   return 'mid';
 }
-document.getElementById('share-image').addEventListener('click', async ()=>{
+document.getElementById('share-image').addEventListener('click', ()=>{
   const r = getResultsForShare();
   // средняя точность по 1-back и 2-back
   const avgAcc = Math.round(((parseInt(r.acc1, 10) || 0) + (parseInt(r.acc2, 10) || 0)) / 2);
   const level = computeLevel(avgAcc);
-  const canvas = await ShareUtils.buildShareCanvas({
-    dayLabel: 'День 4 · N-back',
-    title: 'Рабочая память',
-    subtitle: `${r.name} держала буквы в голове`,
-    userName: r.name,
-    level,
-    stats: [
-      { v: r.acc1 + '%', l: '1-back точность' },
-      { v: r.acc2 + '%', l: '2-back точность' },
-      { v: r.miss,       l: 'пропустила' },
-      { v: r.fa,         l: 'ошибочно жала' },
-    ],
-  });
-  ShareUtils.downloadCanvas(canvas, `nback-${r.name}.png`);
-  showHint('Картинка сохранена — можно постить в сторис.');
+  const ch = ShareUtils.downloadCard(level);
+  if (ch) {
+    showHint(`Сохранила: «${ch.name}» — теперь в твоих Downloads. Постируй в сторис!`);
+  }
 });
 
 Challenge.requireRegistration();

@@ -218,7 +218,7 @@
 </main>
 
 <script src="../challenge.js?v=3"></script>
-<script src="../share-utils.js?v=12"></script>
+<script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
    Wisconsin Card Sorting Test (упрощённый)
@@ -530,29 +530,13 @@ function computeLevel(perseverations){
   if (perseverations < 4) return 'high';
   return 'mid';
 }
-document.getElementById('share-image').addEventListener('click', async () => {
-  const name = Challenge.getName();
-  const cats = document.getElementById('r-cats').textContent;
+document.getElementById('share-image').addEventListener('click', () => {
   const pers = document.getElementById('r-pers').textContent;
-  const acc = document.getElementById('r-acc').textContent;
-  const trials = document.getElementById('r-trials').textContent;
   const level = computeLevel(parseInt(pers, 10) || 0);
-
-  const canvas = await ShareUtils.buildShareCanvas({
-    dayLabel: 'День 6 · Висконсин',
-    title: 'Переключение',
-    subtitle: `${name} ловила смену правил`,
-    userName: name,
-    level,
-    stats: [
-      { v: cats,        l: 'правил угадала' },
-      { v: pers,        l: 'залипаний на старом' },
-      { v: acc + '%',   l: 'точность' },
-      { v: trials,      l: 'карточек' },
-    ],
-  });
-  ShareUtils.downloadCanvas(canvas, `wisconsin-${name}.png`);
-  showHint('Картинка сохранена.');
+  const ch = ShareUtils.downloadCard(level);
+  if (ch) {
+    showHint(`Сохранила: «${ch.name}» — теперь в твоих Downloads. Постируй в сторис!`);
+  }
 });
 
 Challenge.requireRegistration();
