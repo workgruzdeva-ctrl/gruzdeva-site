@@ -37,10 +37,9 @@ window.ShareUtils = (function(){
       { file: 'levels/mid-ptenets.png', name: 'Птенец-молодец',  phrase: 'Справилась не без приключений, но справилась.' },
     ],
     high: [
-      { file: 'levels/high-gus.png',   name: 'Гусь-всемогусь', phrase: 'Тебе сегодня всё по плечу.' },
-      // позже добавятся:
-      // { file: 'levels/high-rock.png', name: 'Гусь-за-попу-кусь', phrase: 'Быстро, цепко, уверенно.' },
-      // { file: 'levels/high-zhar.png', name: 'Жар-птица',         phrase: 'Ты огонь, детка.' },
+      { file: 'levels/high-gus.png',  name: 'Гусь-всемогусь',     phrase: 'Тебе сегодня всё по плечу.' },
+      { file: 'levels/high-rock.png', name: 'Гусь-за-попу-кусь',  phrase: 'Быстро, цепко, уверенно.' },
+      { file: 'levels/high-zhar.png', name: 'Жар-птица',          phrase: 'Ты огонь, детка.' },
     ],
   };
 
@@ -315,46 +314,47 @@ window.ShareUtils = (function(){
       await (_charReady[char.file] || Promise.resolve());
       const charImg = _charImages[char.file];
 
-      // dayLabel
+      // dayLabel мелким
       ctx.fillStyle = '#5E6B4A';
       ctx.font = '700 26px "Manrope", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(`• ${dayLabel.toUpperCase()}`, W/2, 250);
+      ctx.fillText(`• ${dayLabel.toUpperCase()}`, W/2, 260);
 
-      // "Сегодня ты —" (мелкий префикс над картинкой)
+      // ЗАГОЛОВОК-ДОСТИЖЕНИЕ: "Я прошла {title}"
+      drawFitText(ctx, `Я прошла ${title}`, W/2, 400, W - 100,
+        '600 70px "Fraunces", "Georgia", serif', '#1A1614', 'center');
+
+      // "сегодня ты —"
       ctx.fillStyle = '#5A5042';
       ctx.font = '500 28px "Manrope", sans-serif';
-      ctx.fillText('сегодня ты —', W/2, 320);
+      ctx.textAlign = 'center';
+      ctx.fillText('сегодня ты —', W/2, 510);
 
-      // ПЕРСОНАЖ
+      // ПЕРСОНАЖ — 520×520
       if (charImg && charImg.naturalWidth > 0) {
-        const SIZE = 360;
-        ctx.drawImage(charImg, (W - SIZE)/2, 350, SIZE, SIZE);
+        const SIZE = 520;
+        ctx.drawImage(charImg, (W - SIZE)/2, 560, SIZE, SIZE);
       }
 
-      // ИМЯ персонажа — крупным Caveat (весёлый рукописный)
-      drawFitText(ctx, char.name, W/2, 780, W - 100,
-        '700 80px "Caveat", cursive', '#D9694A', 'center');
+      // ИМЯ персонажа — крупно весёлым Caveat
+      drawFitText(ctx, char.name, W/2, 1170, W - 80,
+        '700 100px "Caveat", cursive', '#D9694A', 'center');
 
       // ФРАЗА (с word-wrap)
-      ctx.font = 'italic 500 28px "Fraunces", "Georgia", serif';
+      ctx.font = 'italic 500 30px "Fraunces", "Georgia", serif';
       ctx.fillStyle = '#5A5042';
       ctx.textAlign = 'center';
       const phraseLines = wrap(ctx, char.phrase, W - 160);
-      let py = 850;
+      let py = 1240;
       for (const line of phraseLines) {
         ctx.fillText(line, W/2, py);
-        py += 36;
+        py += 38;
       }
 
-      // title теста (мелким — не дублирует имя)
-      drawFitText(ctx, title, W/2, py + 40, W - 120,
-        '600 36px "Fraunces", "Georgia", serif', '#2A2620', 'center');
-
-      // stats — переместить с учётом высоты phrase
-      const cardY = py + 100;
-      const cardH = 540;
+      // stats-card — в самом низу
       if (stats && stats.length > 0) {
+        const cardY = Math.max(py + 60, 1380);
+        const cardH = H - cardY - 60;  // отступ снизу 60
         ctx.fillStyle = '#FBF7EE';
         roundRect(ctx, 80, cardY, W - 160, cardH, 40); ctx.fill();
         ctx.strokeStyle = '#E6DECE'; ctx.lineWidth = 3;
@@ -372,6 +372,8 @@ window.ShareUtils = (function(){
             '700 22px "Manrope", sans-serif', '#8C8A77', 'center');
         });
       }
+
+      return canvas;  // возвращаем canvas СРАЗУ — без общей нижней плашки
     } else {
       // ====== СТАРЫЙ ЛЕЙАУТ (back-compat, для финала и где нет уровня) ======
       // crowned bird
