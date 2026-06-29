@@ -67,6 +67,24 @@
     <a class="back" href="index.html">← Назад на сайт</a>
   </header>
 
+  <h2 class="section-title">Все 9 персонажей по уровню</h2>
+  <p class="lede" style="margin-bottom:8px">Все варианты сторис-карточек, которые может выдать сайт после теста. Уровень («низкий / средний / высокий») определяется по результату, внутри уровня — один из трёх персонажей.</p>
+
+  <h3 style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:22px;margin:24px 0 12px;color:var(--ink)">Низкий результат</h3>
+  <div class="grid" id="grid-low">
+    <!-- 3 cards -->
+  </div>
+
+  <h3 style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:22px;margin:32px 0 12px;color:var(--ink)">Средний результат</h3>
+  <div class="grid" id="grid-mid">
+    <!-- 3 cards -->
+  </div>
+
+  <h3 style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:22px;margin:32px 0 12px;color:var(--ink)">Высокий результат</h3>
+  <div class="grid" id="grid-high">
+    <!-- 3 cards -->
+  </div>
+
   <h2 class="section-title">Челлендж «Стаей идти веселее» — итоги дней</h2>
   <div class="grid" id="grid-challenge">
     <!-- 6 cards generated below -->
@@ -86,7 +104,7 @@
 
 </div>
 
-<script src="challenge/share-utils.js?v=7"></script>
+<script src="challenge/share-utils.js?v=9"></script>
 <script>
 /* ============================================================
    Локальные копии рендереров из daily-card.html и
@@ -444,12 +462,210 @@ function showError(card, msg){
   preview.innerHTML = `<div class="spinner" style="color:#D9694A">Не получилось: ${msg}</div>`;
 }
 
+// ===== Конфиг превью для 9 персонажей по уровню =====
+const charactersShares = {
+  low: [
+    {
+      charName: 'Жук-невывожук',
+      charSeed: 0,
+      args: {
+        dayLabel: 'День 1 · PVT',
+        title: 'тест бдительности',
+        level: 'low',
+        charSeed: 0,
+        stats: [
+          { v: '512', l: 'средний RT' },
+          { v: '430', l: 'лучший RT' },
+          { v: '5', l: 'лапсы' },
+          { v: '1', l: 'фальстарты' },
+        ],
+      },
+      filename: 'share-char-low-zhuk.png',
+    },
+    {
+      charName: 'Ележевика',
+      charSeed: 1,
+      args: {
+        dayLabel: 'День 1 · PVT',
+        title: 'тест бдительности',
+        level: 'low',
+        charSeed: 1,
+        stats: [
+          { v: '512', l: 'средний RT' },
+          { v: '430', l: 'лучший RT' },
+          { v: '5', l: 'лапсы' },
+          { v: '1', l: 'фальстарты' },
+        ],
+      },
+      filename: 'share-char-low-elezhevika.png',
+    },
+    {
+      charName: 'Мята, немного помята',
+      charSeed: 2,
+      args: {
+        dayLabel: 'День 1 · PVT',
+        title: 'тест бдительности',
+        level: 'low',
+        charSeed: 2,
+        stats: [
+          { v: '512', l: 'средний RT' },
+          { v: '430', l: 'лучший RT' },
+          { v: '5', l: 'лапсы' },
+          { v: '1', l: 'фальстарты' },
+        ],
+      },
+      filename: 'share-char-low-myata.png',
+    },
+  ],
+  mid: [
+    {
+      charName: 'Утка-Незабудка',
+      charSeed: 0,
+      args: {
+        dayLabel: 'День 2 · Go/No-Go',
+        title: 'реакцию и торможение',
+        level: 'mid',
+        charSeed: 0,
+        stats: [
+          { v: '82%', l: 'точность жми' },
+          { v: '395', l: 'средний RT' },
+          { v: '3', l: 'ошибочно жала' },
+          { v: '4', l: 'пропустила «жми»' },
+        ],
+      },
+      filename: 'share-char-mid-utka.png',
+    },
+    {
+      charName: 'Королёк-нормалёк',
+      charSeed: 1,
+      args: {
+        dayLabel: 'День 2 · Go/No-Go',
+        title: 'реакцию и торможение',
+        level: 'mid',
+        charSeed: 1,
+        stats: [
+          { v: '82%', l: 'точность жми' },
+          { v: '395', l: 'средний RT' },
+          { v: '3', l: 'ошибочно жала' },
+          { v: '4', l: 'пропустила «жми»' },
+        ],
+      },
+      filename: 'share-char-mid-korolek.png',
+    },
+    {
+      charName: 'Птенец-молодец',
+      charSeed: 2,
+      args: {
+        dayLabel: 'День 2 · Go/No-Go',
+        title: 'реакцию и торможение',
+        level: 'mid',
+        charSeed: 2,
+        stats: [
+          { v: '82%', l: 'точность жми' },
+          { v: '395', l: 'средний RT' },
+          { v: '3', l: 'ошибочно жала' },
+          { v: '4', l: 'пропустила «жми»' },
+        ],
+      },
+      filename: 'share-char-mid-ptenets.png',
+    },
+  ],
+  high: [
+    {
+      charName: 'Гусь-всемогусь',
+      charSeed: 0,
+      args: {
+        dayLabel: 'День 4 · N-back',
+        title: 'рабочую память',
+        level: 'high',
+        charSeed: 0,
+        stats: [
+          { v: '92%', l: 'точность' },
+          { v: '1', l: 'пропустила' },
+          { v: '0', l: 'ошибочно жала' },
+          { v: '—', l: '' },
+        ],
+      },
+      filename: 'share-char-high-gus.png',
+    },
+    {
+      charName: 'Гусь-за-попу-кусь',
+      charSeed: 1,
+      args: {
+        dayLabel: 'День 4 · N-back',
+        title: 'рабочую память',
+        level: 'high',
+        charSeed: 1,
+        stats: [
+          { v: '92%', l: 'точность' },
+          { v: '1', l: 'пропустила' },
+          { v: '0', l: 'ошибочно жала' },
+          { v: '—', l: '' },
+        ],
+      },
+      filename: 'share-char-high-rock.png',
+    },
+    {
+      charName: 'Жар-птица',
+      charSeed: 2,
+      args: {
+        dayLabel: 'День 4 · N-back',
+        title: 'рабочую память',
+        level: 'high',
+        charSeed: 2,
+        stats: [
+          { v: '92%', l: 'точность' },
+          { v: '1', l: 'пропустила' },
+          { v: '0', l: 'ошибочно жала' },
+          { v: '—', l: '' },
+        ],
+      },
+      filename: 'share-char-high-zhar.png',
+    },
+  ],
+};
+
+// Упрощённая карточка для секции персонажей: только title + canvas + download
+function buildCharCard({ charName }){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <span class="badge">сторис · 1080×1920</span>
+    <div class="preview"><div class="spinner">Рисую…</div></div>
+    <h3></h3>
+    <div class="actions">
+      <a class="btn primary" download role="button">Скачать PNG 1080×1920</a>
+    </div>
+  `;
+  card.querySelector('h3').textContent = charName;
+  return card;
+}
+
 // ===== Сборка галереи =====
 (async function main(){
   // ждём, пока ShareUtils дозагрузит королеву
   // (буффер на загрузку PNG)
   await new Promise(r => setTimeout(r, 200));
   await birdReady;
+
+  // 0) 9 персонажей по уровню
+  if (!window.ShareUtils || typeof window.ShareUtils.buildShareCanvas !== 'function'){
+    console.error('ShareUtils не загрузился');
+  } else {
+    for (const lvl of ['low', 'mid', 'high']){
+      const grid = document.getElementById('grid-' + lvl);
+      for (const item of charactersShares[lvl]){
+        const card = buildCharCard(item);
+        grid.appendChild(card);
+        try {
+          const canvas = await window.ShareUtils.buildShareCanvas(item.args);
+          attachCanvasToCard(card, canvas, item.filename);
+        } catch (e){
+          showError(card, e.message || String(e));
+        }
+      }
+    }
+  }
 
   // 1) Челлендж — 6 шт.
   const gridChallenge = document.getElementById('grid-challenge');

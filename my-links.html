@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мои ссылки · Груздева</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFEBE2; --paper:#FBFAF6; --paper2:#F4F1E8;
+  --ink:#16150F; --ink-mid:#46443A; --ink-soft:#8C897A;
+  --green:#26402F; --green-mid:#37614A; --green-pale:#E6EDE7;
+  --gold:#8A6B28; --gold-pale:#F2E9D4;
+  --line:rgba(22,21,15,.12); --line-soft:rgba(22,21,15,.07); --r:5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;background:var(--bg);color:var(--ink);min-height:100vh;padding:0 0 60px}
+
+.mast{background:var(--ink);color:#EFEBE2;padding:34px 40px 30px}
+.mast-inner{max-width:880px;margin:0 auto}
+.mast-kicker{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(239,235,226,.4);margin-bottom:10px}
+.mast-name{font-family:'Fraunces',serif;font-size:32px;font-weight:500;letter-spacing:-.015em;line-height:1}
+.mast-sub{font-family:'DM Mono',monospace;font-size:10px;color:rgba(239,235,226,.5);margin-top:12px;letter-spacing:.04em}
+
+.wrap{max-width:880px;margin:0 auto;padding:36px 40px 0}
+
+.group-head{display:flex;align-items:baseline;gap:12px;margin:30px 0 14px}
+.group-head:first-child{margin-top:0}
+.group-no{font-family:'DM Mono',monospace;font-size:10px;color:var(--green-mid);font-weight:500}
+.group-title{font-family:'Fraunces',serif;font-size:18px;font-weight:500;letter-spacing:-.01em;white-space:nowrap}
+.group-rule{flex:1;height:1px;background:var(--line)}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.card.locked{border-left:3px solid var(--gold)}
+.card-main{flex:1;min-width:230px}
+.card-label{font-family:'Fraunces',serif;font-size:16px;font-weight:500;margin-bottom:4px}
+.card-desc{font-size:12.5px;color:var(--ink-mid);line-height:1.45}
+.card-url{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:8px;word-break:break-all;letter-spacing:.01em}
+.tag{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:10px;margin-left:8px;vertical-align:middle}
+.tag.client{background:var(--green-pale);color:var(--green-mid);border:1px solid rgba(55,97,74,.3)}
+.tag.test{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(138,107,40,.3)}
+.tag.soon{background:#ECEDF4;color:#4A5288;border:1px solid rgba(80,90,150,.25)}
+
+.card-actions{display:flex;gap:8px;flex-shrink:0}
+.btn{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border-radius:4px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;border:1px solid var(--line)}
+.btn-open{background:var(--green-mid);color:#fff;border-color:var(--green-mid)}
+.btn-open:hover{background:var(--green)}
+.btn-copy{background:transparent;color:var(--ink-mid)}
+.btn-copy:hover{border-color:var(--green-mid);color:var(--green-mid)}
+.btn-copy.ok{border-color:#3E8861;color:#3E8861}
+
+.foot{max-width:880px;margin:34px auto 0;padding:0 40px;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-soft);letter-spacing:.03em;line-height:1.7}
+
+@media(max-width:600px){
+  .mast,.wrap,.foot{padding-left:18px;padding-right:18px}
+  .card-actions{width:100%}
+  .btn{flex:1;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <div class="mast-kicker">Личное хранилище · ADHD-коучинг</div>
+    <div class="mast-name">Мои ссылки</div>
+    <div class="mast-sub">Валентина Груздева · все рабочие ссылки в одном месте</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ГРУППОВАЯ РАБОТА -->
+  <div class="group-head">
+    <span class="group-no">01</span>
+    <span class="group-title">Групповая работа</span>
+    <span class="group-rule"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Группа <span class="tag client">для участниц</span></div>
+      <div class="card-desc">Главная страница групповой работы.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/group.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/group.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/group.html">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Личный кабинет участника <span class="tag client">для участниц</span></div>
+      <div class="card-desc">Личный кабинет участника групповой программы.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/m/grp/</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/m/grp/" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/m/grp/">Копировать</button>
+    </div>
+  </div>
+
+  <!-- ЧЕЛЛЕНДЖ -->
+  <div class="group-head">
+    <span class="group-no">02</span>
+    <span class="group-title">Челлендж</span>
+    <span class="group-rule"></span>
+  </div>
+
+  <div class="card locked">
+    <div class="card-main">
+      <div class="card-label">Челлендж <span class="tag client">для участниц</span></div>
+      <div class="card-desc">Публичная версия с замком на 24 часа — даёшь участницам.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Челлендж — dev <span class="tag test">для теста</span></div>
+      <div class="card-desc">Без замка, можно пройти подряд. Только для проверки, не для участниц.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/?dev=1</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/?dev=1" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/challenge/?dev=1">Копировать</button>
+    </div>
+  </div>
+
+  <!-- ИНДИВИДУАЛЬНАЯ РАБОТА -->
+  <div class="group-head">
+    <span class="group-no">03</span>
+    <span class="group-title">Индивидуальная работа</span>
+    <span class="group-rule"></span>
+  </div>
+
+  <div class="card" id="card-individual">
+    <div class="card-main">
+      <div class="card-label">Карточка клиента <span class="tag soon" id="indiv-tag">после публикации</span></div>
+      <div class="card-desc">Карточка индивидуальной работы: эксперимент, отметки по дням, практики, сводка для встречи.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/individual.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/individual.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/individual.html">Копировать</button>
+    </div>
+  </div>
+
+  <!-- САЙТ -->
+  <div class="group-head">
+    <span class="group-no">04</span>
+    <span class="group-title">Сайт</span>
+    <span class="group-rule"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Главная страница сайта</div>
+      <div class="card-desc">Корень сайта gruzdeva-site.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Клуб — лендинг</div>
+      <div class="card-desc">Лендинг клуба.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/club.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/club.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/club.html">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Курс</div>
+      <div class="card-desc">Страница курса (course). Уточни название/описание — подправлю.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/course.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/course.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/course.html">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Подготовка</div>
+      <div class="card-desc">Страница подготовки (prep). Уточни название/описание — подправлю.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/prep.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/prep.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/prep.html">Копировать</button>
+    </div>
+  </div>
+
+
+  <!-- КАРТОЧКИ И КОНТЕНТ -->
+  <div class="group-head">
+    <span class="group-no">05</span>
+    <span class="group-title">Карточки и контент</span>
+    <span class="group-rule"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Пенделечки — карточка дня</div>
+      <div class="card-desc">Карточка дня для подписчиков клуба «Стая» — крути барабан, делись в Telegram или картинкой для сторис.</div>
+      <div class="card-url">workgruzdeva-ctrl.github.io/gruzdeva-site/daily-card.html</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="https://workgruzdeva-ctrl.github.io/gruzdeva-site/daily-card.html" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="https://workgruzdeva-ctrl.github.io/gruzdeva-site/daily-card.html">Копировать</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Список карточек — для дизайнера <span class="tag test">.md файл</span></div>
+      <div class="card-desc">Все 28 пенделечков, разбитые по 5 категориям (инициация / тело / состояние / стая / сарказм) с цветами тегов. Лежит локально.</div>
+      <div class="card-url">~/Desktop/gruzdeva-site/cards-list.md</div>
+    </div>
+    <div class="card-actions">
+      <a class="btn btn-open" href="file:///Users/valentinagruzdeva/Desktop/gruzdeva-site/cards-list.md" target="_blank">Открыть</a>
+      <button class="btn btn-copy" data-url="~/Desktop/gruzdeva-site/cards-list.md">Копировать путь</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-main">
+      <div class="card-label">Шаблоны в сторис <span class="tag soon">скоро</span></div>
+      <div class="card-desc">Готовые PNG/Figma-шаблоны для сторис: цитаты, анонсы, кросс-промо клуба и курса. Сюда добавлю когда будут готовы.</div>
+      <div class="card-url">— ссылка появится позже —</div>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-copy" disabled style="opacity:.4;cursor:not-allowed">Не готово</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot">
+  Файл лежит на твоём компьютере. Открывай двойным кликом, добавляй новые ссылки по образцу карточек.
+</div>
+
+<script>
+document.querySelectorAll('.btn-copy').forEach(b => {
+  b.addEventListener('click', () => {
+    const url = b.dataset.url;
+    const done = () => { const t=b.textContent; b.textContent='Скопировано ✓'; b.classList.add('ok'); setTimeout(()=>{b.textContent=t;b.classList.remove('ok');},1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done).catch(done);
+    else { const ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); }
+  });
+});
+</script>
+</body>
+</html>

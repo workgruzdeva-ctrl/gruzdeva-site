@@ -282,7 +282,7 @@ window.ShareUtils = (function(){
   /* Главная функция: рисует единый «бинго-постер» для дня.
      async — потому что ждёт прелоад PNG персонажа (если level передан)
      и загрузку шрифта Caveat (если ещё не приехал). */
-  async function buildShareCanvas({ dayLabel, title, subtitle, stats, userName, level }){
+  async function buildShareCanvas({ dayLabel, title, subtitle, stats, userName, level, charSeed }){
     // Гарантируем, что Caveat и прочие веб-шрифты успели загрузиться
     if (document.fonts && document.fonts.ready) {
       try { await document.fonts.ready; } catch(e){}
@@ -310,7 +310,9 @@ window.ShareUtils = (function(){
 
     if (level && _CHARS[level] && _CHARS[level].length > 0) {
       // ====== НОВЫЙ ЛЕЙАУТ С ПЕРСОНАЖЕМ ======
-      const char = pickCharacter(level);
+      // charSeed (опц.) — для галереи: явно показать конкретного персонажа.
+      // Без seed — случайный.
+      const char = pickCharacter(level, charSeed);
       await (_charReady[char.file] || Promise.resolve());
       const charImg = _charImages[char.file];
 

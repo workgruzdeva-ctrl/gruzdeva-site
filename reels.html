@@ -68,6 +68,25 @@
   .pal.green{background:#12643A}
   .pal.ink{background:#241D14}
   .pal.lilac{background:#7C5CFF}
+  .pal.transparent{
+    background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size:10px 10px;
+    background-position:0 0,0 5px,5px -5px,-5px 0;
+    background-color:#fff;
+  }
+  /* preview frame: при прозрачной палитре — шахматка-фон, чтобы видно что прозрачно */
+  .preview-wrap.transparent-bg{background:
+    linear-gradient(45deg, #4a4a4a 25%, transparent 25%),
+    linear-gradient(-45deg, #4a4a4a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #4a4a4a 75%),
+    linear-gradient(-45deg, transparent 75%, #4a4a4a 75%) #2a2a2a;
+    background-size:24px 24px;
+    background-position:0 0,0 12px,12px -12px,-12px 0;
+  }
 
   .btn{
     display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
@@ -137,12 +156,18 @@
     <div class="field">
       <span class="label">Палитра</span>
       <div class="palette" id="palette">
-        <div class="pal cream on" data-bg="#FFF7E6" data-ink="#241D14" data-accent="#FF6A3D"></div>
-        <div class="pal coral" data-bg="#FF6A3D" data-ink="#FFFCF4" data-accent="#FFC527"></div>
-        <div class="pal yellow" data-bg="#FFC527" data-ink="#241D14" data-accent="#FF6A3D"></div>
-        <div class="pal green" data-bg="#12643A" data-ink="#FFFCF4" data-accent="#FFC527"></div>
-        <div class="pal ink" data-bg="#241D14" data-ink="#FFFCF4" data-accent="#FF6A3D"></div>
-        <div class="pal lilac" data-bg="#7C5CFF" data-ink="#FFFCF4" data-accent="#FFC527"></div>
+        <div class="pal cream on" data-bg="#FFF7E6" data-ink="#241D14" data-accent="#FF6A3D" title="cream"></div>
+        <div class="pal coral" data-bg="#FF6A3D" data-ink="#FFFCF4" data-accent="#FFC527" title="coral"></div>
+        <div class="pal yellow" data-bg="#FFC527" data-ink="#241D14" data-accent="#FF6A3D" title="yellow"></div>
+        <div class="pal green" data-bg="#12643A" data-ink="#FFFCF4" data-accent="#FFC527" title="green"></div>
+        <div class="pal ink" data-bg="#241D14" data-ink="#FFFCF4" data-accent="#FF6A3D" title="ink"></div>
+        <div class="pal lilac" data-bg="#7C5CFF" data-ink="#FFFCF4" data-accent="#FFC527" title="lilac"></div>
+        <div class="pal transparent" data-bg="transparent" data-ink="#FFFFFF" data-accent="#FFC527" title="прозрачный + затемнение"></div>
+      </div>
+      <div class="field" id="overlayField" style="display:none;margin-top:10px">
+        <span class="label">Сила затемнения (для прозрачного)</span>
+        <input type="range" id="overlayRange" min="0" max="80" value="40" style="width:100%">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px"><span id="overlayVal">40</span>% затемнения · текст белый</div>
       </div>
     </div>
 
@@ -198,8 +223,18 @@ document.querySelectorAll('#palette .pal').forEach(p => p.addEventListener('clic
   state.bg = p.dataset.bg;
   state.ink = p.dataset.ink;
   state.accent = p.dataset.accent;
+  // показать слайдер затемнения только для прозрачной палитры
+  document.getElementById('overlayField').style.display = (state.bg === 'transparent') ? 'block' : 'none';
+  // шахматка-превью для прозрачного
+  document.querySelector('.preview-wrap').classList.toggle('transparent-bg', state.bg === 'transparent');
   draw(ctx, cv.width, cv.height);
 }));
+
+document.getElementById('overlayRange').addEventListener('input', e => {
+  state.overlay = +e.target.value;
+  document.getElementById('overlayVal').textContent = state.overlay;
+  draw(ctx, cv.width, cv.height);
+});
 
 /* ====== DRAWING ====== */
 function draw(ctx, w, h){
