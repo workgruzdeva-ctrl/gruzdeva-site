@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+# AI crawlers — разрешаем чтение публичных страниц
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Закрытые зоны участниц (личные кабинеты по прямым ссылкам)
+Disallow: /m/
+Disallow: /render-tmp/
+
+Sitemap: https://workgruzdeva-ctrl.github.io/gruzdeva-site/sitemap.xml
