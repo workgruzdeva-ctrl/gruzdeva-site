@@ -867,6 +867,25 @@ const BIRDS = [
   { file: '09_koroleva_stai.png',         name: 'Королева стаи',       desc: 'Не стала идеальной. Просто теперь у неё есть крылья, корона и план' },
 ];
 
+/* ---------- групповой замок ----------
+   Челлендж «идём стаей» — участники не обгоняют лидера.
+   День N становится доступен по календарю: 1-й — в день старта, 2-й — на следующий, и т.д.
+   Догонять можно (пропустил день → сегодня закрываешь оба), обгонять — нельзя.
+*/
+const CHALLENGE_START = new Date(2026, 6, 1); // 1 июля 2026, локальная TZ
+CHALLENGE_START.setHours(0, 0, 0, 0);
+function daysSinceStart(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.floor((today - CHALLENGE_START) / 86400000);
+}
+function maxVisNAllowed(){
+  return Math.max(1, Math.min(7, daysSinceStart() + 1));
+}
+function nextMidnightTs(){
+  const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0);
+  return d.getTime();
+}
+
 const DAYS = [
   { n:1, visN:1, name:'PVT',                 desc:'Тест бдительности — жми на точку, когда она появится. Замер скорости реакции.',  url:'day1/index.html' },
   { n:2, visN:2, name:'Go / No-Go',          desc:'Реакция на «можно» и торможение на «нельзя». Проверка импульсивности.',           url:'day2/index.html' },
@@ -941,13 +960,15 @@ function renderHome(s){
     return visns.size;
   })();
 
-  // Замок между днями убран: пропустила день — сразу проходи следующий,
-  // или проходи несколько дней подряд. Челлендж не растягивается на месяц.
+  // Групповой замок: не даём обгонять — день N доступен только на N-й день от старта.
+  // Догонять можно (пропущенный день закроется вместе с сегодняшним).
+  const maxVis = maxVisNAllowed();
+  const isLocked = currentDay && currentDay.visN > maxVis;
 
   // current day card
   const currentBox = document.getElementById('home-current');
   currentBox.innerHTML = '';
-  if(currentDay){
+  if(currentDay && !isLocked){
     const a = document.createElement('a');
     a.className = 'current-card';
     a.href = currentDay.url;
@@ -964,6 +985,19 @@ function renderHome(s){
       </span>
     `;
     currentBox.appendChild(a);
+  } else if(currentDay && isLocked){
+    // locked: следующий день ещё не наступил по календарю
+    const div = document.createElement('div');
+    div.className = 'current-card locked';
+    div.innerHTML = `
+      <div class="cc-label">Идём стаей</div>
+      <div class="cc-day">день ${currentDay.visN} из 7</div>
+      <div class="cc-name">${currentDay.name}</div>
+      <div class="cc-desc">Стая ещё не дошла до этого дня — <b>обгонять не будем</b>. Здесь появится задание, когда наступит следующий день.</div>
+      <span class="cc-cta lock-timer" id="lock-countdown">откроется в полночь</span>
+    `;
+    currentBox.appendChild(div);
+    startLockCountdown(nextMidnightTs());
   } else {
     const f = document.createElement('div');
     f.className = 'finale-card';

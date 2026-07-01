@@ -5,6 +5,29 @@
 
 const LS_KEY = 'gruzdeva_challenge_v1';
 
+/* ---------- групповой замок ----------
+   Челлендж «идём стаей» — участники не обгоняют лидера.
+   День с visN=N становится доступен на N-й день от старта.
+   Догонять можно (пропустил — сегодня закроешь оба), обгонять — нельзя.
+   При ?dev=1 замок игнорируется.
+*/
+const CHALLENGE_START_Y = 2026;
+const CHALLENGE_START_M = 6;  // июль (0-indexed)
+const CHALLENGE_START_D = 1;
+
+// маппинг URL day{N} → visN
+const DAY_VISN = { 1:1, 2:2, 3:3, 4:4, 5:5, 6:5, 7:6, 8:7 };
+
+function _daysSinceStart(){
+  const start = new Date(CHALLENGE_START_Y, CHALLENGE_START_M, CHALLENGE_START_D);
+  start.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.floor((today - start) / 86400000);
+}
+function _maxVisN(){
+  return Math.max(1, Math.min(7, _daysSinceStart() + 1));
+}
+
 window.Challenge = {
   getState(){
     try{
@@ -59,6 +82,23 @@ window.Challenge = {
     }
     const s = this.getState();
     if(!s || !s.name){
+      window.location.href = '../index.html';
+      return false;
+    }
+    return true;
+  },
+  // Групповой замок: возвращает true, если день доступен по календарю.
+  isDayUnlocked(dayN){
+    const visN = DAY_VISN[dayN];
+    if(!visN) return true;
+    return visN <= _maxVisN();
+  },
+  // Guard для конкретного дня — вызывается на day{N}/index.html.
+  // Если день ещё не наступил — редиректит на landing.
+  guardDayLock(dayN){
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('dev') === '1') return true;
+    if(!this.isDayUnlocked(dayN)){
       window.location.href = '../index.html';
       return false;
     }

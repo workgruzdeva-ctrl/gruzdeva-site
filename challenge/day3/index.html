@@ -157,10 +157,11 @@
 
 </main>
 
-<script src="../challenge.js?v=3"></script>
+<script src="../challenge.js?v=4"></script>
 <script>
 /* require registered user */
 Challenge.requireRegistration();
+Challenge.guardDayLock(3);
 
 const selfreport = document.getElementById('selfreport');
 const markBtn    = document.getElementById('mark-done');

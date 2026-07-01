@@ -185,7 +185,7 @@
 
 </main>
 
-<script src="../challenge.js?v=3"></script>
+<script src="../challenge.js?v=4"></script>
 <script src="../share-utils.js?v=13"></script>
 <script>
 /* ============================================================
@@ -448,6 +448,7 @@ document.getElementById('share-image').addEventListener('click', ()=>{
 
 /* require registered user */
 Challenge.requireRegistration();
+Challenge.guardDayLock(2);
 </script>
 </body>
 </html>
