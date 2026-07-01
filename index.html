@@ -508,7 +508,8 @@
   .mcard.lecture:hover .pfoot .open .arrow{transform:translateX(3px)}
 
   /* CONSULTATIONS */
-  .formats{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch}
+  .formats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; align-items:stretch}
+  @media (max-width: 1180px){ .formats{grid-template-columns:repeat(2,1fr)} }
   .card{
     background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg);
     padding:36px 32px 32px;
@@ -1214,7 +1215,7 @@
     <div class="section-head">
       <div>
         <h2 class="display">Консультации</h2>
-        <p class="section-lead">Три формата — от первого «кажется, это про меня» до устойчивых изменений в группе. Начните с первичной оценки или сразу с того, что подходит.</p>
+        <p class="section-lead">Четыре формата — от первого «кажется, это про меня» до постоянной поддержки в стае. Начните с первичной оценки или сразу с того, что подходит.</p>
       </div>
     </div>
 
@@ -1250,6 +1251,36 @@
         <p style="margin-top:14px; font-size:12px; color:var(--muted); text-align:center"><a href="prep.html" style="color:var(--ink); text-decoration:none; border-bottom:1px solid var(--accent)">Подготовка к первой встрече →</a></p>
       </article>
 
+      <article class="card">
+        <div class="ftype"><span class="num">02</span><span class="sep">—</span><span>Поддержка</span></div>
+        <h3>Клуб «Стая»</h3>
+        <p class="summary">Постоянная стая. Раз в неделю созваниваемся и разгребаем свои дела вместе.</p>
+
+        <div class="fit">
+          <p class="fit-label">Подойдёт, если</p>
+          <ul class="fit-list">
+            <li>Работать в одиночку тяжело, а рядом с людьми — проще</li>
+            <li>Нужна регулярная опора без больших обязательств</li>
+            <li>Хочется быть среди своих, где не стыдно за СДВГ</li>
+          </ul>
+        </div>
+
+        <div class="price-block">
+          <div class="pl">Подписка</div>
+          <div class="pv">29 €<span class="per-unit">в месяц · отписаться в любой момент</span><span class="rub">≈ 2 900 ₽</span></div>
+        </div>
+
+        <p class="inc-label">Что включено</p>
+        <ul class="inc">
+          <li>Еженедельный даблинг-созвон в Зуме — 1,5 часа делаем свои дела рядом</li>
+          <li>Партнёры по даблингу в живом чате — сесть подаблить в любой день</li>
+          <li>Техника недели — маленькая, рабочая, вместе пробуем</li>
+          <li>Своё гнездо — закрытое место, можно не объяснять</li>
+        </ul>
+
+        <a href="club.html" class="card-cta">Узнать про клуб <span class="arrow">→</span></a>
+      </article>
+
       <article class="card featured">
         <!-- goose mascot -->
         <svg class="card-mascot" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1267,7 +1298,7 @@
           <path d="M 54 105 L 66 105" stroke="#ffd93d" stroke-width="3" stroke-linecap="round"/>
         </svg>
 
-        <div class="ftype"><span class="num">02</span><span class="sep">—</span><span>Группа</span></div>
+        <div class="ftype"><span class="num">03</span><span class="sep">—</span><span>Группа</span></div>
         <h3>Групповая работа</h3>
         <span class="ribbon">стаей идти веселее</span>
         <p class="summary">Структура курса и поддержка таких же, как вы. Самый живой формат.</p>
@@ -1299,7 +1330,7 @@
       </article>
 
       <article class="card">
-        <div class="ftype"><span class="num">03</span><span class="sep">—</span><span>Индивидуально</span></div>
+        <div class="ftype"><span class="num">04</span><span class="sep">—</span><span>Индивидуально</span></div>
         <h3>Консультации</h3>
         <p class="summary">Тренируем конкретные навыки под вашу жизнь.</p>
 
