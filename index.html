@@ -519,6 +519,30 @@
   }
   .card:hover{transform:translateY(-3px); border-color:var(--ink); box-shadow:var(--shadow-hover)}
 
+  /* Клуб «Стая» — акцент из палитры клуба (кремовый + оранжевый) */
+  .card.club-highlight{
+    background:#FFF7E6;
+    border:2px solid #FF6A3D;
+    position:relative;
+  }
+  .card.club-highlight::before{
+    content:"🪶";
+    position:absolute; top:-14px; right:24px;
+    background:#FF6A3D; color:#fff;
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+  }
+  .card.club-highlight:hover{border-color:#C8451F; box-shadow:0 12px 28px rgba(255,106,61,.22)}
+  .card.club-highlight .ftype{color:#C8451F}
+  .card.club-highlight .ftype .num{color:#FF6A3D}
+  .card.club-highlight h3{color:#241D14}
+  .card.club-highlight .summary{color:#5A5042}
+  .card.club-highlight .price-block{border-color:#FFC527}
+  .card.club-highlight .pv{color:#241D14}
+  .card.club-highlight .card-cta{background:#FF6A3D; border-color:#FF6A3D; color:#fff}
+  .card.club-highlight .card-cta:hover{background:#C8451F; border-color:#C8451F}
+
   /* Breadcrumb style ftype "01 — СТАРТ" */
   .card .ftype{
     display:flex; align-items:center; gap:14px; align-self:flex-start;
@@ -1251,7 +1275,7 @@
         <p style="margin-top:14px; font-size:12px; color:var(--muted); text-align:center"><a href="prep.html" style="color:var(--ink); text-decoration:none; border-bottom:1px solid var(--accent)">Подготовка к первой встрече →</a></p>
       </article>
 
-      <article class="card">
+      <article class="card club-highlight">
         <div class="ftype"><span class="num">02</span><span class="sep">—</span><span>Поддержка</span></div>
         <h3>Клуб «Стая»</h3>
         <p class="summary">Постоянная стая. Раз в неделю созваниваемся и разгребаем свои дела вместе.</p>
