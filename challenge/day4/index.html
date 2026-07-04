@@ -260,10 +260,12 @@ function renderInterlude(){
       <button class="nb-match-btn" id="continue-btn">Дальше →</button>
     </div>
   `;
-  document.getElementById('continue-btn').addEventListener('click', (e)=>{
-    e.stopPropagation();
-    startBlock(2);
-  });
+  // Родительский #nb-stage делает preventDefault на touchstart — это глушит эмуляцию click
+  // на дочерних элементах. Поэтому кнопке нужен явный touchstart-обработчик.
+  const contBtn = document.getElementById('continue-btn');
+  const contHandler = (e)=>{ e.preventDefault(); e.stopPropagation(); startBlock(2); };
+  contBtn.addEventListener('click', contHandler);
+  contBtn.addEventListener('touchstart', contHandler, { passive: false });
 }
 
 function renderStim(letter, idx, canMatch){
