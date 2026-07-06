@@ -238,12 +238,16 @@ document.getElementById('overlayRange').addEventListener('input', e => {
 
 /* ====== DRAWING ====== */
 function draw(ctx, w, h){
-  // background — gradient
-  const g = ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0, state.bg);
-  g.addColorStop(1, mix(state.bg, '#000', 0.05));
-  ctx.fillStyle = g;
-  ctx.fillRect(0,0,w,h);
+  // очищаем канвас; для прозрачного фона просто оставляем как есть
+  ctx.clearRect(0, 0, w, h);
+  if(state.bg && state.bg !== 'transparent'){
+    // background — gradient
+    const g = ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0, state.bg);
+    g.addColorStop(1, mix(state.bg, '#000000', 0.05));
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,w,h);
+  }
 
   // soft decorative blobs
   drawBlob(ctx, w*0.85, h*0.18, w*0.55, hexA(state.accent, 0.14));
@@ -336,8 +340,7 @@ function drawBlob(ctx, cx, cy, r, color){
   ctx.fill();
 }
 function hexA(hex, alpha){
-  const c = hex.replace('#','');
-  const r = parseInt(c.slice(0,2),16), g = parseInt(c.slice(2,4),16), b = parseInt(c.slice(4,6),16);
+  const [r,g,b] = parseHex(hex);
   return `rgba(${r},${g},${b},${alpha})`;
 }
 function mix(a,b,t){
@@ -347,7 +350,12 @@ function mix(a,b,t){
   const bl = Math.round(A[2]*(1-t)+B[2]*t);
   return `rgb(${r},${g},${bl})`;
 }
-function parseHex(h){const c=h.replace('#','');return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
+function parseHex(h){
+  if(!h || h === 'transparent') return [0,0,0];
+  let c = h.replace('#','');
+  if(c.length === 3) c = c.split('').map(ch=>ch+ch).join(''); // '#000' → '#000000'
+  return [parseInt(c.slice(0,2),16), parseInt(c.slice(2,4),16), parseInt(c.slice(4,6),16)];
+}
 function invertOn(hex){
   const [r,g,b] = parseHex(hex);
   const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
