@@ -710,6 +710,7 @@
       <button data-week="5">5</button>
       <button data-week="6">6</button>
     </div>
+    <div id="weekDateLabel" style="margin-top:6px; font-size:12px; color:var(--muted); text-align:center; font-family:'Charter','Iowan Old Style','Georgia',serif; font-style:italic"></div>
 
     <!-- Quick nav -->
     <div class="nav-section">
@@ -928,6 +929,40 @@ function parseYmd(s){
   return new Date(y, m - 1, d);  // локальная дата без UTC
 }
 function today(){ return ymd(new Date()); }
+
+// ============ КАЛЕНДАРЬ ТРЕНИНГА ============
+// Тренинг стартовал во вторник 7 июля 2026. 6 недель, каждая — с вт по пн.
+const GROUP_START = new Date(2026, 6, 7);
+GROUP_START.setHours(0, 0, 0, 0);
+
+function groupWeekBounds(weekN){
+  // weekN: 1..6 — возвращает { start, end } в локальной TZ
+  const start = new Date(GROUP_START);
+  start.setDate(start.getDate() + (weekN - 1) * 7);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  return { start, end };
+}
+function computeCurrentGroupWeek(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const daysPassed = Math.floor((today - GROUP_START) / 86400000);
+  if (daysPassed < 0) return 1;               // до старта — показываем 1-ю
+  const w = Math.floor(daysPassed / 7) + 1;
+  return Math.max(1, Math.min(6, w));
+}
+function fmtRuShort(d){
+  const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  return `${d.getDate()} ${months[d.getMonth()]}`;
+}
+function groupWeekLabel(weekN){
+  const { start, end } = groupWeekBounds(weekN);
+  // если оба дня в одном месяце — показываем сокращённо: «7-13 июля»
+  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  if (start.getMonth() === end.getMonth()){
+    return `${start.getDate()}–${end.getDate()} ${months[start.getMonth()]}`;
+  }
+  return `${fmtRuShort(start)} – ${fmtRuShort(end)}`;
+}
 
 // «Неделя эксперимента» — начинается в четверг. Возвращает YYYY-MM-DD четверга (локально)
 function expWeekKey(date){
@@ -1344,8 +1379,18 @@ document.getElementById('ifthenAdd').addEventListener('click', () => {
 // ============ WEEK SELECTOR ============
 function renderWeeks(){
   document.querySelectorAll('.weeks-pill button').forEach(b => {
-    b.classList.toggle('active', +b.dataset.week === state.currentWeek);
+    const wn = +b.dataset.week;
+    b.classList.toggle('active', wn === state.currentWeek);
+    // tooltip с датами для каждой недели
+    b.title = `Неделя ${wn}: ${groupWeekLabel(wn)}`;
   });
+  // подпись с датами активной недели
+  const lab = document.getElementById('weekDateLabel');
+  if (lab){
+    const auto = computeCurrentGroupWeek();
+    const isNow = state.currentWeek === auto;
+    lab.textContent = `${groupWeekLabel(state.currentWeek)}${isNow ? ' · сейчас' : ''}`;
+  }
 }
 document.querySelectorAll('.weeks-pill button').forEach(b => {
   b.addEventListener('click', () => {
@@ -1354,6 +1399,16 @@ document.querySelectorAll('.weeks-pill button').forEach(b => {
     renderWeeks();
   });
 });
+
+// Автоопределение: если состояние ещё дефолтное (currentWeek=1 и не было завершённых
+// недель) — подставляем реальную неделю по календарю.
+(function autoSyncCurrentWeek(){
+  const auto = computeCurrentGroupWeek();
+  if (state.currentWeek === 1 && (!state.completedWeeks || state.completedWeeks.length === 0) && auto !== 1){
+    state.currentWeek = auto;
+    saveState();
+  }
+})();
 
 // ============ WORKBOOKS placeholder ============
 document.querySelectorAll('.wb-card').forEach(card => {
