@@ -872,7 +872,7 @@ const BIRDS = [
    День N становится доступен по календарю: 1-й — в день старта, 2-й — на следующий, и т.д.
    Догонять можно (пропустил день → сегодня закрываешь оба), обгонять — нельзя.
 */
-const CHALLENGE_START = new Date(2026, 6, 1); // 1 июля 2026, локальная TZ
+const CHALLENGE_START = new Date(2026, 6, 7); // вторник, 7 июля 2026 — локальная TZ
 CHALLENGE_START.setHours(0, 0, 0, 0);
 function daysSinceStart(){
   const today = new Date(); today.setHours(0,0,0,0);
@@ -884,6 +884,20 @@ function maxVisNAllowed(){
 function nextMidnightTs(){
   const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0);
   return d.getTime();
+}
+// дата, когда открывается visN-ый день (visN=1 — день старта)
+function dateForVisN(visN){
+  const d = new Date(CHALLENGE_START);
+  d.setDate(d.getDate() + (visN - 1));
+  return d;
+}
+const RU_MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const RU_DAYS_SHORT = ['вс','пн','вт','ср','чт','пт','сб'];
+function formatRuDate(d, withWeekday=true){
+  const day = d.getDate();
+  const m = RU_MONTHS[d.getMonth()];
+  const wd = RU_DAYS_SHORT[d.getDay()];
+  return withWeekday ? `${wd}, ${day} ${m}` : `${day} ${m}`;
 }
 
 const DAYS = [
@@ -969,13 +983,14 @@ function renderHome(s){
   const currentBox = document.getElementById('home-current');
   currentBox.innerHTML = '';
   if(currentDay && !isLocked){
+    const dateStr = formatRuDate(dateForVisN(currentDay.visN));
     const a = document.createElement('a');
     a.className = 'current-card';
     a.href = currentDay.url;
     a.innerHTML = `
       ${currentDay.gift ? `<span class="gift">🎁 ${currentDay.gift}</span>` : ''}
       <div class="cc-label">${done === 0 ? 'Начни здесь' : 'Твой следующий день'}</div>
-      <div class="cc-day">день ${currentDay.visN} из 7</div>
+      <div class="cc-day">день ${currentDay.visN} из 7 · ${dateStr}</div>
       <div class="cc-name">${currentDay.name}</div>
       <div class="cc-desc">${currentDay.desc}</div>
       <span class="cc-cta">Открыть
@@ -987,13 +1002,14 @@ function renderHome(s){
     currentBox.appendChild(a);
   } else if(currentDay && isLocked){
     // locked: следующий день ещё не наступил по календарю
+    const dateStr = formatRuDate(dateForVisN(currentDay.visN));
     const div = document.createElement('div');
     div.className = 'current-card locked';
     div.innerHTML = `
       <div class="cc-label">Идём стаей</div>
-      <div class="cc-day">день ${currentDay.visN} из 7</div>
+      <div class="cc-day">день ${currentDay.visN} из 7 · ${dateStr}</div>
       <div class="cc-name">${currentDay.name}</div>
-      <div class="cc-desc">Стая ещё не дошла до этого дня — <b>обгонять не будем</b>. Здесь появится задание, когда наступит следующий день.</div>
+      <div class="cc-desc">Стая ещё не дошла до этого дня — <b>обгонять не будем</b>. Откроется <b>${dateStr}</b>.</div>
       <span class="cc-cta lock-timer" id="lock-countdown">откроется в полночь</span>
     `;
     currentBox.appendChild(div);
@@ -1022,7 +1038,7 @@ function renderHome(s){
     doneDays.forEach(d=>{
       const c = document.createElement('div');
       c.className = 'done-card';
-      c.innerHTML = `<div class="check">✓</div><div><span class="dn">день ${d.visN}</span> · ${d.name}</div>`;
+      c.innerHTML = `<div class="check">✓</div><div><span class="dn">день ${d.visN}</span> · ${d.name}<br><span style="font-size:12px;color:var(--muted)">${formatRuDate(dateForVisN(d.visN), false)}</span></div>`;
       grid.appendChild(c);
     });
     doneBox.appendChild(grid);

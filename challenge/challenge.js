@@ -13,7 +13,7 @@ const LS_KEY = 'gruzdeva_challenge_v1';
 */
 const CHALLENGE_START_Y = 2026;
 const CHALLENGE_START_M = 6;  // июль (0-indexed)
-const CHALLENGE_START_D = 1;
+const CHALLENGE_START_D = 7;  // вторник, 7 июля 2026
 
 // маппинг URL day{N} → visN
 const DAY_VISN = { 1:1, 2:2, 3:3, 4:4, 5:5, 6:5, 7:6, 8:7 };
