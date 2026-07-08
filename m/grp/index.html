@@ -1047,13 +1047,21 @@ function ensureFreshWeek(){
   }
 })();
 
+// «Неделя закрыта полностью» = все 3 weekly-задачи отмечены И все 7 дней эксперимента tried.
+// Проверяется по текущему weekKey (= expWeekKey), т.к. они синхронизированы (вт→пн).
 function isWeekFullyDone(){
-  return WEEKLY_TASKS.every(t => state.weekly.items?.[t.id]);
+  const allWeekly = WEEKLY_TASKS.every(t => state.weekly.items?.[t.id]);
+  if (!allWeekly) return false;
+  const wk = expWeekKey();
+  const expData = state.experiment?.weeks?.[wk];
+  if (!expData) return false;
+  const days = expWeekDays(wk);
+  return days.every(d => expData.days?.[d.key]?.tried);
 }
 
-// Стадия маскота = количество накопительных task-awards (с потолком MASCOTS.length-1)
+// Стадия маскота = количество ПОЛНОСТЬЮ закрытых недель (потолок MASCOTS.length-1)
 function currentStageIdx(){
-  return Math.min(state.taskAwardKeys.length, MASCOTS.length - 1);
+  return Math.min(state.completedWeeks.length, MASCOTS.length - 1);
 }
 
 // Подменяем функции из mascot.js — теперь стадия растёт за каждую отмеченную task,
@@ -1072,47 +1080,28 @@ function getMascotProgress(){
   };
 }
 
-// Награждает task (увеличивает накопительный счётчик стадий) и обновляет completedWeeks для отчёта.
-// Вызывается ПОСЛЕ изменения state.weekly.items (отметки или снятия).
-function processTaskChange(taskId, isNowDone){
+// Проверяет: закрылась ли неделя? Если да — добавляет её в completedWeeks и растит гуся.
+// Стадия НЕ откатывается: даже если участница потом снимет галочку, completedWeeks сохраняется.
+// Вызывается ПОСЛЕ любого изменения — weekly-task или дня эксперимента.
+function checkWeekClosed(){
   ensureFreshWeek();
   const wk = state.weekly.weekKey;
-  const awardKey = `${wk}:${taskId}`;
+  if (!isWeekFullyDone()) return;
+  if (state.completedWeeks.includes(wk)) return;
 
-  if (isNowDone){
-    // если эта пара (неделя+task) ещё не давала награду — начисляем стадию
-    if (!state.taskAwardKeys.includes(awardKey)){
-      const beforeStage = currentStageIdx();
-      state.taskAwardKeys.push(awardKey);
-      saveState();
-      const afterStage = currentStageIdx();
-      if (afterStage > beforeStage && afterStage < MASCOTS.length){
-        setTimeout(() => showToast(0, `🎉 Новая стадия: ${MASCOTS[afterStage].name}!`), 1500);
-      }
-    }
+  const beforeStage = currentStageIdx();
+  state.completedWeeks.push(wk);
+  saveState();
+  const afterStage = currentStageIdx();
+  if (afterStage > beforeStage && afterStage < MASCOTS.length){
+    setTimeout(() => showToast(0, `🎉 Неделя закрыта! Новая стадия: ${MASCOTS[afterStage].name}`), 1200);
   }
-  // при снятии галочки — стадия не уменьшается (счётчик taskAwardKeys остаётся)
-
-  // completedWeeks (для еженедельного отчёта)
-  const idx = state.completedWeeks.indexOf(wk);
-  if (isWeekFullyDone()){
-    if (idx < 0){ state.completedWeeks.push(wk); saveState(); }
-  } else {
-    if (idx >= 0){ state.completedWeeks.splice(idx, 1); saveState(); }
-  }
+  renderMascot();
 }
 
-// Backwards-compat alias — старый код вызывает updateCompletedWeeks()
-function updateCompletedWeeks(){
-  ensureFreshWeek();
-  const wk = state.weekly.weekKey;
-  const idx = state.completedWeeks.indexOf(wk);
-  if (isWeekFullyDone()){
-    if (idx < 0){ state.completedWeeks.push(wk); saveState(); }
-  } else {
-    if (idx >= 0){ state.completedWeeks.splice(idx, 1); saveState(); }
-  }
-}
+// Backwards-compat aliases — старый код зовёт processTaskChange / updateCompletedWeeks
+function processTaskChange(){ checkWeekClosed(); }
+function updateCompletedWeeks(){ checkWeekClosed(); }
 
 // ============ POINTS / MASCOT RENDER ============
 function addPoints(delta, label = ''){
@@ -1266,6 +1255,7 @@ function renderExperiment(){
         addPoints(5, 'День эксперимента отмечен');
       }
       saveState();
+      checkWeekClosed(); // может закрыть неделю → +стадия
       renderExperiment();
     });
   });
