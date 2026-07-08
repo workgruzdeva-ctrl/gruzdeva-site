@@ -980,7 +980,7 @@ function expWeekDays(weekKey){
   const out = [];
   const todayStr = today();
   for (let i = 0; i < 7; i++){
-    const d = new Date(thu);
+    const d = new Date(tue);
     d.setDate(tue.getDate() + i);
     const key = ymd(d);
     out.push({
