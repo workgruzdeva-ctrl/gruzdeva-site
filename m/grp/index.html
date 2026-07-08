@@ -729,13 +729,13 @@
 
     <!-- ============ WEEKLY GROUP TASKS ============ -->
     <h2 id="weekly">Групповая работа</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Универсальные задачи за участие в группе — на каждую неделю. Это не личный эксперимент, а коммитменты как члена группы. Сбрасываются в четверг вместе с новой встречей.</p>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Универсальные задачи за участие в группе — на каждую неделю. Это не личный эксперимент, а коммитменты как члена группы. Сбрасываются во вторник вместе с новой встречей.</p>
 
     <div class="dailies" id="weeklyList"></div>
 
     <!-- ============ EXPERIMENT TRACKER ============ -->
     <h2 id="experiment">Поведенческий эксперимент</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Каждую неделю на встрече вы выбираете одну стратегию и пробуете её в жизни. Здесь отмечаете каждый день: попробовали или нет, как прошло, и что заметили. Неделя — от четверга до среды.</p>
+    <p style="font-size:13px; color:var(--muted); margin-top:4px">Каждую неделю на встрече вы выбираете одну стратегию и пробуете её в жизни. Здесь отмечаете каждый день: попробовали или нет, как прошло, и что заметили. Неделя — от вторника до понедельника.</p>
 
     <div class="exp-strategy">
       <div class="exp-strategy-label">Стратегия этой недели</div>
@@ -964,24 +964,24 @@ function groupWeekLabel(weekN){
   return `${fmtRuShort(start)} – ${fmtRuShort(end)}`;
 }
 
-// «Неделя эксперимента» — начинается в четверг. Возвращает YYYY-MM-DD четверга (локально)
+// «Неделя эксперимента» — начинается во вторник (день встречи группы). Возвращает YYYY-MM-DD вторника (локально)
 function expWeekKey(date){
   const d = date ? (typeof date === 'string' ? parseYmd(date) : new Date(date)) : new Date();
   d.setHours(0, 0, 0, 0);
-  const day = d.getDay(); // 0=Вс, 4=Чт
-  const daysBack = day >= 4 ? day - 4 : day + 3;
+  const day = d.getDay(); // 0=Вс, 2=Вт
+  const daysBack = day >= 2 ? day - 2 : day + 5;
   d.setDate(d.getDate() - daysBack);
   return ymd(d);
 }
 function expWeekDays(weekKey){
-  const thu = parseYmd(weekKey);
-  const names = ['ЧТ', 'ПТ', 'СБ', 'ВС', 'ПН', 'ВТ', 'СР'];
+  const tue = parseYmd(weekKey);
+  const names = ['ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС', 'ПН'];
   const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
   const out = [];
   const todayStr = today();
   for (let i = 0; i < 7; i++){
     const d = new Date(thu);
-    d.setDate(thu.getDate() + i);
+    d.setDate(tue.getDate() + i);
     const key = ymd(d);
     out.push({
       key,
@@ -1011,6 +1011,19 @@ function ensureFreshWeek(){
 // ============ STAGE LOGIC ============
 // Новая логика: стадия = количество ПОЛНОСТЬЮ выполненных недель.
 // Баллы остаются — но они только для геймификации, не определяют стадию.
+
+// Одноразовое обнуление: старт тренинга сдвинут на вт 7 июля 2026, ритм недели
+// поменяли с чт→ср на вт→пн. Прогресс, набитый по старой системе, обнуляем всем.
+(function resetProgressV2(){
+  if (state._resetV2Done) return;
+  state.points = 0;
+  state.taskAwardKeys = [];
+  state.completedWeeks = [];
+  state.weekly = { weekKey: '', items: {} };
+  state.experiment = { weeks: {}, viewWeek: null };
+  state._resetV2Done = true;
+  saveState();
+})();
 
 // Миграция: если у пользователя есть points/completedWeeks, но нет taskAwardKeys —
 // проставим столько «виртуальных» наград, чтобы стадия не откатилась.
@@ -1142,7 +1155,7 @@ function showToast(delta, label){
 
 // ============ WEEKLY GROUP TASKS ============
 const WEEKLY_TASKS = [
-  { id: 'session',  text: 'Пришла на встречу группы',         sub: 'четверг — встреча потока',                          pts: 20 },
+  { id: 'session',  text: 'Пришла на встречу группы',         sub: 'вторник — встреча потока',                          pts: 20 },
   { id: 'workbook', text: 'Сделала упражнение в тетради',     sub: 'воркбук недели — хотя бы одно упражнение',           pts: 15 },
   { id: 'support',  text: 'Поддержала кого-то из группы',     sub: 'комментарий, отклик, реакция в чате',                pts: 10 },
 ];
