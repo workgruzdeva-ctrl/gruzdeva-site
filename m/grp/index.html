@@ -673,6 +673,174 @@
     h2{font-size:19px}
     .ifthen-add{grid-template-columns:1fr; gap:6px}
   }
+
+  /* ============ БОЛЬШАЯ КАРТОЧКА «ЭТА НЕДЕЛЯ» ============ */
+  .week-hero{
+    display:block;
+    padding:32px 32px 28px;
+    margin:20px 0 32px;
+    border-radius:22px;
+    border:2px solid var(--wk-border, #f0b400);
+    background:var(--wk-bg, #FCE4B6);
+    color:var(--wk-ink, #241D14);
+    position:relative;
+    overflow:hidden;
+    transition:background .3s ease, border-color .3s ease;
+  }
+  .wk-eyebrow{
+    font-family:'Manrope',sans-serif;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    font-weight:800;
+    opacity:.7;
+    margin:0 0 8px;
+  }
+  .wk-title{
+    font-family:'Charter','Iowan Old Style','Georgia',serif;
+    font-size:36px; line-height:1.05; font-weight:700;
+    margin:0 0 6px;
+  }
+  .wk-dates{
+    font-family:'Charter',serif; font-style:italic;
+    font-size:15px; opacity:.75;
+    margin:0 0 22px;
+  }
+  .wk-instr{
+    font-size:15px; line-height:1.5;
+    margin:0 0 16px;
+  }
+  .wk-instr b{font-weight:700}
+
+  .wk-tasks{ list-style:none; margin:0 0 6px; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .wk-task{
+    display:flex; align-items:flex-start; gap:14px;
+    padding:14px 16px;
+    background:rgba(255,255,255,0.55);
+    border:1.5px solid rgba(0,0,0,0.08);
+    border-radius:14px;
+    cursor:pointer;
+    transition:background .12s, transform .12s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .wk-task:hover{ background:rgba(255,255,255,0.85); }
+  .wk-task.done{ background:rgba(255,255,255,0.9); }
+  .wk-check{
+    flex-shrink:0;
+    width:26px; height:26px; border-radius:8px;
+    border:2px solid var(--wk-ink,#241D14);
+    background:transparent;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:800;
+    margin-top:1px;
+  }
+  .wk-task.done .wk-check{
+    background:var(--wk-ink,#241D14);
+    color:var(--wk-bg,#FCE4B6);
+  }
+  .wk-task.done .wk-check::before{content:"✓"}
+  .wk-txt{ flex:1; }
+  .wk-t-title{ font-weight:600; font-size:16px; line-height:1.3; }
+  .wk-task.done .wk-t-title{ opacity:.55; text-decoration:line-through; }
+  .wk-t-sub{ font-size:13px; opacity:.6; margin-top:2px; line-height:1.35; }
+  .wk-t-pts{
+    align-self:center; flex-shrink:0;
+    background:var(--wk-ink,#241D14);
+    color:var(--wk-bg,#FCE4B6);
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:13px;
+    padding:6px 10px; border-radius:999px;
+  }
+
+  .wk-bonus-label{
+    font-family:'Manrope',sans-serif;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    font-weight:800; opacity:.55;
+    margin:22px 0 10px;
+  }
+
+  .wk-cta{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%;
+    margin-top:24px; padding:18px 22px;
+    background:var(--wk-ink,#241D14); color:var(--wk-bg,#FCE4B6);
+    border:none; border-radius:14px;
+    font-family:'Manrope',sans-serif; font-weight:700; font-size:17px;
+    text-decoration:none; cursor:pointer;
+    transition:transform .12s, opacity .12s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .wk-cta:hover{ transform:translateY(-1px); opacity:.9 }
+
+  .wk-progress{
+    font-family:'Manrope',sans-serif;
+    font-size:13px; font-weight:600; opacity:.65;
+    margin-top:14px; text-align:center;
+  }
+
+  /* Финальный экран (после 5-й недели) */
+  .week-hero.congrats{
+    text-align:center;
+    padding:44px 32px 40px;
+    background:linear-gradient(135deg, #FCE4B6, #a8c0a0);
+    border-color:#2f4434;
+  }
+  .congrats-mascot{
+    display:flex; justify-content:center; margin:0 auto 22px;
+    max-width:280px;
+  }
+  .congrats-mascot svg{ width:100%; height:auto; }
+  .congrats-h{
+    font-family:'Charter',serif; font-size:42px; line-height:1.05; margin:0 0 10px;
+  }
+  .congrats-sub{
+    font-size:17px; line-height:1.5; opacity:.85; margin:0 0 22px;
+  }
+
+  /* ============ БЛОК «ВСЕ МАТЕРИАЛЫ» — свёрнутый ============ */
+  .materials-fold{
+    border-top:1px solid var(--line);
+    padding:14px 0 0;
+    margin-top:20px;
+  }
+  .materials-fold > summary{
+    cursor:pointer;
+    padding:10px 0;
+    font-family:'Manrope',sans-serif;
+    font-size:14px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--soft);
+    list-style:none;
+    display:flex; align-items:center; gap:8px;
+  }
+  .materials-fold > summary::-webkit-details-marker{ display:none; }
+  .materials-fold[open] > summary .chev{ transform:rotate(180deg); }
+  .materials-fold .chev{ transition:transform .18s ease; font-size:12px; }
+  .materials-body{ padding:8px 0 20px; }
+  .mat-h{
+    font-family:'Charter',serif; font-size:18px; margin:22px 0 6px;
+  }
+  .mat-note{ font-size:13px; color:var(--soft); margin:0 0 8px; line-height:1.5; }
+  .mat-tiny{ font-size:11px; color:var(--muted); margin-top:32px; padding-top:14px; border-top:1px solid var(--line); }
+  .mat-tiny a{ color:var(--rust); margin-left:8px; }
+
+  .workbooks-cta{
+    display:flex; align-items:center; gap:16px; padding:20px 22px; margin:10px 0 14px;
+    background:var(--accent); color:#fff; border-radius:16px; text-decoration:none;
+    font-weight:700; font-size:15px; box-shadow:0 8px 18px rgba(217,105,74,0.22);
+    transition:transform .15s ease;
+  }
+  .workbooks-cta:hover{ transform:translateY(-1px); }
+  .wb-ico{ font-size:24px; }
+  .wb-body{ flex:1; line-height:1.3; }
+  .wb-sub{ display:block; font-size:12px; font-weight:500; opacity:.85; margin-top:2px; }
+  .wb-arr{ font-size:18px; }
+
+  @media (max-width: 760px){
+    .week-hero{ padding:24px 20px 22px; margin:14px 0 24px; }
+    .wk-title{ font-size:28px; }
+    .wk-task{ padding:12px 14px; }
+    .wk-t-title{ font-size:15px; }
+    .wk-cta{ font-size:16px; padding:16px 20px; }
+    .congrats-h{ font-size:32px; }
+  }
 </style>
 </head>
 <body>
@@ -708,91 +876,42 @@
       <button data-week="3">3</button>
       <button data-week="4">4</button>
       <button data-week="5">5</button>
-      <button data-week="6">6</button>
     </div>
     <div id="weekDateLabel" style="margin-top:6px; font-size:12px; color:var(--muted); text-align:center; font-family:'Charter','Iowan Old Style','Georgia',serif; font-style:italic"></div>
-
-    <!-- Quick nav -->
-    <div class="nav-section">
-      <a href="#weekly">Групповая работа</a>
-      <a href="#experiment">Эксперимент недели</a>
-      <a href="#ifthen">«Если — то» план</a>
-      <a href="#workbooks">Воркбуки</a>
-      <a href="#help">Поддержка</a>
-    </div>
   </aside>
 
   <!-- ============ MAIN ============ -->
   <main class="main">
     <h1>Зона участника</h1>
-    <p class="lead">Здесь живут воркбуки, трекеры и ваш гусёнок. Закрываете все 3 задачи недели — гусёнок переходит на следующую стадию.</p>
 
-    <!-- ============ WEEKLY GROUP TASKS ============ -->
-    <h2 id="weekly">Групповая работа</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Универсальные задачи за участие в группе — на каждую неделю. Это не личный эксперимент, а коммитменты как члена группы. Сбрасываются во вторник вместе с новой встречей.</p>
+    <!-- ============ БОЛЬШАЯ КАРТОЧКА «ЭТА НЕДЕЛЯ» ============ -->
+    <section class="week-hero" id="weekHero"></section>
 
-    <div class="dailies" id="weeklyList"></div>
+    <!-- ============ ВСЕ МАТЕРИАЛЫ (свёрнутый блок) ============ -->
+    <details class="materials-fold">
+      <summary>Все материалы <span class="chev">▾</span></summary>
+      <div class="materials-body">
+        <h3 class="mat-h">Рабочие тетради</h3>
+        <p class="mat-note">Все воркбуки лежат в одной папке на Google Drive. Откройте, скачайте нужный — и заполняйте.</p>
+        <a href="https://drive.google.com/drive/folders/1Lhx2Ig59wMuHfIsJuqmsjyNcARkzz32i?usp=sharing"
+           target="_blank" rel="noopener" class="workbooks-cta">
+          <span class="wb-ico">📓</span>
+          <span class="wb-body">
+            Открыть рабочие тетради
+            <span class="wb-sub">Google Drive · тетради всех недель в одной папке</span>
+          </span>
+          <span class="wb-arr">→</span>
+        </a>
 
-    <!-- ============ EXPERIMENT TRACKER ============ -->
-    <h2 id="experiment">Поведенческий эксперимент</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Каждую неделю на встрече вы выбираете одну стратегию и пробуете её в жизни. Здесь отмечаете каждый день: попробовали или нет, как прошло, и что заметили. Неделя — от вторника до понедельника.</p>
+        <h3 class="mat-h">Если что-то непонятно</h3>
+        <p class="mat-note">Пишите в Telegram <a href="https://t.me/dr_gruzdeva" style="font-weight:600">@dr_gruzdeva</a>. Если совсем плохо — экстренные службы: <strong>112</strong>.</p>
 
-    <div class="exp-strategy">
-      <div class="exp-strategy-label">Стратегия этой недели</div>
-      <textarea id="expStrategy" placeholder="Например: при прокрастинации — ставить таймер на 2 минуты и работать только эти 2 минуты."></textarea>
-      <div class="exp-weekmeta">
-        <div>Неделя <strong id="expWeekRange">…</strong> · попробовано <strong id="expWeekCount">0 / 7</strong></div>
-        <div class="nav">
-          <button id="expPrev">← пред.</button>
-          <button id="expToday">сегодня</button>
-          <button id="expNext">след. →</button>
-        </div>
+        <p class="mat-tiny">
+          Эта страница хранит ваш прогресс в браузере (localStorage). Если очистите кэш или зайдёте с другого устройства — придётся начать заново.
+          <a href="#" id="resetLink">Сбросить прогресс</a>
+        </p>
       </div>
-    </div>
-
-    <div class="exp-days" id="expDays"></div>
-
-    <!-- ============ IF-THEN PLANS (optional) ============ -->
-    <h2 id="ifthen">«Если — то» план <span style="font-family:inherit; font-size:12px; font-weight:400; color:var(--muted); letter-spacing:.02em; text-transform:none">— опционально</span></h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Если в рамках эксперимента полезно сформулировать конкретное «когда X — я делаю Y» — добавьте сюда. Не обязательно, входит в часть эксперимента.</p>
-
-    <div class="ifthen-list" id="ifthenList"></div>
-
-    <div class="ifthen-add">
-      <input id="ifInput" type="text" placeholder="Если: после утреннего кофе…">
-      <input id="thenInput" type="text" placeholder="То: открою документ и напишу 1 строку">
-      <button id="ifthenAdd">Добавить</button>
-    </div>
-
-    <!-- ============ WORKBOOKS ============ -->
-    <h2 id="workbooks">Рабочие тетради</h2>
-    <p style="font-size:13px; color:var(--muted); margin-top:4px">Все 6 воркбуков лежат в одной папке на Google Drive. Откройте, скачайте нужный — и заполняйте.</p>
-
-    <a href="https://drive.google.com/drive/folders/1Lhx2Ig59wMuHfIsJuqmsjyNcARkzz32i?usp=sharing"
-       target="_blank" rel="noopener"
-       style="display:flex; align-items:center; gap:16px; padding:22px 26px; margin:18px 0 12px;
-              background:var(--accent); color:#fff; border-radius:16px; text-decoration:none;
-              font-weight:700; font-size:16px; box-shadow:0 10px 22px rgba(217,105,74,0.28);
-              transition:transform .15s ease;">
-      <span style="font-size:28px">📓</span>
-      <span style="flex:1; line-height:1.3">
-        Открыть рабочие тетради
-        <span style="display:block; font-size:13px; font-weight:500; opacity:.85; margin-top:2px">Google Drive · все 6 недель в одной папке</span>
-      </span>
-      <span style="font-size:20px">→</span>
-    </a>
-
-    <!-- ============ HELP ============ -->
-    <h2 id="help">Поддержка</h2>
-    <p style="font-size:14px; line-height:1.6">
-      Если что-то непонятно или нужна поддержка между встречами — пишите в Telegram <a href="https://t.me/dr_gruzdeva" style="font-weight:600">@dr_gruzdeva</a>.<br>
-      <span style="color:var(--muted)">Если совсем плохо — экстренные службы: <strong>112</strong>.</span>
-    </p>
-
-    <p style="font-size:11px; color:var(--muted); margin-top:48px; padding-top:18px; border-top:1px solid var(--line)">
-      Эта страница хранит ваш прогресс в браузере (localStorage). Если очистите кэш или зайдёте с другого устройства — придётся начать заново.
-      <a href="#" id="resetLink" style="color:var(--rust); margin-left:8px">Сбросить прогресс</a>
-    </p>
+    </details>
   </main>
 
 </div>
@@ -948,7 +1067,7 @@ function computeCurrentGroupWeek(){
   const daysPassed = Math.floor((today - GROUP_START) / 86400000);
   if (daysPassed < 0) return 1;               // до старта — показываем 1-ю
   const w = Math.floor(daysPassed / 7) + 1;
-  return Math.max(1, Math.min(6, w));
+  return Math.max(1, Math.min(TOTAL_WEEKS, w));
 }
 function fmtRuShort(d){
   const months = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
@@ -1012,8 +1131,7 @@ function ensureFreshWeek(){
 // Новая логика: стадия = количество ПОЛНОСТЬЮ выполненных недель.
 // Баллы остаются — но они только для геймификации, не определяют стадию.
 
-// Одноразовое обнуление: старт тренинга сдвинут на вт 7 июля 2026, ритм недели
-// поменяли с чт→ср на вт→пн. Прогресс, набитый по старой системе, обнуляем всем.
+// Одноразовое обнуление v2 (миграция уже была).
 (function resetProgressV2(){
   if (state._resetV2Done) return;
   state.points = 0;
@@ -1022,6 +1140,20 @@ function ensureFreshWeek(){
   state.weekly = { weekKey: '', items: {} };
   state.experiment = { weeks: {}, viewWeek: null };
   state._resetV2Done = true;
+  saveState();
+})();
+
+// Одноразовое обнуление v3: убрали 7-дневный трекер эксперимента, поменяли задачи
+// (workbook исчез, появились experiment+dabling). Старый прогресс становится некорректным.
+(function resetProgressV3(){
+  if (state._resetV3Done) return;
+  state.points = 0;
+  state.taskAwardKeys = [];
+  state.completedWeeks = [];
+  state.weekly = { weekKey: '', items: {} };
+  state.experiment = { weeks: {}, viewWeek: null };
+  state.ifthen = [];
+  state._resetV3Done = true;
   saveState();
 })();
 
@@ -1047,21 +1179,14 @@ function ensureFreshWeek(){
   }
 })();
 
-// «Неделя закрыта полностью» = все 3 weekly-задачи отмечены И все 7 дней эксперимента tried.
-// Проверяется по текущему weekKey (= expWeekKey), т.к. они синхронизированы (вт→пн).
+// «Неделя закрыта» = все обязательные задачи отмечены. Бонусы не влияют на закрытие.
 function isWeekFullyDone(){
-  const allWeekly = WEEKLY_TASKS.every(t => state.weekly.items?.[t.id]);
-  if (!allWeekly) return false;
-  const wk = expWeekKey();
-  const expData = state.experiment?.weeks?.[wk];
-  if (!expData) return false;
-  const days = expWeekDays(wk);
-  return days.every(d => expData.days?.[d.key]?.tried);
+  return WEEKLY_TASKS.filter(t => t.required).every(t => state.weekly.items?.[t.id]);
 }
 
-// Стадия маскота = количество ПОЛНОСТЬЮ закрытых недель (потолок MASCOTS.length-1)
+// Стадия маскота = количество закрытых недель (потолок TOTAL_WEEKS или MASCOTS.length-1)
 function currentStageIdx(){
-  return Math.min(state.completedWeeks.length, MASCOTS.length - 1);
+  return Math.min(state.completedWeeks.length, MASCOTS.length - 1, TOTAL_WEEKS);
 }
 
 // Подменяем функции из mascot.js — теперь стадия растёт за каждую отмеченную task,
@@ -1142,242 +1267,142 @@ function showToast(delta, label){
   toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ============ WEEKLY GROUP TASKS ============
+// ============ ЗАДАЧИ НЕДЕЛИ ============
+// required: true → двигает гуся (нужно ВСЕ required, чтобы неделя закрылась)
+// bonus:    true → даёт баллы, но не двигает гуся
 const WEEKLY_TASKS = [
-  { id: 'session',  text: 'Пришла на встречу группы',         sub: 'вторник — встреча потока',                          pts: 20 },
-  { id: 'workbook', text: 'Сделала упражнение в тетради',     sub: 'воркбук недели — хотя бы одно упражнение',           pts: 15 },
-  { id: 'support',  text: 'Поддержала кого-то из группы',     sub: 'комментарий, отклик, реакция в чате',                pts: 10 },
+  { id: 'session',    text: 'Пришла на встречу группы',    sub: 'вторник — встреча потока',              pts: 30, required: true },
+  { id: 'experiment', text: 'Попробовала эксперимент недели', sub: 'выбранная на встрече стратегия',     pts: 30, required: true },
+  { id: 'support',    text: 'Поддержала кого-то в группе',  sub: 'комментарий, отклик, реакция в чате',   pts: 10, bonus: true },
+  { id: 'dabling',    text: 'Даблинг-сессия с участником',  sub: 'созвонились и порабтали рядом',         pts: 25, bonus: true },
 ];
 
-function renderWeekly(){
+const TOTAL_WEEKS = 5;
+
+// Цвета карточки для каждой из 5 недель — прогрессия от «начала пути» к «глубине»
+const WEEK_COLORS = {
+  1: { bg:'#FCE4B6', ink:'#5b4200', border:'#f0b400', name:'Начало' },
+  2: { bg:'#F5D28B', ink:'#5b4200', border:'#c4a15a', name:'Разгон' },
+  3: { bg:'#F5B487', ink:'#5c2818', border:'#a05a3c', name:'Разбор'  },
+  4: { bg:'#cfd9c2', ink:'#2f4434', border:'#6f8a6a', name:'Инструменты' },
+  5: { bg:'#a8c0a0', ink:'#1a2b1e', border:'#2f4434', name:'Финиш' },
+};
+
+// ============ БОЛЬШАЯ КАРТОЧКА «ЭТА НЕДЕЛЯ» ============
+function renderWeekHero(){
   ensureFreshWeek();
-  const c = document.getElementById('weeklyList');
-  c.innerHTML = '';
-  WEEKLY_TASKS.forEach(d => {
-    const el = document.createElement('div');
-    el.className = 'daily' + (state.weekly.items[d.id] ? ' done' : '');
+  const host = document.getElementById('weekHero');
+  if(!host) return;
+  const wn = state.currentWeek;
+
+  // Если все 5 недель закрыты — экран поздравления
+  if (state.completedWeeks.length >= TOTAL_WEEKS){
+    renderCongrats(host);
+    return;
+  }
+
+  const colors = WEEK_COLORS[wn] || WEEK_COLORS[1];
+  host.className = 'week-hero';
+  host.style.setProperty('--wk-bg', colors.bg);
+  host.style.setProperty('--wk-ink', colors.ink);
+  host.style.setProperty('--wk-border', colors.border);
+
+  const required = WEEKLY_TASKS.filter(t => t.required);
+  const bonus    = WEEKLY_TASKS.filter(t => t.bonus);
+  const dateStr  = groupWeekLabel(wn);
+  const reqDone  = required.filter(t => state.weekly.items?.[t.id]).length;
+
+  host.innerHTML = `
+    <div class="wk-eyebrow">Неделя ${wn} из ${TOTAL_WEEKS} · ${colors.name}</div>
+    <div class="wk-title">Эта неделя</div>
+    <div class="wk-dates">${dateStr}</div>
+    <p class="wk-instr">Тебе нужно сделать <b>2 вещи</b>, чтобы гусёнок вырос. Всё остальное — по желанию.</p>
+    <ul class="wk-tasks" id="wkReq"></ul>
+    <div class="wk-bonus-label">Бонус — за это только баллы</div>
+    <ul class="wk-tasks" id="wkBonus"></ul>
+    <button class="wk-cta" id="wkContinueBtn">Продолжить неделю <span>→</span></button>
+    <div class="wk-progress">Обязательные: ${reqDone} / ${required.length}</div>
+  `;
+
+  const buildTask = (t) => {
+    const done = !!state.weekly.items?.[t.id];
+    const el = document.createElement('li');
+    el.className = 'wk-task' + (done ? ' done' : '');
     el.innerHTML = `
-      <div class="daily-check"></div>
-      <div class="daily-text">${d.text}<small>${d.sub}</small></div>
-      <div class="daily-pts">+${d.pts}</div>
+      <div class="wk-check"></div>
+      <div class="wk-txt">
+        <div class="wk-t-title">${t.text}</div>
+        <div class="wk-t-sub">${t.sub}</div>
+      </div>
+      <div class="wk-t-pts">+${t.pts}</div>
     `;
     el.addEventListener('click', () => {
-      const wasDone = !!state.weekly.items[d.id];
+      const wasDone = !!state.weekly.items[t.id];
       if (wasDone){
-        delete state.weekly.items[d.id];
-        addPoints(-d.pts, d.text + ' — отменено');
-        processTaskChange(d.id, false);
+        delete state.weekly.items[t.id];
+        addPoints(-t.pts, t.text + ' — отменено');
       } else {
-        state.weekly.items[d.id] = true;
-        addPoints(d.pts, d.text);
-        processTaskChange(d.id, true);
+        state.weekly.items[t.id] = true;
+        addPoints(t.pts, t.text);
       }
+      saveState();
+      checkWeekClosed();
       renderMascot();
-      renderWeekly();
+      renderWeekHero();
     });
-    c.appendChild(el);
+    return el;
+  };
+
+  const reqBox = document.getElementById('wkReq');
+  const bonusBox = document.getElementById('wkBonus');
+  required.forEach(t => reqBox.appendChild(buildTask(t)));
+  bonus.forEach(t => bonusBox.appendChild(buildTask(t)));
+
+  document.getElementById('wkContinueBtn').addEventListener('click', () => {
+    const fold = document.querySelector('.materials-fold');
+    if (fold){
+      fold.open = true;
+      fold.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
   });
 }
 
-// ============ EXPERIMENT TRACKER ============
-function getViewedWeekKey(){
-  return state.experiment.viewWeek || expWeekKey();
+function renderCongrats(host){
+  host.className = 'week-hero congrats';
+  host.removeAttribute('style');
+  const finalStage = Math.min(state.completedWeeks.length, MASCOTS.length - 1);
+  const svg = MASCOTS[finalStage]?.svg || '';
+  const name = MASCOTS[finalStage]?.name || 'Гусь';
+  host.innerHTML = `
+    <div class="congrats-mascot">${svg}</div>
+    <h2 class="congrats-h">Ты дошла до финиша 🎉</h2>
+    <p class="congrats-sub">
+      5 недель — за плечами. Гусёнок вырос до стадии <b>${name}</b>.<br>
+      Спасибо, что была рядом со стаей.
+    </p>
+    <a href="../../group.html" class="wk-cta" style="background:#2f4434; color:#FCE4B6">К списку тренингов →</a>
+  `;
 }
 
+// ============ EXPERIMENT TRACKER (устарело, но функции ensureExpWeek/getViewedWeekKey могут звать другие места) ============
+function getViewedWeekKey(){
+  return (state.experiment && state.experiment.viewWeek) || expWeekKey();
+}
 function ensureExpWeek(wk){
+  if (!state.experiment) state.experiment = { weeks: {}, viewWeek: null };
   if (!state.experiment.weeks[wk]){
     state.experiment.weeks[wk] = { strategy: '', days: {} };
   }
   return state.experiment.weeks[wk];
 }
 
-function renderExperiment(){
-  const wk = getViewedWeekKey();
-  const data = ensureExpWeek(wk);
-  const days = expWeekDays(wk);
-  const todayWk = expWeekKey();
-
-  // Стратегия
-  document.getElementById('expStrategy').value = data.strategy || '';
-  document.getElementById('expWeekRange').textContent = expWeekRangeLabel(wk);
-  const tried = days.filter(d => data.days[d.key]?.tried).length;
-  document.getElementById('expWeekCount').textContent = `${tried} / 7`;
-
-  // Кнопки навигации
-  document.getElementById('expNext').disabled = false; // позволяем смотреть будущее
-  document.getElementById('expToday').disabled = (wk === todayWk);
-
-  // Список дней
-  const c = document.getElementById('expDays');
-  c.innerHTML = '';
-  days.forEach(day => {
-    const ds = data.days[day.key] || {};
-    const isTried = !!ds.tried;
-    const mood = ds.mood || '';
-    const note = ds.note || '';
-    const el = document.createElement('div');
-    el.className = 'exp-day' + (isTried ? ' tried' : '') + (day.isToday ? ' is-today' : '');
-    el.innerHTML = `
-      <div class="exp-day-head">
-        <div class="exp-day-name">${day.name}${day.isToday ? ' · сегодня' : ''}</div>
-        <div class="exp-day-date">${day.date}</div>
-      </div>
-      <div class="exp-day-body">
-        <div class="exp-day-row">
-          <button class="exp-tried" data-day="${day.key}">
-            <span class="dot"></span>
-            <span>${isTried ? 'Попробовала' : 'Не отмечено'}</span>
-          </button>
-          <div class="exp-mood" data-day="${day.key}">
-            <button data-mood="bad" class="${mood === 'bad' ? 'active' : ''}" title="Не получилось">😐</button>
-            <button data-mood="ok" class="${mood === 'ok' ? 'active' : ''}" title="Частично">🙂</button>
-            <button data-mood="great" class="${mood === 'great' ? 'active' : ''}" title="Получилось">🎉</button>
-          </div>
-        </div>
-        <textarea class="exp-note" data-day="${day.key}" rows="1"
-                  placeholder="Как прошло? (необязательно)">${escapeHtml(note)}</textarea>
-      </div>
-    `;
-    c.appendChild(el);
-  });
-
-  // Делегирование событий через c
-  c.querySelectorAll('.exp-tried').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const k = btn.dataset.day;
-      const wasTried = !!data.days[k]?.tried;
-      data.days[k] = data.days[k] || {};
-      if (wasTried){
-        data.days[k].tried = false;
-        addPoints(-5, 'День эксперимента отменён');
-      } else {
-        data.days[k].tried = true;
-        addPoints(5, 'День эксперимента отмечен');
-      }
-      saveState();
-      checkWeekClosed(); // может закрыть неделю → +стадия
-      renderExperiment();
-    });
-  });
-
-  c.querySelectorAll('.exp-mood button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const k = btn.parentElement.dataset.day;
-      data.days[k] = data.days[k] || {};
-      const m = btn.dataset.mood;
-      const isActive = data.days[k].mood === m;
-      data.days[k].mood = isActive ? '' : m;
-      // Бонус за 🎉 при первой отметке
-      if (!isActive && m === 'great'){
-        addPoints(2, 'Получилось! Бонус');
-      }
-      saveState();
-      renderExperiment();
-    });
-  });
-
-  c.querySelectorAll('.exp-note').forEach(area => {
-    area.addEventListener('input', () => {
-      const k = area.dataset.day;
-      data.days[k] = data.days[k] || {};
-      data.days[k].note = area.value;
-      saveState();
-    });
-  });
-}
-
-document.getElementById('expStrategy').addEventListener('input', e => {
-  const wk = getViewedWeekKey();
-  const data = ensureExpWeek(wk);
-  data.strategy = e.target.value;
-  saveState();
-});
-
-document.getElementById('expPrev').addEventListener('click', () => {
-  const wk = getViewedWeekKey();
-  const d = parseYmd(wk);
-  d.setDate(d.getDate() - 7);
-  state.experiment.viewWeek = ymd(d);
-  saveState();
-  renderExperiment();
-});
-document.getElementById('expNext').addEventListener('click', () => {
-  const wk = getViewedWeekKey();
-  const d = parseYmd(wk);
-  d.setDate(d.getDate() + 7);
-  state.experiment.viewWeek = ymd(d);
-  saveState();
-  renderExperiment();
-});
-document.getElementById('expToday').addEventListener('click', () => {
-  state.experiment.viewWeek = null;
-  saveState();
-  renderExperiment();
-});
-
-// ============ IF-THEN PLANS ============
-function renderIfThen(){
-  const c = document.getElementById('ifthenList');
-  c.innerHTML = '';
-  if (state.ifthen.length === 0){
-    c.innerHTML = '<p style="font-size:13px; color:var(--muted); padding:10px 0">Пока пусто. Добавьте первый план ниже.</p>';
-    return;
-  }
-  state.ifthen.forEach(plan => {
-    const t = today();
-    const doneToday = (plan.doneTimes || []).some(s => s === t || s.slice(0, 10) === t);
-    const el = document.createElement('div');
-    el.className = 'ifthen-item' + (doneToday ? ' done' : '');
-    el.innerHTML = `
-      <div class="ifthen-text">
-        <span class="if">Если</span> ${escapeHtml(plan.if)} —
-        <span class="then">то</span> ${escapeHtml(plan.then)}
-      </div>
-      <div class="ifthen-check"></div>
-      <button class="ifthen-del" title="Удалить">×</button>
-    `;
-    el.querySelector('.ifthen-check').addEventListener('click', () => {
-      if (doneToday){
-        plan.doneTimes = plan.doneTimes.filter(s => s.slice(0, 10) !== t);
-        addPoints(-5, 'План отменён');
-      } else {
-        plan.doneTimes = plan.doneTimes || [];
-        plan.doneTimes.push(new Date().toISOString());
-        addPoints(5, 'План выполнен');
-      }
-      saveState();
-      renderIfThen();
-    });
-    el.querySelector('.ifthen-del').addEventListener('click', () => {
-      if (confirm('Удалить этот план?')){
-        state.ifthen = state.ifthen.filter(p => p.id !== plan.id);
-        saveState();
-        renderIfThen();
-      }
-    });
-    c.appendChild(el);
-  });
-}
-
+// (удалено) Экспериментальный трекер и if-then планы — заменены на карточку «Эта неделя».
 function escapeHtml(s){
   return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
-
-document.getElementById('ifthenAdd').addEventListener('click', () => {
-  const ifVal = document.getElementById('ifInput').value.trim();
-  const thenVal = document.getElementById('thenInput').value.trim();
-  if (!ifVal || !thenVal) return;
-  state.ifthen.push({
-    id: 'p' + Date.now(),
-    if: ifVal,
-    then: thenVal,
-    doneTimes: [],
-  });
-  document.getElementById('ifInput').value = '';
-  document.getElementById('thenInput').value = '';
-  saveState();
-  renderIfThen();
-});
+// stubs — чтобы старый код в renderAll и других местах не падал
+function renderExperiment(){}
+function renderIfThen(){}
 
 // ============ WEEK SELECTOR ============
 function renderWeeks(){
@@ -1687,10 +1712,8 @@ document.getElementById('feedbackOpen').addEventListener('click', () => hideFeed
 function renderAll(){
   renderName();
   renderMascot();
-  renderWeekly();
-  renderExperiment();
-  renderIfThen();
   renderWeeks();
+  renderWeekHero();
 }
 renderAll();
 maybeShowFeedback();
