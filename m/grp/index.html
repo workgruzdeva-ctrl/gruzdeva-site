@@ -888,7 +888,6 @@
       <button data-week="4">4</button>
       <button data-week="5">5</button>
     </div>
-    <div id="weekDateLabel" style="margin-top:6px; font-size:12px; color:var(--muted); text-align:center; font-family:'Charter','Iowan Old Style','Georgia',serif; font-style:italic"></div>
   </aside>
 
   <!-- ============ MAIN ============ -->
@@ -1346,7 +1345,6 @@ function renderWeekHero(){
   const items    = getWeeklyItems(wn);
   const required = WEEKLY_TASKS.filter(t => t.required);
   const bonus    = WEEKLY_TASKS.filter(t => t.bonus);
-  const dateStr  = groupWeekLabel(wn);
   const reqDone  = required.filter(t => items[t.id]).length;
   const allReqDone = reqDone === required.length;
   const canGoNext = allReqDone && wn < TOTAL_WEEKS;
@@ -1364,7 +1362,6 @@ function renderWeekHero(){
   host.innerHTML = `
     <div class="wk-eyebrow">Неделя ${wn} из ${TOTAL_WEEKS} · ${colors.name}</div>
     <div class="wk-title">Эта неделя</div>
-    <div class="wk-dates">${dateStr}</div>
     <p class="wk-instr">Тебе нужно сделать <b>2 вещи</b>, чтобы гусёнок вырос. Всё остальное — по желанию.</p>
     <ul class="wk-tasks" id="wkReq"></ul>
     <div class="wk-bonus-label">Бонус — за это только баллы</div>
@@ -1510,16 +1507,8 @@ function renderWeeks(){
   document.querySelectorAll('.weeks-pill button').forEach(b => {
     const wn = +b.dataset.week;
     b.classList.toggle('active', wn === state.currentWeek);
-    // tooltip с датами для каждой недели
-    b.title = `Неделя ${wn}: ${groupWeekLabel(wn)}`;
+    b.title = `Неделя ${wn}`;
   });
-  // подпись с датами активной недели
-  const lab = document.getElementById('weekDateLabel');
-  if (lab){
-    const auto = computeCurrentGroupWeek();
-    const isNow = state.currentWeek === auto;
-    lab.textContent = `${groupWeekLabel(state.currentWeek)}${isNow ? ' · сейчас' : ''}`;
-  }
 }
 document.querySelectorAll('.weeks-pill button').forEach(b => {
   b.addEventListener('click', () => {
