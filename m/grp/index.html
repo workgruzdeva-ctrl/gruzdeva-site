@@ -793,6 +793,17 @@
   .congrats-sub{
     font-size:17px; line-height:1.5; opacity:.85; margin:0 0 22px;
   }
+  .congrats-stats{
+    display:flex; justify-content:center; gap:22px; flex-wrap:wrap;
+    margin:14px 0 22px;
+  }
+  .congrats-stat{
+    background:rgba(255,255,255,0.7); padding:12px 18px; border-radius:12px;
+    min-width:110px;
+  }
+  .cs-num{ font-family:'Charter',serif; font-size:28px; font-weight:700; line-height:1; }
+  .cs-lbl{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; opacity:.6; margin-top:4px; }
+  .congrats-actions{ display:flex; flex-direction:column; gap:10px; max-width:360px; margin:0 auto; }
 
   /* ============ БЛОК «ВСЕ МАТЕРИАЛЫ» — свёрнутый ============ */
   .materials-fold{
@@ -1157,6 +1168,18 @@ function ensureFreshWeek(){
   saveState();
 })();
 
+// v5: галочки теперь per-неделя (state.weekly.byWeek). Старый items — общий на всех.
+// Обнуляем всё, чтобы не осталось артефактов «на всех неделях сразу отмечено».
+(function resetProgressV5(){
+  if (state._resetV5Done) return;
+  state.points = 0;
+  state.completedWeeks = [];
+  state.weekly = { weekKey: '', items: {}, byWeek: {} };
+  state._finalOpened = false;
+  state._resetV5Done = true;
+  saveState();
+})();
+
 // Миграция: если у пользователя есть points/completedWeeks, но нет taskAwardKeys —
 // проставим столько «виртуальных» наград, чтобы стадия не откатилась.
 (function migrateStageData(){
@@ -1179,9 +1202,21 @@ function ensureFreshWeek(){
   }
 })();
 
-// «Неделя закрыта» = все обязательные задачи отмечены. Бонусы не влияют на закрытие.
-function isWeekFullyDone(){
-  return WEEKLY_TASKS.filter(t => t.required).every(t => state.weekly.items?.[t.id]);
+// Хранилище галочек per-неделя: state.weekly.byWeek = { 1: {session:true,...}, 2:{...}, ... }
+function getWeeklyItems(wn){
+  if (!state.weekly.byWeek) state.weekly.byWeek = {};
+  if (!state.weekly.byWeek[wn]) state.weekly.byWeek[wn] = {};
+  return state.weekly.byWeek[wn];
+}
+function setWeeklyItem(wn, id, done){
+  const items = getWeeklyItems(wn);
+  if (done) items[id] = true; else delete items[id];
+}
+
+// «Неделя закрыта» = все обязательные задачи ЭТОЙ недели отмечены. Бонусы не влияют.
+function isWeekFullyDone(wn){
+  const items = getWeeklyItems(wn || state.currentWeek);
+  return WEEKLY_TASKS.filter(t => t.required).every(t => items[t.id]);
 }
 
 // Стадия маскота = количество закрытых недель (потолок TOTAL_WEEKS или MASCOTS.length-1)
@@ -1205,17 +1240,16 @@ function getMascotProgress(){
   };
 }
 
-// Проверяет: закрылась ли неделя? Если да — добавляет её в completedWeeks и растит гуся.
-// Стадия НЕ откатывается: даже если участница потом снимет галочку, completedWeeks сохраняется.
-// Вызывается ПОСЛЕ любого изменения — weekly-task или дня эксперимента.
+// Проверяет: закрылась ли текущая неделя тренинга (state.currentWeek)?
+// Если да — добавляет её номер в completedWeeks и растит гуся.
+// Стадия НЕ откатывается: даже если снять галочку — completedWeeks сохраняется.
 function checkWeekClosed(){
-  ensureFreshWeek();
-  const wk = state.weekly.weekKey;
-  if (!isWeekFullyDone()) return;
-  if (state.completedWeeks.includes(wk)) return;
+  const wn = state.currentWeek;
+  if (!isWeekFullyDone(wn)) return;
+  if (state.completedWeeks.includes(wn)) return;
 
   const beforeStage = currentStageIdx();
-  state.completedWeeks.push(wk);
+  state.completedWeeks.push(wn);
   saveState();
   const afterStage = currentStageIdx();
   if (afterStage > beforeStage && afterStage < MASCOTS.length){
@@ -1295,8 +1329,8 @@ function renderWeekHero(){
   if(!host) return;
   const wn = state.currentWeek;
 
-  // Если все 5 недель закрыты — экран поздравления
-  if (state.completedWeeks.length >= TOTAL_WEEKS){
+  // Если все 5 недель закрыты ИЛИ явно открыт финальный экран — поздравление
+  if (state._finalOpened || state.completedWeeks.length >= TOTAL_WEEKS){
     renderCongrats(host);
     return;
   }
@@ -1307,12 +1341,14 @@ function renderWeekHero(){
   host.style.setProperty('--wk-ink', colors.ink);
   host.style.setProperty('--wk-border', colors.border);
 
+  const items    = getWeeklyItems(wn);
   const required = WEEKLY_TASKS.filter(t => t.required);
   const bonus    = WEEKLY_TASKS.filter(t => t.bonus);
   const dateStr  = groupWeekLabel(wn);
-  const reqDone  = required.filter(t => state.weekly.items?.[t.id]).length;
+  const reqDone  = required.filter(t => items[t.id]).length;
   const allReqDone = reqDone === required.length;
   const canGoNext = allReqDone && wn < TOTAL_WEEKS;
+  const canGoFinal = allReqDone && wn === TOTAL_WEEKS;
 
   // Кнопка меняется в зависимости от прогресса:
   // — все обязательные готовы + есть следующая неделя → «Открыть неделю N+1 →»
@@ -1336,7 +1372,7 @@ function renderWeekHero(){
   `;
 
   const buildTask = (t) => {
-    const done = !!state.weekly.items?.[t.id];
+    const done = !!items[t.id];
     const el = document.createElement('li');
     el.className = 'wk-task' + (done ? ' done' : '');
     el.innerHTML = `
@@ -1348,12 +1384,12 @@ function renderWeekHero(){
       <div class="wk-t-pts">+${t.pts}</div>
     `;
     el.addEventListener('click', () => {
-      const wasDone = !!state.weekly.items[t.id];
+      const wasDone = !!items[t.id];
       if (wasDone){
-        delete state.weekly.items[t.id];
+        setWeeklyItem(wn, t.id, false);
         addPoints(-t.pts, t.text + ' — отменено');
       } else {
-        state.weekly.items[t.id] = true;
+        setWeeklyItem(wn, t.id, true);
         addPoints(t.pts, t.text);
       }
       saveState();
@@ -1375,7 +1411,11 @@ function renderWeekHero(){
       saveState();
       renderWeeks();
       renderWeekHero();
-      // прокрутим к верху карточки, чтобы пользовательница увидела новую неделю
+      host.scrollIntoView({ behavior:'smooth', block:'start' });
+    } else if (canGoFinal){
+      state._finalOpened = true;
+      saveState();
+      renderWeekHero();
       host.scrollIntoView({ behavior:'smooth', block:'start' });
     } else {
       const wb = document.querySelector('.workbooks-cta');
@@ -1390,6 +1430,17 @@ function renderCongrats(host){
   const finalStage = Math.min(state.completedWeeks.length, MASCOTS.length - 1);
   const svg = MASCOTS[finalStage]?.svg || '';
   const name = MASCOTS[finalStage]?.name || 'Гусь';
+  const closedCount = state.completedWeeks.length;
+
+  // Считаем бонусы за все недели
+  let bonusTotal = 0;
+  for (let wn = 1; wn <= TOTAL_WEEKS; wn++){
+    const items = getWeeklyItems(wn);
+    WEEKLY_TASKS.filter(t => t.bonus).forEach(t => {
+      if (items[t.id]) bonusTotal += t.pts;
+    });
+  }
+
   host.innerHTML = `
     <div class="congrats-mascot">${svg}</div>
     <h2 class="congrats-h">Ты дошла до финиша 🎉</h2>
@@ -1397,8 +1448,39 @@ function renderCongrats(host){
       5 недель — за плечами. Гусёнок вырос до стадии <b>${name}</b>.<br>
       Спасибо, что была рядом со стаей.
     </p>
-    <a href="../../group.html" class="wk-cta" style="background:#2f4434; color:#FCE4B6">К списку тренингов →</a>
+    <div class="congrats-stats">
+      <div class="congrats-stat">
+        <div class="cs-num">${closedCount} / ${TOTAL_WEEKS}</div>
+        <div class="cs-lbl">закрытых недель</div>
+      </div>
+      <div class="congrats-stat">
+        <div class="cs-num">${state.points}</div>
+        <div class="cs-lbl">всего баллов</div>
+      </div>
+      <div class="congrats-stat">
+        <div class="cs-num">+${bonusTotal}</div>
+        <div class="cs-lbl">из них бонусами</div>
+      </div>
+    </div>
+    <div class="congrats-actions">
+      <button class="wk-cta" id="finalReport" style="background:#f0b400; color:#241D14">📝 Открыть итоговый отчёт</button>
+      <button class="wk-cta wk-cta-ghost" id="finalBack" style="background:transparent; color:inherit; border:2px solid currentColor">← Вернуться к неделям</button>
+    </div>
   `;
+  const rep = document.getElementById('finalReport');
+  if (rep) rep.addEventListener('click', () => {
+    const btn = document.getElementById('reportBtn');
+    if (btn) btn.click();
+  });
+  const back = document.getElementById('finalBack');
+  if (back) back.addEventListener('click', () => {
+    state._finalOpened = false;
+    state.currentWeek = TOTAL_WEEKS;
+    saveState();
+    renderWeeks();
+    renderWeekHero();
+    host.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
 }
 
 // ============ EXPERIMENT TRACKER (устарело, но функции ensureExpWeek/getViewedWeekKey могут звать другие места) ============
@@ -1559,8 +1641,9 @@ function buildReport(){
     .filter(d => exp.days[d.key]?.note?.trim())
     .map(d => `  • ${d.name}: ${exp.days[d.key].note.trim()}`);
 
-  const weeklyDone = WEEKLY_TASKS.filter(t => state.weekly.items?.[t.id]);
-  const weeklyOpen = WEEKLY_TASKS.filter(t => !state.weekly.items?.[t.id]);
+  const _items = getWeeklyItems(state.currentWeek);
+  const weeklyDone = WEEKLY_TASKS.filter(t => _items[t.id]);
+  const weeklyOpen = WEEKLY_TASKS.filter(t => !_items[t.id]);
 
   const info = getMascotProgress();
   const supportMsg = MASCOT_MESSAGES[Math.floor(Math.random() * MASCOT_MESSAGES.length)];
