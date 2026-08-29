@@ -1329,8 +1329,10 @@ function renderWeekHero(){
   if(!host) return;
   const wn = state.currentWeek;
 
-  // Если все 5 недель закрыты ИЛИ явно открыт финальный экран — поздравление
-  if (state._finalOpened || state.completedWeeks.length >= TOTAL_WEEKS){
+  // Финальный экран показывается ТОЛЬКО когда явно нажали «К финалу».
+  // Даже если все 5 недель закрыты — участница может листать недели обратно,
+  // снимать/ставить галочки. Финал открывается кнопкой и по такой же кнопке закрывается.
+  if (state._finalOpened){
     renderCongrats(host);
     return;
   }
