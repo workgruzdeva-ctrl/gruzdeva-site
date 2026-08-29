@@ -1311,6 +1311,17 @@ function renderWeekHero(){
   const bonus    = WEEKLY_TASKS.filter(t => t.bonus);
   const dateStr  = groupWeekLabel(wn);
   const reqDone  = required.filter(t => state.weekly.items?.[t.id]).length;
+  const allReqDone = reqDone === required.length;
+  const canGoNext = allReqDone && wn < TOTAL_WEEKS;
+
+  // Кнопка меняется в зависимости от прогресса:
+  // — все обязательные готовы + есть следующая неделя → «Открыть неделю N+1 →»
+  // — все обязательные готовы + последняя неделя → «К финалу →»
+  // — иначе → «Продолжить неделю →» (скроллит к тетрадям)
+  let ctaText;
+  if (canGoNext)          ctaText = `Открыть неделю ${wn + 1} <span>→</span>`;
+  else if (allReqDone)    ctaText = `К финалу <span>→</span>`;
+  else                    ctaText = `Продолжить неделю <span>→</span>`;
 
   host.innerHTML = `
     <div class="wk-eyebrow">Неделя ${wn} из ${TOTAL_WEEKS} · ${colors.name}</div>
@@ -1320,8 +1331,8 @@ function renderWeekHero(){
     <ul class="wk-tasks" id="wkReq"></ul>
     <div class="wk-bonus-label">Бонус — за это только баллы</div>
     <ul class="wk-tasks" id="wkBonus"></ul>
-    <button class="wk-cta" id="wkContinueBtn">Продолжить неделю <span>→</span></button>
-    <div class="wk-progress">Обязательные: ${reqDone} / ${required.length}</div>
+    <button class="wk-cta" id="wkContinueBtn">${ctaText}</button>
+    <div class="wk-progress">Обязательные: ${reqDone} / ${required.length}${allReqDone ? ' · неделя закрыта 🎉' : ''}</div>
   `;
 
   const buildTask = (t) => {
@@ -1359,8 +1370,17 @@ function renderWeekHero(){
   bonus.forEach(t => bonusBox.appendChild(buildTask(t)));
 
   document.getElementById('wkContinueBtn').addEventListener('click', () => {
-    const wb = document.querySelector('.workbooks-cta');
-    if (wb) wb.scrollIntoView({ behavior:'smooth', block:'center' });
+    if (canGoNext){
+      state.currentWeek = wn + 1;
+      saveState();
+      renderWeeks();
+      renderWeekHero();
+      // прокрутим к верху карточки, чтобы пользовательница увидела новую неделю
+      host.scrollIntoView({ behavior:'smooth', block:'start' });
+    } else {
+      const wb = document.querySelector('.workbooks-cta');
+      if (wb) wb.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
   });
 }
 
