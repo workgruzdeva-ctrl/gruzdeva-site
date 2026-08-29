@@ -887,31 +887,22 @@
     <!-- ============ БОЛЬШАЯ КАРТОЧКА «ЭТА НЕДЕЛЯ» ============ -->
     <section class="week-hero" id="weekHero"></section>
 
-    <!-- ============ ВСЕ МАТЕРИАЛЫ (свёрнутый блок) ============ -->
-    <details class="materials-fold">
-      <summary>Все материалы <span class="chev">▾</span></summary>
-      <div class="materials-body">
-        <h3 class="mat-h">Рабочие тетради</h3>
-        <p class="mat-note">Все воркбуки лежат в одной папке на Google Drive. Откройте, скачайте нужный — и заполняйте.</p>
-        <a href="https://drive.google.com/drive/folders/1Lhx2Ig59wMuHfIsJuqmsjyNcARkzz32i?usp=sharing"
-           target="_blank" rel="noopener" class="workbooks-cta">
-          <span class="wb-ico">📓</span>
-          <span class="wb-body">
-            Открыть рабочие тетради
-            <span class="wb-sub">Google Drive · тетради всех недель в одной папке</span>
-          </span>
-          <span class="wb-arr">→</span>
-        </a>
+    <!-- ============ РАБОЧИЕ ТЕТРАДИ ============ -->
+    <a href="https://drive.google.com/drive/folders/1Lhx2Ig59wMuHfIsJuqmsjyNcARkzz32i?usp=sharing"
+       target="_blank" rel="noopener" class="workbooks-cta" style="margin-top:8px">
+      <span class="wb-ico">📓</span>
+      <span class="wb-body">
+        Открыть рабочие тетради
+        <span class="wb-sub">Google Drive · тетради всех недель в одной папке</span>
+      </span>
+      <span class="wb-arr">→</span>
+    </a>
 
-        <h3 class="mat-h">Если что-то непонятно</h3>
-        <p class="mat-note">Пишите в Telegram <a href="https://t.me/dr_gruzdeva" style="font-weight:600">@dr_gruzdeva</a>. Если совсем плохо — экстренные службы: <strong>112</strong>.</p>
-
-        <p class="mat-tiny">
-          Эта страница хранит ваш прогресс в браузере (localStorage). Если очистите кэш или зайдёте с другого устройства — придётся начать заново.
-          <a href="#" id="resetLink">Сбросить прогресс</a>
-        </p>
-      </div>
-    </details>
+    <p class="mat-tiny">
+      Если что-то непонятно — пишите в Telegram <a href="https://t.me/dr_gruzdeva" style="font-weight:600">@dr_gruzdeva</a>. Если совсем плохо — экстренные службы: <strong>112</strong>.<br><br>
+      Эта страница хранит ваш прогресс в браузере (localStorage). Если очистите кэш или зайдёте с другого устройства — придётся начать заново.
+      <a href="#" id="resetLink">Сбросить прогресс</a>
+    </p>
   </main>
 
 </div>
@@ -1157,6 +1148,15 @@ function ensureFreshWeek(){
   saveState();
 })();
 
+// v4: убрали autoSync — сбрасываем currentWeek на 1 у всех, чтобы кабинет открывался
+// с первой недели, а участница сама переключала.
+(function resetProgressV4(){
+  if (state._resetV4Done) return;
+  state.currentWeek = 1;
+  state._resetV4Done = true;
+  saveState();
+})();
+
 // Миграция: если у пользователя есть points/completedWeeks, но нет taskAwardKeys —
 // проставим столько «виртуальных» наград, чтобы стадия не откатилась.
 (function migrateStageData(){
@@ -1359,11 +1359,8 @@ function renderWeekHero(){
   bonus.forEach(t => bonusBox.appendChild(buildTask(t)));
 
   document.getElementById('wkContinueBtn').addEventListener('click', () => {
-    const fold = document.querySelector('.materials-fold');
-    if (fold){
-      fold.open = true;
-      fold.scrollIntoView({ behavior:'smooth', block:'start' });
-    }
+    const wb = document.querySelector('.workbooks-cta');
+    if (wb) wb.scrollIntoView({ behavior:'smooth', block:'center' });
   });
 }
 
@@ -1428,15 +1425,7 @@ document.querySelectorAll('.weeks-pill button').forEach(b => {
   });
 });
 
-// Автоопределение: если состояние ещё дефолтное (currentWeek=1 и не было завершённых
-// недель) — подставляем реальную неделю по календарю.
-(function autoSyncCurrentWeek(){
-  const auto = computeCurrentGroupWeek();
-  if (state.currentWeek === 1 && (!state.completedWeeks || state.completedWeeks.length === 0) && auto !== 1){
-    state.currentWeek = auto;
-    saveState();
-  }
-})();
+// (убрано) Автосинк недели по календарю — участницы сами переключают.
 
 // ============ WORKBOOKS placeholder ============
 document.querySelectorAll('.wb-card').forEach(card => {
