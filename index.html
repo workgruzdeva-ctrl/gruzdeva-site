@@ -782,6 +782,22 @@
   .price-block .pv .per-unit{font-family:-apple-system,sans-serif; font-size:13px; font-weight:500; color:var(--muted); letter-spacing:0}
   .price-block .pv .rub{font-family:-apple-system,sans-serif; font-size:13px; font-weight:500; color:var(--muted); letter-spacing:0; margin:0}
 
+  /* Прайс-лист из нескольких строк (консультации) */
+  .price-list{list-style:none; padding:0; margin:0}
+  .price-list li{
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+    padding:9px 0; border-bottom:1px dashed var(--line); font-size:14px;
+  }
+  .price-list li:last-child{border-bottom:none; padding-bottom:0}
+  .price-list .pl-name{color:var(--ink); font-weight:600; display:flex; flex-direction:column; gap:3px}
+  .price-list .pl-save{font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-deep); font-weight:700}
+  .price-list .pl-price{
+    font-family:"Charter","Iowan Old Style","Georgia",serif;
+    font-size:19px; font-weight:600; color:var(--ink); white-space:nowrap;
+  }
+  .price-list .pl-rub{font-family:-apple-system,sans-serif; font-size:12px; font-weight:500; color:var(--muted)}
+  .price-list .pl-featured{background:var(--accent-soft); margin:4px -10px 0; padding:10px; border-radius:6px; border-bottom:none}
+
   /* "Что включено" with checkmarks */
   .inc-label{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px}
   ul.inc{list-style:none; padding:0; margin:0 0 28px; font-size:14px; color:var(--soft)}
@@ -1513,13 +1529,16 @@
         </div>
 
         <div class="price-block">
-          <div class="pl">Пакет из 5 встреч</div>
-          <div class="pv">350 €<span class="per-unit">· 70 € за сессию</span><span class="rub">≈ 35 000 ₽</span></div>
+          <ul class="price-list">
+            <li><span class="pl-name">Первичная</span><span class="pl-price">50 € <span class="pl-rub">· 5 000 ₽</span></span></li>
+            <li><span class="pl-name">Поддерживающая разовая</span><span class="pl-price">80 € <span class="pl-rub">· 8 000 ₽</span></span></li>
+            <li class="pl-featured"><span class="pl-name">Пакет из 5<span class="pl-save">экономия 5 000 ₽</span></span><span class="pl-price">350 € <span class="pl-rub">· 35 000 ₽</span></span></li>
+          </ul>
         </div>
 
         <p class="inc-label">Что включено</p>
         <ul class="inc">
-          <li>5 индивидуальных сессий по 60 минут</li>
+          <li>Индивидуальные сессии по 60 минут</li>
           <li>Поддержка между встречами при необходимости</li>
           <li>Фокус на устойчивых изменениях</li>
           <li>Индивидуальные техники под ваш контекст</li>
