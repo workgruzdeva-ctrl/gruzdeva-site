@@ -735,7 +735,13 @@
     font-size:34px; font-weight:600; letter-spacing:-.015em; line-height:1.05;
     margin:0 0 14px;
   }
-  .card .summary{color:var(--soft); font-size:15px; line-height:1.55; margin:0 0 22px}
+  .card .summary{color:var(--soft); font-size:15px; line-height:1.55; margin:0 0 10px}
+  .card .card-meta{
+    display:inline-block;
+    font-size:13px; color:var(--ink); margin:0 0 22px;
+    padding:5px 11px; background:var(--accent-soft); border-radius:999px;
+  }
+  .card .card-meta b{color:var(--accent-deep)}
 
   /* Ribbon (italic accent line for featured card) — main highlight */
   .ribbon{
@@ -1442,6 +1448,7 @@
         <div class="ftype"><span class="num">01</span><span class="sep">—</span><span>Старт</span></div>
         <h3>Первичная оценка</h3>
         <p class="summary">Понять, СДВГ ли это и что с этим делать дальше.</p>
+        <p class="card-meta"><b>1–3 встречи</b> · зависит от того, как подготовитесь</p>
 
         <div class="fit">
           <p class="fit-label">Подойдёт, если</p>
@@ -1459,7 +1466,7 @@
 
         <p class="inc-label">Что включено</p>
         <ul class="inc">
-          <li>Интервью-скрининг по DIVA-5 — обычно 1–3 встречи, зависит от того, как пойдёт</li>
+          <li>Интервью-скрининг по протоколу DIVA-5</li>
           <li>Письменное заключение и рекомендации</li>
           <li>При необходимости — направление к психиатру</li>
         </ul>
