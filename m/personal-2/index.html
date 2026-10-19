@@ -129,6 +129,69 @@
   .check-item.done .check-box::before{ content:"✓"; }
   .check-text{ font-size:15px; line-height:1.4; }
   .check-item.done .check-text{ text-decoration:line-through; opacity:.6 }
+  .check-sub{
+    display:block; font-size:12.5px; color:var(--muted); font-weight:400;
+    line-height:1.45; margin-top:4px; font-style:italic;
+    text-decoration:none; opacity:1;
+  }
+  .check-item.done .check-sub{ text-decoration:none; opacity:.6 }
+
+  /* Дерево решений (шаг 4) */
+  .tree{ margin:12px 0 0 38px; }
+  .tree-root{
+    display:inline-block; padding:10px 18px; background:var(--card);
+    border:2px solid var(--ink); border-radius:12px;
+    font-family:'Fraunces',serif; font-weight:600; font-size:16px;
+    margin:0 auto 10px; position:relative;
+  }
+  .tree > .tree-root{
+    display:block; max-width:260px; margin-left:auto; margin-right:auto;
+    text-align:center;
+  }
+  .tree > .tree-root::after{
+    content:""; position:absolute; left:50%; bottom:-20px; width:2px; height:20px;
+    background:var(--ink-2); transform:translateX(-1px);
+  }
+  .tree-split{
+    display:grid; grid-template-columns:1fr 1fr; gap:28px;
+    position:relative; padding-top:28px;
+  }
+  .tree-split::before{
+    content:""; position:absolute; top:0; left:25%; right:25%; height:2px;
+    background:var(--ink-2);
+  }
+  .tree-branch{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    position:relative;
+  }
+  .tree-branch::before{
+    content:""; position:absolute; top:-14px; left:50%; width:2px; height:14px;
+    background:var(--ink-2); transform:translateX(-1px);
+  }
+  .tree-cond{
+    background:var(--coral-soft); color:var(--coral);
+    padding:10px 14px; border-radius:12px;
+    font-weight:700; font-size:13px; line-height:1.3; text-align:center;
+    min-height:52px; display:flex; align-items:center; justify-content:center;
+  }
+  .tree-arrow{
+    font-size:22px; color:var(--ink-2); font-weight:800; line-height:1;
+  }
+  .tree-action{
+    background:var(--sage-soft); border:2px solid var(--sage);
+    border-radius:14px; padding:14px; width:100%;
+  }
+  .tree-action-title{
+    font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--sage);
+    margin-bottom:8px; text-align:center;
+  }
+
+  @media (max-width:540px){
+    .tree, .tree > .tree-root{ margin-left:0; }
+    .tree-split{ grid-template-columns:1fr; gap:22px; padding-top:22px; }
+    .tree-split::before{ left:50%; right:auto; width:2px; height:22px; top:-11px; }
+    .tree-branch::before{ display:none; }
+  }
 
   /* Развилка — три карточки */
   .branches{
@@ -250,7 +313,7 @@
     <ul class="checks">
       <li class="check-item" data-id="s1_a"><div class="check-box"></div><div class="check-text">Села за компьютер</div></li>
       <li class="check-item" data-id="s1_b"><div class="check-box"></div><div class="check-text">Тетрадь с задачей рядом, открыта на нужной странице</div></li>
-      <li class="check-item" data-id="s1_c"><div class="check-box"></div><div class="check-text">Сказала себе: «я готова подойти к этой задаче»</div></li>
+      <li class="check-item" data-id="s1_c"><div class="check-box"></div><div class="check-text">Обозначила начало — хоть как-нибудь<span class="check-sub">сказала «я готова», или орёшь благим матом чайкой, или записываешь мне кружочки о боли этого бренного мира и своём сопротивлении</span></div></li>
     </ul>
   </article>
 
@@ -270,66 +333,48 @@
   <article class="step" data-step="s3">
     <div class="step-head">
       <div class="step-num"><span class="n">3</span></div>
-      <div class="step-title">Нарисовать полоску</div>
+      <div class="step-title">Нарисовать полоску (или взять вторую, уже существующую)</div>
     </div>
-    <p class="step-sub">Одно действие. Пробуй — без ожиданий, как получится.</p>
     <ul class="checks">
-      <li class="check-item" data-id="s3_a"><div class="check-box"></div><div class="check-text">Полоска нарисована</div></li>
+      <li class="check-item" data-id="s3_a"><div class="check-box"></div><div class="check-text">Полоска нарисована или найдена вторая</div></li>
+      <li class="check-item" data-id="s3_b"><div class="check-box"></div><div class="check-text">Отправила Вале кружочек — как собой горжусь, что двигаюсь по задаче</div></li>
     </ul>
   </article>
 
-  <!-- 4. Развилка -->
+  <!-- 4. Дерево решений -->
   <article class="step" data-step="s4">
     <div class="step-head">
       <div class="step-num"><span class="n">4</span></div>
       <div class="step-title">Посмотреть, что получилось</div>
     </div>
-    <p class="step-sub">Выбирай честно — это не оценка, это маршрут дальше.</p>
+    <p class="step-sub">Если красиво — пропускаешь шаг и идёшь на финиш. Если что-то не так — вот два пути.</p>
 
-    <div class="branches">
-      <div class="branches-q">Как вышло?</div>
-      <div class="branches-row">
-        <button class="branch-btn" data-branch="ok">
-          <span class="emo">👍</span>Получилось хорошо
-        </button>
-        <button class="branch-btn" data-branch="ugly">
-          <span class="emo">🧐</span>Получилось,<br>но некрасиво
-        </button>
-        <button class="branch-btn" data-branch="err">
-          <span class="emo">⚠️</span>Вышла ошибка
-        </button>
-      </div>
+    <div class="tree">
+      <div class="tree-root">Полоска готова</div>
+      <div class="tree-split">
+        <!-- левая ветка -->
+        <div class="tree-branch">
+          <div class="tree-cond">Получилось,<br>но некрасиво</div>
+          <div class="tree-arrow">↓</div>
+          <div class="tree-action">
+            <div class="tree-action-title">Перемоделировать</div>
+            <ul class="checks" style="margin-left:0">
+              <li class="check-item" data-id="s4_u"><div class="check-box"></div><div class="check-text">Перемоделировала и остановилась на достаточно</div></li>
+            </ul>
+          </div>
+        </div>
 
-      <!-- Ветка OK -->
-      <div class="branch-detail" data-detail="ok">
-        <h4>Отлично. Это победа.</h4>
-        <p>Красиво с первого раза — тоже результат. Поставь галочку и выдохни.</p>
-        <ul class="checks">
-          <li class="check-item" data-id="s4_ok"><div class="check-box"></div><div class="check-text">Я приняла, что получилось</div></li>
-        </ul>
-      </div>
-
-      <!-- Ветка UGLY -->
-      <div class="branch-detail" data-detail="ugly">
-        <h4>Это не провал — это правка.</h4>
-        <p>«Некрасиво» — нормальная часть любой работы. Посмотри, что именно хочется поменять, и попробуй ещё раз.</p>
-        <ul class="checks">
-          <li class="check-item" data-id="s4_u1"><div class="check-box"></div><div class="check-text">Посмотрела, что именно не нравится</div></li>
-          <li class="check-item" data-id="s4_u2"><div class="check-box"></div><div class="check-text">Перерисовала / перемоделировала</div></li>
-          <li class="check-item" data-id="s4_u3"><div class="check-box"></div><div class="check-text">Остановилась на том, что уже достаточно</div></li>
-        </ul>
-      </div>
-
-      <!-- Ветка ERR -->
-      <div class="branch-detail" data-detail="err">
-        <h4>Ошибка — это подсказка, не приговор.</h4>
-        <p>Открой лист и посмотри, что это за ошибка. Разберись спокойно — и попробуй ещё раз.</p>
-        <ul class="checks">
-          <li class="check-item" data-id="s4_e1"><div class="check-box"></div><div class="check-text">Прочитала текст ошибки</div></li>
-          <li class="check-item" data-id="s4_e2"><div class="check-box"></div><div class="check-text">Нашла по листу, что это за ошибка</div></li>
-          <li class="check-item" data-id="s4_e3"><div class="check-box"></div><div class="check-text">Поняла, что делать (хотя бы примерно)</div></li>
-          <li class="check-item" data-id="s4_e4"><div class="check-box"></div><div class="check-text">Повторила попытку</div></li>
-        </ul>
+        <!-- правая ветка -->
+        <div class="tree-branch">
+          <div class="tree-cond">Не получилось,<br>вышла ошибка</div>
+          <div class="tree-arrow">↓</div>
+          <div class="tree-action">
+            <div class="tree-action-title">Ищем решение онлайн</div>
+            <ul class="checks" style="margin-left:0">
+              <li class="check-item" data-id="s4_e"><div class="check-box"></div><div class="check-text">Поискала онлайн, нашла способ решить ошибку</div></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </article>
@@ -366,19 +411,14 @@ const BIRDS = [
 ];
 
 const CHEERS_BY_ID = {
-  s1_a:  'За стол — это первый и часто самый тяжёлый шаг. Молодец.',
-  s1_b:  'Тетрадь рядом — значит задача рядом, не в голове.',
-  s1_c:  'Фраза в голос работает. Ты это уже сделала.',
-  s2_a:  'Запустила — и уже половина дела.',
-  s3_a:  'Полоска есть. Теперь просто посмотри, что вышло.',
-  s4_ok: 'С первой попытки — редкость. Запомни это чувство.',
-  s4_u1: 'Увидеть, что не нравится — это тоже навык.',
-  s4_u2: 'Перерисовать — не поражение, а работа.',
-  s4_u3: 'Остановиться на «достаточно» — зрелый ход.',
-  s4_e1: 'Прочитать ошибку — уже храбро.',
-  s4_e2: 'Нашла по листу — отлично.',
-  s4_e3: 'Понять, что делать — уже 80% решения.',
-  s4_e4: 'Повторила. Ты в игре.',
+  s1_a: 'За стол — это первый и часто самый тяжёлый шаг. Молодец.',
+  s1_b: 'Тетрадь рядом — значит задача рядом, не в голове.',
+  s1_c: 'Начало обозначено. Как — не важно. Главное, что ты тут.',
+  s2_a: 'Запустила — и уже половина дела.',
+  s3_a: 'Полоска есть. Это уже результат.',
+  s3_b: 'Кружочек о гордости — то что надо. Ты видишь свой прогресс.',
+  s4_u: 'Перемоделировать и остановиться — зрелый ход. Это навык.',
+  s4_e: 'Нашла онлайн — ты не одна с этой ошибкой. Разобралась.',
 };
 
 // --- State ---
@@ -397,8 +437,11 @@ function doneCount(){
 }
 function updateMascot(cheer){
   const n = doneCount();
-  // 9 стадий, максимум — после 8 галочек
-  const stage = Math.min(n, BIRDS.length - 1);
+  // Базовых галочек 6 (s1_a, s1_b, s1_c, s2_a, s3_a, s3_b).
+  // Ветви дерева (s4_u, s4_e) — опциональны. Всего может быть до 8.
+  // Переводим n → стадию 0..8, равномерно.
+  const total = 8;
+  const stage = Math.min(Math.round((n / total) * (BIRDS.length - 1)), BIRDS.length - 1);
   const b = BIRDS[stage];
   document.getElementById('mascotImg').src = '../grp/birds/' + b.file;
   document.getElementById('mascotStage').textContent = 'стадия ' + stage;
@@ -428,33 +471,13 @@ function renderChecks(){
   renderFinal();
 }
 
-function renderBranch(){
-  // Активная кнопка + видимая деталь
-  document.querySelectorAll('.branch-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.branch === state.branch);
-  });
-  document.querySelectorAll('.branch-detail').forEach(d => {
-    d.classList.toggle('active', d.dataset.detail === state.branch);
-  });
-}
-
-function isBranchComplete(){
-  if (!state.branch) return false;
-  const map = {
-    ok: ['s4_ok'],
-    ugly: ['s4_u1','s4_u2','s4_u3'],
-    err: ['s4_e1','s4_e2','s4_e3','s4_e4'],
-  };
-  const req = map[state.branch] || [];
-  return req.every(id => state.checks[id]);
-}
-
 function renderFinal(){
-  const base = ['s1_a','s1_b','s1_c','s2_a','s3_a'].every(id => state.checks[id]);
-  const show = base && isBranchComplete();
-  document.getElementById('finalBox').classList.toggle('show', show);
-  if (show){
-    // Показать последнего гуся
+  // Финал появляется когда закрыты базовые шаги 1-3 (включая кружочек о гордости).
+  // Ветви в дереве решений — опциональны: если полоска сразу получилась красиво,
+  // ветви вообще не трогаешь.
+  const base = ['s1_a','s1_b','s1_c','s2_a','s3_a','s3_b'].every(id => state.checks[id]);
+  document.getElementById('finalBox').classList.toggle('show', base);
+  if (base){
     const img = document.getElementById('mascotImg');
     img.src = '../grp/birds/09_koroleva_stai.png';
     document.getElementById('mascotStage').textContent = 'стадия ' + (BIRDS.length - 1);
@@ -478,23 +501,10 @@ document.querySelectorAll('.check-item').forEach(el => {
   });
 });
 
-document.querySelectorAll('.branch-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    state.branch = b.dataset.branch;
-    saveState();
-    renderBranch();
-    renderFinal();
-    // мягкий скролл к деталям ветки
-    const d = document.querySelector(`.branch-detail[data-detail="${state.branch}"]`);
-    if (d) setTimeout(() => d.scrollIntoView({ behavior:'smooth', block:'center' }), 100);
-  });
-});
-
 document.getElementById('againBtn').addEventListener('click', () => {
   if (!confirm('Начать задачу заново? Все галочки обнулятся.')) return;
-  state = { checks:{}, branch:null };
+  state = { checks:{} };
   saveState();
-  renderBranch();
   renderChecks();
   document.getElementById('finalBox').classList.remove('show');
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -503,9 +513,8 @@ document.getElementById('againBtn').addEventListener('click', () => {
 document.getElementById('resetAll').addEventListener('click', (e) => {
   e.preventDefault();
   if (!confirm('Сбросить весь прогресс?')) return;
-  state = { checks:{}, branch:null };
+  state = { checks:{} };
   saveState();
-  renderBranch();
   renderChecks();
   document.getElementById('finalBox').classList.remove('show');
 });
@@ -522,7 +531,6 @@ document.getElementById('resetAll').addEventListener('click', (e) => {
   if (task) document.getElementById('taskTitle').textContent = task;
 })();
 
-renderBranch();
 renderChecks();
 </script>
 
